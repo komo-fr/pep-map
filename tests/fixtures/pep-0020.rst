@@ -1,0 +1,11 @@
+PEP: 20
+Title: The Zen of Python
+Author: Tim Peters <tim.peters@gmail.com>
+Status: Active
+Type: Informational
+Created:
+
+The Zen of Python
+
+    Beautiful is better than ugly.
+    Explicit is better than implicit.
