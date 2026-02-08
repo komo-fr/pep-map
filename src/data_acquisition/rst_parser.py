@@ -160,13 +160,13 @@ class RSTParser:
 
         # Validate required fields
         if not title:
-            raise ValueError(f"Missing required field 'Title' in {file_path}")
+            raise ValueError(f"Missing required field 'Title' in PEP {pep_number} ({file_path})")
         if not status:
-            raise ValueError(f"Missing required field 'Status' in {file_path}")
+            raise ValueError(f"Missing required field 'Status' in PEP {pep_number} ({file_path})")
         if not pep_type:
-            raise ValueError(f"Missing required field 'Type' in {file_path}")
+            raise ValueError(f"Missing required field 'Type' in in PEP {pep_number} ({file_path})")
         if not author_string:
-            raise ValueError(f"Missing required field 'Author' in {file_path}")
+            raise ValueError(f"Missing required field 'Author' in in PEP {pep_number} ({file_path})")
 
         # Parse authors
         authors = self._parse_authors(author_string)
