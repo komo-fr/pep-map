@@ -1,0 +1,10 @@
+PEP: 9999
+Title: Sample Draft PEP
+Author: Test Author <test@example.com>
+Status: Draft
+Type: Standards Track
+Created: 01-Jan-2026
+
+Abstract
+
+    This is a sample draft PEP for testing purposes.

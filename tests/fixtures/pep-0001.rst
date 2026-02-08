@@ -1,0 +1,22 @@
+PEP: 1
+Title: PEP Purpose and Guidelines
+Author: Barry Warsaw <barry@python.org>,
+        Jeremy Hylton <jeremy@alum.mit.edu>,
+        David Goodger <goodger@python.org>,
+        Nick Coghlan <ncoghlan@gmail.com>
+Status: Active
+Type: Process
+Created: 13-Jun-2000
+Post-History: 21-Mar-2001, 29-Jul-2002, 03-May-2003, 05-May-2012,
+              07-Apr-2013
+
+Abstract
+
+    This PEP contains the index of all Python Enhancement Proposals,
+    known as PEPs.  PEP numbers are assigned by the PEP editors, and
+    once assigned are never changed.  The version control history of
+    the PEP texts represent their historical record.
+
+Introduction
+
+    The PEP process begins with a new idea for Python.
