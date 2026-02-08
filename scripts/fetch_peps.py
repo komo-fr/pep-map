@@ -204,7 +204,7 @@ def main() -> int:
         logger.info("Saving metadata JSON...")
         metadata = {
             "fetched_at": datetime.now(timezone.utc).isoformat(),
-            "source_url": url
+            "source_url": PEP_REPO_URL
         }
         save_metadata_json(metadata, metadata_path)
 
@@ -215,7 +215,7 @@ def main() -> int:
             fetcher.cleanup(extract_dir)
             logger.info("Cleanup complete")
         else:
-            logger.info(f"Keeping raw files (--keep-raw flag set)")
+            logger.info("Keeping raw files (--keep-raw flag set)")
             logger.info(f"  Zip file: {zip_path}")
             logger.info(f"  Extracted: {extract_dir}")
 
