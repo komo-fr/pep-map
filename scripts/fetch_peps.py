@@ -9,9 +9,6 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, List
 
-# Add parent directory to path to import src modules
-sys.path.insert(0, str(Path(__file__).parent.parent))
-
 from src.data_acquisition.github_fetcher import PEPFetcher
 from src.data_acquisition.rst_parser import PEPMetadata, RSTParser
 
