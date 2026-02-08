@@ -44,9 +44,9 @@ class RSTParser:
         """
         # Expected format: pep-NNNN.rst
         filename = file_path.stem  # Get filename without extension
-        parts = filename.split('-')
+        parts = filename.split("-")
 
-        if len(parts) != 2 or parts[0] != 'pep':
+        if len(parts) != 2 or parts[0] != "pep":
             raise ValueError(f"Invalid PEP filename format: {file_path.name}")
 
         try:
@@ -69,10 +69,10 @@ class RSTParser:
         Note:
             Handles multi-line field values that are indented with spaces.
         """
-        lines = content.split('\n')
+        lines = content.split("\n")
         field_value_lines = []
         in_field = False
-        field_pattern = re.compile(rf'^{re.escape(field_name)}:\s*(.*)$', re.IGNORECASE)
+        field_pattern = re.compile(rf"^{re.escape(field_name)}:\s*(.*)$", re.IGNORECASE)
 
         for i, line in enumerate(lines):
             # Check if this line starts the field we're looking for
@@ -88,7 +88,7 @@ class RSTParser:
             # If we're in a field, check for continuation lines
             if in_field:
                 # Continuation lines start with whitespace
-                if line and (line[0] == ' ' or line[0] == '\t'):
+                if line and (line[0] == " " or line[0] == "\t"):
                     field_value_lines.append(line.strip())
                 else:
                     # We've reached the end of this field
@@ -98,7 +98,7 @@ class RSTParser:
             return None
 
         # Join multi-line values
-        return ' '.join(field_value_lines)
+        return " ".join(field_value_lines)
 
     def _parse_authors(self, author_string: str) -> List[str]:
         """
@@ -115,10 +115,10 @@ class RSTParser:
             -> ["Barry Warsaw", "Jeremy Hylton"]
         """
         # Remove email addresses (text in angle brackets)
-        author_string = re.sub(r'<[^>]+>', '', author_string)
+        author_string = re.sub(r"<[^>]+>", "", author_string)
 
         # Split by comma
-        authors = [author.strip() for author in author_string.split(',')]
+        authors = [author.strip() for author in author_string.split(",")]
 
         # Filter out empty strings
         authors = [author for author in authors if author]
@@ -143,7 +143,7 @@ class RSTParser:
 
         # Read file content
         try:
-            content = file_path.read_text(encoding='utf-8')
+            content = file_path.read_text(encoding="utf-8")
         except Exception as e:
             logger.error(f"Failed to read file {file_path}: {e}")
             raise
@@ -160,19 +160,27 @@ class RSTParser:
 
         # Validate required fields
         if not title:
-            raise ValueError(f"Missing required field 'Title' in PEP {pep_number} ({file_path})")
+            raise ValueError(
+                f"Missing required field 'Title' in PEP {pep_number} ({file_path})"
+            )
         if not status:
-            raise ValueError(f"Missing required field 'Status' in PEP {pep_number} ({file_path})")
+            raise ValueError(
+                f"Missing required field 'Status' in PEP {pep_number} ({file_path})"
+            )
         if not pep_type:
-            raise ValueError(f"Missing required field 'Type' in in PEP {pep_number} ({file_path})")
+            raise ValueError(
+                f"Missing required field 'Type' in in PEP {pep_number} ({file_path})"
+            )
         if not author_string:
-            raise ValueError(f"Missing required field 'Author' in in PEP {pep_number} ({file_path})")
+            raise ValueError(
+                f"Missing required field 'Author' in in PEP {pep_number} ({file_path})"
+            )
 
         # Parse authors
         authors = self._parse_authors(author_string)
 
         # Handle empty Created field
-        if created is not None and created.strip() == '':
+        if created is not None and created.strip() == "":
             created = None
 
         metadata = PEPMetadata(
@@ -181,7 +189,7 @@ class RSTParser:
             status=status,
             type=pep_type,
             created=created,
-            authors=authors
+            authors=authors,
         )
 
         logger.debug(f"Successfully parsed PEP {pep_number}: {title}")
@@ -213,9 +221,6 @@ class RSTParser:
                 errors += 1
                 continue
 
-        logger.info(
-            f"Parsed {len(results)} PEPs successfully, "
-            f"{errors} files failed"
-        )
+        logger.info(f"Parsed {len(results)} PEPs successfully, {errors} files failed")
 
         return results

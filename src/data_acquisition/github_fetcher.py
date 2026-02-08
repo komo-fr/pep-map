@@ -12,6 +12,7 @@ logger = logging.getLogger(__name__)
 
 DEFAULT_TIMEOUT = 60
 
+
 class PEPFetcher:
     """Fetcher for downloading and extracting PEP files from GitHub."""
 
@@ -80,7 +81,7 @@ class PEPFetcher:
             extract_to_resolved = extract_to.resolve()
 
             # Validate all file paths before extraction (Zip Slip protection)
-            with zipfile.ZipFile(zip_path, 'r') as zf:
+            with zipfile.ZipFile(zip_path, "r") as zf:
                 for member in zf.namelist():
                     # Resolve the full path and check it's within extract_to
                     member_path = (extract_to / member).resolve()
@@ -126,7 +127,7 @@ class PEPFetcher:
         for file_path in repo_path.glob("pep-*.rst"):
             # Extract PEP number from filename (e.g., pep-0001.rst -> 1)
             try:
-                pep_number = int(file_path.stem.split('-')[1])
+                pep_number = int(file_path.stem.split("-")[1])
                 # Exclude PEP 0 (table of contents)
                 if pep_number != 0:
                     pep_files.append(file_path)
@@ -135,7 +136,7 @@ class PEPFetcher:
                 continue
 
         # Sort by PEP number
-        pep_files.sort(key=lambda p: int(p.stem.split('-')[1]))
+        pep_files.sort(key=lambda p: int(p.stem.split("-")[1]))
 
         logger.info(f"Found {len(pep_files)} PEP files")
         return pep_files

@@ -179,7 +179,7 @@ Content here
             status="Draft",
             type="Process",
             created="01-Jan-2020",
-            authors=["Author One", "Author Two"]
+            authors=["Author One", "Author Two"],
         )
 
         assert metadata.pep_number == 1
@@ -197,7 +197,7 @@ Content here
             status="Active",
             type="Informational",
             created=None,
-            authors=["Author"]
+            authors=["Author"],
         )
 
         assert metadata.created is None

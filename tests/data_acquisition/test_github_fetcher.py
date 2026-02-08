@@ -41,8 +41,8 @@ class TestPEPFetcher:
 
         # Create zip file
         zip_path = temp_dir / "test.zip"
-        with zipfile.ZipFile(zip_path, 'w') as zf:
-            for file in pep_dir.rglob('*'):
+        with zipfile.ZipFile(zip_path, "w") as zf:
+            for file in pep_dir.rglob("*"):
                 if file.is_file():
                     arcname = file.relative_to(temp_dir)
                     zf.write(file, arcname)
@@ -60,7 +60,7 @@ class TestPEPFetcher:
         mock_response.content = b"fake zip content"
         mock_response.raise_for_status = Mock()
 
-        with patch('requests.get', return_value=mock_response) as mock_get:
+        with patch("requests.get", return_value=mock_response) as mock_get:
             result = fetcher.download_repo(url, output_path)
 
             # Verify the download was called correctly
@@ -78,7 +78,9 @@ class TestPEPFetcher:
         output_path = temp_dir / "peps.zip"
 
         # Mock requests.get to raise an exception
-        with patch('requests.get', side_effect=requests.RequestException("Connection error")):
+        with patch(
+            "requests.get", side_effect=requests.RequestException("Connection error")
+        ):
             with pytest.raises(requests.RequestException):
                 fetcher.download_repo(url, output_path)
 
@@ -117,14 +119,14 @@ class TestPEPFetcher:
 
         # Verify we got the correct PEP files
         assert len(pep_files) == 3
-        pep_numbers = {int(f.stem.split('-')[1]) for f in pep_files}
+        pep_numbers = {int(f.stem.split("-")[1]) for f in pep_files}
         assert pep_numbers == {1, 8, 20}
 
         # Verify all returned files exist and have .rst extension
         for pep_file in pep_files:
             assert pep_file.exists()
-            assert pep_file.suffix == '.rst'
-            assert pep_file.name.startswith('pep-')
+            assert pep_file.suffix == ".rst"
+            assert pep_file.name.startswith("pep-")
 
     def test_get_pep_files_excludes_pep_0(self, fetcher, temp_dir):
         """Test that PEP 0 (table of contents) is excluded from the list."""
@@ -179,12 +181,12 @@ class TestPEPFetcher:
         mock_response.content = b"content"
         mock_response.raise_for_status = Mock()
 
-        with patch('requests.get', return_value=mock_response) as mock_get:
+        with patch("requests.get", return_value=mock_response) as mock_get:
             fetcher.download_repo(url, output_path, timeout=30)
 
             # Verify timeout was passed
-            assert 'timeout' in mock_get.call_args[1]
-            assert mock_get.call_args[1]['timeout'] == 30
+            assert "timeout" in mock_get.call_args[1]
+            assert mock_get.call_args[1]["timeout"] == 30
 
     def test_extract_zip_prevents_path_traversal(self, fetcher, temp_dir):
         """Test that path traversal in zip files is blocked (Zip Slip protection)."""
@@ -192,7 +194,7 @@ class TestPEPFetcher:
         malicious_zip = temp_dir / "malicious.zip"
         extract_to = temp_dir / "extracted"
 
-        with zipfile.ZipFile(malicious_zip, 'w') as zf:
+        with zipfile.ZipFile(malicious_zip, "w") as zf:
             # Try to write outside the extraction directory using relative paths
             zf.writestr("../../../etc/passwd", "malicious content")
             zf.writestr("normal.txt", "normal content")
@@ -207,7 +209,7 @@ class TestPEPFetcher:
         malicious_zip = temp_dir / "malicious_absolute.zip"
         extract_to = temp_dir / "extracted"
 
-        with zipfile.ZipFile(malicious_zip, 'w') as zf:
+        with zipfile.ZipFile(malicious_zip, "w") as zf:
             # Try to write to an absolute path
             zf.writestr("/tmp/malicious.txt", "malicious content")
 
@@ -221,7 +223,7 @@ class TestPEPFetcher:
         safe_zip = temp_dir / "safe.zip"
         extract_to = temp_dir / "extracted"
 
-        with zipfile.ZipFile(safe_zip, 'w') as zf:
+        with zipfile.ZipFile(safe_zip, "w") as zf:
             # These should all be safe paths within the extraction directory
             zf.writestr("peps-main/peps/pep-0001.rst", "PEP content")
             zf.writestr("peps-main/peps/subfolder/file.txt", "nested content")
@@ -243,7 +245,7 @@ class TestPEPFetcher:
         malicious_zip = temp_dir / "malicious_symlink.zip"
         extract_to = temp_dir / "extracted"
 
-        with zipfile.ZipFile(malicious_zip, 'w') as zf:
+        with zipfile.ZipFile(malicious_zip, "w") as zf:
             # Try to create a file with a name that looks like a symlink traversal
             zf.writestr("link/../../../etc/passwd", "malicious content")
 
