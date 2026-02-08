@@ -7,7 +7,7 @@ import logging
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 from src.data_acquisition.github_fetcher import PEPFetcher
 from src.data_acquisition.rst_parser import PEPMetadata, RSTParser
@@ -82,7 +82,7 @@ def save_metadata_json(metadata: Dict, output_path: Path) -> None:
     logger.info(f"Successfully saved metadata to {output_path}")
 
 
-def parse_arguments(args: List[str] = None) -> argparse.Namespace:
+def parse_arguments(args: Optional[List[str]] = None) -> argparse.Namespace:
     """
     Parse command-line arguments.
 
