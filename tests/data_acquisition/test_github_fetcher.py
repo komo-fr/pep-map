@@ -184,3 +184,68 @@ class TestPEPFetcher:
             # Verify timeout was passed
             assert 'timeout' in mock_get.call_args[1]
             assert mock_get.call_args[1]['timeout'] == 30
+
+    def test_extract_zip_prevents_path_traversal(self, fetcher, temp_dir):
+        """Test that path traversal in zip files is blocked (Zip Slip protection)."""
+        # Create a malicious zip file with path traversal attempts
+        malicious_zip = temp_dir / "malicious.zip"
+        extract_to = temp_dir / "extracted"
+
+        with zipfile.ZipFile(malicious_zip, 'w') as zf:
+            # Try to write outside the extraction directory using relative paths
+            zf.writestr("../../../etc/passwd", "malicious content")
+            zf.writestr("normal.txt", "normal content")
+
+        # Should raise ValueError when detecting path traversal
+        with pytest.raises(ValueError, match="path traversal"):
+            fetcher.extract_zip(malicious_zip, extract_to)
+
+    def test_extract_zip_prevents_absolute_path(self, fetcher, temp_dir):
+        """Test that absolute paths in zip files are blocked."""
+        # Create a malicious zip file with absolute path
+        malicious_zip = temp_dir / "malicious_absolute.zip"
+        extract_to = temp_dir / "extracted"
+
+        with zipfile.ZipFile(malicious_zip, 'w') as zf:
+            # Try to write to an absolute path
+            zf.writestr("/tmp/malicious.txt", "malicious content")
+
+        # Should raise ValueError when detecting path traversal
+        with pytest.raises(ValueError, match="path traversal"):
+            fetcher.extract_zip(malicious_zip, extract_to)
+
+    def test_extract_zip_allows_safe_nested_paths(self, fetcher, temp_dir):
+        """Test that safe nested paths within extraction directory are allowed."""
+        # Create a zip file with safe nested paths
+        safe_zip = temp_dir / "safe.zip"
+        extract_to = temp_dir / "extracted"
+
+        with zipfile.ZipFile(safe_zip, 'w') as zf:
+            # These should all be safe paths within the extraction directory
+            zf.writestr("peps-main/peps/pep-0001.rst", "PEP content")
+            zf.writestr("peps-main/peps/subfolder/file.txt", "nested content")
+            zf.writestr("file.txt", "root file")
+
+        # Should extract successfully without raising errors
+        result = fetcher.extract_zip(safe_zip, extract_to)
+
+        # Verify extraction was successful
+        assert result.exists()
+        assert (result / "peps-main" / "peps" / "pep-0001.rst").exists()
+        assert (result / "peps-main" / "peps" / "subfolder" / "file.txt").exists()
+        assert (result / "file.txt").exists()
+
+    def test_extract_zip_prevents_symlink_path_traversal(self, fetcher, temp_dir):
+        """Test that symlinks attempting path traversal are blocked."""
+        # Note: This test may behave differently on different platforms
+        # Some zip implementations normalize symlinks, others preserve them
+        malicious_zip = temp_dir / "malicious_symlink.zip"
+        extract_to = temp_dir / "extracted"
+
+        with zipfile.ZipFile(malicious_zip, 'w') as zf:
+            # Try to create a file with a name that looks like a symlink traversal
+            zf.writestr("link/../../../etc/passwd", "malicious content")
+
+        # Should raise ValueError when detecting path traversal
+        with pytest.raises(ValueError, match="path traversal"):
+            fetcher.extract_zip(malicious_zip, extract_to)

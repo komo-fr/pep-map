@@ -1,6 +1,7 @@
 """GitHub fetcher for downloading and extracting PEP repository."""
 
 import logging
+import os
 import shutil
 import zipfile
 from pathlib import Path
@@ -56,7 +57,7 @@ class PEPFetcher:
 
     def extract_zip(self, zip_path: Path, extract_to: Path) -> Path:
         """
-        Extract zip file to specified directory.
+        Extract zip file to specified directory with path traversal protection.
 
         Args:
             zip_path: Path to the zip file
@@ -67,6 +68,7 @@ class PEPFetcher:
 
         Raises:
             zipfile.BadZipFile: If the file is not a valid zip file
+            ValueError: If the zip file contains path traversal attempts (Zip Slip attack)
         """
         logger.info(f"Extracting {zip_path} to {extract_to}")
 
@@ -74,8 +76,27 @@ class PEPFetcher:
             # Ensure extraction directory exists
             extract_to.mkdir(parents=True, exist_ok=True)
 
-            # Extract zip file
+            # Resolve the extraction directory to its absolute path
+            extract_to_resolved = extract_to.resolve()
+
+            # Validate all file paths before extraction (Zip Slip protection)
             with zipfile.ZipFile(zip_path, 'r') as zf:
+                for member in zf.namelist():
+                    # Resolve the full path and check it's within extract_to
+                    member_path = (extract_to / member).resolve()
+
+                    # Check if the resolved path is within the extraction directory
+                    # Use os.sep to ensure proper path separator handling
+                    try:
+                        member_path.relative_to(extract_to_resolved)
+                    except ValueError:
+                        # relative_to() raises ValueError if member_path is not relative to extract_to_resolved
+                        logger.error(f"Path traversal attempt detected: {member}")
+                        raise ValueError(
+                            f"Attempted path traversal in zip file: {member}"
+                        )
+
+                # If all paths are safe, extract
                 zf.extractall(extract_to)
 
             logger.info(f"Successfully extracted to {extract_to}")
