@@ -1,7 +1,6 @@
 """GitHub fetcher for downloading and extracting PEP repository."""
 
 import logging
-import os
 import shutil
 import zipfile
 from pathlib import Path
