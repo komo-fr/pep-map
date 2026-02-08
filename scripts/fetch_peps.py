@@ -2,11 +2,12 @@
 
 import argparse
 import csv
+import json
 import logging
 import sys
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
-from typing import List
+from typing import Dict, List
 
 # Add parent directory to path to import src modules
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -59,6 +60,29 @@ def save_to_csv(data: List[PEPMetadata], output_path: Path) -> None:
             })
 
     logger.info(f"Successfully saved to {output_path}")
+
+
+def save_metadata_json(metadata: Dict, output_path: Path) -> None:
+    """
+    Save metadata to JSON file.
+
+    Args:
+        metadata: Dictionary containing metadata (fetched_at, source_url, etc.)
+        output_path: Path where to save the JSON file
+
+    Note:
+        JSON is formatted with indentation for readability.
+    """
+    logger.info(f"Saving metadata to {output_path}")
+
+    # Ensure parent directory exists
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+
+    # Write JSON file with indentation
+    with open(output_path, 'w', encoding='utf-8') as jsonfile:
+        json.dump(metadata, jsonfile, indent=2, ensure_ascii=False)
+
+    logger.info(f"Successfully saved metadata to {output_path}")
 
 
 def parse_arguments(args: List[str] = None) -> argparse.Namespace:
@@ -130,11 +154,14 @@ def main() -> int:
         raw_dir.mkdir(parents=True, exist_ok=True)
         output_dir.mkdir(parents=True, exist_ok=True)
 
-        # Generate timestamped filenames
+        # Generate timestamp for raw files (still need this for temp files)
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         zip_path = raw_dir / f"peps_{timestamp}.zip"
         extract_dir = raw_dir / f"peps_extracted_{timestamp}"
-        csv_path = output_dir / f"peps_metadata_{timestamp}.csv"
+
+        # Fixed output filenames (no timestamp)
+        csv_path = output_dir / "peps_metadata.csv"
+        metadata_path = output_dir / "metadata.json"
 
         # Step 1: Download PEP repository
         logger.info("Step 1/4: Downloading PEP repository...")
@@ -169,9 +196,20 @@ def main() -> int:
         pep_metadata = parser.parse_multiple_peps(pep_files)
         logger.info(f"Successfully parsed {len(pep_metadata)} PEPs")
 
-        # Step 4: Save to CSV
-        logger.info("Step 4/4: Saving to CSV...")
+        # Step 4: Save to CSV and JSON
+        logger.info("Step 4/4: Saving data...")
+
+        # Save CSV
+        logger.info("Saving CSV file...")
         save_to_csv(pep_metadata, csv_path)
+
+        # Create and save metadata JSON
+        logger.info("Saving metadata JSON...")
+        metadata = {
+            "fetched_at": datetime.now(timezone.utc).isoformat(),
+            "source_url": url
+        }
+        save_metadata_json(metadata, metadata_path)
 
         # Clean up raw files if not keeping
         if not args.keep_raw:
@@ -190,6 +228,8 @@ def main() -> int:
         logger.info("="*60)
         logger.info(f"Total PEPs processed: {len(pep_metadata)}")
         logger.info(f"Output CSV file: {csv_path}")
+        logger.info(f"Metadata JSON file: {metadata_path}")
+        logger.info(f"Fetched at: {metadata['fetched_at']}")
         logger.info("="*60)
 
         return 0
