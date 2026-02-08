@@ -11,6 +11,7 @@ import requests
 
 logger = logging.getLogger(__name__)
 
+DEFAULT_TIMEOUT = 60
 
 class PEPFetcher:
     """Fetcher for downloading and extracting PEP files from GitHub."""
@@ -20,7 +21,7 @@ class PEPFetcher:
         pass
 
     def download_repo(
-        self, url: str, output_path: Path, timeout: int = 60
+        self, url: str, output_path: Path, timeout: int = DEFAULT_TIMEOUT
     ) -> Path:
         """
         Download PEP repository zip file from GitHub.

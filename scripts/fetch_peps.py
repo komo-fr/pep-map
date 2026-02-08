@@ -14,6 +14,7 @@ from src.data_acquisition.rst_parser import PEPMetadata, RSTParser
 
 logger = logging.getLogger(__name__)
 
+PEP_REPO_URL = "https://github.com/python/peps/archive/refs/heads/main.zip"
 
 def save_to_csv(data: List[PEPMetadata], output_path: Path) -> None:
     """
@@ -162,8 +163,7 @@ def main() -> int:
 
         # Step 1: Download PEP repository
         logger.info("Step 1/4: Downloading PEP repository...")
-        url = "https://github.com/python/peps/archive/refs/heads/main.zip"
-        fetcher.download_repo(url, zip_path)
+        fetcher.download_repo(PEP_REPO_URL, zip_path)
         logger.info(f"Downloaded to {zip_path}")
 
         # Step 2: Extract zip file

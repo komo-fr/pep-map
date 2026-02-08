@@ -9,6 +9,7 @@ import pytest
 import requests
 
 from src.data_acquisition.github_fetcher import PEPFetcher
+from scripts.fetch_peps import PEP_REPO_URL
 
 
 class TestPEPFetcher:
@@ -50,7 +51,7 @@ class TestPEPFetcher:
 
     def test_download_peps_repo_success(self, fetcher, temp_dir):
         """Test successful download of PEP repository zip."""
-        url = "https://github.com/python/peps/archive/refs/heads/main.zip"
+        url = PEP_REPO_URL
         output_path = temp_dir / "peps.zip"
 
         # Mock the requests.get call
@@ -170,7 +171,7 @@ class TestPEPFetcher:
 
     def test_download_with_timeout(self, fetcher, temp_dir):
         """Test download with timeout setting."""
-        url = "https://github.com/python/peps/archive/refs/heads/main.zip"
+        url = PEP_REPO_URL
         output_path = temp_dir / "peps.zip"
 
         mock_response = Mock()
