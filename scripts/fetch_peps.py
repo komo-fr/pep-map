@@ -16,6 +16,7 @@ logger = logging.getLogger(__name__)
 
 PEP_REPO_URL = "https://github.com/python/peps/archive/refs/heads/main.zip"
 
+
 def save_to_csv(data: List[PEPMetadata], output_path: Path) -> None:
     """
     Save PEP metadata to CSV file.
@@ -34,28 +35,30 @@ def save_to_csv(data: List[PEPMetadata], output_path: Path) -> None:
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
     # Define CSV headers
-    fieldnames = ['pep_number', 'title', 'status', 'type', 'created', 'authors']
+    fieldnames = ["pep_number", "title", "status", "type", "created", "authors"]
 
     # Write CSV file
-    with open(output_path, 'w', encoding='utf-8', newline='') as csvfile:
+    with open(output_path, "w", encoding="utf-8", newline="") as csvfile:
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         writer.writeheader()
 
         for pep in data:
             # Join multiple authors with semicolon
-            authors_str = '; '.join(pep.authors)
+            authors_str = "; ".join(pep.authors)
 
             # Handle None created field
-            created_str = pep.created if pep.created is not None else ''
+            created_str = pep.created if pep.created is not None else ""
 
-            writer.writerow({
-                'pep_number': pep.pep_number,
-                'title': pep.title,
-                'status': pep.status,
-                'type': pep.type,
-                'created': created_str,
-                'authors': authors_str
-            })
+            writer.writerow(
+                {
+                    "pep_number": pep.pep_number,
+                    "title": pep.title,
+                    "status": pep.status,
+                    "type": pep.type,
+                    "created": created_str,
+                    "authors": authors_str,
+                }
+            )
 
     logger.info(f"Successfully saved to {output_path}")
 
@@ -77,7 +80,7 @@ def save_metadata_json(metadata: Dict, output_path: Path) -> None:
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
     # Write JSON file with indentation
-    with open(output_path, 'w', encoding='utf-8') as jsonfile:
+    with open(output_path, "w", encoding="utf-8") as jsonfile:
         json.dump(metadata, jsonfile, indent=2, ensure_ascii=False)
 
     logger.info(f"Successfully saved metadata to {output_path}")
@@ -94,26 +97,24 @@ def parse_arguments(args: Optional[List[str]] = None) -> argparse.Namespace:
         Parsed arguments as Namespace object
     """
     parser = argparse.ArgumentParser(
-        description='Fetch and parse PEP metadata from GitHub repository'
+        description="Fetch and parse PEP metadata from GitHub repository"
     )
 
     parser.add_argument(
-        '--output-dir',
+        "--output-dir",
         type=str,
-        default='data/processed',
-        help='Output directory for processed CSV file (default: data/processed)'
+        default="data/processed",
+        help="Output directory for processed CSV file (default: data/processed)",
     )
 
     parser.add_argument(
-        '--keep-raw',
-        action='store_true',
-        help='Keep raw downloaded files (default: delete after processing)'
+        "--keep-raw",
+        action="store_true",
+        help="Keep raw downloaded files (default: delete after processing)",
     )
 
     parser.add_argument(
-        '--verbose',
-        action='store_true',
-        help='Enable verbose logging output'
+        "--verbose", action="store_true", help="Enable verbose logging output"
     )
 
     return parser.parse_args(args)
@@ -132,8 +133,7 @@ def main() -> int:
     # Set up logging
     log_level = logging.DEBUG if args.verbose else logging.INFO
     logging.basicConfig(
-        level=log_level,
-        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+        level=log_level, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
     )
 
     logger.info("Starting PEP metadata fetch and parse")
@@ -204,7 +204,7 @@ def main() -> int:
         logger.info("Saving metadata JSON...")
         metadata = {
             "fetched_at": datetime.now(timezone.utc).isoformat(),
-            "source_url": url
+            "source_url": PEP_REPO_URL,
         }
         save_metadata_json(metadata, metadata_path)
 
@@ -215,19 +215,19 @@ def main() -> int:
             fetcher.cleanup(extract_dir)
             logger.info("Cleanup complete")
         else:
-            logger.info(f"Keeping raw files (--keep-raw flag set)")
+            logger.info("Keeping raw files (--keep-raw flag set)")
             logger.info(f"  Zip file: {zip_path}")
             logger.info(f"  Extracted: {extract_dir}")
 
         # Summary
-        logger.info("\n" + "="*60)
+        logger.info("\n" + "=" * 60)
         logger.info("SUCCESS: PEP metadata fetch complete")
-        logger.info("="*60)
+        logger.info("=" * 60)
         logger.info(f"Total PEPs processed: {len(pep_metadata)}")
         logger.info(f"Output CSV file: {csv_path}")
         logger.info(f"Metadata JSON file: {metadata_path}")
         logger.info(f"Fetched at: {metadata['fetched_at']}")
-        logger.info("="*60)
+        logger.info("=" * 60)
 
         return 0
 
