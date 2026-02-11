@@ -35,7 +35,17 @@ def save_to_csv(data: List[PEPMetadata], output_path: Path) -> None:
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
     # Define CSV headers
-    fieldnames = ["pep_number", "title", "status", "type", "created", "authors"]
+    fieldnames = [
+        "pep_number",
+        "title",
+        "status",
+        "type",
+        "created",
+        "authors",
+        "topic",
+        "requires",
+        "replaces",
+    ]
 
     # Write CSV file
     with open(output_path, "w", encoding="utf-8", newline="") as csvfile:
@@ -46,8 +56,21 @@ def save_to_csv(data: List[PEPMetadata], output_path: Path) -> None:
             # Join multiple authors with semicolon
             authors_str = "; ".join(pep.authors)
 
+            # Join multiple topics with semicolon
+            topic_str = "; ".join(pep.topic) if pep.topic else ""
+
             # Handle None created field
             created_str = pep.created if pep.created is not None else ""
+
+            # Join multiple requires with semicolon
+            requires_str = (
+                "; ".join(str(req) for req in pep.requires) if pep.requires else ""
+            )
+
+            # Join multiple replaces with semicolon
+            replaces_str = (
+                "; ".join(str(rep) for rep in pep.replaces) if pep.replaces else ""
+            )
 
             writer.writerow(
                 {
@@ -57,6 +80,9 @@ def save_to_csv(data: List[PEPMetadata], output_path: Path) -> None:
                     "type": pep.type,
                     "created": created_str,
                     "authors": authors_str,
+                    "topic": topic_str,
+                    "requires": requires_str,
+                    "replaces": replaces_str,
                 }
             )
 
