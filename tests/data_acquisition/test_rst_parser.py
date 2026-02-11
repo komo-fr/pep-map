@@ -404,3 +404,116 @@ Content here
         )
 
         assert metadata.requires is None
+
+    def test_parse_replaces_single(self, parser, fixtures_dir):
+        """Test parsing PEP with single Replaces PEP."""
+        pep_file = fixtures_dir / "pep-with-replaces-single.rst"
+        metadata = parser.parse_pep_file(pep_file)
+
+        assert metadata.replaces is not None
+        assert len(metadata.replaces) == 1
+        assert 102 in metadata.replaces
+        assert isinstance(metadata.replaces[0], int)
+
+    def test_parse_replaces_multiple(self, parser, fixtures_dir):
+        """Test parsing PEP with multiple Replaces PEPs."""
+        pep_file = fixtures_dir / "pep-with-replaces-multiple.rst"
+        metadata = parser.parse_pep_file(pep_file)
+
+        assert metadata.replaces is not None
+        assert len(metadata.replaces) == 2
+        assert 245 in metadata.replaces
+        assert 246 in metadata.replaces
+        # すべて整数型であることを確認
+        assert all(isinstance(rep, int) for rep in metadata.replaces)
+
+    def test_parse_replaces_not_present(self, parser, fixtures_dir):
+        """Test parsing PEP without Replaces field returns None."""
+        pep_file = fixtures_dir / "pep-0001.rst"
+        metadata = parser.parse_pep_file(pep_file)
+
+        # Replacesフィールドがない場合はNoneが返される
+        assert metadata.replaces is None
+
+    def test_parse_replaces_invalid(self, parser, fixtures_dir):
+        """Test parsing PEP with invalid Replaces value raises error."""
+        pep_file = fixtures_dir / "pep-with-replaces-invalid.rst"
+
+        # 不正なPEP番号が含まれる場合はValueErrorが発生
+        with pytest.raises(ValueError) as excinfo:
+            parser.parse_pep_file(pep_file)
+
+        assert "Invalid PEP number in Replaces field" in str(excinfo.value)
+
+    def test_parse_replaces_peps_method(self, parser):
+        """Test _parse_replaces_peps method parses PEP numbers correctly."""
+        # 単一PEP番号
+        replaces = parser._parse_replaces_peps("102")
+        assert replaces == [102]
+
+        # 複数PEP番号（カンマとスペース区切り）
+        replaces = parser._parse_replaces_peps("245, 246")
+        assert replaces == [245, 246]
+
+        # 複数PEP番号（前後に余分なスペースがある場合）
+        replaces = parser._parse_replaces_peps("  382  ,  402  ")
+        assert replaces == [382, 402]
+
+        # 空文字列
+        replaces = parser._parse_replaces_peps("")
+        assert replaces == []
+
+        # すべて整数型であることを確認
+        replaces = parser._parse_replaces_peps("245, 246")
+        assert all(isinstance(rep, int) for rep in replaces)
+
+    def test_parse_replaces_peps_method_invalid(self, parser):
+        """Test _parse_replaces_peps method with invalid PEP numbers raises error."""
+        # 文字列が含まれる場合
+        with pytest.raises(ValueError) as excinfo:
+            parser._parse_replaces_peps("invalid")
+        assert "Invalid PEP number" in str(excinfo.value)
+
+        # 混在する場合
+        with pytest.raises(ValueError) as excinfo:
+            parser._parse_replaces_peps("123, invalid, 456")
+        assert "Invalid PEP number" in str(excinfo.value)
+
+        # 負の数
+        with pytest.raises(ValueError) as excinfo:
+            parser._parse_replaces_peps("-1")
+        assert "Invalid PEP number" in str(excinfo.value)
+
+        # 小数
+        with pytest.raises(ValueError) as excinfo:
+            parser._parse_replaces_peps("123.45")
+        assert "Invalid PEP number" in str(excinfo.value)
+
+    def test_pep_metadata_with_replaces(self):
+        """Test PEPMetadata dataclass with replaces field."""
+        metadata = PEPMetadata(
+            pep_number=8009,
+            title="Test PEP",
+            status="Accepted",
+            type="Standards Track",
+            created="01-Jan-2020",
+            authors=["Test Author"],
+            replaces=[245, 246],
+        )
+
+        assert metadata.replaces == [245, 246]
+        assert all(isinstance(rep, int) for rep in metadata.replaces)
+
+    def test_pep_metadata_without_replaces(self):
+        """Test PEPMetadata dataclass without replaces field."""
+        metadata = PEPMetadata(
+            pep_number=1,
+            title="Test PEP",
+            status="Active",
+            type="Process",
+            created="01-Jan-2020",
+            authors=["Test Author"],
+            replaces=None,
+        )
+
+        assert metadata.replaces is None

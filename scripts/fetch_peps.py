@@ -44,6 +44,7 @@ def save_to_csv(data: List[PEPMetadata], output_path: Path) -> None:
         "authors",
         "topic",
         "requires",
+        "replaces",
     ]
 
     # Write CSV file
@@ -62,7 +63,14 @@ def save_to_csv(data: List[PEPMetadata], output_path: Path) -> None:
             created_str = pep.created if pep.created is not None else ""
 
             # Join multiple requires with semicolon
-            requires_str = "; ".join(str(req) for req in pep.requires) if pep.requires else ""
+            requires_str = (
+                "; ".join(str(req) for req in pep.requires) if pep.requires else ""
+            )
+
+            # Join multiple replaces with semicolon
+            replaces_str = (
+                "; ".join(str(rep) for rep in pep.replaces) if pep.replaces else ""
+            )
 
             writer.writerow(
                 {
@@ -74,6 +82,7 @@ def save_to_csv(data: List[PEPMetadata], output_path: Path) -> None:
                     "authors": authors_str,
                     "topic": topic_str,
                     "requires": requires_str,
+                    "replaces": replaces_str,
                 }
             )
 

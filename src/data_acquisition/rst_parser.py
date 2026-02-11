@@ -21,6 +21,7 @@ class PEPMetadata:
     authors: List[str]
     topic: Optional[List[str]] = None
     requires: Optional[List[int]] = None
+    replaces: Optional[List[int]] = None
 
 
 class RSTParser:
@@ -203,6 +204,57 @@ class RSTParser:
 
         return requires_peps
 
+    def _parse_replaces_peps(self, replaces_string: str) -> List[int]:
+        """
+        Parse Replaces field string into a list of PEP numbers.
+
+        Args:
+            replaces_string: String containing one or more PEP numbers
+
+        Returns:
+            List of PEP numbers as integers
+
+        Raises:
+            ValueError: If any PEP number is invalid (not a positive integer)
+
+        Example:
+            "102" -> [102]
+            "245, 246" -> [245, 246]
+            "" -> []
+        """
+        # 空文字列の場合は空リストを返す
+        if not replaces_string or not replaces_string.strip():
+            return []
+
+        # カンマで分割
+        pep_strings = [pep.strip() for pep in replaces_string.split(",")]
+
+        # 空文字列を除外
+        pep_strings = [pep for pep in pep_strings if pep]
+
+        # 各PEP番号を整数に変換
+        replaces_peps = []
+        for pep_str in pep_strings:
+            try:
+                pep_num = int(pep_str)
+                # PEP番号は正の整数でなければならない
+                if pep_num <= 0:
+                    raise ValueError(
+                        f"Invalid PEP number in Replaces field: '{pep_str}' "
+                        f"(PEP numbers must be positive integers)"
+                    )
+                replaces_peps.append(pep_num)
+            except ValueError as e:
+                # int()の変換エラーまたは負の数エラー
+                if "Invalid PEP number" in str(e):
+                    raise  # 既に適切なエラーメッセージがある場合は再送出
+                raise ValueError(
+                    f"Invalid PEP number in Replaces field: '{pep_str}' "
+                    f"(must be a positive integer)"
+                ) from e
+
+        return replaces_peps
+
     def parse_pep_file(self, file_path: Path) -> PEPMetadata:
         """
         Parse a PEP RST file and extract metadata.
@@ -239,6 +291,7 @@ class RSTParser:
         # Extract optional fields
         topic_string = self.parse_header_field(content, "Topic")
         requires_string = self.parse_header_field(content, "Requires")
+        replaces_string = self.parse_header_field(content, "Replaces")
 
         # Validate required fields
         if not title:
@@ -283,6 +336,20 @@ class RSTParser:
                     f"Failed to parse Requires field in PEP {pep_number} ({file_path}): {e}"
                 ) from e
 
+        # Parse replaced PEPs (optional field)
+        replaces = None
+        if replaces_string is not None:
+            try:
+                replaces = self._parse_replaces_peps(replaces_string)
+                # 空リストの場合はNoneとして扱う
+                if not replaces:
+                    replaces = None
+            except ValueError as e:
+                # Replaces フィールドのパースエラーはPEP全体のエラーとして扱う
+                raise ValueError(
+                    f"Failed to parse Replaces field in PEP {pep_number} ({file_path}): {e}"
+                ) from e
+
         # Handle empty Created field
         if created is not None and created.strip() == "":
             created = None
@@ -296,6 +363,7 @@ class RSTParser:
             authors=authors,
             topic=topic,
             requires=requires,
+            replaces=replaces,
         )
 
         logger.debug(f"Successfully parsed PEP {pep_number}: {title}")
