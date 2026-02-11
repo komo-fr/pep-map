@@ -186,15 +186,9 @@ class RSTParser:
                 pep_num = int(pep_str)
                 # PEP番号は正の整数でなければならない
                 if pep_num <= 0:
-                    raise ValueError(
-                        f"Invalid PEP number in {field_name} field: '{pep_str}' "
-                        f"(PEP numbers must be positive integers)"
-                    )
+                    raise ValueError("non-positive PEP number")
                 pep_numbers.append(pep_num)
             except ValueError as e:
-                # int()の変換エラーまたは負の数エラー
-                if "Invalid PEP number" in str(e):
-                    raise  # 既に適切なエラーメッセージがある場合は再送出
                 raise ValueError(
                     f"Invalid PEP number in {field_name} field: '{pep_str}' "
                     f"(must be a positive integer)"
