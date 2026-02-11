@@ -19,6 +19,7 @@ class PEPMetadata:
     type: str
     created: Optional[str]  # ISO format date string, or None if empty
     authors: List[str]
+    topic: Optional[List[str]] = None
 
 
 class RSTParser:
@@ -28,32 +29,30 @@ class RSTParser:
         """Initialize RSTParser."""
         pass
 
-    def extract_pep_number(self, file_path: Path) -> int:
+    def extract_pep_number(self, content: str) -> int:
         """
-        Extract PEP number from filename.
+        Extract PEP number from RST metadata (the value after "PEP:").
 
         Args:
-            file_path: Path to the PEP file (e.g., pep-0001.rst)
+            content: The RST file content (must contain a "PEP: N" header field)
 
         Returns:
             PEP number as integer
 
         Raises:
-            ValueError: If filename doesn't match expected pattern
-            IndexError: If filename structure is invalid
+            ValueError: If "PEP:" field is missing or value is not a valid integer
         """
-        # Expected format: pep-NNNN.rst
-        filename = file_path.stem  # Get filename without extension
-        parts = filename.split("-")
-
-        if len(parts) != 2 or parts[0] != "pep":
-            raise ValueError(f"Invalid PEP filename format: {file_path.name}")
+        pep_value = self.parse_header_field(content, "PEP")
+        if pep_value is None or not pep_value.strip():
+            raise ValueError("Missing or empty 'PEP:' field in document")
 
         try:
-            pep_number = int(parts[1])
+            pep_number = int(pep_value.strip())
             return pep_number
         except ValueError as e:
-            raise ValueError(f"Could not parse PEP number from {file_path.name}") from e
+            raise ValueError(
+                f"Could not parse PEP number from 'PEP:' field (got: {pep_value!r})"
+            ) from e
 
     def parse_header_field(self, content: str, field_name: str) -> Optional[str]:
         """
@@ -125,6 +124,33 @@ class RSTParser:
 
         return authors
 
+    def _parse_topics(self, topic_string: str) -> List[str]:
+        """
+        Parse topic string into a list of topics.
+
+        Args:
+            topic_string: String containing one or more topics
+
+        Returns:
+            List of topic names
+
+        Example:
+            "Governance, Packaging" -> ["Governance", "Packaging"]
+            "Typing" -> ["Typing"]
+            "" -> []
+        """
+        # 空文字列の場合は空リストを返す
+        if not topic_string or not topic_string.strip():
+            return []
+
+        # カンマで分割
+        topics = [topic.strip() for topic in topic_string.split(",")]
+
+        # 空文字列を除外
+        topics = [topic for topic in topics if topic]
+
+        return topics
+
     def parse_pep_file(self, file_path: Path) -> PEPMetadata:
         """
         Parse a PEP RST file and extract metadata.
@@ -148,8 +174,8 @@ class RSTParser:
             logger.error(f"Failed to read file {file_path}: {e}")
             raise
 
-        # Extract PEP number from filename
-        pep_number = self.extract_pep_number(file_path)
+        # Extract PEP number from document metadata (PEP: field)
+        pep_number = self.extract_pep_number(content)
 
         # Extract required fields
         title = self.parse_header_field(content, "Title")
@@ -157,6 +183,9 @@ class RSTParser:
         pep_type = self.parse_header_field(content, "Type")
         created = self.parse_header_field(content, "Created")
         author_string = self.parse_header_field(content, "Author")
+
+        # Extract optional fields
+        topic_string = self.parse_header_field(content, "Topic")
 
         # Validate required fields
         if not title:
@@ -179,6 +208,14 @@ class RSTParser:
         # Parse authors
         authors = self._parse_authors(author_string)
 
+        # Parse topics (optional field)
+        topic = None
+        if topic_string is not None:
+            topic = self._parse_topics(topic_string)
+            # 空リストの場合はNoneとして扱う
+            if not topic:
+                topic = None
+
         # Handle empty Created field
         if created is not None and created.strip() == "":
             created = None
@@ -190,6 +227,7 @@ class RSTParser:
             type=pep_type,
             created=created,
             authors=authors,
+            topic=topic,
         )
 
         logger.debug(f"Successfully parsed PEP {pep_number}: {title}")

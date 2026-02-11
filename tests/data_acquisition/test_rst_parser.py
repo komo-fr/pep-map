@@ -56,26 +56,34 @@ class TestRSTParser:
         with pytest.raises((ValueError, KeyError)):
             parser.parse_pep_file(pep_file)
 
-    def test_parse_pep_number_from_filename(self, parser, fixtures_dir):
-        """Test extracting PEP number from filename."""
+    def test_parse_pep_number_from_metadata(self, parser, fixtures_dir):
+        """Test extracting PEP number from document metadata (PEP: field)."""
         pep_file = fixtures_dir / "pep-0001.rst"
-        pep_number = parser.extract_pep_number(pep_file)
+        content = pep_file.read_text(encoding="utf-8")
+        pep_number = parser.extract_pep_number(content)
         assert pep_number == 1
 
         pep_file = fixtures_dir / "pep-0008.rst"
-        pep_number = parser.extract_pep_number(pep_file)
+        content = pep_file.read_text(encoding="utf-8")
+        pep_number = parser.extract_pep_number(content)
         assert pep_number == 8
 
         pep_file = fixtures_dir / "pep-9999.rst"
-        pep_number = parser.extract_pep_number(pep_file)
+        content = pep_file.read_text(encoding="utf-8")
+        pep_number = parser.extract_pep_number(content)
         assert pep_number == 9999
 
-    def test_parse_pep_number_from_filename_invalid(self, parser, fixtures_dir):
-        """Test extracting PEP number from invalid filename raises error."""
-        invalid_file = fixtures_dir / "invalid-name.rst"
+    def test_parse_pep_number_from_metadata_missing(self, parser):
+        """Test extracting PEP number when PEP: field is missing raises error."""
+        content = "Title: Some PEP\nAuthor: Someone\nStatus: Draft\n"
+        with pytest.raises(ValueError, match="Missing or empty"):
+            parser.extract_pep_number(content)
 
-        with pytest.raises((ValueError, IndexError)):
-            parser.extract_pep_number(invalid_file)
+    def test_parse_pep_number_from_metadata_invalid(self, parser):
+        """Test extracting PEP number when PEP: value is not a number raises error."""
+        content = "PEP: not-a-number\nTitle: Test\nAuthor: X\nStatus: Draft\n"
+        with pytest.raises(ValueError, match="Could not parse PEP number"):
+            parser.extract_pep_number(content)
 
     def test_parse_multiple_authors(self, parser, fixtures_dir):
         """Test parsing PEP with multiple authors."""
@@ -209,3 +217,76 @@ Content here
 
         assert metadata.status == "Draft"
         assert metadata.type == "Standards Track"
+
+    def test_parse_topic_single(self, parser, fixtures_dir):
+        """Test parsing PEP with single topic."""
+        pep_file = fixtures_dir / "pep-with-topic-single.rst"
+        metadata = parser.parse_pep_file(pep_file)
+
+        assert metadata.topic is not None
+        assert len(metadata.topic) == 1
+        assert "Governance" in metadata.topic
+
+    def test_parse_topic_multiple(self, parser, fixtures_dir):
+        """Test parsing PEP with multiple topics."""
+        pep_file = fixtures_dir / "pep-with-topic-multiple.rst"
+        metadata = parser.parse_pep_file(pep_file)
+
+        assert metadata.topic is not None
+        assert len(metadata.topic) == 2
+        assert "Governance" in metadata.topic
+        assert "Packaging" in metadata.topic
+
+    def test_parse_topic_not_present(self, parser, fixtures_dir):
+        """Test parsing PEP without Topic field returns None."""
+        pep_file = fixtures_dir / "pep-0001.rst"
+        metadata = parser.parse_pep_file(pep_file)
+
+        # Topicフィールドがない場合はNoneが返される
+        assert metadata.topic is None
+
+    def test_parse_topics_method(self, parser):
+        """Test _parse_topics method parses topic string correctly."""
+        # 単一トピック
+        topics = parser._parse_topics("Governance")
+        assert topics == ["Governance"]
+
+        # 複数トピック（カンマとスペース区切り）
+        topics = parser._parse_topics("Governance, Packaging")
+        assert topics == ["Governance", "Packaging"]
+
+        # 複数トピック（前後に余分なスペースがある場合）
+        topics = parser._parse_topics("  Governance  ,  Typing  ")
+        assert topics == ["Governance", "Typing"]
+
+        # 空文字列
+        topics = parser._parse_topics("")
+        assert topics == []
+
+    def test_pep_metadata_with_topic(self):
+        """Test PEPMetadata dataclass with topic field."""
+        metadata = PEPMetadata(
+            pep_number=8001,
+            title="Test PEP",
+            status="Draft",
+            type="Process",
+            created="01-Jan-2020",
+            authors=["Test Author"],
+            topic=["Governance", "Packaging"],
+        )
+
+        assert metadata.topic == ["Governance", "Packaging"]
+
+    def test_pep_metadata_without_topic(self):
+        """Test PEPMetadata dataclass without topic field."""
+        metadata = PEPMetadata(
+            pep_number=1,
+            title="Test PEP",
+            status="Draft",
+            type="Process",
+            created="01-Jan-2020",
+            authors=["Test Author"],
+            topic=None,
+        )
+
+        assert metadata.topic is None
