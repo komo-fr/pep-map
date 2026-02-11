@@ -291,11 +291,11 @@ class RSTParser:
             )
         if not pep_type:
             raise ValueError(
-                f"Missing required field 'Type' in in PEP {pep_number} ({file_path})"
+                f"Missing required field 'Type' in PEP {pep_number} ({file_path})"
             )
         if not author_string:
             raise ValueError(
-                f"Missing required field 'Author' in in PEP {pep_number} ({file_path})"
+                f"Missing required field 'Author' in PEP {pep_number} ({file_path})"
             )
 
         # Parse authors
