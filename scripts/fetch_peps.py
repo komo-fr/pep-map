@@ -43,6 +43,7 @@ def save_to_csv(data: List[PEPMetadata], output_path: Path) -> None:
         "created",
         "authors",
         "topic",
+        "requires",
     ]
 
     # Write CSV file
@@ -60,6 +61,9 @@ def save_to_csv(data: List[PEPMetadata], output_path: Path) -> None:
             # Handle None created field
             created_str = pep.created if pep.created is not None else ""
 
+            # Join multiple requires with semicolon
+            requires_str = "; ".join(str(req) for req in pep.requires) if pep.requires else ""
+
             writer.writerow(
                 {
                     "pep_number": pep.pep_number,
@@ -69,6 +73,7 @@ def save_to_csv(data: List[PEPMetadata], output_path: Path) -> None:
                     "created": created_str,
                     "authors": authors_str,
                     "topic": topic_str,
+                    "requires": requires_str,
                 }
             )
 
