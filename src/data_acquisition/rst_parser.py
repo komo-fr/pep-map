@@ -153,6 +153,55 @@ class RSTParser:
 
         return topics
 
+    def _parse_pep_numbers(self, pep_string: str, field_name: str) -> List[int]:
+        """
+        Parse a comma-separated string of PEP numbers into a list of integers.
+
+        Args:
+            pep_string: String containing one or more PEP numbers
+            field_name: Name of the field (for error messages)
+
+        Returns:
+            List of PEP numbers as integers
+
+        Raises:
+            ValueError: If any PEP number is invalid (not a positive integer)
+
+        Example:
+            "234" -> [234]
+            "440, 508, 518" -> [440, 508, 518]
+            "" -> []
+        """
+        # 空文字列の場合は空リストを返す
+        if not pep_string or not pep_string.strip():
+            return []
+
+        # カンマで分割し、空文字列を除外
+        pep_strings = [pep.strip() for pep in pep_string.split(",") if pep.strip()]
+
+        # 各PEP番号を整数に変換
+        pep_numbers = []
+        for pep_str in pep_strings:
+            try:
+                pep_num = int(pep_str)
+                # PEP番号は正の整数でなければならない
+                if pep_num <= 0:
+                    raise ValueError(
+                        f"Invalid PEP number in {field_name} field: '{pep_str}' "
+                        f"(PEP numbers must be positive integers)"
+                    )
+                pep_numbers.append(pep_num)
+            except ValueError as e:
+                # int()の変換エラーまたは負の数エラー
+                if "Invalid PEP number" in str(e):
+                    raise  # 既に適切なエラーメッセージがある場合は再送出
+                raise ValueError(
+                    f"Invalid PEP number in {field_name} field: '{pep_str}' "
+                    f"(must be a positive integer)"
+                ) from e
+
+        return pep_numbers
+
     def _parse_requires_peps(self, requires_string: str) -> List[int]:
         """
         Parse Requires field string into a list of PEP numbers.
@@ -171,38 +220,7 @@ class RSTParser:
             "440, 508, 518" -> [440, 508, 518]
             "" -> []
         """
-        # 空文字列の場合は空リストを返す
-        if not requires_string or not requires_string.strip():
-            return []
-
-        # カンマで分割
-        pep_strings = [pep.strip() for pep in requires_string.split(",")]
-
-        # 空文字列を除外
-        pep_strings = [pep for pep in pep_strings if pep]
-
-        # 各PEP番号を整数に変換
-        requires_peps = []
-        for pep_str in pep_strings:
-            try:
-                pep_num = int(pep_str)
-                # PEP番号は正の整数でなければならない
-                if pep_num <= 0:
-                    raise ValueError(
-                        f"Invalid PEP number in Requires field: '{pep_str}' "
-                        f"(PEP numbers must be positive integers)"
-                    )
-                requires_peps.append(pep_num)
-            except ValueError as e:
-                # int()の変換エラーまたは負の数エラー
-                if "Invalid PEP number" in str(e):
-                    raise  # 既に適切なエラーメッセージがある場合は再送出
-                raise ValueError(
-                    f"Invalid PEP number in Requires field: '{pep_str}' "
-                    f"(must be a positive integer)"
-                ) from e
-
-        return requires_peps
+        return self._parse_pep_numbers(requires_string, "Requires")
 
     def _parse_replaces_peps(self, replaces_string: str) -> List[int]:
         """
@@ -222,38 +240,7 @@ class RSTParser:
             "245, 246" -> [245, 246]
             "" -> []
         """
-        # 空文字列の場合は空リストを返す
-        if not replaces_string or not replaces_string.strip():
-            return []
-
-        # カンマで分割
-        pep_strings = [pep.strip() for pep in replaces_string.split(",")]
-
-        # 空文字列を除外
-        pep_strings = [pep for pep in pep_strings if pep]
-
-        # 各PEP番号を整数に変換
-        replaces_peps = []
-        for pep_str in pep_strings:
-            try:
-                pep_num = int(pep_str)
-                # PEP番号は正の整数でなければならない
-                if pep_num <= 0:
-                    raise ValueError(
-                        f"Invalid PEP number in Replaces field: '{pep_str}' "
-                        f"(PEP numbers must be positive integers)"
-                    )
-                replaces_peps.append(pep_num)
-            except ValueError as e:
-                # int()の変換エラーまたは負の数エラー
-                if "Invalid PEP number" in str(e):
-                    raise  # 既に適切なエラーメッセージがある場合は再送出
-                raise ValueError(
-                    f"Invalid PEP number in Replaces field: '{pep_str}' "
-                    f"(must be a positive integer)"
-                ) from e
-
-        return replaces_peps
+        return self._parse_pep_numbers(replaces_string, "Replaces")
 
     def parse_pep_file(self, file_path: Path) -> PEPMetadata:
         """
