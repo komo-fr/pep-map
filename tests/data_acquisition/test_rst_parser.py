@@ -290,3 +290,117 @@ Content here
         )
 
         assert metadata.topic is None
+
+    def test_parse_requires_single(self, parser, fixtures_dir):
+        """Test parsing PEP with single Requires PEP."""
+        pep_file = fixtures_dir / "pep-with-requires-single.rst"
+        metadata = parser.parse_pep_file(pep_file)
+
+        assert metadata.requires is not None
+        assert len(metadata.requires) == 1
+        assert 234 in metadata.requires
+        assert isinstance(metadata.requires[0], int)
+
+    def test_parse_requires_multiple(self, parser, fixtures_dir):
+        """Test parsing PEP with multiple Requires PEPs."""
+        pep_file = fixtures_dir / "pep-with-requires-multiple.rst"
+        metadata = parser.parse_pep_file(pep_file)
+
+        assert metadata.requires is not None
+        assert len(metadata.requires) == 3
+        assert 440 in metadata.requires
+        assert 508 in metadata.requires
+        assert 518 in metadata.requires
+        # すべて整数型であることを確認
+        assert all(isinstance(req, int) for req in metadata.requires)
+
+    def test_parse_requires_not_present(self, parser, fixtures_dir):
+        """Test parsing PEP without Requires field returns None."""
+        pep_file = fixtures_dir / "pep-0001.rst"
+        metadata = parser.parse_pep_file(pep_file)
+
+        # Requiresフィールドがない場合はNoneが返される
+        assert metadata.requires is None
+
+    def test_parse_requires_invalid(self, parser, fixtures_dir):
+        """Test parsing PEP with invalid Requires value raises error."""
+        pep_file = fixtures_dir / "pep-with-requires-invalid.rst"
+
+        # 不正なPEP番号が含まれる場合はValueErrorが発生
+        with pytest.raises(ValueError) as excinfo:
+            parser.parse_pep_file(pep_file)
+
+        assert "Invalid PEP number in Requires field" in str(excinfo.value)
+
+    def test_parse_requires_peps_method(self, parser):
+        """Test _parse_requires_peps method parses PEP numbers correctly."""
+        # 単一PEP番号
+        requires = parser._parse_requires_peps("234")
+        assert requires == [234]
+
+        # 複数PEP番号（カンマとスペース区切り）
+        requires = parser._parse_requires_peps("440, 508, 518")
+        assert requires == [440, 508, 518]
+
+        # 複数PEP番号（前後に余分なスペースがある場合）
+        requires = parser._parse_requires_peps("  256  ,  257  ")
+        assert requires == [256, 257]
+
+        # 空文字列
+        requires = parser._parse_requires_peps("")
+        assert requires == []
+
+        # すべて整数型であることを確認
+        requires = parser._parse_requires_peps("440, 508, 518")
+        assert all(isinstance(req, int) for req in requires)
+
+    def test_parse_requires_peps_method_invalid(self, parser):
+        """Test _parse_requires_peps method with invalid PEP numbers raises error."""
+        # 文字列が含まれる場合
+        with pytest.raises(ValueError) as excinfo:
+            parser._parse_requires_peps("invalid")
+        assert "Invalid PEP number" in str(excinfo.value)
+
+        # 混在する場合
+        with pytest.raises(ValueError) as excinfo:
+            parser._parse_requires_peps("123, invalid, 456")
+        assert "Invalid PEP number" in str(excinfo.value)
+
+        # 負の数
+        with pytest.raises(ValueError) as excinfo:
+            parser._parse_requires_peps("-1")
+        assert "Invalid PEP number" in str(excinfo.value)
+
+        # 小数
+        with pytest.raises(ValueError) as excinfo:
+            parser._parse_requires_peps("123.45")
+        assert "Invalid PEP number" in str(excinfo.value)
+
+    def test_pep_metadata_with_requires(self):
+        """Test PEPMetadata dataclass with requires field."""
+        metadata = PEPMetadata(
+            pep_number=8006,
+            title="Test PEP",
+            status="Draft",
+            type="Standards Track",
+            created="01-Jan-2020",
+            authors=["Test Author"],
+            requires=[440, 508, 518],
+        )
+
+        assert metadata.requires == [440, 508, 518]
+        assert all(isinstance(req, int) for req in metadata.requires)
+
+    def test_pep_metadata_without_requires(self):
+        """Test PEPMetadata dataclass without requires field."""
+        metadata = PEPMetadata(
+            pep_number=1,
+            title="Test PEP",
+            status="Draft",
+            type="Process",
+            created="01-Jan-2020",
+            authors=["Test Author"],
+            requires=None,
+        )
+
+        assert metadata.requires is None
