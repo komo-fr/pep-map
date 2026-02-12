@@ -199,3 +199,19 @@ class CitationExtractor:
             df = df.astype({"source": int, "target": int, "count": int})
 
         return df
+
+    def save_to_csv(self, citations_df: pd.DataFrame, output_path: Path) -> None:
+        """Save citations DataFrame to CSV file.
+
+        Args:
+            citations_df: DataFrame with columns: source, target, count
+            output_path: Path where the CSV file should be saved
+
+        Note:
+            Creates parent directories if they don't exist.
+        """
+        # Create parent directory if it doesn't exist
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+
+        # Save to CSV without index
+        citations_df.to_csv(output_path, index=False)

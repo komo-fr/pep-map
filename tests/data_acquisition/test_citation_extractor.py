@@ -286,3 +286,61 @@ Content here."""
 
         # But should still have the correct columns
         assert list(result.columns) == ["source", "target", "count"]
+
+    # Phase 7: CSV output tests (Red)
+
+    def test_save_to_csv(self, extractor, parser, fixtures_dir, tmp_path):
+        """Test saving citations to CSV file."""
+        # Extract citations from a file
+        file_paths = [fixtures_dir / "pep-with-citations.rst"]
+        df = extractor.extract_from_multiple_files(file_paths, parser)
+
+        # Save to CSV
+        output_path = tmp_path / "citations.csv"
+        extractor.save_to_csv(df, output_path)
+
+        # Check that file was created
+        assert output_path.exists()
+
+        # Read the CSV file and verify content
+        saved_df = pd.read_csv(output_path)
+        assert len(saved_df) == len(df)
+        assert list(saved_df.columns) == ["source", "target", "count"]
+
+    def test_csv_format(self, extractor, parser, fixtures_dir, tmp_path):
+        """Test CSV file format."""
+        # Create a simple DataFrame
+        file_paths = [fixtures_dir / "pep-with-citations.rst"]
+        df = extractor.extract_from_multiple_files(file_paths, parser)
+
+        # Save to CSV
+        output_path = tmp_path / "citations.csv"
+        extractor.save_to_csv(df, output_path)
+
+        # Read the file as text to check format
+        with output_path.open("r") as f:
+            lines = f.readlines()
+
+        # Check header line
+        assert lines[0].strip() == "source,target,count"
+
+        # Check that there's no index column (no leading numbers)
+        if len(lines) > 1:
+            # Data lines should not start with a number followed by comma
+            # They should start with source PEP number
+            assert not lines[1].startswith("0,")
+
+    def test_save_to_csv_create_directory(self, extractor, tmp_path):
+        """Test that parent directory is created if it doesn't exist."""
+        # Create a nested path that doesn't exist
+        output_path = tmp_path / "nested" / "dir" / "citations.csv"
+
+        # Create an empty DataFrame
+        df = pd.DataFrame(columns=["source", "target", "count"])
+
+        # Save should create the directory
+        extractor.save_to_csv(df, output_path)
+
+        # Check that file and directories were created
+        assert output_path.exists()
+        assert output_path.parent.exists()
