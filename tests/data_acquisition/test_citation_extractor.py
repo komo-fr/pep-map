@@ -82,6 +82,116 @@ class TestCitationExtractor:
 
     def test_extract_mixed_pep_role_and_plain_text(self, extractor):
         """Test that plain text PEP citations are extracted but not from within :pep: roles."""
-        content = "See :pep:`style guide <8>` and PEP 8 for details."
+        content = "See :pep:`style guide <8>` and PEP 257 for details."
         result = extractor.extract_citations(content)
-        assert result == [8, 8]
+        assert result == [8, 257]
+
+    # Phase 3: Additional citation patterns - URL PEP number tests (Red)
+
+    def test_extract_pep_from_url(self, extractor):
+        """Test extracting PEP citation from URL."""
+        content = "See https://peps.python.org/pep-0257/ for details."
+        result = extractor.extract_citations(content)
+        assert result == [257]
+
+        content = "See https://peps.python.org/pep-8001/ for details."
+        result = extractor.extract_citations(content)
+        assert result == [8001]
+
+    def test_extract_pep_from_url_with_anchor(self, extractor):
+        """Test extracting PEP citation from URL with anchor."""
+        content = ".. _link: https://peps.python.org/pep-0445/#gil-free"
+        result = extractor.extract_citations(content)
+        assert result == [445]
+
+    def test_extract_multiple_peps_from_urls(self, extractor):
+        """Test extracting multiple PEP citations from URLs."""
+        content = "See https://peps.python.org/pep-0008/ and https://peps.python.org/pep-0257/#specification for details."
+        result = extractor.extract_citations(content)
+        assert result == [8, 257]
+
+    # Phase 3: Additional citation patterns - Requires field tests (Red)
+
+    def test_extract_requires_single(self, extractor, parser):
+        """Test extracting single PEP from Requires field."""
+        content = """PEP: 1234
+Title: Test PEP
+Author: Test Author
+Status: Draft
+Type: Standards Track
+Created: 01-Jan-2020
+Requires: 532
+
+Content here."""
+        result = extractor.extract_requires_field(content, parser)
+        assert result == [532]
+
+    def test_extract_requires_multiple(self, extractor, parser):
+        """Test extracting multiple PEPs from Requires field."""
+        content = """PEP: 1234
+Title: Test PEP
+Author: Test Author
+Status: Draft
+Type: Standards Track
+Created: 01-Jan-2020
+Requires: 489, 573, 630
+
+Content here."""
+        result = extractor.extract_requires_field(content, parser)
+        assert result == [489, 573, 630]
+
+    def test_extract_requires_none(self, extractor, parser):
+        """Test extracting from content without Requires field."""
+        content = """PEP: 1234
+Title: Test PEP
+Author: Test Author
+Status: Draft
+Type: Standards Track
+Created: 01-Jan-2020
+
+Content here."""
+        result = extractor.extract_requires_field(content, parser)
+        assert result == []
+
+    # Phase 3: Additional citation patterns - Replaces field tests (Red)
+
+    def test_extract_replaces_single(self, extractor, parser):
+        """Test extracting single PEP from Replaces field."""
+        content = """PEP: 1234
+Title: Test PEP
+Author: Test Author
+Status: Draft
+Type: Standards Track
+Created: 01-Jan-2020
+Replaces: 123
+
+Content here."""
+        result = extractor.extract_replaces_field(content, parser)
+        assert result == [123]
+
+    def test_extract_replaces_multiple(self, extractor, parser):
+        """Test extracting multiple PEPs from Replaces field."""
+        content = """PEP: 1234
+Title: Test PEP
+Author: Test Author
+Status: Draft
+Type: Standards Track
+Created: 01-Jan-2020
+Replaces: 123, 456, 789
+
+Content here."""
+        result = extractor.extract_replaces_field(content, parser)
+        assert result == [123, 456, 789]
+
+    def test_extract_replaces_none(self, extractor, parser):
+        """Test extracting from content without Replaces field."""
+        content = """PEP: 1234
+Title: Test PEP
+Author: Test Author
+Status: Draft
+Type: Standards Track
+Created: 01-Jan-2020
+
+Content here."""
+        result = extractor.extract_replaces_field(content, parser)
+        assert result == []

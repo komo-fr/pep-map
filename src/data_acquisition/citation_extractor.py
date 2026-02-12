@@ -6,6 +6,8 @@ This module provides functionality to extract PEP citations from RST content.
 import re
 from typing import List
 
+from src.data_acquisition.rst_parser import RSTParser
+
 
 class CitationExtractor:
     """Extract PEP citations from RST content.
@@ -25,6 +27,8 @@ class CitationExtractor:
         # Compile regex pattern for plain text PEP NNN format (case-insensitive)
         # Use negative lookbehind to avoid matching within :pep: roles
         self.plain_text_pep_pattern = re.compile(r"(?<!`)PEP\s+(\d+)", re.IGNORECASE)
+        # Compile regex pattern for URL PEP format
+        self.url_pep_pattern = re.compile(r"https://peps\.python\.org/pep-0*(\d+)")
 
     def extract_citations(self, content: str) -> List[int]:
         """Extract cited PEP numbers from content.
@@ -34,6 +38,7 @@ class CitationExtractor:
         - Custom text :pep:`text <NNN>` pattern
         - Custom text with anchor :pep:`text <NNN#anchor>` pattern
         - Plain text PEP NNN pattern (case-insensitive)
+        - URL https://peps.python.org/pep-NNN/ pattern
 
         Args:
             content: RST content to extract citations from
@@ -58,4 +63,43 @@ class CitationExtractor:
             pep_number = int(match.group(1))
             citations.append(pep_number)
 
+        # Match URL https://peps.python.org/pep-NNN/ pattern
+        for match in self.url_pep_pattern.finditer(content):
+            pep_number = int(match.group(1))
+            citations.append(pep_number)
+
         return citations
+
+    def extract_requires_field(self, content: str, parser: RSTParser) -> List[int]:
+        """Extract PEP numbers from the Requires header field.
+
+        Args:
+            content: RST content to extract Requires field from
+            parser: RSTParser instance to use for parsing
+
+        Returns:
+            List of required PEP numbers as integers, or empty list if no Requires field
+        """
+        requires_value = parser.parse_header_field(content, "Requires")
+
+        if requires_value is None:
+            return []
+
+        return parser._parse_requires_peps(requires_value)
+
+    def extract_replaces_field(self, content: str, parser: RSTParser) -> List[int]:
+        """Extract PEP numbers from the Replaces header field.
+
+        Args:
+            content: RST content to extract Replaces field from
+            parser: RSTParser instance to use for parsing
+
+        Returns:
+            List of replaced PEP numbers as integers, or empty list if no Replaces field
+        """
+        replaces_value = parser.parse_header_field(content, "Replaces")
+
+        if replaces_value is None:
+            return []
+
+        return parser._parse_replaces_peps(replaces_value)
