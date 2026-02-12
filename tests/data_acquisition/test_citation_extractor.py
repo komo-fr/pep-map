@@ -195,3 +195,29 @@ Created: 01-Jan-2020
 Content here."""
         result = extractor.extract_replaces_field(content, parser)
         assert result == []
+
+    # Phase 4: File-based citation extraction tests (Red)
+
+    def test_extract_from_file(self, extractor, parser, fixtures_dir):
+        """Test extracting citations from a file."""
+        file_path = fixtures_dir / "pep-with-citations.rst"
+        result = extractor.extract_from_file(file_path, parser)
+
+        # Expected citations from pep-with-citations.rst (PEP 9999):
+        # - Requires: 489, 573
+        # - Replaces: 123, 456
+        # - Body citations: 8, 257, 20, 1, 3107, 484, 526, 445
+        expected = {9999: [1, 8, 20, 123, 257, 445, 456, 484, 489, 526, 573, 3107]}
+
+        assert 9999 in result
+        # Compare as sorted lists to ignore order
+        assert sorted(result[9999]) == sorted(expected[9999])
+
+    def test_exclude_self_reference(self, extractor, parser, fixtures_dir):
+        """Test that self-references are excluded from citations."""
+        file_path = fixtures_dir / "pep-0008.rst"
+        result = extractor.extract_from_file(file_path, parser)
+
+        # PEP 8 should not cite itself even if "PEP 8" appears in the text
+        assert 8 in result
+        assert 8 not in result[8]

@@ -4,7 +4,8 @@ This module provides functionality to extract PEP citations from RST content.
 """
 
 import re
-from typing import List
+from pathlib import Path
+from typing import Dict, List
 
 from src.data_acquisition.rst_parser import RSTParser
 
@@ -103,3 +104,43 @@ class CitationExtractor:
             return []
 
         return parser._parse_replaces_peps(replaces_value)
+
+    def extract_from_file(
+        self, file_path: Path, parser: RSTParser
+    ) -> Dict[int, List[int]]:
+        """Extract citations from a PEP file.
+
+        Args:
+            file_path: Path to the PEP RST file
+            parser: RSTParser instance to use for parsing
+
+        Returns:
+            Dictionary mapping source PEP number to list of cited PEP numbers
+            (excluding self-references)
+        """
+        # Read file content
+        content = file_path.read_text(encoding="utf-8")
+
+        # Extract source PEP number from the file
+        source_pep = parser.extract_pep_number(content)
+
+        # Extract citations from body
+        body_citations = self.extract_citations(content)
+
+        # Extract citations from Requires field
+        requires_citations = self.extract_requires_field(content, parser)
+
+        # Extract citations from Replaces field
+        replaces_citations = self.extract_replaces_field(content, parser)
+
+        # Combine all citations
+        all_citations = body_citations + requires_citations + replaces_citations
+
+        # Remove duplicates and exclude self-references
+        unique_citations = list(set(all_citations))
+        filtered_citations = [pep for pep in unique_citations if pep != source_pep]
+
+        # Sort for consistent output
+        filtered_citations.sort()
+
+        return {source_pep: filtered_citations}
