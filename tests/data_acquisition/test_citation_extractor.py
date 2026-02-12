@@ -207,11 +207,14 @@ Content here."""
         # - Requires: 489, 573
         # - Replaces: 123, 456
         # - Body citations: 8, 257, 20, 1, 3107, 484, 526, 445
-        expected = {9999: [1, 8, 20, 123, 257, 445, 456, 484, 489, 526, 573, 3107]}
+        expected_peps = [1, 8, 20, 123, 257, 445, 456, 484, 489, 526, 573, 3107]
 
         assert 9999 in result
-        # Compare as sorted lists to ignore order
-        assert sorted(result[9999]) == sorted(expected[9999])
+        # Check that all expected PEPs are present
+        assert sorted(result[9999].keys()) == sorted(expected_peps)
+        # Each PEP should have a count >= 1
+        for pep in expected_peps:
+            assert result[9999][pep] >= 1
 
     def test_exclude_self_reference(self, extractor, parser, fixtures_dir):
         """Test that self-references are excluded from citations."""
@@ -220,4 +223,15 @@ Content here."""
 
         # PEP 8 should not cite itself even if "PEP 8" appears in the text
         assert 8 in result
-        assert 8 not in result[8]
+        # Check that 8 is not in the cited PEPs (dict keys)
+        assert 8 not in result[8].keys()
+
+    # Phase 5: Citation counting tests (Red)
+
+    def test_count_multiple_citations_to_same_pep(self, extractor):
+        """Test counting multiple citations to the same PEP."""
+        content = "See :pep:`8` and :pep:`257`. Also PEP 8."
+        result = extractor.count_citations(content)
+
+        # PEP 8 is cited twice, PEP 257 once
+        assert result == {8: 2, 257: 1}

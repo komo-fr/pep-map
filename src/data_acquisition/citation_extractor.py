@@ -4,6 +4,7 @@ This module provides functionality to extract PEP citations from RST content.
 """
 
 import re
+from collections import Counter
 from pathlib import Path
 from typing import Dict, List
 
@@ -105,18 +106,30 @@ class CitationExtractor:
 
         return parser._parse_replaces_peps(replaces_value)
 
+    def count_citations(self, content: str) -> Dict[int, int]:
+        """Count citations in content.
+
+        Args:
+            content: RST content to count citations from
+
+        Returns:
+            Dictionary mapping PEP numbers to citation counts
+        """
+        citations = self.extract_citations(content)
+        return dict(Counter(citations))
+
     def extract_from_file(
         self, file_path: Path, parser: RSTParser
-    ) -> Dict[int, List[int]]:
-        """Extract citations from a PEP file.
+    ) -> Dict[int, Dict[int, int]]:
+        """Extract citations from a PEP file with counts.
 
         Args:
             file_path: Path to the PEP RST file
             parser: RSTParser instance to use for parsing
 
         Returns:
-            Dictionary mapping source PEP number to list of cited PEP numbers
-            (excluding self-references)
+            Dictionary mapping source PEP number to dictionary of cited PEP numbers
+            and their counts (excluding self-references)
         """
         # Read file content
         content = file_path.read_text(encoding="utf-8")
@@ -136,11 +149,11 @@ class CitationExtractor:
         # Combine all citations
         all_citations = body_citations + requires_citations + replaces_citations
 
-        # Remove duplicates and exclude self-references
-        unique_citations = list(set(all_citations))
-        filtered_citations = [pep for pep in unique_citations if pep != source_pep]
+        # Count citations using Counter
+        citation_counts = Counter(all_citations)
 
-        # Sort for consistent output
-        filtered_citations.sort()
+        # Exclude self-references
+        if source_pep in citation_counts:
+            del citation_counts[source_pep]
 
-        return {source_pep: filtered_citations}
+        return {source_pep: dict(citation_counts)}
