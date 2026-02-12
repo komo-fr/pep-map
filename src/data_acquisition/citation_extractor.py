@@ -8,6 +8,8 @@ from collections import Counter
 from pathlib import Path
 from typing import Dict, List
 
+import pandas as pd
+
 from src.data_acquisition.rst_parser import RSTParser
 
 
@@ -157,3 +159,43 @@ class CitationExtractor:
             del citation_counts[source_pep]
 
         return {source_pep: dict(citation_counts)}
+
+    def extract_from_multiple_files(
+        self, file_paths: List[Path], parser: RSTParser
+    ) -> pd.DataFrame:
+        """Extract citations from multiple PEP files.
+
+        Args:
+            file_paths: List of paths to PEP RST files
+            parser: RSTParser instance to use for parsing
+
+        Returns:
+            DataFrame with columns: source, target, count
+        """
+        # Prepare list to collect all citation records
+        records = []
+
+        # Process each file
+        for file_path in file_paths:
+            # Extract citations from the file
+            file_citations = self.extract_from_file(file_path, parser)
+
+            # Convert to DataFrame records
+            for source_pep, citations in file_citations.items():
+                for target_pep, count in citations.items():
+                    records.append(
+                        {"source": source_pep, "target": target_pep, "count": count}
+                    )
+
+        # Create DataFrame
+        if records:
+            df = pd.DataFrame(records)
+        else:
+            # Return empty DataFrame with correct columns
+            df = pd.DataFrame(columns=["source", "target", "count"])
+
+        # Ensure correct data types
+        if len(df) > 0:
+            df = df.astype({"source": int, "target": int, "count": int})
+
+        return df

@@ -2,6 +2,7 @@
 
 from pathlib import Path
 
+import pandas as pd
 import pytest
 
 from src.data_acquisition.citation_extractor import CitationExtractor
@@ -235,3 +236,53 @@ Content here."""
 
         # PEP 8 is cited twice, PEP 257 once
         assert result == {8: 2, 257: 1}
+
+    # Phase 6: Multiple file processing tests (Red)
+
+    def test_extract_from_multiple_files(self, extractor, parser, fixtures_dir):
+        """Test extracting citations from multiple files."""
+        file_paths = [
+            fixtures_dir / "pep-with-citations.rst",
+            fixtures_dir / "pep-0008.rst",
+        ]
+        result = extractor.extract_from_multiple_files(file_paths, parser)
+
+        # Result should be a DataFrame
+        assert isinstance(result, pd.DataFrame)
+
+        # DataFrame should have the expected columns
+        assert list(result.columns) == ["source", "target", "count"]
+
+        # DataFrame should contain data from both files
+        assert len(result) > 0
+
+        # Check that PEP 9999 citations are included
+        pep_9999_citations = result[result["source"] == 9999]
+        assert len(pep_9999_citations) > 0
+
+    def test_dataframe_structure(self, extractor, parser, fixtures_dir):
+        """Test that the DataFrame has correct structure."""
+        file_paths = [fixtures_dir / "pep-with-citations.rst"]
+        result = extractor.extract_from_multiple_files(file_paths, parser)
+
+        # Check column names
+        assert list(result.columns) == ["source", "target", "count"]
+
+        # Check data types - all should be integers
+        assert result["source"].dtype == int
+        assert result["target"].dtype == int
+        assert result["count"].dtype == int
+
+        # Check that all counts are positive
+        assert (result["count"] > 0).all()
+
+    def test_extract_from_empty_file_list(self, extractor, parser):
+        """Test extracting from an empty file list."""
+        result = extractor.extract_from_multiple_files([], parser)
+
+        # Result should be an empty DataFrame
+        assert isinstance(result, pd.DataFrame)
+        assert len(result) == 0
+
+        # But should still have the correct columns
+        assert list(result.columns) == ["source", "target", "count"]
