@@ -196,7 +196,7 @@ class RSTParser:
 
         return pep_numbers
 
-    def _parse_requires_peps(self, requires_string: str) -> List[int]:
+    def parse_requires_peps(self, requires_string: str) -> List[int]:
         """
         Parse Requires field string into a list of PEP numbers.
 
@@ -216,7 +216,7 @@ class RSTParser:
         """
         return self._parse_pep_numbers(requires_string, "Requires")
 
-    def _parse_replaces_peps(self, replaces_string: str) -> List[int]:
+    def parse_replaces_peps(self, replaces_string: str) -> List[int]:
         """
         Parse Replaces field string into a list of PEP numbers.
 
@@ -307,7 +307,7 @@ class RSTParser:
         requires = None
         if requires_string is not None:
             try:
-                requires = self._parse_requires_peps(requires_string)
+                requires = self.parse_requires_peps(requires_string)
                 # 空リストの場合はNoneとして扱う
                 if not requires:
                     requires = None
@@ -321,7 +321,7 @@ class RSTParser:
         replaces = None
         if replaces_string is not None:
             try:
-                replaces = self._parse_replaces_peps(replaces_string)
+                replaces = self.parse_replaces_peps(replaces_string)
                 # 空リストの場合はNoneとして扱う
                 if not replaces:
                     replaces = None

@@ -89,7 +89,7 @@ class CitationExtractor:
         if requires_value is None:
             return []
 
-        return parser._parse_requires_peps(requires_value)
+        return parser.parse_requires_peps(requires_value)
 
     def extract_replaces_field(self, content: str, parser: RSTParser) -> List[int]:
         """Extract PEP numbers from the Replaces header field.
@@ -106,7 +106,7 @@ class CitationExtractor:
         if replaces_value is None:
             return []
 
-        return parser._parse_replaces_peps(replaces_value)
+        return parser.parse_replaces_peps(replaces_value)
 
     def count_citations(self, content: str) -> Dict[int, int]:
         """Count citations in content.

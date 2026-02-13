@@ -335,45 +335,45 @@ Content here
     def test_parse_requires_peps_method(self, parser):
         """Test _parse_requires_peps method parses PEP numbers correctly."""
         # 単一PEP番号
-        requires = parser._parse_requires_peps("234")
+        requires = parser.parse_requires_peps("234")
         assert requires == [234]
 
         # 複数PEP番号（カンマとスペース区切り）
-        requires = parser._parse_requires_peps("440, 508, 518")
+        requires = parser.parse_requires_peps("440, 508, 518")
         assert requires == [440, 508, 518]
 
         # 複数PEP番号（前後に余分なスペースがある場合）
-        requires = parser._parse_requires_peps("  256  ,  257  ")
+        requires = parser.parse_requires_peps("  256  ,  257  ")
         assert requires == [256, 257]
 
         # 空文字列
-        requires = parser._parse_requires_peps("")
+        requires = parser.parse_requires_peps("")
         assert requires == []
 
         # すべて整数型であることを確認
-        requires = parser._parse_requires_peps("440, 508, 518")
+        requires = parser.parse_requires_peps("440, 508, 518")
         assert all(isinstance(req, int) for req in requires)
 
     def test_parse_requires_peps_method_invalid(self, parser):
         """Test _parse_requires_peps method with invalid PEP numbers raises error."""
         # 文字列が含まれる場合
         with pytest.raises(ValueError) as excinfo:
-            parser._parse_requires_peps("invalid")
+            parser.parse_requires_peps("invalid")
         assert "Invalid PEP number" in str(excinfo.value)
 
         # 混在する場合
         with pytest.raises(ValueError) as excinfo:
-            parser._parse_requires_peps("123, invalid, 456")
+            parser.parse_requires_peps("123, invalid, 456")
         assert "Invalid PEP number" in str(excinfo.value)
 
         # 負の数
         with pytest.raises(ValueError) as excinfo:
-            parser._parse_requires_peps("-1")
+            parser.parse_requires_peps("-1")
         assert "Invalid PEP number" in str(excinfo.value)
 
         # 小数
         with pytest.raises(ValueError) as excinfo:
-            parser._parse_requires_peps("123.45")
+            parser.parse_requires_peps("123.45")
         assert "Invalid PEP number" in str(excinfo.value)
 
     def test_pep_metadata_with_requires(self):
@@ -448,45 +448,45 @@ Content here
     def test_parse_replaces_peps_method(self, parser):
         """Test _parse_replaces_peps method parses PEP numbers correctly."""
         # 単一PEP番号
-        replaces = parser._parse_replaces_peps("102")
+        replaces = parser.parse_replaces_peps("102")
         assert replaces == [102]
 
         # 複数PEP番号（カンマとスペース区切り）
-        replaces = parser._parse_replaces_peps("245, 246")
+        replaces = parser.parse_replaces_peps("245, 246")
         assert replaces == [245, 246]
 
         # 複数PEP番号（前後に余分なスペースがある場合）
-        replaces = parser._parse_replaces_peps("  382  ,  402  ")
+        replaces = parser.parse_replaces_peps("  382  ,  402  ")
         assert replaces == [382, 402]
 
         # 空文字列
-        replaces = parser._parse_replaces_peps("")
+        replaces = parser.parse_replaces_peps("")
         assert replaces == []
 
         # すべて整数型であることを確認
-        replaces = parser._parse_replaces_peps("245, 246")
+        replaces = parser.parse_replaces_peps("245, 246")
         assert all(isinstance(rep, int) for rep in replaces)
 
     def test_parse_replaces_peps_method_invalid(self, parser):
         """Test _parse_replaces_peps method with invalid PEP numbers raises error."""
         # 文字列が含まれる場合
         with pytest.raises(ValueError) as excinfo:
-            parser._parse_replaces_peps("invalid")
+            parser.parse_replaces_peps("invalid")
         assert "Invalid PEP number" in str(excinfo.value)
 
         # 混在する場合
         with pytest.raises(ValueError) as excinfo:
-            parser._parse_replaces_peps("123, invalid, 456")
+            parser.parse_replaces_peps("123, invalid, 456")
         assert "Invalid PEP number" in str(excinfo.value)
 
         # 負の数
         with pytest.raises(ValueError) as excinfo:
-            parser._parse_replaces_peps("-1")
+            parser.parse_replaces_peps("-1")
         assert "Invalid PEP number" in str(excinfo.value)
 
         # 小数
         with pytest.raises(ValueError) as excinfo:
-            parser._parse_replaces_peps("123.45")
+            parser.parse_replaces_peps("123.45")
         assert "Invalid PEP number" in str(excinfo.value)
 
     def test_pep_metadata_with_replaces(self):
