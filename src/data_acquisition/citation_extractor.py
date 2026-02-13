@@ -34,7 +34,7 @@ class CitationExtractor:
         # Compile regex pattern for URL PEP format
         self.url_pep_pattern = re.compile(r"https://peps\.python\.org/pep-0*(\d+)")
 
-    def extract_citations(self, content: str) -> List[int]:
+    def extract_citations(self, content: str, exclude_self: bool = True) -> List[int]:
         """Extract cited PEP numbers from content.
 
         Supports the following patterns:
@@ -48,6 +48,7 @@ class CitationExtractor:
 
         Args:
             content: RST content to extract citations from
+            exclude_self: Whether to exclude self-references
 
         Returns:
             List of cited PEP numbers as integers
@@ -76,6 +77,13 @@ class CitationExtractor:
 
         citations += self._extract_requires_field(content)
         citations += self._extract_replaces_field(content)
+
+        # Exclude self-references
+        parser = RSTParser()
+        source_pep = parser.extract_pep_number(content)
+        if exclude_self and source_pep in citations:
+            citations.remove(source_pep)
+
         return citations
 
     def _extract_requires_field(self, content: str) -> List[int]:
@@ -112,19 +120,24 @@ class CitationExtractor:
 
         return parser.parse_replaces_peps(replaces_value)
 
-    def count_citations(self, content: str) -> Dict[int, int]:
+    def count_citations(
+        self, content: str, exclude_self: bool = True
+    ) -> Dict[int, int]:
         """Count citations in content.
 
         Args:
             content: RST content to count citations from
+            exclude_self: Whether to exclude self-references
 
         Returns:
             Dictionary mapping PEP numbers to citation counts
         """
-        citations = self.extract_citations(content)
+        citations = self.extract_citations(content, exclude_self=exclude_self)
         return dict(Counter(citations))
 
-    def extract_from_file(self, file_path: Path) -> Dict[int, Dict[int, int]]:
+    def extract_from_file(
+        self, file_path: Path, exclude_self: bool = True
+    ) -> Dict[int, Dict[int, int]]:
         """Extract citations from a PEP file with counts.
 
         Args:
@@ -142,14 +155,10 @@ class CitationExtractor:
         source_pep = parser.extract_pep_number(content)
 
         # Extract citations
-        citations = self.extract_citations(content)
+        citations = self.extract_citations(content, exclude_self)
 
         # Count citations using Counter
         citation_counts = Counter(citations)
-
-        # Exclude self-references
-        if source_pep in citation_counts:
-            del citation_counts[source_pep]
 
         return {source_pep: dict(citation_counts)}
 

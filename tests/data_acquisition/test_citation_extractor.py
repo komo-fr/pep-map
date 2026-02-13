@@ -25,39 +25,48 @@ class TestCitationExtractor:
 
     def test_extract_single_pep_role_citation(self, extractor):
         """Test extracting a single :pep: citation."""
-        content = "See :pep:`8` for details."
+        content = "PEP: 1234\n\nSee :pep:`8` for details."
         result = extractor.extract_citations(content)
         assert result == [8]
 
     def test_extract_multiple_pep_role_citations(self, extractor):
         """Test extracting multiple :pep: citations."""
-        content = "See :pep:`8` and :pep:`257`."
+        content = "PEP: 1234\n\nSee :pep:`8` and :pep:`257`."
         result = extractor.extract_citations(content)
         assert result == [8, 257]
 
     def test_extract_no_citations(self, extractor):
         """Test extracting from content with no citations."""
-        content = "This is a PEP without any citations."
+        content = "PEP: 1234\n\nThis is a PEP without any citations."
         result = extractor.extract_citations(content)
         assert result == []
+
+    def test_extract_citations_exclude_self(self, extractor):
+        """Test extracting citations and excluding self-references."""
+        content = "PEP: 8\n\nSee :pep:`8` and PEP 123for details."
+        result = extractor.extract_citations(content, exclude_self=True)
+        assert result == [123]
+
+        result = extractor.extract_citations(content, exclude_self=False)
+        assert result == [8, 123]
 
     # Phase 3: Additional citation patterns - Custom text PEP role tests (Red)
 
     def test_extract_pep_role_with_custom_text(self, extractor):
         """Test extracting :pep: citation with custom text."""
-        content = ":pep:`the style guide <8>` for details."
+        content = "PEP: 1234\n\n:pep:`the style guide <8>` for details."
         result = extractor.extract_citations(content)
         assert result == [8]
 
     def test_extract_pep_role_with_anchor(self, extractor):
         """Test extracting :pep: citation with custom text and anchor."""
-        content = ":pep:`PEP 1 <1#discussing-a-pep>` section"
+        content = "PEP: 1234\n\n:pep:`PEP 1 <1#discussing-a-pep>` section"
         result = extractor.extract_citations(content)
         assert result == [1]
 
     def test_extract_multiple_custom_pep_roles(self, extractor):
         """Test extracting multiple :pep: citations with custom text."""
-        content = ":pep:`style <8>` and :pep:`Type Hints <484>`"
+        content = "PEP: 1234\n\n:pep:`style <8>` and :pep:`Type Hints <484>`"
         result = extractor.extract_citations(content)
         assert result == [8, 484]
 
@@ -65,19 +74,19 @@ class TestCitationExtractor:
 
     def test_extract_pep_number_format(self, extractor):
         """Test extracting PEP citation in 'PEP NNN' format."""
-        content = "See PEP 8 for guidelines."
+        content = "PEP: 1234\n\nSee PEP 8 for guidelines."
         result = extractor.extract_citations(content)
         assert result == [8]
 
     def test_extract_pep_case_insensitive(self, extractor):
         """Test extracting PEP citation with case-insensitive matching."""
-        content = "See pep 8 for guidelines."
+        content = "PEP: 1234\n\nSee pep 8 for guidelines."
         result = extractor.extract_citations(content)
         assert result == [8]
 
     def test_extract_mixed_pep_role_and_plain_text(self, extractor):
         """Test that plain text PEP citations are extracted but not from within :pep: roles."""
-        content = "See :pep:`style guide <8>` and PEP 257 for details."
+        content = "PEP: 1234\n\nSee :pep:`style guide <8>` and PEP 257 for details."
         result = extractor.extract_citations(content)
         assert result == [8, 257]
 
@@ -85,23 +94,23 @@ class TestCitationExtractor:
 
     def test_extract_pep_from_url(self, extractor):
         """Test extracting PEP citation from URL."""
-        content = "See https://peps.python.org/pep-0257/ for details."
+        content = "PEP: 1234\n\nSee https://peps.python.org/pep-0257/ for details."
         result = extractor.extract_citations(content)
         assert result == [257]
 
-        content = "See https://peps.python.org/pep-8001/ for details."
+        content = "PEP: 1234\n\nSee https://peps.python.org/pep-8001/ for details."
         result = extractor.extract_citations(content)
         assert result == [8001]
 
     def test_extract_pep_from_url_with_anchor(self, extractor):
         """Test extracting PEP citation from URL with anchor."""
-        content = ".. _link: https://peps.python.org/pep-0445/#gil-free"
+        content = "PEP: 1234\n\n.. _link: https://peps.python.org/pep-0445/#gil-free"
         result = extractor.extract_citations(content)
         assert result == [445]
 
     def test_extract_multiple_peps_from_urls(self, extractor):
         """Test extracting multiple PEP citations from URLs."""
-        content = "See https://peps.python.org/pep-0008/ and https://peps.python.org/pep-0257/#specification for details."
+        content = "PEP: 1234\n\nSee https://peps.python.org/pep-0008/ and https://peps.python.org/pep-0257/#specification for details."
         result = extractor.extract_citations(content)
         assert result == [8, 257]
 
@@ -225,11 +234,22 @@ Content here."""
 
     def test_count_multiple_citations_to_same_pep(self, extractor):
         """Test counting multiple citations to the same PEP."""
-        content = "See :pep:`8` and :pep:`257`. Also PEP 8."
+        content = """PEP: 123
+See :pep:`8` and :pep:`257`. Also PEP 8.
+"""
         result = extractor.count_citations(content)
 
         # PEP 8 is cited twice, PEP 257 once
         assert result == {8: 2, 257: 1}
+
+    def test_count_citations_exclude_self(self, extractor):
+        """Test counting citations and excluding self-references."""
+        content = """PEP: 8\n\nSee :pep:`8` and PEP 123 for details."""
+        result = extractor.count_citations(content, exclude_self=True)
+        assert result == {123: 1}
+
+        result = extractor.count_citations(content, exclude_self=False)
+        assert result == {8: 1, 123: 1}
 
     def test_count(self, extractor):
         content = """
