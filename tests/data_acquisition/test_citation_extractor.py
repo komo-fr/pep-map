@@ -6,7 +6,6 @@ import pandas as pd
 import pytest
 
 from src.data_acquisition.citation_extractor import CitationExtractor
-from src.data_acquisition.rst_parser import RSTParser
 
 
 class TestCitationExtractor:
@@ -16,11 +15,6 @@ class TestCitationExtractor:
     def extractor(self):
         """Create a CitationExtractor instance for testing."""
         return CitationExtractor()
-
-    @pytest.fixture
-    def parser(self):
-        """Create an RSTParser instance for testing."""
-        return RSTParser()
 
     @pytest.fixture
     def fixtures_dir(self):
@@ -113,7 +107,7 @@ class TestCitationExtractor:
 
     # Phase 3: Additional citation patterns - Requires field tests (Red)
 
-    def test_extract_requires_single(self, extractor, parser):
+    def test_extract_requires_single(self, extractor):
         """Test extracting single PEP from Requires field."""
         content = """PEP: 1234
 Title: Test PEP
@@ -124,10 +118,10 @@ Created: 01-Jan-2020
 Requires: 532
 
 Content here."""
-        result = extractor.extract_requires_field(content, parser)
+        result = extractor._extract_requires_field(content)
         assert result == [532]
 
-    def test_extract_requires_multiple(self, extractor, parser):
+    def test_extract_requires_multiple(self, extractor):
         """Test extracting multiple PEPs from Requires field."""
         content = """PEP: 1234
 Title: Test PEP
@@ -138,10 +132,10 @@ Created: 01-Jan-2020
 Requires: 489, 573, 630
 
 Content here."""
-        result = extractor.extract_requires_field(content, parser)
+        result = extractor._extract_requires_field(content)
         assert result == [489, 573, 630]
 
-    def test_extract_requires_none(self, extractor, parser):
+    def test_extract_requires_none(self, extractor):
         """Test extracting from content without Requires field."""
         content = """PEP: 1234
 Title: Test PEP
@@ -151,12 +145,12 @@ Type: Standards Track
 Created: 01-Jan-2020
 
 Content here."""
-        result = extractor.extract_requires_field(content, parser)
+        result = extractor._extract_requires_field(content)
         assert result == []
 
     # Phase 3: Additional citation patterns - Replaces field tests (Red)
 
-    def test_extract_replaces_single(self, extractor, parser):
+    def test_extract_replaces_single(self, extractor):
         """Test extracting single PEP from Replaces field."""
         content = """PEP: 1234
 Title: Test PEP
@@ -167,10 +161,10 @@ Created: 01-Jan-2020
 Replaces: 123
 
 Content here."""
-        result = extractor.extract_replaces_field(content, parser)
+        result = extractor._extract_replaces_field(content)
         assert result == [123]
 
-    def test_extract_replaces_multiple(self, extractor, parser):
+    def test_extract_replaces_multiple(self, extractor):
         """Test extracting multiple PEPs from Replaces field."""
         content = """PEP: 1234
 Title: Test PEP
@@ -181,10 +175,10 @@ Created: 01-Jan-2020
 Replaces: 123, 456, 789
 
 Content here."""
-        result = extractor.extract_replaces_field(content, parser)
+        result = extractor._extract_replaces_field(content)
         assert result == [123, 456, 789]
 
-    def test_extract_replaces_none(self, extractor, parser):
+    def test_extract_replaces_none(self, extractor):
         """Test extracting from content without Replaces field."""
         content = """PEP: 1234
 Title: Test PEP
@@ -194,15 +188,15 @@ Type: Standards Track
 Created: 01-Jan-2020
 
 Content here."""
-        result = extractor.extract_replaces_field(content, parser)
+        result = extractor._extract_replaces_field(content)
         assert result == []
 
     # Phase 4: File-based citation extraction tests (Red)
 
-    def test_extract_from_file(self, extractor, parser, fixtures_dir):
+    def test_extract_from_file(self, extractor, fixtures_dir):
         """Test extracting citations from a file."""
         file_path = fixtures_dir / "pep-with-citations.rst"
-        result = extractor.extract_from_file(file_path, parser)
+        result = extractor.extract_from_file(file_path)
 
         # Expected citations from pep-with-citations.rst (PEP 9999):
         # - Requires: 489, 573
@@ -217,10 +211,10 @@ Content here."""
         for pep in expected_peps:
             assert result[9999][pep] >= 1
 
-    def test_exclude_self_reference(self, extractor, parser, fixtures_dir):
+    def test_exclude_self_reference(self, extractor, fixtures_dir):
         """Test that self-references are excluded from citations."""
         file_path = fixtures_dir / "pep-0008.rst"
-        result = extractor.extract_from_file(file_path, parser)
+        result = extractor.extract_from_file(file_path)
 
         # PEP 8 should not cite itself even if "PEP 8" appears in the text
         assert 8 in result
@@ -237,15 +231,36 @@ Content here."""
         # PEP 8 is cited twice, PEP 257 once
         assert result == {8: 2, 257: 1}
 
+    def test_count(self, extractor):
+        content = """
+PEP: 1234
+Title: Test PEP
+Author: Test Author
+Status: Draft
+Type: Standards Track
+Created: 01-Jan-2020
+Requires: 8, 573
+Replaces: 8, 456
+
+See :pep:`8` and :pep:`8`. Also PEP 8.
+:pep:`PEP 8 <8#discussing-a-pep>` section
+See :pep:`style guide <8>` for details.
+See https://peps.python.org/pep-0008/ and https://peps.python.org/pep-0008/#specification for details.
+".. _link: https://peps.python.org/pep-0008/#gil-free"
+See https://peps.python.org/pep-0008/ for details.
+"""
+        result = extractor.count_citations(content)
+        assert result == {8: 11, 573: 1, 456: 1}
+
     # Phase 6: Multiple file processing tests (Red)
 
-    def test_extract_from_multiple_files(self, extractor, parser, fixtures_dir):
+    def test_extract_from_multiple_files(self, extractor, fixtures_dir):
         """Test extracting citations from multiple files."""
         file_paths = [
             fixtures_dir / "pep-with-citations.rst",
             fixtures_dir / "pep-0008.rst",
         ]
-        result = extractor.extract_from_multiple_files(file_paths, parser)
+        result = extractor.extract_from_multiple_files(file_paths)
 
         # Result should be a DataFrame
         assert isinstance(result, pd.DataFrame)
@@ -260,10 +275,10 @@ Content here."""
         pep_9999_citations = result[result["source"] == 9999]
         assert len(pep_9999_citations) > 0
 
-    def test_dataframe_structure(self, extractor, parser, fixtures_dir):
+    def test_dataframe_structure(self, extractor, fixtures_dir):
         """Test that the DataFrame has correct structure."""
         file_paths = [fixtures_dir / "pep-with-citations.rst"]
-        result = extractor.extract_from_multiple_files(file_paths, parser)
+        result = extractor.extract_from_multiple_files(file_paths)
 
         # Check column names
         assert list(result.columns) == ["source", "target", "count"]
@@ -276,9 +291,9 @@ Content here."""
         # Check that all counts are positive
         assert (result["count"] > 0).all()
 
-    def test_extract_from_empty_file_list(self, extractor, parser):
+    def test_extract_from_empty_file_list(self, extractor):
         """Test extracting from an empty file list."""
-        result = extractor.extract_from_multiple_files([], parser)
+        result = extractor.extract_from_multiple_files([])
 
         # Result should be an empty DataFrame
         assert isinstance(result, pd.DataFrame)
@@ -289,11 +304,11 @@ Content here."""
 
     # Phase 7: CSV output tests (Red)
 
-    def test_save_to_csv(self, extractor, parser, fixtures_dir, tmp_path):
+    def test_save_to_csv(self, extractor, fixtures_dir, tmp_path):
         """Test saving citations to CSV file."""
         # Extract citations from a file
         file_paths = [fixtures_dir / "pep-with-citations.rst"]
-        df = extractor.extract_from_multiple_files(file_paths, parser)
+        df = extractor.extract_from_multiple_files(file_paths)
 
         # Save to CSV
         output_path = tmp_path / "citations.csv"
@@ -307,11 +322,11 @@ Content here."""
         assert len(saved_df) == len(df)
         assert list(saved_df.columns) == ["source", "target", "count"]
 
-    def test_csv_format(self, extractor, parser, fixtures_dir, tmp_path):
+    def test_csv_format(self, extractor, fixtures_dir, tmp_path):
         """Test CSV file format."""
         # Create a simple DataFrame
         file_paths = [fixtures_dir / "pep-with-citations.rst"]
-        df = extractor.extract_from_multiple_files(file_paths, parser)
+        df = extractor.extract_from_multiple_files(file_paths)
 
         # Save to CSV
         output_path = tmp_path / "citations.csv"

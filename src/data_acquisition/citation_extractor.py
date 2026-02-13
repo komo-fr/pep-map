@@ -43,6 +43,8 @@ class CitationExtractor:
         - Custom text with anchor :pep:`text <NNN#anchor>` pattern
         - Plain text PEP NNN pattern (case-insensitive)
         - URL https://peps.python.org/pep-NNN/ pattern
+        - Requires field
+        - Replaces field
 
         Args:
             content: RST content to extract citations from
@@ -72,18 +74,20 @@ class CitationExtractor:
             pep_number = int(match.group(1))
             citations.append(pep_number)
 
+        citations += self._extract_requires_field(content)
+        citations += self._extract_replaces_field(content)
         return citations
 
-    def extract_requires_field(self, content: str, parser: RSTParser) -> List[int]:
+    def _extract_requires_field(self, content: str) -> List[int]:
         """Extract PEP numbers from the Requires header field.
 
         Args:
             content: RST content to extract Requires field from
-            parser: RSTParser instance to use for parsing
 
         Returns:
             List of required PEP numbers as integers, or empty list if no Requires field
         """
+        parser = RSTParser()
         requires_value = parser.parse_header_field(content, "Requires")
 
         if requires_value is None:
@@ -91,16 +95,16 @@ class CitationExtractor:
 
         return parser.parse_requires_peps(requires_value)
 
-    def extract_replaces_field(self, content: str, parser: RSTParser) -> List[int]:
+    def _extract_replaces_field(self, content: str) -> List[int]:
         """Extract PEP numbers from the Replaces header field.
 
         Args:
             content: RST content to extract Replaces field from
-            parser: RSTParser instance to use for parsing
 
         Returns:
             List of replaced PEP numbers as integers, or empty list if no Replaces field
         """
+        parser = RSTParser()
         replaces_value = parser.parse_header_field(content, "Replaces")
 
         if replaces_value is None:
@@ -120,14 +124,11 @@ class CitationExtractor:
         citations = self.extract_citations(content)
         return dict(Counter(citations))
 
-    def extract_from_file(
-        self, file_path: Path, parser: RSTParser
-    ) -> Dict[int, Dict[int, int]]:
+    def extract_from_file(self, file_path: Path) -> Dict[int, Dict[int, int]]:
         """Extract citations from a PEP file with counts.
 
         Args:
             file_path: Path to the PEP RST file
-            parser: RSTParser instance to use for parsing
 
         Returns:
             Dictionary mapping source PEP number to dictionary of cited PEP numbers
@@ -137,22 +138,14 @@ class CitationExtractor:
         content = file_path.read_text(encoding="utf-8")
 
         # Extract source PEP number from the file
+        parser = RSTParser()
         source_pep = parser.extract_pep_number(content)
 
-        # Extract citations from body
-        body_citations = self.extract_citations(content)
-
-        # Extract citations from Requires field
-        requires_citations = self.extract_requires_field(content, parser)
-
-        # Extract citations from Replaces field
-        replaces_citations = self.extract_replaces_field(content, parser)
-
-        # Combine all citations
-        all_citations = body_citations + requires_citations + replaces_citations
+        # Extract citations
+        citations = self.extract_citations(content)
 
         # Count citations using Counter
-        citation_counts = Counter(all_citations)
+        citation_counts = Counter(citations)
 
         # Exclude self-references
         if source_pep in citation_counts:
@@ -160,14 +153,11 @@ class CitationExtractor:
 
         return {source_pep: dict(citation_counts)}
 
-    def extract_from_multiple_files(
-        self, file_paths: List[Path], parser: RSTParser
-    ) -> pd.DataFrame:
+    def extract_from_multiple_files(self, file_paths: List[Path]) -> pd.DataFrame:
         """Extract citations from multiple PEP files.
 
         Args:
             file_paths: List of paths to PEP RST files
-            parser: RSTParser instance to use for parsing
 
         Returns:
             DataFrame with columns: source, target, count
@@ -178,7 +168,7 @@ class CitationExtractor:
         # Process each file
         for file_path in file_paths:
             # Extract citations from the file
-            file_citations = self.extract_from_file(file_path, parser)
+            file_citations = self.extract_from_file(file_path)
 
             # Convert to DataFrame records
             for source_pep, citations in file_citations.items():
