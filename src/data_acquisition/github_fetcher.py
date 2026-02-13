@@ -4,7 +4,6 @@ import logging
 import shutil
 import zipfile
 from pathlib import Path
-from typing import List
 
 import requests
 
@@ -107,7 +106,7 @@ class PEPFetcher:
             logger.error(f"Invalid zip file {zip_path}: {e}")
             raise
 
-    def get_pep_files(self, repo_path: Path) -> List[Path]:
+    def get_pep_files(self, repo_path: Path) -> list[Path]:
         """
         Get list of PEP RST files from the repository directory.
 

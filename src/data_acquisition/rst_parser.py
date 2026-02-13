@@ -4,7 +4,7 @@ import logging
 import re
 from dataclasses import dataclass
 from pathlib import Path
-from typing import List, Optional
+from typing import Optional
 
 logger = logging.getLogger(__name__)
 
@@ -18,10 +18,10 @@ class PEPMetadata:
     status: str
     type: str
     created: Optional[str]  # ISO format date string, or None if empty
-    authors: List[str]
-    topic: Optional[List[str]] = None
-    requires: Optional[List[int]] = None
-    replaces: Optional[List[int]] = None
+    authors: list[str]
+    topic: Optional[list[str]] = None
+    requires: Optional[list[int]] = None
+    replaces: Optional[list[int]] = None
 
 
 class RSTParser:
@@ -101,7 +101,7 @@ class RSTParser:
         # Join multi-line values
         return " ".join(field_value_lines)
 
-    def _parse_authors(self, author_string: str) -> List[str]:
+    def _parse_authors(self, author_string: str) -> list[str]:
         """
         Parse author string into a list of author names.
 
@@ -126,7 +126,7 @@ class RSTParser:
 
         return authors
 
-    def _parse_topics(self, topic_string: str) -> List[str]:
+    def _parse_topics(self, topic_string: str) -> list[str]:
         """
         Parse topic string into a list of topics.
 
@@ -153,7 +153,7 @@ class RSTParser:
 
         return topics
 
-    def _parse_pep_numbers(self, pep_string: str, field_name: str) -> List[int]:
+    def _parse_pep_numbers(self, pep_string: str, field_name: str) -> list[int]:
         """
         Parse a comma-separated string of PEP numbers into a list of integers.
 
@@ -196,7 +196,7 @@ class RSTParser:
 
         return pep_numbers
 
-    def parse_requires_peps(self, requires_string: str) -> List[int]:
+    def parse_requires_peps(self, requires_string: str) -> list[int]:
         """
         Parse Requires field string into a list of PEP numbers.
 
@@ -216,7 +216,7 @@ class RSTParser:
         """
         return self._parse_pep_numbers(requires_string, "Requires")
 
-    def parse_replaces_peps(self, replaces_string: str) -> List[int]:
+    def parse_replaces_peps(self, replaces_string: str) -> list[int]:
         """
         Parse Replaces field string into a list of PEP numbers.
 
@@ -350,7 +350,7 @@ class RSTParser:
         logger.debug(f"Successfully parsed PEP {pep_number}: {title}")
         return metadata
 
-    def parse_multiple_peps(self, file_paths: List[Path]) -> List[PEPMetadata]:
+    def parse_multiple_peps(self, file_paths: list[Path]) -> list[PEPMetadata]:
         """
         Parse multiple PEP files and return a list of metadata.
 

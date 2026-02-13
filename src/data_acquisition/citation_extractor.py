@@ -6,7 +6,6 @@ This module provides functionality to extract PEP citations from RST content.
 import re
 from collections import Counter
 from pathlib import Path
-from typing import Dict, List
 
 import pandas as pd
 
@@ -34,7 +33,7 @@ class CitationExtractor:
         # Compile regex pattern for URL PEP format
         self.url_pep_pattern = re.compile(r"https://peps\.python\.org/pep-0*(\d+)")
 
-    def extract_citations(self, content: str, exclude_self: bool = True) -> List[int]:
+    def extract_citations(self, content: str, exclude_self: bool = True) -> list[int]:
         """Extract cited PEP numbers from content.
 
         Supports the following patterns:
@@ -86,7 +85,7 @@ class CitationExtractor:
 
         return citations
 
-    def _extract_requires_field(self, content: str) -> List[int]:
+    def _extract_requires_field(self, content: str) -> list[int]:
         """Extract PEP numbers from the Requires header field.
 
         Args:
@@ -103,7 +102,7 @@ class CitationExtractor:
 
         return parser.parse_requires_peps(requires_value)
 
-    def _extract_replaces_field(self, content: str) -> List[int]:
+    def _extract_replaces_field(self, content: str) -> list[int]:
         """Extract PEP numbers from the Replaces header field.
 
         Args:
@@ -122,7 +121,7 @@ class CitationExtractor:
 
     def count_citations(
         self, content: str, exclude_self: bool = True
-    ) -> Dict[int, int]:
+    ) -> dict[int, int]:
         """Count citations in content.
 
         Args:
@@ -137,7 +136,7 @@ class CitationExtractor:
 
     def extract_from_file(
         self, file_path: Path, exclude_self: bool = True
-    ) -> Dict[int, Dict[int, int]]:
+    ) -> dict[int, dict[int, int]]:
         """Extract citations from a PEP file with counts.
 
         Args:
@@ -162,7 +161,7 @@ class CitationExtractor:
 
         return {source_pep: dict(citation_counts)}
 
-    def extract_from_multiple_files(self, file_paths: List[Path]) -> pd.DataFrame:
+    def extract_from_multiple_files(self, file_paths: list[Path]) -> pd.DataFrame:
         """Extract citations from multiple PEP files.
 
         Args:

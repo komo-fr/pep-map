@@ -7,7 +7,7 @@ import logging
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Optional
 
 from src.data_acquisition.github_fetcher import PEPFetcher
 from src.data_acquisition.rst_parser import PEPMetadata, RSTParser
@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 PEP_REPO_URL = "https://github.com/python/peps/archive/refs/heads/main.zip"
 
 
-def save_to_csv(data: List[PEPMetadata], output_path: Path) -> None:
+def save_to_csv(data: list[PEPMetadata], output_path: Path) -> None:
     """
     Save PEP metadata to CSV file.
 
@@ -89,7 +89,7 @@ def save_to_csv(data: List[PEPMetadata], output_path: Path) -> None:
     logger.info(f"Successfully saved to {output_path}")
 
 
-def save_metadata_json(metadata: Dict, output_path: Path) -> None:
+def save_metadata_json(metadata: dict, output_path: Path) -> None:
     """
     Save metadata to JSON file.
 
@@ -112,7 +112,7 @@ def save_metadata_json(metadata: Dict, output_path: Path) -> None:
     logger.info(f"Successfully saved metadata to {output_path}")
 
 
-def parse_arguments(args: Optional[List[str]] = None) -> argparse.Namespace:
+def parse_arguments(args: Optional[list[str]] = None) -> argparse.Namespace:
     """
     Parse command-line arguments.
 
