@@ -169,6 +169,7 @@ def main() -> int:
         logger.info("Saving metadata JSON...")
         metadata = {
             "fetched_at": datetime.now(timezone.utc).isoformat(),
+            "source_url": PEP_REPO_URL,
         }
         save_metadata_json(metadata, metadata_path)
 
