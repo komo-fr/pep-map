@@ -1,19 +1,20 @@
-"""Tests for RST parser module."""
+"""Tests for PEP parser module."""
 
+import csv
 from pathlib import Path
 
 import pytest
 
-from src.data_acquisition.rst_parser import PEPMetadata, RSTParser
+from src.data_acquisition.pep_parser import PEPMetadata, PEPParser
 
 
-class TestRSTParser:
-    """Test cases for RSTParser class."""
+class TestPEPParser:
+    """Test cases for PEPParser class."""
 
     @pytest.fixture
     def parser(self):
-        """Create an RSTParser instance for testing."""
-        return RSTParser()
+        """Create a PEPParser instance for testing."""
+        return PEPParser()
 
     @pytest.fixture
     def fixtures_dir(self):
@@ -517,3 +518,164 @@ Content here
         )
 
         assert metadata.replaces is None
+
+    # CSV保存テスト
+    def test_save_to_csv_creates_file(self, parser, tmp_path):
+        """Test that save_to_csv creates a CSV file."""
+        # サンプルデータ作成
+        metadata_list = [
+            PEPMetadata(
+                pep_number=1,
+                title="Test PEP 1",
+                status="Active",
+                type="Process",
+                created="2000-01-01",
+                authors=["Author One"],
+            ),
+        ]
+
+        output_path = tmp_path / "test_output.csv"
+        parser.save_to_csv(metadata_list, output_path)
+
+        # ファイルが作成されたか確認
+        assert output_path.exists()
+        assert output_path.is_file()
+
+    def test_save_to_csv_correct_columns(self, parser, tmp_path):
+        """Test that save_to_csv creates CSV with correct columns."""
+        metadata_list = [
+            PEPMetadata(
+                pep_number=1,
+                title="Test PEP",
+                status="Draft",
+                type="Process",
+                created="2000-01-01",
+                authors=["Author"],
+            ),
+        ]
+
+        output_path = tmp_path / "test_output.csv"
+        parser.save_to_csv(metadata_list, output_path)
+
+        # CSVを読み込んで確認
+        with open(output_path, "r", encoding="utf-8") as f:
+            reader = csv.DictReader(f)
+            fieldnames = reader.fieldnames
+
+        expected_columns = [
+            "pep_number",
+            "title",
+            "status",
+            "type",
+            "created",
+            "authors",
+            "topic",
+            "requires",
+            "replaces",
+        ]
+        assert fieldnames == expected_columns
+
+    def test_save_to_csv_correct_data_types(self, parser, tmp_path):
+        """Test that save_to_csv saves data with correct types."""
+        metadata_list = [
+            PEPMetadata(
+                pep_number=123,
+                title="Test PEP",
+                status="Draft",
+                type="Process",
+                created="2000-01-01",
+                authors=["Author One"],
+            ),
+        ]
+
+        output_path = tmp_path / "test_output.csv"
+        parser.save_to_csv(metadata_list, output_path)
+
+        # CSVを読み込んで確認
+        with open(output_path, "r", encoding="utf-8") as f:
+            reader = csv.DictReader(f)
+            row = next(reader)
+
+        # pep_numberが文字列として保存されているか確認（CSVは全て文字列）
+        assert row["pep_number"] == "123"
+        assert row["title"] == "Test PEP"
+        assert row["status"] == "Draft"
+
+    def test_save_to_csv_handles_empty_list(self, parser, tmp_path):
+        """Test that save_to_csv handles empty list correctly."""
+        metadata_list = []
+
+        output_path = tmp_path / "test_output.csv"
+        parser.save_to_csv(metadata_list, output_path)
+
+        # ファイルが作成され、ヘッダーのみ存在することを確認
+        assert output_path.exists()
+
+        with open(output_path, "r", encoding="utf-8") as f:
+            reader = csv.DictReader(f)
+            rows = list(reader)
+
+        # データ行は0行
+        assert len(rows) == 0
+
+    def test_save_to_csv_handles_none_values(self, parser, tmp_path):
+        """Test that save_to_csv handles None values correctly."""
+        metadata_list = [
+            PEPMetadata(
+                pep_number=20,
+                title="Zen of Python",
+                status="Active",
+                type="Informational",
+                created=None,  # None値
+                authors=["Tim Peters"],
+                topic=None,  # None値
+                requires=None,  # None値
+                replaces=None,  # None値
+            ),
+        ]
+
+        output_path = tmp_path / "test_output.csv"
+        parser.save_to_csv(metadata_list, output_path)
+
+        import csv
+
+        with open(output_path, "r", encoding="utf-8") as f:
+            reader = csv.DictReader(f)
+            row = next(reader)
+
+        # None値は空文字列として保存される
+        assert row["created"] == ""
+        assert row["topic"] == ""
+        assert row["requires"] == ""
+        assert row["replaces"] == ""
+
+    def test_save_to_csv_handles_list_fields(self, parser, tmp_path):
+        """Test that save_to_csv handles list fields correctly."""
+        metadata_list = [
+            PEPMetadata(
+                pep_number=8,
+                title="Style Guide",
+                status="Active",
+                type="Process",
+                created="2001-07-05",
+                authors=["Guido van Rossum", "Barry Warsaw", "Alyssa Coghlan"],
+                topic=["Governance", "Packaging"],
+                requires=[440, 508, 518],
+                replaces=[245, 246],
+            ),
+        ]
+
+        output_path = tmp_path / "test_output.csv"
+        parser.save_to_csv(metadata_list, output_path)
+
+        import csv
+
+        with open(output_path, "r", encoding="utf-8") as f:
+            reader = csv.DictReader(f)
+            row = next(reader)
+
+        # リストフィールドはセミコロンで結合される
+        assert row["authors"] == "Guido van Rossum; Barry Warsaw; Alyssa Coghlan"
+        assert row["topic"] == "Governance; Packaging"
+        assert row["requires"] == "440; 508; 518"
+        assert row["replaces"] == "245; 246"

@@ -9,7 +9,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from src.data_acquisition.rst_parser import RSTParser
+from src.data_acquisition.pep_parser import PEPParser
 
 
 class CitationExtractor:
@@ -32,6 +32,7 @@ class CitationExtractor:
         self.plain_text_pep_pattern = re.compile(r"(?<!`)PEP\s+(\d+)", re.IGNORECASE)
         # Compile regex pattern for URL PEP format
         self.url_pep_pattern = re.compile(r"https://peps\.python\.org/pep-0*(\d+)")
+        self._parser = PEPParser()
 
     def extract_citations(self, content: str, exclude_self: bool = True) -> list[int]:
         """Extract cited PEP numbers from content.
@@ -78,8 +79,7 @@ class CitationExtractor:
         citations += self._extract_replaces_field(content)
 
         # Exclude self-references
-        parser = RSTParser()
-        source_pep = parser.extract_pep_number(content)
+        source_pep = self._parser.extract_pep_number(content)
         if exclude_self and source_pep in citations:
             citations.remove(source_pep)
 
@@ -94,13 +94,12 @@ class CitationExtractor:
         Returns:
             List of required PEP numbers as integers, or empty list if no Requires field
         """
-        parser = RSTParser()
-        requires_value = parser.parse_header_field(content, "Requires")
+        requires_value = self._parser.parse_header_field(content, "Requires")
 
         if requires_value is None:
             return []
 
-        return parser.parse_requires_peps(requires_value)
+        return self._parser.parse_requires_peps(requires_value)
 
     def _extract_replaces_field(self, content: str) -> list[int]:
         """Extract PEP numbers from the Replaces header field.
@@ -111,13 +110,12 @@ class CitationExtractor:
         Returns:
             List of replaced PEP numbers as integers, or empty list if no Replaces field
         """
-        parser = RSTParser()
-        replaces_value = parser.parse_header_field(content, "Replaces")
+        replaces_value = self._parser.parse_header_field(content, "Replaces")
 
         if replaces_value is None:
             return []
 
-        return parser.parse_replaces_peps(replaces_value)
+        return self._parser.parse_replaces_peps(replaces_value)
 
     def count_citations(
         self, content: str, exclude_self: bool = True
@@ -150,8 +148,7 @@ class CitationExtractor:
         content = file_path.read_text(encoding="utf-8")
 
         # Extract source PEP number from the file
-        parser = RSTParser()
-        source_pep = parser.extract_pep_number(content)
+        source_pep = self._parser.extract_pep_number(content)
 
         # Extract citations
         citations = self.extract_citations(content, exclude_self)

@@ -1,5 +1,6 @@
-"""RST parser for extracting PEP metadata from RST files."""
+"""PEP parser for extracting metadata from PEP RST files."""
 
+import csv
 import logging
 import re
 from dataclasses import dataclass
@@ -24,12 +25,8 @@ class PEPMetadata:
     replaces: Optional[list[int]] = None
 
 
-class RSTParser:
+class PEPParser:
     """Parser for extracting metadata from PEP RST files."""
-
-    def __init__(self):
-        """Initialize RSTParser."""
-        pass
 
     def extract_pep_number(self, content: str) -> int:
         """
@@ -379,3 +376,77 @@ class RSTParser:
         logger.info(f"Parsed {len(results)} PEPs successfully, {errors} files failed")
 
         return results
+
+    def save_to_csv(self, data: list[PEPMetadata], output_path: Path) -> None:
+        """
+        Save PEP metadata to CSV file.
+
+        Args:
+            data: List of PEPMetadata objects to save
+            output_path: Path where to save the CSV file
+
+        Note:
+            - Multiple authors are joined with semicolons (;)
+            - Multiple topics are joined with semicolons (;)
+            - Multiple requires/replaces are joined with semicolons (;)
+            - Empty created fields are saved as empty strings
+            - Parent directory is created if it doesn't exist
+        """
+        logger.info(f"Saving {len(data)} PEPs to {output_path}")
+
+        # Ensure parent directory exists
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+
+        # Define CSV headers
+        fieldnames = [
+            "pep_number",
+            "title",
+            "status",
+            "type",
+            "created",
+            "authors",
+            "topic",
+            "requires",
+            "replaces",
+        ]
+
+        # Write CSV file
+        with open(output_path, "w", encoding="utf-8", newline="") as csvfile:
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+            writer.writeheader()
+
+            for pep in data:
+                # Join multiple authors with semicolon
+                authors_str = "; ".join(pep.authors)
+
+                # Join multiple topics with semicolon
+                topic_str = "; ".join(pep.topic) if pep.topic else ""
+
+                # Handle None created field
+                created_str = pep.created if pep.created is not None else ""
+
+                # Join multiple requires with semicolon
+                requires_str = (
+                    "; ".join(str(req) for req in pep.requires) if pep.requires else ""
+                )
+
+                # Join multiple replaces with semicolon
+                replaces_str = (
+                    "; ".join(str(rep) for rep in pep.replaces) if pep.replaces else ""
+                )
+
+                writer.writerow(
+                    {
+                        "pep_number": pep.pep_number,
+                        "title": pep.title,
+                        "status": pep.status,
+                        "type": pep.type,
+                        "created": created_str,
+                        "authors": authors_str,
+                        "topic": topic_str,
+                        "requires": requires_str,
+                        "replaces": replaces_str,
+                    }
+                )
+
+        logger.info(f"Successfully saved to {output_path}")
