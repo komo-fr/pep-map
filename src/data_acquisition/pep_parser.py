@@ -1,4 +1,4 @@
-"""RST parser for extracting PEP metadata from RST files."""
+"""PEP parser for extracting metadata from PEP RST files."""
 
 import csv
 import logging
@@ -25,11 +25,11 @@ class PEPMetadata:
     replaces: Optional[list[int]] = None
 
 
-class RSTParser:
+class PEPParser:
     """Parser for extracting metadata from PEP RST files."""
 
     def __init__(self):
-        """Initialize RSTParser."""
+        """Initialize PEPParser."""
         pass
 
     def extract_pep_number(self, content: str) -> int:

@@ -1,20 +1,20 @@
-"""Tests for RST parser module."""
+"""Tests for PEP parser module."""
 
 import csv
 from pathlib import Path
 
 import pytest
 
-from src.data_acquisition.rst_parser import PEPMetadata, RSTParser
+from src.data_acquisition.pep_parser import PEPMetadata, PEPParser
 
 
-class TestRSTParser:
-    """Test cases for RSTParser class."""
+class TestPEPParser:
+    """Test cases for PEPParser class."""
 
     @pytest.fixture
     def parser(self):
-        """Create an RSTParser instance for testing."""
-        return RSTParser()
+        """Create a PEPParser instance for testing."""
+        return PEPParser()
 
     @pytest.fixture
     def fixtures_dir(self):

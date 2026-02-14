@@ -10,7 +10,7 @@ from typing import Optional
 
 from src.data_acquisition.citation_extractor import CitationExtractor
 from src.data_acquisition.github_fetcher import PEPFetcher
-from src.data_acquisition.rst_parser import RSTParser
+from src.data_acquisition.pep_parser import PEPParser
 
 logger = logging.getLogger(__name__)
 
@@ -95,7 +95,7 @@ def main() -> int:
     try:
         # Initialize components
         fetcher = PEPFetcher()
-        parser = RSTParser()
+        parser = PEPParser()
         citation_extractor = CitationExtractor()
 
         # Set up paths

@@ -15,7 +15,7 @@ from scripts.fetch_peps import (
     parse_arguments,
     save_metadata_json,
 )
-from src.data_acquisition.rst_parser import PEPMetadata
+from src.data_acquisition.pep_parser import PEPMetadata
 
 
 class TestFetchPepsHelpers:

@@ -9,7 +9,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from src.data_acquisition.rst_parser import RSTParser
+from src.data_acquisition.pep_parser import PEPParser
 
 
 class CitationExtractor:
@@ -78,7 +78,7 @@ class CitationExtractor:
         citations += self._extract_replaces_field(content)
 
         # Exclude self-references
-        parser = RSTParser()
+        parser = PEPParser()
         source_pep = parser.extract_pep_number(content)
         if exclude_self and source_pep in citations:
             citations.remove(source_pep)
@@ -94,7 +94,7 @@ class CitationExtractor:
         Returns:
             List of required PEP numbers as integers, or empty list if no Requires field
         """
-        parser = RSTParser()
+        parser = PEPParser()
         requires_value = parser.parse_header_field(content, "Requires")
 
         if requires_value is None:
@@ -111,7 +111,7 @@ class CitationExtractor:
         Returns:
             List of replaced PEP numbers as integers, or empty list if no Replaces field
         """
-        parser = RSTParser()
+        parser = PEPParser()
         replaces_value = parser.parse_header_field(content, "Replaces")
 
         if replaces_value is None:
@@ -150,7 +150,7 @@ class CitationExtractor:
         content = file_path.read_text(encoding="utf-8")
 
         # Extract source PEP number from the file
-        parser = RSTParser()
+        parser = PEPParser()
         source_pep = parser.extract_pep_number(content)
 
         # Extract citations
