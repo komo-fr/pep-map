@@ -1,7 +1,6 @@
 """Fetch and parse PEP metadata from GitHub repository."""
 
 import argparse
-import csv
 import json
 import logging
 import sys
@@ -9,84 +8,13 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
 
+from src.data_acquisition.citation_extractor import CitationExtractor
 from src.data_acquisition.github_fetcher import PEPFetcher
-from src.data_acquisition.rst_parser import PEPMetadata, RSTParser
+from src.data_acquisition.rst_parser import RSTParser
 
 logger = logging.getLogger(__name__)
 
 PEP_REPO_URL = "https://github.com/python/peps/archive/refs/heads/main.zip"
-
-
-def save_to_csv(data: list[PEPMetadata], output_path: Path) -> None:
-    """
-    Save PEP metadata to CSV file.
-
-    Args:
-        data: List of PEPMetadata objects to save
-        output_path: Path where to save the CSV file
-
-    Note:
-        Multiple authors are joined with semicolons (;).
-        Empty created fields are saved as empty strings.
-    """
-    logger.info(f"Saving {len(data)} PEPs to {output_path}")
-
-    # Ensure parent directory exists
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-
-    # Define CSV headers
-    fieldnames = [
-        "pep_number",
-        "title",
-        "status",
-        "type",
-        "created",
-        "authors",
-        "topic",
-        "requires",
-        "replaces",
-    ]
-
-    # Write CSV file
-    with open(output_path, "w", encoding="utf-8", newline="") as csvfile:
-        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-        writer.writeheader()
-
-        for pep in data:
-            # Join multiple authors with semicolon
-            authors_str = "; ".join(pep.authors)
-
-            # Join multiple topics with semicolon
-            topic_str = "; ".join(pep.topic) if pep.topic else ""
-
-            # Handle None created field
-            created_str = pep.created if pep.created is not None else ""
-
-            # Join multiple requires with semicolon
-            requires_str = (
-                "; ".join(str(req) for req in pep.requires) if pep.requires else ""
-            )
-
-            # Join multiple replaces with semicolon
-            replaces_str = (
-                "; ".join(str(rep) for rep in pep.replaces) if pep.replaces else ""
-            )
-
-            writer.writerow(
-                {
-                    "pep_number": pep.pep_number,
-                    "title": pep.title,
-                    "status": pep.status,
-                    "type": pep.type,
-                    "created": created_str,
-                    "authors": authors_str,
-                    "topic": topic_str,
-                    "requires": requires_str,
-                    "replaces": replaces_str,
-                }
-            )
-
-    logger.info(f"Successfully saved to {output_path}")
 
 
 def save_metadata_json(metadata: dict, output_path: Path) -> None:
@@ -168,6 +96,7 @@ def main() -> int:
         # Initialize components
         fetcher = PEPFetcher()
         parser = RSTParser()
+        citation_extractor = CitationExtractor()
 
         # Set up paths
         project_root = Path(__file__).parent.parent
@@ -185,20 +114,21 @@ def main() -> int:
 
         # Fixed output filenames (no timestamp)
         csv_path = output_dir / "peps_metadata.csv"
+        citations_path = output_dir / "citations.csv"
         metadata_path = output_dir / "metadata.json"
 
         # Step 1: Download PEP repository
-        logger.info("Step 1/4: Downloading PEP repository...")
+        logger.info("Step 1/5: Downloading PEP repository...")
         fetcher.download_repo(PEP_REPO_URL, zip_path)
         logger.info(f"Downloaded to {zip_path}")
 
         # Step 2: Extract zip file
-        logger.info("Step 2/4: Extracting zip file...")
+        logger.info("Step 2/5: Extracting zip file...")
         fetcher.extract_zip(zip_path, extract_dir)
         logger.info(f"Extracted to {extract_dir}")
 
         # Step 3: Find and parse PEP files
-        logger.info("Step 3/4: Finding PEP files...")
+        logger.info("Step 3/5: Finding PEP files...")
         # The extracted directory structure is typically: peps-main/peps/
         pep_dir = extract_dir / "peps-main" / "peps"
 
@@ -219,18 +149,26 @@ def main() -> int:
         pep_metadata = parser.parse_multiple_peps(pep_files)
         logger.info(f"Successfully parsed {len(pep_metadata)} PEPs")
 
-        # Step 4: Save to CSV and JSON
-        logger.info("Step 4/4: Saving data...")
+        # Step 4: Extract citations
+        logger.info("Step 4/5: Extracting citations...")
+        citations_df = citation_extractor.extract_from_multiple_files(pep_files)
+        logger.info(f"Extracted {len(citations_df)} citation records")
 
-        # Save CSV
-        logger.info("Saving CSV file...")
-        save_to_csv(pep_metadata, csv_path)
+        # Step 5: Save all data
+        logger.info("Step 5/5: Saving data...")
+
+        # Save PEP metadata CSV
+        logger.info("Saving PEP metadata CSV...")
+        parser.save_to_csv(pep_metadata, csv_path)
+
+        # Save citations CSV
+        logger.info("Saving citations CSV...")
+        citation_extractor.save_to_csv(citations_df, citations_path)
 
         # Create and save metadata JSON
         logger.info("Saving metadata JSON...")
         metadata = {
             "fetched_at": datetime.now(timezone.utc).isoformat(),
-            "source_url": PEP_REPO_URL,
         }
         save_metadata_json(metadata, metadata_path)
 
@@ -250,8 +188,10 @@ def main() -> int:
         logger.info("SUCCESS: PEP metadata fetch complete")
         logger.info("=" * 60)
         logger.info(f"Total PEPs processed: {len(pep_metadata)}")
-        logger.info(f"Output CSV file: {csv_path}")
-        logger.info(f"Metadata JSON file: {metadata_path}")
+        logger.info(f"Total citations extracted: {len(citations_df)}")
+        logger.info(f"PEP metadata CSV: {csv_path}")
+        logger.info(f"Citations CSV: {citations_path}")
+        logger.info(f"Metadata JSON: {metadata_path}")
         logger.info(f"Fetched at: {metadata['fetched_at']}")
         logger.info("=" * 60)
 
