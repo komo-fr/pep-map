@@ -8,3 +8,4 @@ pytest-cov
 ruff
 mypy
 types-requests
+pandas-stubs
