@@ -28,10 +28,6 @@ class PEPMetadata:
 class PEPParser:
     """Parser for extracting metadata from PEP RST files."""
 
-    def __init__(self):
-        """Initialize PEPParser."""
-        pass
-
     def extract_pep_number(self, content: str) -> int:
         """
         Extract PEP number from RST metadata (the value after "PEP:").
