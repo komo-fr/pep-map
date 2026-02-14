@@ -108,7 +108,7 @@ def main() -> int:
         output_dir.mkdir(parents=True, exist_ok=True)
 
         # Generate timestamp for raw files (still need this for temp files)
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
         zip_path = raw_dir / f"peps_{timestamp}.zip"
         extract_dir = raw_dir / f"peps_extracted_{timestamp}"
 
