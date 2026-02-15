@@ -1,3 +1,0 @@
-[tool.mypy.overrides]
-module = "plotly.*"
-ignore_missing_imports = true
