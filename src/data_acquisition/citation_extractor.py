@@ -79,9 +79,9 @@ class CitationExtractor:
         citations += self._extract_replaces_field(content)
 
         # Exclude self-references
-        source_pep = self._parser.extract_pep_number(content)
-        if exclude_self and source_pep in citations:
-            citations.remove(source_pep)
+        citing_pep = self._parser.extract_pep_number(content)
+        if exclude_self and citing_pep in citations:
+            citations.remove(citing_pep)
 
         return citations
 
@@ -141,14 +141,14 @@ class CitationExtractor:
             file_path: Path to the PEP RST file
 
         Returns:
-            Dictionary mapping source PEP number to dictionary of cited PEP numbers
+            Dictionary mapping citing PEP number to dictionary of cited PEP numbers
             and their counts (excluding self-references)
         """
         # Read file content
         content = file_path.read_text(encoding="utf-8")
 
-        # Extract source PEP number from the file
-        source_pep = self._parser.extract_pep_number(content)
+        # Extract citing PEP number from the file
+        citing_pep = self._parser.extract_pep_number(content)
 
         # Extract citations
         citations = self.extract_citations(content, exclude_self)
@@ -156,7 +156,7 @@ class CitationExtractor:
         # Count citations using Counter
         citation_counts = Counter(citations)
 
-        return {source_pep: dict(citation_counts)}
+        return {citing_pep: dict(citation_counts)}
 
     def extract_from_multiple_files(self, file_paths: list[Path]) -> pd.DataFrame:
         """Extract citations from multiple PEP files.
@@ -165,7 +165,7 @@ class CitationExtractor:
             file_paths: List of paths to PEP RST files
 
         Returns:
-            DataFrame with columns: source, target, count
+            DataFrame with columns: citing, cited, count
         """
         # Prepare list to collect all citation records
         records = []
@@ -176,10 +176,10 @@ class CitationExtractor:
             file_citations = self.extract_from_file(file_path)
 
             # Convert to DataFrame records
-            for source_pep, citations in file_citations.items():
-                for target_pep, count in citations.items():
+            for citing_pep, citations in file_citations.items():
+                for cited_pep, count in citations.items():
                     records.append(
-                        {"source": source_pep, "target": target_pep, "count": count}
+                        {"citing": citing_pep, "cited": cited_pep, "count": count}
                     )
 
         # Create DataFrame
@@ -187,11 +187,11 @@ class CitationExtractor:
             df = pd.DataFrame(records)
         else:
             # Return empty DataFrame with correct columns
-            df = pd.DataFrame(columns=["source", "target", "count"])
+            df = pd.DataFrame(columns=["citing", "cited", "count"])
 
         # Ensure correct data types
         if len(df) > 0:
-            df = df.astype({"source": int, "target": int, "count": int})
+            df = df.astype({"citing": int, "cited": int, "count": int})
 
         return df
 
@@ -199,7 +199,7 @@ class CitationExtractor:
         """Save citations DataFrame to CSV file.
 
         Args:
-            citations_df: DataFrame with columns: source, target, count
+            citations_df: DataFrame with columns: citing, cited, count
             output_path: Path where the CSV file should be saved
 
         Note:

@@ -230,5 +230,5 @@ This is a test PEP.
             fieldnames = reader.fieldnames
 
         # 正しいカラムが存在するか確認
-        expected_columns = ["source", "target", "count"]
+        expected_columns = ["citing", "cited", "count"]
         assert fieldnames == expected_columns
