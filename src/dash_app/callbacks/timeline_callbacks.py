@@ -2,7 +2,12 @@
 
 from dash import Input, Output, html
 
-from src.dash_app.utils.data_loader import generate_pep_url, get_pep_by_number
+from src.dash_app.utils.data_loader import (
+    generate_pep_url,
+    get_cited_peps,
+    get_citing_peps,
+    get_pep_by_number,
+)
 
 
 def register_timeline_callbacks(app):
@@ -42,6 +47,75 @@ def register_timeline_callbacks(app):
 
         # 存在する場合: PEP情報を表示
         return _create_pep_info_display(pep_data), ""
+
+    # === テーブル更新コールバック（新規追加） ===
+    @app.callback(
+        Output("citing-peps-table", "data"),
+        Output("cited-peps-table", "data"),
+        Input("pep-input", "value"),
+    )
+    def update_tables(pep_number):
+        """
+        PEP番号入力に連動してテーブルデータを更新する
+
+        Args:
+            pep_number: 入力されたPEP番号（int または None）
+
+        Returns:
+            tuple: (citing_tableのデータ, cited_tableのデータ)
+        """
+        # 入力が空/Noneまたは存在しないPEPの場合: 空のテーブル
+        if pep_number is None:
+            return [], []
+
+        pep_data = get_pep_by_number(pep_number)
+        if pep_data is None:
+            return [], []
+
+        # このPEPを引用しているPEPを取得
+        citing_peps_df = get_citing_peps(pep_number)
+        citing_table_data = _convert_df_to_table_data(citing_peps_df)
+
+        # このPEPに引用されているPEPを取得
+        cited_peps_df = get_cited_peps(pep_number)
+        cited_table_data = _convert_df_to_table_data(cited_peps_df)
+
+        return citing_table_data, cited_table_data
+
+
+def _convert_df_to_table_data(df) -> list[dict]:
+    """
+    DataFrameをDataTable用のデータ形式に変換する
+
+    Args:
+        df: PEPメタデータのDataFrame
+
+    Returns:
+        list[dict]: DataTable用のレコードリスト
+    """
+    if df.empty:
+        return []
+
+    table_data: list[dict] = []
+    for idx, row in df.iterrows():
+        pep_number = row["pep_number"]
+        pep_url = generate_pep_url(pep_number)
+
+        # 日付をフォーマット（YYYY-MM-DD）
+        created_str = row["created"].strftime("%Y-%m-%d")
+
+        table_data.append(
+            {
+                "row_num": len(table_data) + 1,  # 通し番号（1から開始）
+                "pep": f"[PEP {pep_number}]({pep_url})",  # Markdownリンク
+                "pep_number": pep_number,  # ソート用（非表示）
+                "title": row["title"],
+                "status": row["status"],
+                "created": created_str,
+            }
+        )
+
+    return table_data
 
 
 def _create_initial_info_message() -> html.Div:
