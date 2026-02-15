@@ -6,6 +6,7 @@ dash==4.0.0
 
 # for development
 pytest
+pytest-mock
 pytest-cov
 ruff
 mypy
