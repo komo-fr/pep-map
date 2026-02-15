@@ -4,6 +4,7 @@ from dash import Dash, html, Input, Output
 
 from src.dash_app.layouts.common import create_tab_navigation
 from src.dash_app.layouts.timeline import create_timeline_layout
+from src.dash_app.callbacks.timeline_callbacks import register_timeline_callbacks
 
 # Dashアプリの初期化
 app = Dash(
@@ -62,6 +63,10 @@ def render_tab_content(active_tab):
                 html.P("不明なタブです。"),
             ]
         )
+
+
+# Timelineコールバックを登録
+register_timeline_callbacks(app)
 
 
 if __name__ == "__main__":
