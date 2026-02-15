@@ -1,4 +1,5 @@
 """データ読み込みモジュール"""
+
 import json
 from datetime import datetime
 
@@ -192,6 +193,7 @@ def generate_pep_url(pep_number: int) -> str:
         generate_pep_url(484) → "https://peps.python.org/pep-0484/"
     """
     from src.dash_app.utils.constants import PEP_BASE_URL
+
     return PEP_BASE_URL.format(pep_number=pep_number)
 
 

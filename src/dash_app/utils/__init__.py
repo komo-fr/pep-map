@@ -1,4 +1,5 @@
 """ユーティリティモジュール"""
+
 from src.dash_app.utils.constants import (
     DATA_DIR,
     DEFAULT_STATUS_COLOR,
