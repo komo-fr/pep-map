@@ -1,7 +1,9 @@
 """Timelineタブのコールバック関数"""
 
+import plotly.graph_objects as go
 from dash import Input, Output, html
 
+from src.dash_app.utils.constants import DEFAULT_STATUS_COLOR, STATUS_COLOR_MAP
 from src.dash_app.utils.data_loader import (
     generate_pep_url,
     get_cited_peps,
@@ -81,6 +83,33 @@ def register_timeline_callbacks(app):
         cited_table_data = _convert_df_to_table_data(cited_peps_df)
 
         return citing_table_data, cited_table_data
+
+    # === グラフ更新コールバック（新規追加） ===
+    @app.callback(
+        Output("timeline-graph", "figure"),
+        Input("pep-input", "value"),
+    )
+    def update_timeline_graph(pep_number):
+        """
+        PEP番号入力に連動してタイムライングラフを更新する
+
+        Args:
+            pep_number: 入力されたPEP番号（int または None）
+
+        Returns:
+            go.Figure: Plotlyのfigureオブジェクト
+        """
+        # 入力が空/Noneの場合: 空のグラフを返す
+        if pep_number is None:
+            return _create_empty_figure()
+
+        # PEPの存在確認
+        pep_data = get_pep_by_number(pep_number)
+        if pep_data is None:
+            return _create_empty_figure()
+
+        # グラフデータを構築
+        return _create_timeline_figure(pep_number, pep_data)
 
 
 def _convert_df_to_table_data(df) -> list[dict]:
@@ -204,3 +233,143 @@ def _create_pep_info_display(pep_data) -> html.Div:
             ),
         ]
     )
+
+
+def _create_empty_figure() -> go.Figure:
+    """
+    空のグラフ（初期状態）を生成する
+
+    Returns:
+        go.Figure: 空のPlotly figureオブジェクト
+    """
+    fig = go.Figure()
+
+    fig.update_layout(
+        xaxis=dict(
+            title="Created Date",
+            showgrid=True,
+        ),
+        yaxis=dict(
+            tickvals=[-1, 0, 1],
+            ticktext=["", "", ""],
+            range=[-1.5, 1.5],
+            showgrid=False,
+        ),
+        showlegend=False,
+        margin=dict(l=40, r=40, t=40, b=40),
+        annotations=[
+            dict(
+                text="Enter a PEP number to see the timeline",
+                xref="paper",
+                yref="paper",
+                x=0.5,
+                y=0.5,
+                showarrow=False,
+                font=dict(size=14, color="#999"),
+            )
+        ],
+    )
+
+    return fig
+
+
+def _create_timeline_figure(pep_number: int, pep_data) -> go.Figure:
+    """
+    タイムライングラフを生成する
+
+    Args:
+        pep_number: 選択中のPEP番号
+        pep_data: 選択中のPEPのメタデータ
+
+    Returns:
+        go.Figure: Plotly figureオブジェクト
+    """
+    # 引用関係のPEPを取得
+    citing_peps_df = get_citing_peps(pep_number)  # このPEPを引用しているPEP
+    cited_peps_df = get_cited_peps(pep_number)  # このPEPに引用されているPEP
+
+    # グラフデータを構築
+    dates = []
+    y_positions = []
+    colors = []
+    texts = []
+    hover_texts = []
+
+    # 選択中のPEP（Y=0）
+    dates.append(pep_data["created"])
+    y_positions.append(0)
+    colors.append(STATUS_COLOR_MAP.get(pep_data["status"], DEFAULT_STATUS_COLOR))
+    texts.append(str(pep_number))
+    hover_texts.append(
+        f"PEP {pep_number}<br>"
+        f"{pep_data['title']}<br>"
+        f"Status: {pep_data['status']}<br>"
+        f"Created: {pep_data['created'].strftime('%Y-%m-%d')}"
+    )
+
+    # 引用しているPEP（Y=1）
+    for _, row in citing_peps_df.iterrows():
+        dates.append(row["created"])
+        y_positions.append(1)
+        colors.append(STATUS_COLOR_MAP.get(row["status"], DEFAULT_STATUS_COLOR))
+        texts.append(str(row["pep_number"]))
+        hover_texts.append(
+            f"PEP {row['pep_number']}<br>"
+            f"{row['title']}<br>"
+            f"Status: {row['status']}<br>"
+            f"Created: {row['created'].strftime('%Y-%m-%d')}"
+        )
+
+    # 引用されているPEP（Y=-1）
+    for _, row in cited_peps_df.iterrows():
+        dates.append(row["created"])
+        y_positions.append(-1)
+        colors.append(STATUS_COLOR_MAP.get(row["status"], DEFAULT_STATUS_COLOR))
+        texts.append(str(row["pep_number"]))
+        hover_texts.append(
+            f"PEP {row['pep_number']}<br>"
+            f"{row['title']}<br>"
+            f"Status: {row['status']}<br>"
+            f"Created: {row['created'].strftime('%Y-%m-%d')}"
+        )
+
+    # Plotly Figureを生成
+    fig = go.Figure()
+
+    fig.add_trace(
+        go.Scatter(
+            x=dates,
+            y=y_positions,
+            mode="markers+text",
+            marker=dict(
+                color=colors,
+                size=10,
+            ),
+            text=texts,
+            textposition="top right",
+            textfont=dict(size=10),
+            hovertext=hover_texts,
+            hoverinfo="text",
+        )
+    )
+
+    fig.update_layout(
+        xaxis=dict(
+            title="Created Date",
+            showgrid=True,
+        ),
+        yaxis=dict(
+            tickvals=[-1, 0, 1],
+            ticktext=["", "", ""],
+            range=[-1.5, 1.5],
+            showgrid=False,
+            zeroline=True,
+            zerolinecolor="#ddd",
+            zerolinewidth=1,
+        ),
+        showlegend=False,
+        margin=dict(l=40, r=40, t=40, b=40),
+        hovermode="closest",
+    )
+
+    return fig
