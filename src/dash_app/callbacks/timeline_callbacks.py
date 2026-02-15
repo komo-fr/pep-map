@@ -1,6 +1,6 @@
 """Timelineタブのコールバック関数"""
 
-import plotly.graph_objects as go  # type: ignore[import-untyped]
+import plotly.graph_objects as go
 from dash import Input, Output, html
 
 from src.dash_app.utils.constants import DEFAULT_STATUS_COLOR, STATUS_COLOR_MAP

@@ -17,3 +17,8 @@ exclude_lines = [
     "if __name__ == .__main__.:",
     "raise NotImplementedError",
 ]
+
+[tool.mypy]
+[[tool.mypy.overrides]]
+module = "plotly.*"
+ignore_missing_imports = true
