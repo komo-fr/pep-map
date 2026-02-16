@@ -213,37 +213,43 @@ def _create_pep_info_display(pep_data) -> html.Div:
 
     return html.Div(
         [
-            # 1行目: Created と Type
-            html.P(
-                f"Created: {created_str}  Type: {pep_type}",
-                style={
-                    "marginBottom": "4px",
-                    "color": "#666",
-                    "fontSize": "14px",
-                },
-            ),
-            # 2行目: PEP番号（リンク付き）
+            # 1行目: PEP番号（リンク付き）とタイトル
             html.H3(
-                html.A(
-                    f"PEP {pep_number}",
-                    href=pep_url,
-                    target="_blank",
-                    style={
-                        "color": "#0066cc",
-                        "textDecoration": "none",
-                    },
-                ),
+                [
+                    html.A(
+                        f"PEP {pep_number}",
+                        href=pep_url,
+                        target="_blank",
+                        style={
+                            "color": "#0066cc",
+                            "textDecoration": "underline",
+                        },
+                    ),
+                    f": {title}",
+                ],
                 style={
                     "marginBottom": "4px",
                     "marginTop": "0",
                 },
             ),
-            # 3行目: タイトル（Statusを括弧内に表示）
+            # 2行目: Created、Type、Status
             html.P(
-                f"{title} ({status})",
+                [
+                    html.Span("Created: ", style={"fontWeight": "bold"}),
+                    created_str,
+                    html.Span(
+                        "Type: ", style={"fontWeight": "bold", "marginLeft": "20px"}
+                    ),
+                    pep_type,
+                    html.Span(
+                        "Status: ", style={"fontWeight": "bold", "marginLeft": "20px"}
+                    ),
+                    status,
+                ],
                 style={
                     "marginBottom": "0",
-                    "fontSize": "16px",
+                    "color": "#666",
+                    "fontSize": "14px",
                 },
             ),
         ]
