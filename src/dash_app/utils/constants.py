@@ -29,3 +29,23 @@ STATUS_COLOR_MAP = {
 
 # デフォルトの色（未知のStatusの場合）
 DEFAULT_STATUS_COLOR = "#888888"
+
+# === Timeline グラフ定数 ===
+
+# Y軸の位置定数
+TIMELINE_Y_SELECTED = 0  # 選択中のPEP
+TIMELINE_Y_CITING = 1  # 引用しているPEP
+TIMELINE_Y_CITED = -1  # 引用されているPEP
+TIMELINE_Y_RANGE = (-1.5, 1.5)  # Y軸の表示範囲
+TIMELINE_Y_TICKVALS = [-1, 0, 1]  # Y軸の目盛り値
+
+# グラフレイアウト
+TIMELINE_MARGIN = {"l": 40, "r": 40, "t": 40, "b": 40}
+TIMELINE_MARKER_SIZE = 10
+TIMELINE_TEXT_FONT_SIZE = 10
+TIMELINE_ZEROLINE_WIDTH = 1
+TIMELINE_ZEROLINE_COLOR = "#ddd"
+
+# アノテーション（空グラフ用）
+TIMELINE_ANNOTATION_FONT_SIZE = 14
+TIMELINE_ANNOTATION_FONT_COLOR = "#999"

@@ -2,6 +2,14 @@
 
 import plotly.graph_objects as go
 
+from src.dash_app.utils.constants import (
+    TIMELINE_ANNOTATION_FONT_COLOR,
+    TIMELINE_ANNOTATION_FONT_SIZE,
+    TIMELINE_MARGIN,
+    TIMELINE_Y_RANGE,
+    TIMELINE_Y_TICKVALS,
+)
+
 
 def create_empty_figure() -> go.Figure:
     """
@@ -18,13 +26,13 @@ def create_empty_figure() -> go.Figure:
             showgrid=True,
         ),
         yaxis=dict(
-            tickvals=[-1, 0, 1],
+            tickvals=TIMELINE_Y_TICKVALS,
             ticktext=["", "", ""],
-            range=[-1.5, 1.5],
+            range=list(TIMELINE_Y_RANGE),
             showgrid=False,
         ),
         showlegend=False,
-        margin=dict(l=40, r=40, t=40, b=40),
+        margin=dict(**TIMELINE_MARGIN),
         annotations=[
             dict(
                 text="Enter a PEP number to see the timeline",
@@ -33,7 +41,10 @@ def create_empty_figure() -> go.Figure:
                 x=0.5,
                 y=0.5,
                 showarrow=False,
-                font=dict(size=14, color="#999"),
+                font=dict(
+                    size=TIMELINE_ANNOTATION_FONT_SIZE,
+                    color=TIMELINE_ANNOTATION_FONT_COLOR,
+                ),
             )
         ],
     )

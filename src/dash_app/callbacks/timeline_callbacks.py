@@ -4,7 +4,20 @@ import plotly.graph_objects as go
 from dash import Input, Output, html
 
 from src.dash_app.components import create_empty_figure, create_initial_info_message
-from src.dash_app.utils.constants import DEFAULT_STATUS_COLOR, STATUS_COLOR_MAP
+from src.dash_app.utils.constants import (
+    DEFAULT_STATUS_COLOR,
+    STATUS_COLOR_MAP,
+    TIMELINE_MARKER_SIZE,
+    TIMELINE_MARGIN,
+    TIMELINE_TEXT_FONT_SIZE,
+    TIMELINE_Y_CITED,
+    TIMELINE_Y_CITING,
+    TIMELINE_Y_RANGE,
+    TIMELINE_Y_SELECTED,
+    TIMELINE_Y_TICKVALS,
+    TIMELINE_ZEROLINE_COLOR,
+    TIMELINE_ZEROLINE_WIDTH,
+)
 from src.dash_app.utils.data_loader import (
     generate_pep_url,
     get_cited_peps,
@@ -233,7 +246,7 @@ def _create_timeline_figure(pep_number: int, pep_data) -> go.Figure:
 
     # 選択中のPEP（Y=0）
     dates.append(pep_data["created"])
-    y_positions.append(0)
+    y_positions.append(TIMELINE_Y_SELECTED)
     colors.append(STATUS_COLOR_MAP.get(pep_data["status"], DEFAULT_STATUS_COLOR))
     texts.append(str(pep_number))
     hover_texts.append(
@@ -246,7 +259,7 @@ def _create_timeline_figure(pep_number: int, pep_data) -> go.Figure:
     # 引用しているPEP（Y=1）
     for _, row in citing_peps_df.iterrows():
         dates.append(row["created"])
-        y_positions.append(1)
+        y_positions.append(TIMELINE_Y_CITING)
         colors.append(STATUS_COLOR_MAP.get(row["status"], DEFAULT_STATUS_COLOR))
         texts.append(str(row["pep_number"]))
         hover_texts.append(
@@ -259,7 +272,7 @@ def _create_timeline_figure(pep_number: int, pep_data) -> go.Figure:
     # 引用されているPEP（Y=-1）
     for _, row in cited_peps_df.iterrows():
         dates.append(row["created"])
-        y_positions.append(-1)
+        y_positions.append(TIMELINE_Y_CITED)
         colors.append(STATUS_COLOR_MAP.get(row["status"], DEFAULT_STATUS_COLOR))
         texts.append(str(row["pep_number"]))
         hover_texts.append(
@@ -279,11 +292,11 @@ def _create_timeline_figure(pep_number: int, pep_data) -> go.Figure:
             mode="markers+text",
             marker=dict(
                 color=colors,
-                size=10,
+                size=TIMELINE_MARKER_SIZE,
             ),
             text=texts,
             textposition="top right",
-            textfont=dict(size=10),
+            textfont=dict(size=TIMELINE_TEXT_FONT_SIZE),
             hovertext=hover_texts,
             hoverinfo="text",
         )
@@ -295,16 +308,16 @@ def _create_timeline_figure(pep_number: int, pep_data) -> go.Figure:
             showgrid=True,
         ),
         yaxis=dict(
-            tickvals=[-1, 0, 1],
+            tickvals=TIMELINE_Y_TICKVALS,
             ticktext=["", "", ""],
-            range=[-1.5, 1.5],
+            range=list(TIMELINE_Y_RANGE),
             showgrid=False,
             zeroline=True,
-            zerolinecolor="#ddd",
-            zerolinewidth=1,
+            zerolinecolor=TIMELINE_ZEROLINE_COLOR,
+            zerolinewidth=TIMELINE_ZEROLINE_WIDTH,
         ),
         showlegend=False,
-        margin=dict(l=40, r=40, t=40, b=40),
+        margin=dict(**TIMELINE_MARGIN),
         hovermode="closest",
     )
 
