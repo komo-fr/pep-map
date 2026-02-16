@@ -57,9 +57,9 @@ def _create_top_section() -> html.Div:
                     dcc.Input(
                         id="pep-input",
                         type="number",
-                        placeholder="",
+                        placeholder="Please enter the PEP number",
                         style={
-                            "width": "80px",
+                            "width": "200px",
                         },
                     ),
                     # エラーメッセージ表示エリア
