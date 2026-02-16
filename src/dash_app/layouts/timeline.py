@@ -3,6 +3,7 @@
 from dash import dash_table, dcc, html
 
 from src.dash_app.components.status_legend import create_status_legend
+from src.dash_app.components.timeline_messages import create_initial_info_message
 from src.dash_app.utils.data_loader import load_metadata
 
 
@@ -77,7 +78,7 @@ def _create_top_section() -> html.Div:
             # 右側: PEP情報表示
             html.Div(
                 id="pep-info-display",
-                children=_create_initial_info_message(),
+                children=create_initial_info_message(),
                 style={
                     "display": "inline-block",
                     "verticalAlign": "top",
@@ -89,28 +90,6 @@ def _create_top_section() -> html.Div:
             "marginBottom": "16px",
             "borderBottom": "1px solid #ddd",
             "paddingBottom": "16px",
-        },
-    )
-
-
-def _create_initial_info_message() -> html.Div:
-    """初期状態のPEP情報表示（説明文）"""
-    return html.Div(
-        [
-            html.P(
-                "Let's enter the PEP number in the left text box.",
-                style={"marginBottom": "8px"},
-            ),
-            html.P("Then you can see the following information."),
-            html.Ul(
-                [
-                    html.Li("Which PEPs do link that PEP?"),
-                    html.Li("Which PEPs are linked from that PEP?"),
-                ]
-            ),
-        ],
-        style={
-            "color": "#666",
         },
     )
 

@@ -3,6 +3,7 @@
 import plotly.graph_objects as go
 from dash import Input, Output, html
 
+from src.dash_app.components.timeline_messages import create_initial_info_message
 from src.dash_app.utils.constants import DEFAULT_STATUS_COLOR, STATUS_COLOR_MAP
 from src.dash_app.utils.data_loader import (
     generate_pep_url,
@@ -37,7 +38,7 @@ def register_timeline_callbacks(app):
         """
         # 入力が空/Noneの場合: 初期説明文を表示
         if pep_number is None:
-            return _create_initial_info_message(), ""
+            return create_initial_info_message(), ""
 
         # PEPの存在確認
         pep_data = get_pep_by_number(pep_number)
@@ -45,7 +46,7 @@ def register_timeline_callbacks(app):
         # 存在しない場合: エラーメッセージを表示
         if pep_data is None:
             error_message = f"Not Found: PEP {pep_number}"
-            return _create_initial_info_message(), error_message
+            return create_initial_info_message(), error_message
 
         # 存在する場合: PEP情報を表示
         return _create_pep_info_display(pep_data), ""
@@ -145,33 +146,6 @@ def _convert_df_to_table_data(df) -> list[dict]:
         )
 
     return table_data
-
-
-def _create_initial_info_message() -> html.Div:
-    """
-    初期状態のPEP情報表示（説明文）を生成する
-
-    Returns:
-        html.Div: 初期説明文のコンポーネント
-    """
-    return html.Div(
-        [
-            html.P(
-                "Let's enter the PEP number in the left text box.",
-                style={"marginBottom": "8px"},
-            ),
-            html.P("Then you can see the following information."),
-            html.Ul(
-                [
-                    html.Li("Which PEPs do link that PEP?"),
-                    html.Li("Which PEPs are linked from that PEP?"),
-                ]
-            ),
-        ],
-        style={
-            "color": "#666",
-        },
-    )
 
 
 def _create_pep_info_display(pep_data) -> html.Div:
