@@ -286,13 +286,13 @@ See https://peps.python.org/pep-0008/ for details.
         assert isinstance(result, pd.DataFrame)
 
         # DataFrame should have the expected columns
-        assert list(result.columns) == ["source", "target", "count"]
+        assert list(result.columns) == ["citing", "cited", "count"]
 
         # DataFrame should contain data from both files
         assert len(result) > 0
 
         # Check that PEP 9999 citations are included
-        pep_9999_citations = result[result["source"] == 9999]
+        pep_9999_citations = result[result["citing"] == 9999]
         assert len(pep_9999_citations) > 0
 
     def test_dataframe_structure(self, extractor, fixtures_dir):
@@ -301,11 +301,11 @@ See https://peps.python.org/pep-0008/ for details.
         result = extractor.extract_from_multiple_files(file_paths)
 
         # Check column names
-        assert list(result.columns) == ["source", "target", "count"]
+        assert list(result.columns) == ["citing", "cited", "count"]
 
         # Check data types - all should be integers
-        assert result["source"].dtype == int
-        assert result["target"].dtype == int
+        assert result["citing"].dtype == int
+        assert result["cited"].dtype == int
         assert result["count"].dtype == int
 
         # Check that all counts are positive
@@ -320,7 +320,7 @@ See https://peps.python.org/pep-0008/ for details.
         assert len(result) == 0
 
         # But should still have the correct columns
-        assert list(result.columns) == ["source", "target", "count"]
+        assert list(result.columns) == ["citing", "cited", "count"]
 
     # Phase 7: CSV output tests (Red)
 
@@ -340,7 +340,7 @@ See https://peps.python.org/pep-0008/ for details.
         # Read the CSV file and verify content
         saved_df = pd.read_csv(output_path)
         assert len(saved_df) == len(df)
-        assert list(saved_df.columns) == ["source", "target", "count"]
+        assert list(saved_df.columns) == ["citing", "cited", "count"]
 
     def test_csv_format(self, extractor, fixtures_dir, tmp_path):
         """Test CSV file format."""
@@ -357,12 +357,12 @@ See https://peps.python.org/pep-0008/ for details.
             lines = f.readlines()
 
         # Check header line
-        assert lines[0].strip() == "source,target,count"
+        assert lines[0].strip() == "citing,cited,count"
 
         # Check that there's no index column (no leading numbers)
         if len(lines) > 1:
             # Data lines should not start with a number followed by comma
-            # They should start with source PEP number
+            # They should start with citing PEP number
             assert not lines[1].startswith("0,")
 
     def test_save_to_csv_create_directory(self, extractor, tmp_path):
@@ -371,7 +371,7 @@ See https://peps.python.org/pep-0008/ for details.
         output_path = tmp_path / "nested" / "dir" / "citations.csv"
 
         # Create an empty DataFrame
-        df = pd.DataFrame(columns=["source", "target", "count"])
+        df = pd.DataFrame(columns=["citing", "cited", "count"])
 
         # Save should create the directory
         extractor.save_to_csv(df, output_path)
