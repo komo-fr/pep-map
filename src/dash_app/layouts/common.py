@@ -8,6 +8,17 @@ def create_tab_navigation():
     Returns:
         dcc.Tabs: タブナビゲーションコンポーネント
     """
+    # タブ共通スタイル
+    tab_style = {
+        "padding": "8px 16px",
+        "fontWeight": "500",
+    }
+    tab_selected_style = {
+        "padding": "8px 16px",
+        "fontWeight": "bold",
+        "borderTop": "2px solid #6c5ce7",
+    }
+
     return dcc.Tabs(
         id="main-tabs",
         value="timeline",
@@ -15,21 +26,32 @@ def create_tab_navigation():
             dcc.Tab(
                 label="Timeline",
                 value="timeline",
+                style=tab_style,
+                selected_style=tab_selected_style,
             ),
             dcc.Tab(
                 label="Network",
                 value="network",
                 disabled=True,
+                style=tab_style,
+                selected_style=tab_selected_style,
             ),
             dcc.Tab(
                 label="Community",
                 value="community",
                 disabled=True,
+                style=tab_style,
+                selected_style=tab_selected_style,
             ),
             dcc.Tab(
                 label="History",
                 value="history",
                 disabled=True,
+                style=tab_style,
+                selected_style=tab_selected_style,
             ),
         ],
+        style={
+            "height": "auto",
+        },
     )
