@@ -80,7 +80,7 @@ def load_metadata() -> dict:
 
     Returns:
         dict: メタデータの辞書
-            - fetched_at (str): データ取得日（YYYY-MM-DD形式）
+            - fetched_at (str): データ取得日（YYYY-MM-DD HH:MM (UTC)形式）
             - source_url (str): データ取得元URL
     """
     global _metadata_cache
@@ -93,11 +93,11 @@ def load_metadata() -> dict:
     with open(file_path, encoding="utf-8") as f:
         data = json.load(f)
 
-    # fetched_at を YYYY-MM-DD 形式に変換
+    # fetched_at を YYYY-MM-DD HH:MM (UTC) 形式に変換
     # 元のフォーマット: "2026-02-14T15:25:50.027772+00:00"
     fetched_at_str = data["fetched_at"]
     fetched_at_dt = datetime.fromisoformat(fetched_at_str)
-    data["fetched_at"] = fetched_at_dt.strftime("%Y-%m-%d")
+    data["fetched_at"] = fetched_at_dt.strftime("%Y-%m-%d %H:%M (UTC)")
 
     _metadata_cache = data
     return data
