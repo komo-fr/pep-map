@@ -3,7 +3,7 @@
 import plotly.graph_objects as go
 from dash import Input, Output, html
 
-from src.dash_app.components.timeline_messages import create_initial_info_message
+from src.dash_app.components import create_empty_figure, create_initial_info_message
 from src.dash_app.utils.constants import DEFAULT_STATUS_COLOR, STATUS_COLOR_MAP
 from src.dash_app.utils.data_loader import (
     generate_pep_url,
@@ -102,12 +102,12 @@ def register_timeline_callbacks(app):
         """
         # 入力が空/Noneの場合: 空のグラフを返す
         if pep_number is None:
-            return _create_empty_figure()
+            return create_empty_figure()
 
         # PEPの存在確認
         pep_data = get_pep_by_number(pep_number)
         if pep_data is None:
-            return _create_empty_figure()
+            return create_empty_figure()
 
         # グラフデータを構築
         return _create_timeline_figure(pep_number, pep_data)
@@ -207,44 +207,6 @@ def _create_pep_info_display(pep_data) -> html.Div:
             ),
         ]
     )
-
-
-def _create_empty_figure() -> go.Figure:
-    """
-    空のグラフ（初期状態）を生成する
-
-    Returns:
-        go.Figure: 空のPlotly figureオブジェクト
-    """
-    fig = go.Figure()
-
-    fig.update_layout(
-        xaxis=dict(
-            title="Created Date",
-            showgrid=True,
-        ),
-        yaxis=dict(
-            tickvals=[-1, 0, 1],
-            ticktext=["", "", ""],
-            range=[-1.5, 1.5],
-            showgrid=False,
-        ),
-        showlegend=False,
-        margin=dict(l=40, r=40, t=40, b=40),
-        annotations=[
-            dict(
-                text="Enter a PEP number to see the timeline",
-                xref="paper",
-                yref="paper",
-                x=0.5,
-                y=0.5,
-                showarrow=False,
-                font=dict(size=14, color="#999"),
-            )
-        ],
-    )
-
-    return fig
 
 
 def _create_timeline_figure(pep_number: int, pep_data) -> go.Figure:

@@ -2,8 +2,11 @@
 
 from dash import dash_table, dcc, html
 
-from src.dash_app.components.status_legend import create_status_legend
-from src.dash_app.components.timeline_messages import create_initial_info_message
+from src.dash_app.components import (
+    create_empty_figure,
+    create_initial_info_message,
+    create_status_legend,
+)
 from src.dash_app.utils.data_loader import load_metadata
 
 
@@ -109,7 +112,7 @@ def _create_graph_section() -> html.Div:
     return html.Div(
         dcc.Graph(
             id="timeline-graph",
-            figure=_create_empty_figure(),
+            figure=create_empty_figure(),
             style={
                 "height": "300px",
             },
@@ -118,38 +121,6 @@ def _create_graph_section() -> html.Div:
             "marginBottom": "16px",
         },
     )
-
-
-def _create_empty_figure() -> dict:
-    """空のグラフ（初期状態）"""
-    return {
-        "data": [],
-        "layout": {
-            "xaxis": {
-                "title": "Created Date",
-                "showgrid": True,
-            },
-            "yaxis": {
-                "tickvals": [-1, 0, 1],
-                "ticktext": ["", "", ""],
-                "range": [-1.5, 1.5],
-                "showgrid": False,
-            },
-            "showlegend": False,
-            "margin": {"l": 40, "r": 40, "t": 40, "b": 40},
-            "annotations": [
-                {
-                    "text": "Enter a PEP number to see the timeline",
-                    "xref": "paper",
-                    "yref": "paper",
-                    "x": 0.5,
-                    "y": 0.5,
-                    "showarrow": False,
-                    "font": {"size": 14, "color": "#999"},
-                }
-            ],
-        },
-    }
 
 
 def _create_metadata_section(fetched_at: str) -> html.Div:
