@@ -26,6 +26,25 @@ from src.dash_app.utils.data_loader import (
 )
 
 
+def _parse_pep_number(value):
+    """
+    PEP番号の入力値を整数に変換する
+
+    Args:
+        value: 入力値（str, int, None）
+
+    Returns:
+        int | None: 整数に変換されたPEP番号、または None
+    """
+    if value is None or value == "":
+        return None
+
+    try:
+        return int(value)
+    except (ValueError, TypeError):
+        return None
+
+
 def register_timeline_callbacks(app):
     """
     Timelineタブのコールバックを登録する
@@ -44,11 +63,14 @@ def register_timeline_callbacks(app):
         PEP番号入力に連動してPEP情報を更新する
 
         Args:
-            pep_number: 入力されたPEP番号（int または None）
+            pep_number: 入力されたPEP番号（str, int または None）
 
         Returns:
             tuple: (PEP情報表示コンテンツ, エラーメッセージ)
         """
+        # 入力値を整数に変換
+        pep_number = _parse_pep_number(pep_number)
+
         # 入力が空/Noneの場合: 初期説明文を表示
         if pep_number is None:
             return create_initial_info_message(), ""
@@ -75,11 +97,14 @@ def register_timeline_callbacks(app):
         PEP番号入力に連動してテーブルデータを更新する
 
         Args:
-            pep_number: 入力されたPEP番号（int または None）
+            pep_number: 入力されたPEP番号（str, int または None）
 
         Returns:
             tuple: (citing_tableのデータ, cited_tableのデータ)
         """
+        # 入力値を整数に変換
+        pep_number = _parse_pep_number(pep_number)
+
         # 入力が空/Noneまたは存在しないPEPの場合: 空のテーブル
         if pep_number is None:
             return [], []
@@ -108,11 +133,14 @@ def register_timeline_callbacks(app):
         PEP番号入力に連動してタイムライングラフを更新する
 
         Args:
-            pep_number: 入力されたPEP番号（int または None）
+            pep_number: 入力されたPEP番号（str, int または None）
 
         Returns:
             go.Figure: Plotlyのfigureオブジェクト
         """
+        # 入力値を整数に変換
+        pep_number = _parse_pep_number(pep_number)
+
         # 入力が空/Noneの場合: 空のグラフを返す
         if pep_number is None:
             return create_empty_figure()
