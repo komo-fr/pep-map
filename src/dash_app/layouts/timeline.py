@@ -57,11 +57,11 @@ def _create_top_section() -> html.Div:
                     dcc.Input(
                         id="pep-input",
                         type="text",
-                        placeholder="Please enter the PEP number",
+                        placeholder="Enter PEP number",
                         inputMode="numeric",
                         pattern="[0-9]*",
                         style={
-                            "width": "200px",
+                            "width": "180px",
                         },
                     ),
                     # エラーメッセージ表示エリア
@@ -77,7 +77,7 @@ def _create_top_section() -> html.Div:
                 style={
                     "display": "inline-block",
                     "verticalAlign": "top",
-                    "width": "150px",
+                    "width": "200px",
                 },
             ),
             # 右側: PEP情報表示
