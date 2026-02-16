@@ -194,8 +194,25 @@ def _create_pep_table(table_id: str) -> dash_table.DataTable:  # type: ignore[na
         },
         style_cell={
             "textAlign": "left",
-            "padding": "8px",
-            "fontSize": "13px",
+            "padding": "0px 6px",
+            "fontSize": "15px",
+            "height": "auto",
+            "minHeight": "18px",
+        },
+        style_cell_conditional=[
+            {"if": {"column_id": "row_num"}, "width": "40px", "textAlign": "right"},
+            {"if": {"column_id": "pep"}, "width": "80px"},
+            {
+                "if": {"column_id": "title"},
+                "width": "300px",
+                "maxWidth": "300px",
+                "whiteSpace": "normal",
+            },
+            {"if": {"column_id": "status"}, "width": "100px"},
+            {"if": {"column_id": "created"}, "width": "100px"},
+        ],
+        style_data={
+            "lineHeight": "0.9",
         },
         style_header={
             "fontWeight": "bold",
