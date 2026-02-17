@@ -235,15 +235,11 @@ def _create_pep_info_display(pep_data) -> html.Div:
             # 2行目: Created、Type、Status
             html.P(
                 [
-                    html.Span("Created: ", style={"fontWeight": "bold"}),
+                    html.Span("Created: "),
                     created_str,
-                    html.Span(
-                        "Type: ", style={"fontWeight": "bold", "marginLeft": "20px"}
-                    ),
+                    html.Span("Type: ", style={"marginLeft": "20px"}),
                     pep_type,
-                    html.Span(
-                        "Status: ", style={"fontWeight": "bold", "marginLeft": "20px"}
-                    ),
+                    html.Span("Status: ", style={"marginLeft": "20px"}),
                     status,
                 ],
                 style={
