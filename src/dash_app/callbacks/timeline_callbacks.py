@@ -227,6 +227,48 @@ def _convert_df_to_table_data(df) -> list[dict]:
     return table_data
 
 
+def _create_status_badge(status: str):
+    """
+    Statusバッジ（色付き四角 + テキスト）を生成する
+
+    Args:
+        status: PEPのステータス
+
+    Returns:
+        html.Span: 色付きバッジコンポーネント
+    """
+    bg_color = STATUS_COLOR_MAP.get(status, DEFAULT_STATUS_COLOR)
+
+    return html.Span(
+        [
+            # 色付き四角
+            html.Span(
+                style={
+                    "display": "inline-block",
+                    "width": "12px",
+                    "height": "12px",
+                    "backgroundColor": bg_color,
+                    "marginRight": "4px",
+                    "verticalAlign": "middle",
+                    "border": "1px solid #ccc",
+                }
+            ),
+            # Statusテキスト
+            html.Span(
+                status,
+                style={
+                    "verticalAlign": "middle",
+                    "fontWeight": "normal",
+                },
+            ),
+        ],
+        style={
+            "display": "inline",
+            "marginLeft": "0px",
+        },
+    )
+
+
 def _create_pep_info_display(pep_data) -> html.Div:
     """
     PEP情報表示コンポーネントを生成する
@@ -278,7 +320,7 @@ def _create_pep_info_display(pep_data) -> html.Div:
                     html.Span("Type: ", style={"marginLeft": "20px"}),
                     pep_type,
                     html.Span("Status: ", style={"marginLeft": "20px"}),
-                    status,
+                    _create_status_badge(status),
                 ],
                 style={
                     "marginBottom": "0",
