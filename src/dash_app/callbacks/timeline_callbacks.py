@@ -11,6 +11,15 @@ from src.dash_app.components.timeline_figures import (
 from src.dash_app.utils.constants import (
     DEFAULT_STATUS_COLOR,
     STATUS_COLOR_MAP,
+    TIMELINE_ANNOTATION_ARROW_AY,
+    TIMELINE_ANNOTATION_ARROW_COLOR,
+    TIMELINE_ANNOTATION_ARROW_SIZE,
+    TIMELINE_ANNOTATION_ARROW_WIDTH,
+    TIMELINE_ANNOTATION_TEXT_COLOR,
+    TIMELINE_ANNOTATION_TEXT_SIZE,
+    TIMELINE_ANNOTATION_X,
+    TIMELINE_ANNOTATION_Y_CITED_TEXT,
+    TIMELINE_ANNOTATION_Y_CITING_TEXT,
     TIMELINE_MARKER_SIZE,
     TIMELINE_MARGIN,
     TIMELINE_TEXT_FONT_SIZE,
@@ -368,60 +377,66 @@ def _create_pep_annotations(pep_number: int) -> list[dict]:
         list[dict]: アノテーション設定のリスト
     """
     return [
-        # 上部: 矢印のみ (tail=Y=1, arrowhead=Y=0, 下向き)
-        # arrowheadがY=0、tailはY=1方向(上=画面ピクセル減少)なのでay=-50
+        # 上部: 矢印のみ (TIMELINE_Y_CITING のPEP群から TIMELINE_Y_SELECTED へ)
+        # arrowhead が TIMELINE_Y_SELECTED (Y=0)、tail は TIMELINE_Y_CITING (Y=1) 方向
         dict(
             text="",
             xref="paper",
             yref="y",
-            x=0.01,
-            y=0,
+            x=TIMELINE_ANNOTATION_X,
+            y=TIMELINE_Y_SELECTED,
             ax=0,
-            ay=-50,
+            ay=TIMELINE_ANNOTATION_ARROW_AY,
             showarrow=True,
             arrowhead=2,
-            arrowsize=1,
-            arrowwidth=1.5,
-            arrowcolor="#000000",
+            arrowsize=TIMELINE_ANNOTATION_ARROW_SIZE,
+            arrowwidth=TIMELINE_ANNOTATION_ARROW_WIDTH,
+            arrowcolor=TIMELINE_ANNOTATION_ARROW_COLOR,
         ),
-        # 上部テキスト: 矢印の中間 Y=0.5
+        # 上部テキスト: TIMELINE_Y_CITING と TIMELINE_Y_SELECTED の中間より下
         dict(
             text=f"PEP {pep_number} is linked from ...",
             xref="paper",
             yref="y",
-            x=0.01,
-            y=0.55,
+            x=TIMELINE_ANNOTATION_X,
+            y=TIMELINE_ANNOTATION_Y_CITING_TEXT,
             showarrow=False,
-            font=dict(size=12, color="#000000"),
+            font=dict(
+                size=TIMELINE_ANNOTATION_TEXT_SIZE,
+                color=TIMELINE_ANNOTATION_TEXT_COLOR,
+            ),
             align="left",
             xanchor="left",
             yanchor="middle",
         ),
-        # 下部: 矢印のみ (tail=Y=0, arrowhead=Y=-1, 下向き)
-        # arrowheadがY=-1、tailはY=0方向(上=画面ピクセル減少)なのでay=-50
+        # 下部: 矢印のみ (TIMELINE_Y_CITED のPEP群から TIMELINE_Y_SELECTED へ)
+        # arrowhead が TIMELINE_Y_CITED (Y=-1)、tail は TIMELINE_Y_SELECTED (Y=0) 方向
         dict(
             text="",
             xref="paper",
             yref="y",
-            x=0.01,
-            y=-1,
+            x=TIMELINE_ANNOTATION_X,
+            y=TIMELINE_Y_CITED,
             ax=0,
-            ay=-50,
+            ay=TIMELINE_ANNOTATION_ARROW_AY,
             showarrow=True,
             arrowhead=2,
-            arrowsize=1,
-            arrowwidth=1.5,
-            arrowcolor="#000000",
+            arrowsize=TIMELINE_ANNOTATION_ARROW_SIZE,
+            arrowwidth=TIMELINE_ANNOTATION_ARROW_WIDTH,
+            arrowcolor=TIMELINE_ANNOTATION_ARROW_COLOR,
         ),
-        # 下部テキスト: 矢印の中間 Y=-0.5
+        # 下部テキスト: TIMELINE_Y_CITED と TIMELINE_Y_SELECTED の中間より上
         dict(
             text=f"PEP {pep_number} links to ...",
             xref="paper",
             yref="y",
-            x=0.01,
-            y=-0.4,
+            x=TIMELINE_ANNOTATION_X,
+            y=TIMELINE_ANNOTATION_Y_CITED_TEXT,
             showarrow=False,
-            font=dict(size=12, color="#000000"),
+            font=dict(
+                size=TIMELINE_ANNOTATION_TEXT_SIZE,
+                color=TIMELINE_ANNOTATION_TEXT_COLOR,
+            ),
             align="left",
             xanchor="left",
             yanchor="middle",
