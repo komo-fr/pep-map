@@ -82,7 +82,7 @@ class TestLoadFunctions:
         metadata = data_loader.load_metadata()
 
         # YYYY-MM-DD形式であることを確認
-        assert metadata["fetched_at"] == "2026-02-14"
+        assert metadata["fetched_at"] == "2026-02-14 00:00 (UTC)"
         # ISO形式の日付がパースされていることを確認
         import re
 
