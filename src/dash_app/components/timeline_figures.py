@@ -42,32 +42,6 @@ def _get_xaxis_config() -> dict:
     )
 
 
-def _get_half_year_grid_shapes(start_year: int = 2000) -> list[dict]:
-    """
-    各年7月1日に縦のドット線を生成する
-
-    Args:
-        start_year: 開始年
-
-    Returns:
-        list[dict]: shapesの設定リスト
-    """
-    fetched_year = get_fetched_year()
-    return [
-        dict(
-            type="line",
-            xref="x",
-            yref="paper",
-            x0=f"{year}-07-01",
-            x1=f"{year}-07-01",
-            y0=0,
-            y1=1,
-            line=dict(color="rgba(0,0,0,0.15)", width=1, dash="dot"),
-        )
-        for year in range(start_year, fetched_year + 1)
-    ]
-
-
 def _get_guideline_shapes() -> list[dict]:
     """
     タイムライン散布図のガイドライン（横線）を取得する
