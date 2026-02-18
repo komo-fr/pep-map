@@ -405,10 +405,14 @@ def _create_timeline_figure(pep_number: int, pep_data) -> go.Figure:
             marker=dict(
                 color=colors,
                 size=TIMELINE_MARKER_SIZE,
+                opacity=0.7,
             ),
             text=texts,
             textposition="top right",
-            textfont=dict(size=TIMELINE_TEXT_FONT_SIZE),
+            textfont=dict(
+                size=TIMELINE_TEXT_FONT_SIZE,
+                color="rgba(0, 0, 0, 0.7)",
+            ),
             hovertext=hover_texts,
             hoverinfo="text",
         )
