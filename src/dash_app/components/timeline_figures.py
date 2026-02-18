@@ -27,6 +27,7 @@ def _get_xaxis_config() -> dict:
         title="Created Date",
         showgrid=True,
         gridwidth=2,
+        type="date",
         range=[x_range_min, x_range_max],
         dtick="M12",
         tick0="2000-01-01",
