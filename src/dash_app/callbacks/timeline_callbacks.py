@@ -101,12 +101,7 @@ def register_timeline_callbacks(app):
         Returns:
             tuple: (citing_title, cited_title)
         """
-        pep_number = _parse_pep_number(pep_number)
-
-        if pep_number is None:
-            return "PEP N is linked from...", "PEP N links to..."
-
-        return f"PEP {pep_number} is linked from...", f"PEP {pep_number} links to..."
+        return _compute_table_titles(pep_number)
 
     # === テーブル更新コールバック（新規追加） ===
     @app.callback(
@@ -174,6 +169,27 @@ def register_timeline_callbacks(app):
 
         # グラフデータを構築
         return _create_timeline_figure(pep_number, pep_data)
+
+
+def _compute_table_titles(pep_number_input) -> tuple[str, str]:
+    """
+    テーブルタイトルを計算する
+
+    Args:
+        pep_number_input: 入力されたPEP番号（str, int または None）
+
+    Returns:
+        tuple: (citing_title, cited_title)
+    """
+    pep_number = _parse_pep_number(pep_number_input)
+
+    if pep_number is None:
+        return "PEP N is linked from...", "PEP N links to..."
+
+    if get_pep_by_number(pep_number) is None:
+        return "PEP N is linked from...", "PEP N links to..."
+
+    return f"PEP {pep_number} is linked from...", f"PEP {pep_number} links to..."
 
 
 def _convert_df_to_table_data(df) -> list[dict]:
