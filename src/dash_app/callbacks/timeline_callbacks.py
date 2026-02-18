@@ -334,6 +334,78 @@ def _create_pep_info_display(pep_data) -> html.Div:
     )
 
 
+def _create_pep_annotations(pep_number: int) -> list[dict]:
+    """
+    PEP番号入力時のアノテーション（テキストと矢印）を生成する
+
+    Args:
+        pep_number: 入力されたPEP番号
+
+    Returns:
+        list[dict]: アノテーション設定のリスト
+    """
+    return [
+        # 上部: 矢印のみ (tail=Y=1, arrowhead=Y=0, 下向き)
+        # arrowheadがY=0、tailはY=1方向(上=画面ピクセル減少)なのでay=-50
+        dict(
+            text="",
+            xref="paper",
+            yref="y",
+            x=0.01,
+            y=0,
+            ax=0,
+            ay=-50,
+            showarrow=True,
+            arrowhead=2,
+            arrowsize=1,
+            arrowwidth=1.5,
+            arrowcolor="#000000",
+        ),
+        # 上部テキスト: 矢印の中間 Y=0.5
+        dict(
+            text=f"PEP {pep_number} is linked from ...",
+            xref="paper",
+            yref="y",
+            x=0.01,
+            y=0.55,
+            showarrow=False,
+            font=dict(size=12, color="#000000"),
+            align="left",
+            xanchor="left",
+            yanchor="middle",
+        ),
+        # 下部: 矢印のみ (tail=Y=0, arrowhead=Y=-1, 下向き)
+        # arrowheadがY=-1、tailはY=0方向(上=画面ピクセル減少)なのでay=-50
+        dict(
+            text="",
+            xref="paper",
+            yref="y",
+            x=0.01,
+            y=-1,
+            ax=0,
+            ay=-50,
+            showarrow=True,
+            arrowhead=2,
+            arrowsize=1,
+            arrowwidth=1.5,
+            arrowcolor="#000000",
+        ),
+        # 下部テキスト: 矢印の中間 Y=-0.5
+        dict(
+            text=f"PEP {pep_number} links to ...",
+            xref="paper",
+            yref="y",
+            x=0.01,
+            y=-0.4,
+            showarrow=False,
+            font=dict(size=12, color="#000000"),
+            align="left",
+            xanchor="left",
+            yanchor="middle",
+        ),
+    ]
+
+
 def _create_timeline_figure(pep_number: int, pep_data) -> go.Figure:
     """
     タイムライングラフを生成する
@@ -430,6 +502,7 @@ def _create_timeline_figure(pep_number: int, pep_data) -> go.Figure:
         margin=dict(**TIMELINE_MARGIN),
         hovermode="closest",
         shapes=_get_guideline_shapes(),
+        annotations=_create_pep_annotations(pep_number),
     )
 
     return fig
