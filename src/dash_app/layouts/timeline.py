@@ -7,6 +7,10 @@ from src.dash_app.components import (
     create_initial_info_message,
     create_status_legend,
 )
+from src.dash_app.utils.constants import (
+    STATUS_COLOR_MAP,
+    STATUS_FONT_COLOR_MAP,
+)
 from src.dash_app.utils.data_loader import load_metadata
 
 
@@ -184,6 +188,9 @@ def _create_tables_section() -> html.Div:
 
 def _create_pep_table(table_id: str) -> dash_table.DataTable:  # type: ignore[name-defined]
     """PEPテーブルを生成する"""
+    # Status列の条件付きスタイルを生成
+    status_styles = _generate_status_styles()
+
     return dash_table.DataTable(  # type: ignore[attr-defined]
         id=table_id,
         columns=[
@@ -216,7 +223,7 @@ def _create_pep_table(table_id: str) -> dash_table.DataTable:  # type: ignore[na
                 "maxWidth": "300px",
                 "whiteSpace": "normal",
             },
-            {"if": {"column_id": "status"}, "width": "100px"},
+            {"if": {"column_id": "status"}, "width": "100px", "textAlign": "center"},
             {"if": {"column_id": "created"}, "width": "100px"},
         ],
         style_data={
@@ -239,5 +246,29 @@ def _create_pep_table(table_id: str) -> dash_table.DataTable:  # type: ignore[na
                 "fontSize": "14px",
                 "vertical-align": "bottom",
             },
-        ],
+        ]
+        + status_styles,
     )
+
+
+def _generate_status_styles() -> list:
+    """
+    Status列の各ステータス値に対する条件付きスタイルを生成する
+
+    Returns:
+        list: 条件付きスタイルのリスト
+    """
+    styles = []
+    for status, bg_color in STATUS_COLOR_MAP.items():
+        font_color = STATUS_FONT_COLOR_MAP.get(status, "#545454")
+        styles.append(
+            {
+                "if": {
+                    "column_id": "status",
+                    "filter_query": f'{{status}} = "{status}"',
+                },
+                "backgroundColor": bg_color,
+                "color": font_color,
+            }
+        )
+    return styles

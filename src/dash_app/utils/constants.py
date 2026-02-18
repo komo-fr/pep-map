@@ -30,6 +30,26 @@ STATUS_COLOR_MAP = {
 # デフォルトの色（未知のStatusの場合）
 DEFAULT_STATUS_COLOR = "#888888"
 
+# 基本的なフォント色
+BASE_FONT_COLOR = "#545454"
+
+# Statusごとのフォント色定義
+STATUS_FONT_COLOR_MAP = {
+    "Accepted": "#FAFAFA",
+    "Active": "#FAFAFA",
+    "April Fool!": "#FAFAFA",
+    "Draft": "#FAFAFA",
+    "Final": "#FAFAFA",
+    "Provisional": BASE_FONT_COLOR,
+    "Rejected": "#FAFAFA",
+    "Superseded": "#FAFAFA",
+    "Withdrawn": "#FAFAFA",
+    "Deferred": "#FAFAFA",
+}
+
+# デフォルトのフォント色（未知のStatusの場合）
+DEFAULT_STATUS_FONT_COLOR = BASE_FONT_COLOR
+
 # === Timeline グラフ定数 ===
 
 # Y軸の位置定数
