@@ -4,6 +4,10 @@ import plotly.graph_objects as go
 from dash import Input, Output, html
 
 from src.dash_app.components import create_empty_figure, create_initial_info_message
+from src.dash_app.components.timeline_figures import (
+    _get_guideline_shapes,
+    _get_xaxis_config,
+)
 from src.dash_app.utils.constants import (
     DEFAULT_STATUS_COLOR,
     STATUS_COLOR_MAP,
@@ -15,8 +19,6 @@ from src.dash_app.utils.constants import (
     TIMELINE_Y_RANGE,
     TIMELINE_Y_SELECTED,
     TIMELINE_Y_TICKVALS,
-    TIMELINE_ZEROLINE_COLOR,
-    TIMELINE_ZEROLINE_WIDTH,
 )
 from src.dash_app.utils.data_loader import (
     generate_pep_url,
@@ -413,22 +415,17 @@ def _create_timeline_figure(pep_number: int, pep_data) -> go.Figure:
     )
 
     fig.update_layout(
-        xaxis=dict(
-            title="Created Date",
-            showgrid=True,
-        ),
+        xaxis=_get_xaxis_config(),
         yaxis=dict(
             tickvals=TIMELINE_Y_TICKVALS,
             ticktext=["", "", ""],
             range=list(TIMELINE_Y_RANGE),
             showgrid=False,
-            zeroline=True,
-            zerolinecolor=TIMELINE_ZEROLINE_COLOR,
-            zerolinewidth=TIMELINE_ZEROLINE_WIDTH,
         ),
         showlegend=False,
         margin=dict(**TIMELINE_MARGIN),
         hovermode="closest",
+        shapes=_get_guideline_shapes(),
     )
 
     return fig

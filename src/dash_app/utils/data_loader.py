@@ -103,6 +103,19 @@ def load_metadata() -> dict:
     return data
 
 
+def get_fetched_year() -> int:
+    """
+    データ取得日の年を取得する
+
+    Returns:
+        int: データ取得日の年（例: 2026）
+    """
+    metadata = load_metadata()
+    # fetched_at は "YYYY-MM-DD HH:MM (UTC)" 形式なので、最初の4文字を取得
+    fetched_at_str = metadata["fetched_at"]
+    return int(fetched_at_str[:4])
+
+
 def get_pep_by_number(pep_number: int) -> pd.Series | None:
     """
     指定したPEP番号のメタデータを取得する
