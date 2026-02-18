@@ -38,7 +38,7 @@ def sample_peps_metadata():
                 "title": "Function Annotations",
                 "status": "Final",
                 "type": "Standards Track",
-                "created": pd.Timestamp("2006-12-02"),
+                "created": pd.Timestamp("2000-01-01"),
                 "authors": "Collin Winter, Tony Lownds",
                 "topic": "",
                 "requires": "",

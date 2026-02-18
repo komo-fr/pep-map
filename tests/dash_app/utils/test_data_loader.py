@@ -145,9 +145,9 @@ class TestCitationFunctions:
         cited = data_loader.get_cited_peps(484)
 
         assert len(cited) == 2
-        # PEP番号で昇順ソートされていることを確認
-        assert cited.iloc[0]["pep_number"] == 8
-        assert cited.iloc[1]["pep_number"] == 3107
+        # 作成日で昇順ソートされていることを確認
+        assert cited.iloc[0]["pep_number"] == 3107  # 2000-01-01（最も古い）
+        assert cited.iloc[1]["pep_number"] == 8  # 2001-07-05
 
     def test_get_cited_peps_empty(self, mock_data_files, monkeypatch):
         """引用先がない場合は空のDataFrameを返す"""
