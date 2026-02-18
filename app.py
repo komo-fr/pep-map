@@ -1,6 +1,7 @@
 """PEP Map - Timeline機能"""
 
 from dash import Dash, html, Input, Output
+from dash_bootstrap_components import themes
 
 from src.dash_app.layouts.common import create_tab_navigation
 from src.dash_app.layouts.timeline import create_timeline_layout
@@ -10,6 +11,7 @@ from src.dash_app.callbacks.timeline_callbacks import register_timeline_callback
 app = Dash(
     __name__,
     suppress_callback_exceptions=True,  # 動的コンテンツのためコールバック例外を抑制
+    external_stylesheets=[themes.BOOTSTRAP],
 )
 
 # アプリレイアウトの定義

@@ -7,6 +7,10 @@ from src.dash_app.components import (
     create_initial_info_message,
     create_status_legend,
 )
+from src.dash_app.utils.constants import (
+    STATUS_COLOR_MAP,
+    STATUS_FONT_COLOR_MAP,
+)
 from src.dash_app.utils.data_loader import load_metadata
 
 
@@ -56,10 +60,12 @@ def _create_top_section() -> html.Div:
                     ),
                     dcc.Input(
                         id="pep-input",
-                        type="number",
-                        placeholder="",
+                        type="text",
+                        placeholder="Enter PEP number",
+                        inputMode="numeric",
+                        pattern="[0-9]*",
                         style={
-                            "width": "80px",
+                            "width": "180px",
                         },
                     ),
                     # エラーメッセージ表示エリア
@@ -75,7 +81,7 @@ def _create_top_section() -> html.Div:
                 style={
                     "display": "inline-block",
                     "verticalAlign": "top",
-                    "width": "150px",
+                    "width": "200px",
                 },
             ),
             # 右側: PEP情報表示
@@ -146,7 +152,11 @@ def _create_tables_section() -> html.Div:
             # 左側: 選択中PEPを引用しているPEP
             html.Div(
                 [
-                    html.H4("PEP is linked from...", style={"marginBottom": "8px"}),
+                    html.H4(
+                        id="citing-peps-title",
+                        children="PEP N is linked from...",
+                        style={"marginBottom": "8px"},
+                    ),
                     _create_pep_table("citing-peps-table"),
                 ],
                 style={
@@ -159,7 +169,11 @@ def _create_tables_section() -> html.Div:
             # 右側: 選択中PEPから引用されているPEP
             html.Div(
                 [
-                    html.H4("PEP links to...", style={"marginBottom": "8px"}),
+                    html.H4(
+                        id="cited-peps-title",
+                        children="PEP N links to...",
+                        style={"marginBottom": "8px"},
+                    ),
                     _create_pep_table("cited-peps-table"),
                 ],
                 style={
@@ -174,6 +188,9 @@ def _create_tables_section() -> html.Div:
 
 def _create_pep_table(table_id: str) -> dash_table.DataTable:  # type: ignore[name-defined]
     """PEPテーブルを生成する"""
+    # Status列の条件付きスタイルを生成
+    status_styles = _generate_status_styles()
+
     return dash_table.DataTable(  # type: ignore[attr-defined]
         id=table_id,
         columns=[
@@ -192,8 +209,26 @@ def _create_pep_table(table_id: str) -> dash_table.DataTable:  # type: ignore[na
         },
         style_cell={
             "textAlign": "left",
-            "padding": "8px",
-            "fontSize": "13px",
+            "padding": "4px 6px",
+            "fontSize": "15px",
+            "height": "auto",
+            "minHeight": "18px",
+        },
+        style_cell_conditional=[
+            {"if": {"column_id": "row_num"}, "width": "40px", "textAlign": "right"},
+            {"if": {"column_id": "pep"}, "width": "80px"},
+            {
+                "if": {"column_id": "title"},
+                "width": "300px",
+                "maxWidth": "300px",
+                "whiteSpace": "normal",
+            },
+            {"if": {"column_id": "status"}, "width": "100px", "textAlign": "center"},
+            {"if": {"column_id": "created"}, "width": "100px"},
+        ],
+        style_data={
+            "lineHeight": "1.1",
+            "verticalAlign": "middle",
         },
         style_header={
             "fontWeight": "bold",
@@ -203,6 +238,37 @@ def _create_pep_table(table_id: str) -> dash_table.DataTable:  # type: ignore[na
             {
                 "if": {"row_index": "odd"},
                 "backgroundColor": "#fafafa",
-            }
-        ],
+            },
+            {
+                "if": {"column_id": "pep"},
+                "paddingTop": "11px",
+                "paddingBottom": "0px",
+                "fontSize": "14px",
+                "verticalAlign": "bottom",
+            },
+        ]
+        + status_styles,
     )
+
+
+def _generate_status_styles() -> list:
+    """
+    Status列の各ステータス値に対する条件付きスタイルを生成する
+
+    Returns:
+        list: 条件付きスタイルのリスト
+    """
+    styles = []
+    for status, bg_color in STATUS_COLOR_MAP.items():
+        font_color = STATUS_FONT_COLOR_MAP.get(status, "#545454")
+        styles.append(
+            {
+                "if": {
+                    "column_id": "status",
+                    "filter_query": f'{{status}} = "{status}"',
+                },
+                "backgroundColor": bg_color,
+                "color": font_color,
+            }
+        )
+    return styles
