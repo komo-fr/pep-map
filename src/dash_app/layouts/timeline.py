@@ -116,13 +116,16 @@ def _create_legend_section() -> html.Div:
 def _create_graph_section() -> html.Div:
     """タイムライングラフセクション"""
     return html.Div(
-        dcc.Graph(
-            id="timeline-graph",
-            figure=create_empty_figure(),
-            style={
-                "height": "300px",
-            },
-        ),
+        [
+            dcc.Graph(
+                id="timeline-graph",
+                figure=create_empty_figure(),
+                style={
+                    "height": "300px",
+                },
+            ),
+            dcc.Location(id="pep-url", refresh=True),
+        ],
         style={
             "marginBottom": "16px",
         },

@@ -1,7 +1,7 @@
 """Timelineタブのコールバック関数"""
 
 import plotly.graph_objects as go
-from dash import Input, Output, html
+from dash import Input, Output, html, no_update
 
 from src.dash_app.components import create_empty_figure, create_initial_info_message
 from src.dash_app.components.timeline_figures import (
@@ -171,6 +171,19 @@ def register_timeline_callbacks(app):
 
         # グラフデータを構築
         return _create_timeline_figure(pep_number, pep_data)
+
+    # === クリックイベント: 点をクリックしたときにPEPページへ遷移 ===
+    @app.callback(
+        Output("pep-url", "href"),
+        Input("timeline-graph", "clickData"),
+        prevent_initial_call=True,
+    )
+    def navigate_to_pep(click_data):
+        # 本当は別タブ遷移にしたいがJavaScriptを使う必要がありそうなので一旦同タブ遷移にしている
+        if click_data and click_data["points"]:
+            pep_number = click_data["points"][0]["customdata"]
+            return f"https://peps.python.org/pep-{pep_number:04d}/"
+        return no_update
 
 
 def _compute_table_titles(pep_number_input) -> tuple[str, str]:
@@ -427,12 +440,14 @@ def _create_timeline_figure(pep_number: int, pep_data) -> go.Figure:
     colors = []
     texts = []
     hover_texts = []
+    pep_numbers = []  # クリック時のURL生成用
 
     # 選択中のPEP（Y=0）
     dates.append(pep_data["created"])
     y_positions.append(TIMELINE_Y_SELECTED)
     colors.append(STATUS_COLOR_MAP.get(pep_data["status"], DEFAULT_STATUS_COLOR))
     texts.append(str(pep_number))
+    pep_numbers.append(pep_number)
     hover_texts.append(
         f"PEP {pep_number}<br>"
         f"{pep_data['title']}<br>"
@@ -446,6 +461,7 @@ def _create_timeline_figure(pep_number: int, pep_data) -> go.Figure:
         y_positions.append(TIMELINE_Y_CITING)
         colors.append(STATUS_COLOR_MAP.get(row["status"], DEFAULT_STATUS_COLOR))
         texts.append(str(row["pep_number"]))
+        pep_numbers.append(row["pep_number"])
         hover_texts.append(
             f"PEP {row['pep_number']}<br>"
             f"{row['title']}<br>"
@@ -459,6 +475,7 @@ def _create_timeline_figure(pep_number: int, pep_data) -> go.Figure:
         y_positions.append(TIMELINE_Y_CITED)
         colors.append(STATUS_COLOR_MAP.get(row["status"], DEFAULT_STATUS_COLOR))
         texts.append(str(row["pep_number"]))
+        pep_numbers.append(row["pep_number"])
         hover_texts.append(
             f"PEP {row['pep_number']}<br>"
             f"{row['title']}<br>"
@@ -487,6 +504,7 @@ def _create_timeline_figure(pep_number: int, pep_data) -> go.Figure:
             ),
             hovertext=hover_texts,
             hoverinfo="text",
+            customdata=pep_numbers,
         )
     )
 
