@@ -10,6 +10,8 @@ from src.dash_app.components import (
 from src.dash_app.utils.constants import (
     STATUS_COLOR_MAP,
     STATUS_FONT_COLOR_MAP,
+    PYTHON_2_LINE_COLOR,
+    PYTHON_3_LINE_COLOR,
 )
 from src.dash_app.utils.data_loader import load_metadata
 
@@ -104,9 +106,14 @@ def _create_top_section() -> html.Div:
 
 
 def _create_legend_section() -> html.Div:
-    """Status凡例セクション"""
+    """Status凡例セクションとPythonリリース日表示チェックボックス"""
     return html.Div(
-        create_status_legend(),
+        [
+            # Status凡例
+            create_status_legend(),
+            # Pythonリリース日表示チェックボックス
+            _create_python_release_checkboxes(),
+        ],
         style={
             "marginBottom": "16px",
         },
@@ -121,7 +128,7 @@ def _create_graph_section() -> html.Div:
                 id="timeline-graph",
                 figure=create_empty_figure(),
                 style={
-                    "height": "300px",
+                    "height": "350px",
                 },
             ),
             dcc.Location(id="pep-url", refresh=True),
@@ -275,3 +282,76 @@ def _generate_status_styles() -> list:
             }
         )
     return styles
+
+
+def _create_python_release_checkboxes() -> html.Div:
+    """
+    Pythonリリース日表示切り替えチェックボックスを生成する
+
+    Returns:
+        html.Div: チェックボックスコンポーネント
+    """
+    return html.Div(
+        [
+            html.Div(
+                [
+                    dcc.Checklist(
+                        id="python-release-checkboxes",
+                        options=[
+                            {
+                                "label": html.Span(
+                                    [
+                                        html.Span(
+                                            style={
+                                                "display": "inline-block",
+                                                "width": "20px",
+                                                "height": "2px",
+                                                "backgroundColor": PYTHON_2_LINE_COLOR,
+                                                "marginRight": "6px",
+                                                "verticalAlign": "middle",
+                                            }
+                                        ),
+                                        "Show Python 2 release dates",
+                                    ],
+                                    style={"verticalAlign": "middle"},
+                                ),
+                                "value": "python2",
+                            },
+                            {
+                                "label": html.Span(
+                                    [
+                                        html.Span(
+                                            style={
+                                                "display": "inline-block",
+                                                "width": "20px",
+                                                "height": "2px",
+                                                "backgroundColor": PYTHON_3_LINE_COLOR,
+                                                "marginRight": "6px",
+                                                "verticalAlign": "middle",
+                                            }
+                                        ),
+                                        "Show Python 3 release dates",
+                                    ],
+                                    style={"verticalAlign": "middle"},
+                                ),
+                                "value": "python3",
+                            },
+                        ],
+                        value=[],  # デフォルトは非表示
+                        inline=True,
+                        style={
+                            "display": "flex",
+                            "gap": "24px",
+                        },
+                        inputStyle={
+                            "marginRight": "6px",
+                        },
+                    ),
+                ],
+            ),
+        ],
+        style={
+            "marginTop": "8px",
+            "fontSize": "12px",
+        },
+    )

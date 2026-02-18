@@ -12,6 +12,7 @@ from src.dash_app.utils.constants import DATA_DIR
 _peps_metadata_cache: pd.DataFrame | None = None
 _citations_cache: pd.DataFrame | None = None
 _metadata_cache: dict | None = None
+_python_releases_cache: pd.DataFrame | None = None
 
 
 def load_peps_metadata() -> pd.DataFrame:
@@ -191,6 +192,52 @@ def get_cited_peps(pep_number: int) -> pd.DataFrame:
     return result
 
 
+def load_python_releases() -> pd.DataFrame:
+    """
+    Pythonリリース日データを読み込む
+
+    Returns:
+        pd.DataFrame: Pythonリリース日のDataFrame
+
+    列:
+        - version (str): Pythonバージョン（例: "2.0", "3.10"）
+        - release_date (datetime): リリース日
+        - major_version (int): メジャーバージョン（2 or 3）
+    """
+    global _python_releases_cache
+
+    if _python_releases_cache is not None:
+        return _python_releases_cache
+
+    file_path = DATA_DIR / "python_release_dates.csv"
+
+    df = pd.read_csv(file_path, dtype={"version": str})
+
+    # release_date列を日付型に変換
+    # フォーマット: "2000/10/16" → %Y/%m/%d
+    df["release_date"] = pd.to_datetime(df["release_date"], format="%Y/%m/%d")
+
+    # メジャーバージョンを抽出（versionの最初の文字）
+    df["major_version"] = df["version"].str.split(".").str[0].astype(int)
+
+    _python_releases_cache = df
+    return df
+
+
+def get_python_releases_by_major_version(major_version: int) -> pd.DataFrame:
+    """
+    指定したメジャーバージョンのPythonリリース日を取得する
+
+    Args:
+        major_version: メジャーバージョン（2 or 3）
+
+    Returns:
+        pd.DataFrame: 指定メジャーバージョンのリリース日データ
+    """
+    df = load_python_releases()
+    return df[df["major_version"] == major_version].copy()
+
+
 def generate_pep_url(pep_number: int) -> str:
     """
     PEP番号からPEPページのURLを生成する
@@ -214,7 +261,12 @@ def clear_cache() -> None:
     """
     キャッシュをクリアする（テスト用）
     """
-    global _peps_metadata_cache, _citations_cache, _metadata_cache
+    global \
+        _peps_metadata_cache, \
+        _citations_cache, \
+        _metadata_cache, \
+        _python_releases_cache
     _peps_metadata_cache = None
     _citations_cache = None
     _metadata_cache = None
+    _python_releases_cache = None

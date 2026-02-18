@@ -176,6 +176,96 @@ class TestGeneratePepUrl:
         assert url == expected
 
 
+class TestLoadPythonReleases:
+    """load_python_releases関数のテスト"""
+
+    def test_returns_dataframe(self, mock_data_files, monkeypatch):
+        """DataFrameを返す"""
+        monkeypatch.setattr("src.dash_app.utils.data_loader.DATA_DIR", mock_data_files)
+        data_loader.clear_cache()
+
+        df = data_loader.load_python_releases()
+
+        assert isinstance(df, pd.DataFrame)
+
+    def test_has_required_columns(self, mock_data_files, monkeypatch):
+        """必要な列が存在する"""
+        monkeypatch.setattr("src.dash_app.utils.data_loader.DATA_DIR", mock_data_files)
+        data_loader.clear_cache()
+
+        df = data_loader.load_python_releases()
+
+        assert "version" in df.columns
+        assert "release_date" in df.columns
+        assert "major_version" in df.columns
+
+    def test_release_date_is_datetime(self, mock_data_files, monkeypatch):
+        """release_date列がdatetime型"""
+        monkeypatch.setattr("src.dash_app.utils.data_loader.DATA_DIR", mock_data_files)
+        data_loader.clear_cache()
+
+        df = data_loader.load_python_releases()
+
+        assert pd.api.types.is_datetime64_any_dtype(df["release_date"])
+
+    def test_major_version_is_int(self, mock_data_files, monkeypatch):
+        """major_version列がint型"""
+        monkeypatch.setattr("src.dash_app.utils.data_loader.DATA_DIR", mock_data_files)
+        data_loader.clear_cache()
+
+        df = data_loader.load_python_releases()
+
+        assert pd.api.types.is_integer_dtype(df["major_version"])
+
+    def test_python_releases_cache(self, mock_data_files, monkeypatch):
+        """キャッシュが機能する"""
+        monkeypatch.setattr("src.dash_app.utils.data_loader.DATA_DIR", mock_data_files)
+        data_loader.clear_cache()
+
+        # 1回目の読み込み
+        df1 = data_loader.load_python_releases()
+        # 2回目の読み込み（キャッシュから）
+        df2 = data_loader.load_python_releases()
+
+        # 同じオブジェクトであることを確認
+        assert df1 is df2
+
+
+class TestGetPythonReleasesByMajorVersion:
+    """get_python_releases_by_major_version関数のテスト"""
+
+    def test_filter_python2(self, mock_data_files, monkeypatch):
+        """Python 2系のみフィルタリング"""
+        monkeypatch.setattr("src.dash_app.utils.data_loader.DATA_DIR", mock_data_files)
+        data_loader.clear_cache()
+
+        df = data_loader.get_python_releases_by_major_version(2)
+
+        assert all(df["major_version"] == 2)
+
+    def test_filter_python3(self, mock_data_files, monkeypatch):
+        """Python 3系のみフィルタリング"""
+        monkeypatch.setattr("src.dash_app.utils.data_loader.DATA_DIR", mock_data_files)
+        data_loader.clear_cache()
+
+        df = data_loader.get_python_releases_by_major_version(3)
+
+        assert all(df["major_version"] == 3)
+
+    def test_returns_copy(self, mock_data_files, monkeypatch):
+        """返すDataFrameは独立したコピー"""
+        monkeypatch.setattr("src.dash_app.utils.data_loader.DATA_DIR", mock_data_files)
+        data_loader.clear_cache()
+
+        df1 = data_loader.get_python_releases_by_major_version(2)
+        df2 = data_loader.get_python_releases_by_major_version(2)
+
+        # 異なるオブジェクトであることを確認
+        assert df1 is not df2
+        # しかしデータは同じであることを確認
+        assert df1.equals(df2)
+
+
 class TestClearCache:
     """clear_cache関数のテスト"""
 
@@ -190,6 +280,7 @@ class TestClearCache:
         df1 = data_loader.load_peps_metadata()
         citations1 = data_loader.load_citations()
         metadata1 = data_loader.load_metadata()
+        releases1 = data_loader.load_python_releases()
 
         # キャッシュをクリア
         data_loader.clear_cache()
@@ -198,8 +289,10 @@ class TestClearCache:
         df2 = data_loader.load_peps_metadata()
         citations2 = data_loader.load_citations()
         metadata2 = data_loader.load_metadata()
+        releases2 = data_loader.load_python_releases()
 
         # 異なるオブジェクトであることを確認（キャッシュがクリアされた）
         assert df1 is not df2
         assert citations1 is not citations2
         assert metadata1 is not metadata2
+        assert releases1 is not releases2

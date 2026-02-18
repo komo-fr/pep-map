@@ -28,12 +28,19 @@ from src.dash_app.utils.constants import (
     TIMELINE_Y_RANGE,
     TIMELINE_Y_SELECTED,
     TIMELINE_Y_TICKVALS,
+    PYTHON_2_LINE_COLOR,
+    PYTHON_3_LINE_COLOR,
+    PYTHON_2_RELEASE_LABEL_COLOR,
+    PYTHON_3_RELEASE_LABEL_COLOR,
+    TIMELINE_Y_PYTHON2_LABEL,
+    TIMELINE_Y_PYTHON3_LABEL,
 )
 from src.dash_app.utils.data_loader import (
     generate_pep_url,
     get_cited_peps,
     get_citing_peps,
     get_pep_by_number,
+    get_python_releases_by_major_version,
 )
 
 
@@ -155,19 +162,27 @@ def register_timeline_callbacks(app):
     @app.callback(
         Output("timeline-graph", "figure"),
         Input("pep-input", "value"),
+        Input("python-release-checkboxes", "value"),
     )
-    def update_timeline_graph(pep_number):
+    def update_timeline_graph(pep_number, python_release_options):
         """
-        PEP番号入力に連動してタイムライングラフを更新する
+        PEP番号入力とチェックボックスに連動してタイムライングラフを更新する
 
         Args:
             pep_number: 入力されたPEP番号（str, int または None）
+            python_release_options: 選択されたPythonリリース表示オプション（list）
+                - "python2": Python 2系を表示
+                - "python3": Python 3系を表示
 
         Returns:
             go.Figure: Plotlyのfigureオブジェクト
         """
         # 入力値を整数に変換
         pep_number = _parse_pep_number(pep_number)
+
+        # python_release_optionsがNoneの場合は空リストに
+        if python_release_options is None:
+            python_release_options = []
 
         # 入力が空/Noneの場合: 空のグラフを返す
         if pep_number is None:
@@ -179,7 +194,7 @@ def register_timeline_callbacks(app):
             return create_empty_figure()
 
         # グラフデータを構築
-        return _create_timeline_figure(pep_number, pep_data)
+        return _create_timeline_figure(pep_number, pep_data, python_release_options)
 
     # === クリックイベント: 点をクリックしたときにPEPページへ遷移 ===
     @app.callback(
@@ -444,17 +459,22 @@ def _create_pep_annotations(pep_number: int) -> list[dict]:
     ]
 
 
-def _create_timeline_figure(pep_number: int, pep_data) -> go.Figure:
+def _create_timeline_figure(
+    pep_number: int, pep_data, python_release_options: list[str] | None = None
+) -> go.Figure:
     """
     タイムライングラフを生成する
 
     Args:
         pep_number: 選択中のPEP番号
         pep_data: 選択中のPEPのメタデータ
+        python_release_options: Pythonリリース表示オプション
 
     Returns:
         go.Figure: Plotly figureオブジェクト
     """
+    if python_release_options is None:
+        python_release_options = []
     # 引用関係のPEPを取得
     citing_peps_df = get_citing_peps(pep_number)  # このPEPを引用しているPEP
     cited_peps_df = get_cited_peps(pep_number)  # このPEPに引用されているPEP
@@ -548,4 +568,77 @@ def _create_timeline_figure(pep_number: int, pep_data) -> go.Figure:
         annotations=_create_pep_annotations(pep_number),
     )
 
+    # Pythonリリース日の縦線を追加
+    _add_python_release_lines(fig, python_release_options)
+
     return fig
+
+
+def _add_python_release_lines(
+    fig: go.Figure, python_release_options: list[str]
+) -> None:
+    """
+    タイムライングラフにPythonリリース日の縦線を追加する
+
+    Args:
+        fig: Plotly figureオブジェクト
+        python_release_options: Pythonリリース表示オプション
+            - "python2": Python 2系を表示
+            - "python3": Python 3系を表示
+    """
+    if "python2" in python_release_options:
+        _add_release_lines_for_major_version(
+            fig, 2, PYTHON_2_LINE_COLOR, TIMELINE_Y_PYTHON2_LABEL
+        )
+
+    if "python3" in python_release_options:
+        _add_release_lines_for_major_version(
+            fig, 3, PYTHON_3_LINE_COLOR, TIMELINE_Y_PYTHON3_LABEL
+        )
+
+
+def _add_release_lines_for_major_version(
+    fig: go.Figure, major_version: int, line_color: str, y_label_position: float
+) -> None:
+    """
+    指定したメジャーバージョンのPythonリリース日縦線を追加する
+
+    Args:
+        fig: Plotly figureオブジェクト
+        major_version: Pythonメジャーバージョン（2 or 3）
+        line_color: 縦線の色
+        y_label_position: バージョンラベルを表示するY座標
+    """
+    releases = get_python_releases_by_major_version(major_version)
+
+    for _, row in releases.iterrows():
+        release_date = row["release_date"]
+        version = row["version"]
+
+        # 縦線を追加
+        fig.add_vline(
+            x=release_date,
+            line=dict(
+                color=line_color,
+                width=1,
+                dash="solid",
+            ),
+        )
+
+        # バージョン番号ラベルをY座標指定でアノテーション表示
+        fig.add_annotation(
+            x=release_date,
+            y=y_label_position,
+            text=version,
+            showarrow=False,
+            xref="x",
+            yref="y",
+            font=dict(
+                size=10,
+                color=PYTHON_2_RELEASE_LABEL_COLOR
+                if major_version == 2
+                else PYTHON_3_RELEASE_LABEL_COLOR,
+            ),
+            xanchor="left",
+            yanchor="middle",
+        )
