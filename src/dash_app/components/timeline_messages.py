@@ -16,10 +16,12 @@ def create_initial_info_message() -> html.Div:
                 "Enter a PEP number in the left text box (e.g. 8).",
                 style={"marginBottom": "8px"},
             ),
-            html.P("You can then see the following information:"),
+            html.P(
+                "You can then see the following information ordered by creation date:"
+            ),
             html.Ul(
                 [
-                    html.Li("Which PEPs link to that PEP"),
+                    html.Li("Which PEPs link to that PEP?"),
                     html.Li("Which PEPs are linked from that PEP?"),
                 ]
             ),

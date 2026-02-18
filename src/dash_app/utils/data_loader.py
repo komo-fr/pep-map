@@ -144,8 +144,8 @@ def get_citing_peps(pep_number: int) -> pd.DataFrame:
     # 該当するPEPのメタデータを取得
     result = peps_metadata[peps_metadata["pep_number"].isin(citing_pep_numbers)]
 
-    # PEP番号で昇順ソート
-    result = result.sort_values("pep_number").reset_index(drop=True)
+    # 作成日で昇順ソート
+    result = result.sort_values("created").reset_index(drop=True)
 
     return result
 
@@ -172,8 +172,8 @@ def get_cited_peps(pep_number: int) -> pd.DataFrame:
     # 該当するPEPのメタデータを取得
     result = peps_metadata[peps_metadata["pep_number"].isin(cited_pep_numbers)]
 
-    # PEP番号で昇順ソート
-    result = result.sort_values("pep_number").reset_index(drop=True)
+    # 作成日で昇順ソート
+    result = result.sort_values("created").reset_index(drop=True)
 
     return result
 
