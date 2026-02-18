@@ -1,12 +1,25 @@
 """Timelineタブのコールバック関数"""
 
 import plotly.graph_objects as go
-from dash import Input, Output, html
+from dash import Input, Output, html, no_update
 
 from src.dash_app.components import create_empty_figure, create_initial_info_message
+from src.dash_app.components.timeline_figures import (
+    _get_guideline_shapes,
+    _get_xaxis_config,
+)
 from src.dash_app.utils.constants import (
     DEFAULT_STATUS_COLOR,
     STATUS_COLOR_MAP,
+    TIMELINE_ANNOTATION_ARROW_AY,
+    TIMELINE_ANNOTATION_ARROW_COLOR,
+    TIMELINE_ANNOTATION_ARROW_SIZE,
+    TIMELINE_ANNOTATION_ARROW_WIDTH,
+    TIMELINE_ANNOTATION_TEXT_COLOR,
+    TIMELINE_ANNOTATION_TEXT_SIZE,
+    TIMELINE_ANNOTATION_X,
+    TIMELINE_ANNOTATION_Y_CITED_TEXT,
+    TIMELINE_ANNOTATION_Y_CITING_TEXT,
     TIMELINE_MARKER_SIZE,
     TIMELINE_MARGIN,
     TIMELINE_TEXT_FONT_SIZE,
@@ -15,8 +28,6 @@ from src.dash_app.utils.constants import (
     TIMELINE_Y_RANGE,
     TIMELINE_Y_SELECTED,
     TIMELINE_Y_TICKVALS,
-    TIMELINE_ZEROLINE_COLOR,
-    TIMELINE_ZEROLINE_WIDTH,
 )
 from src.dash_app.utils.data_loader import (
     generate_pep_url,
@@ -169,6 +180,29 @@ def register_timeline_callbacks(app):
 
         # グラフデータを構築
         return _create_timeline_figure(pep_number, pep_data)
+
+    # === クリックイベント: 点をクリックしたときにPEPページへ遷移 ===
+    @app.callback(
+        Output("pep-url", "href"),
+        Input("timeline-graph", "clickData"),
+        prevent_initial_call=True,
+    )
+    def navigate_to_pep(click_data):
+        """
+        タイムラインのグラフ上のデータ点をクリックしたときにPEPページへ遷移する
+
+        Args:
+            click_data: Plotlyのクリックイベントデータ
+
+        Returns:
+            str | None: PEPページのURL、またはno_update
+        """
+        # 本当は別タブ遷移にしたいがJavaScriptを使う必要がありそうなので一旦同タブ遷移にしている
+        if click_data and click_data["points"]:
+            # customdata は JSON シリアライズ経由で float/str になる可能性があるため int() でキャスト
+            pep_number = int(click_data["points"][0]["customdata"])
+            return generate_pep_url(pep_number)
+        return no_update
 
 
 def _compute_table_titles(pep_number_input) -> tuple[str, str]:
@@ -332,6 +366,84 @@ def _create_pep_info_display(pep_data) -> html.Div:
     )
 
 
+def _create_pep_annotations(pep_number: int) -> list[dict]:
+    """
+    PEP番号入力時のアノテーション（テキストと矢印）を生成する
+
+    Args:
+        pep_number: 入力されたPEP番号
+
+    Returns:
+        list[dict]: アノテーション設定のリスト
+    """
+    return [
+        # 上部: 矢印のみ (TIMELINE_Y_CITING のPEP群から TIMELINE_Y_SELECTED へ)
+        # arrowhead が TIMELINE_Y_SELECTED (Y=0)、tail は TIMELINE_Y_CITING (Y=1) 方向
+        dict(
+            text="",
+            xref="paper",
+            yref="y",
+            x=TIMELINE_ANNOTATION_X,
+            y=TIMELINE_Y_SELECTED,
+            ax=0,
+            ay=TIMELINE_ANNOTATION_ARROW_AY,
+            showarrow=True,
+            arrowhead=2,
+            arrowsize=TIMELINE_ANNOTATION_ARROW_SIZE,
+            arrowwidth=TIMELINE_ANNOTATION_ARROW_WIDTH,
+            arrowcolor=TIMELINE_ANNOTATION_ARROW_COLOR,
+        ),
+        # 上部テキスト: TIMELINE_Y_CITING と TIMELINE_Y_SELECTED の中間より下
+        dict(
+            text=f"PEP {pep_number} is linked from ...",
+            xref="paper",
+            yref="y",
+            x=TIMELINE_ANNOTATION_X,
+            y=TIMELINE_ANNOTATION_Y_CITING_TEXT,
+            showarrow=False,
+            font=dict(
+                size=TIMELINE_ANNOTATION_TEXT_SIZE,
+                color=TIMELINE_ANNOTATION_TEXT_COLOR,
+            ),
+            align="left",
+            xanchor="left",
+            yanchor="middle",
+        ),
+        # 下部: 矢印のみ (TIMELINE_Y_CITED のPEP群から TIMELINE_Y_SELECTED へ)
+        # arrowhead が TIMELINE_Y_CITED (Y=-1)、tail は TIMELINE_Y_SELECTED (Y=0) 方向
+        dict(
+            text="",
+            xref="paper",
+            yref="y",
+            x=TIMELINE_ANNOTATION_X,
+            y=TIMELINE_Y_CITED,
+            ax=0,
+            ay=TIMELINE_ANNOTATION_ARROW_AY,
+            showarrow=True,
+            arrowhead=2,
+            arrowsize=TIMELINE_ANNOTATION_ARROW_SIZE,
+            arrowwidth=TIMELINE_ANNOTATION_ARROW_WIDTH,
+            arrowcolor=TIMELINE_ANNOTATION_ARROW_COLOR,
+        ),
+        # 下部テキスト: TIMELINE_Y_CITED と TIMELINE_Y_SELECTED の中間より上
+        dict(
+            text=f"PEP {pep_number} links to ...",
+            xref="paper",
+            yref="y",
+            x=TIMELINE_ANNOTATION_X,
+            y=TIMELINE_ANNOTATION_Y_CITED_TEXT,
+            showarrow=False,
+            font=dict(
+                size=TIMELINE_ANNOTATION_TEXT_SIZE,
+                color=TIMELINE_ANNOTATION_TEXT_COLOR,
+            ),
+            align="left",
+            xanchor="left",
+            yanchor="middle",
+        ),
+    ]
+
+
 def _create_timeline_figure(pep_number: int, pep_data) -> go.Figure:
     """
     タイムライングラフを生成する
@@ -353,12 +465,14 @@ def _create_timeline_figure(pep_number: int, pep_data) -> go.Figure:
     colors = []
     texts = []
     hover_texts = []
+    pep_numbers = []  # クリック時のURL生成用
 
     # 選択中のPEP（Y=0）
     dates.append(pep_data["created"])
     y_positions.append(TIMELINE_Y_SELECTED)
     colors.append(STATUS_COLOR_MAP.get(pep_data["status"], DEFAULT_STATUS_COLOR))
     texts.append(str(pep_number))
+    pep_numbers.append(pep_number)
     hover_texts.append(
         f"PEP {pep_number}<br>"
         f"{pep_data['title']}<br>"
@@ -372,6 +486,7 @@ def _create_timeline_figure(pep_number: int, pep_data) -> go.Figure:
         y_positions.append(TIMELINE_Y_CITING)
         colors.append(STATUS_COLOR_MAP.get(row["status"], DEFAULT_STATUS_COLOR))
         texts.append(str(row["pep_number"]))
+        pep_numbers.append(row["pep_number"])
         hover_texts.append(
             f"PEP {row['pep_number']}<br>"
             f"{row['title']}<br>"
@@ -385,6 +500,7 @@ def _create_timeline_figure(pep_number: int, pep_data) -> go.Figure:
         y_positions.append(TIMELINE_Y_CITED)
         colors.append(STATUS_COLOR_MAP.get(row["status"], DEFAULT_STATUS_COLOR))
         texts.append(str(row["pep_number"]))
+        pep_numbers.append(row["pep_number"])
         hover_texts.append(
             f"PEP {row['pep_number']}<br>"
             f"{row['title']}<br>"
@@ -403,32 +519,33 @@ def _create_timeline_figure(pep_number: int, pep_data) -> go.Figure:
             marker=dict(
                 color=colors,
                 size=TIMELINE_MARKER_SIZE,
+                opacity=0.7,
             ),
             text=texts,
             textposition="top right",
-            textfont=dict(size=TIMELINE_TEXT_FONT_SIZE),
+            textfont=dict(
+                size=TIMELINE_TEXT_FONT_SIZE,
+                color="rgba(0, 0, 0, 0.7)",
+            ),
             hovertext=hover_texts,
             hoverinfo="text",
+            customdata=pep_numbers,
         )
     )
 
     fig.update_layout(
-        xaxis=dict(
-            title="Created Date",
-            showgrid=True,
-        ),
+        xaxis=_get_xaxis_config(),
         yaxis=dict(
             tickvals=TIMELINE_Y_TICKVALS,
             ticktext=["", "", ""],
             range=list(TIMELINE_Y_RANGE),
             showgrid=False,
-            zeroline=True,
-            zerolinecolor=TIMELINE_ZEROLINE_COLOR,
-            zerolinewidth=TIMELINE_ZEROLINE_WIDTH,
         ),
         showlegend=False,
         margin=dict(**TIMELINE_MARGIN),
         hovermode="closest",
+        shapes=_get_guideline_shapes(),
+        annotations=_create_pep_annotations(pep_number),
     )
 
     return fig
