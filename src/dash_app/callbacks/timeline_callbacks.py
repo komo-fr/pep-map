@@ -184,14 +184,18 @@ def register_timeline_callbacks(app):
         if python_release_options is None:
             python_release_options = []
 
-        # 入力が空/Noneの場合: 空のグラフを返す
+        # 入力が空/Noneの場合: 空のグラフ + 縦線を返す
         if pep_number is None:
-            return create_empty_figure()
+            fig = create_empty_figure()
+            _add_python_release_lines(fig, python_release_options)
+            return fig
 
         # PEPの存在確認
         pep_data = get_pep_by_number(pep_number)
         if pep_data is None:
-            return create_empty_figure()
+            fig = create_empty_figure()
+            _add_python_release_lines(fig, python_release_options)
+            return fig
 
         # グラフデータを構築
         return _create_timeline_figure(pep_number, pep_data, python_release_options)
