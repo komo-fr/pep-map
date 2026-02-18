@@ -179,10 +179,20 @@ def register_timeline_callbacks(app):
         prevent_initial_call=True,
     )
     def navigate_to_pep(click_data):
+        """
+        タイムラインのグラフ上のデータ点をクリックしたときにPEPページへ遷移する
+
+        Args:
+            click_data: Plotlyのクリックイベントデータ
+
+        Returns:
+            str | None: PEPページのURL、またはno_update
+        """
         # 本当は別タブ遷移にしたいがJavaScriptを使う必要がありそうなので一旦同タブ遷移にしている
         if click_data and click_data["points"]:
-            pep_number = click_data["points"][0]["customdata"]
-            return f"https://peps.python.org/pep-{pep_number:04d}/"
+            # customdata は JSON シリアライズ経由で float/str になる可能性があるため int() でキャスト
+            pep_number = int(click_data["points"][0]["customdata"])
+            return generate_pep_url(pep_number)
         return no_update
 
 
