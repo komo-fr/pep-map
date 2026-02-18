@@ -37,7 +37,7 @@ BASE_FONT_COLOR = "#545454"
 STATUS_FONT_COLOR_MAP = {
     "Accepted": "#FAFAFA",
     "Active": "#FAFAFA",
-    "April Fool!": "#FAFAFA",
+    "April Fool!": BASE_FONT_COLOR,
     "Draft": "#FAFAFA",
     "Final": "#FAFAFA",
     "Provisional": BASE_FONT_COLOR,

@@ -244,7 +244,7 @@ def _create_pep_table(table_id: str) -> dash_table.DataTable:  # type: ignore[na
                 "paddingTop": "11px",
                 "paddingBottom": "0px",
                 "fontSize": "14px",
-                "vertical-align": "bottom",
+                "verticalAlign": "bottom",
             },
         ]
         + status_styles,
