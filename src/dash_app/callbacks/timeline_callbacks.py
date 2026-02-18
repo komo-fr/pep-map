@@ -86,6 +86,28 @@ def register_timeline_callbacks(app):
         # 存在する場合: PEP情報を表示
         return _create_pep_info_display(pep_data), ""
 
+    @app.callback(
+        Output("citing-peps-title", "children"),
+        Output("cited-peps-title", "children"),
+        Input("pep-input", "value"),
+    )
+    def update_table_titles(pep_number):
+        """
+        PEP番号入力に連動してテーブルタイトルを更新する
+
+        Args:
+            pep_number: 入力されたPEP番号（str, int または None）
+
+        Returns:
+            tuple: (citing_title, cited_title)
+        """
+        pep_number = _parse_pep_number(pep_number)
+
+        if pep_number is None:
+            return "PEP N is linked from...", "PEP N links to..."
+
+        return f"PEP {pep_number} is linked from...", f"PEP {pep_number} links to..."
+
     # === テーブル更新コールバック（新規追加） ===
     @app.callback(
         Output("citing-peps-table", "data"),

@@ -148,7 +148,11 @@ def _create_tables_section() -> html.Div:
             # 左側: 選択中PEPを引用しているPEP
             html.Div(
                 [
-                    html.H4("PEP is linked from...", style={"marginBottom": "8px"}),
+                    html.H4(
+                        id="citing-peps-title",
+                        children="PEP N is linked from...",
+                        style={"marginBottom": "8px"},
+                    ),
                     _create_pep_table("citing-peps-table"),
                 ],
                 style={
@@ -161,7 +165,11 @@ def _create_tables_section() -> html.Div:
             # 右側: 選択中PEPから引用されているPEP
             html.Div(
                 [
-                    html.H4("PEP links to...", style={"marginBottom": "8px"}),
+                    html.H4(
+                        id="cited-peps-title",
+                        children="PEP N links to...",
+                        style={"marginBottom": "8px"},
+                    ),
                     _create_pep_table("cited-peps-table"),
                 ],
                 style={
