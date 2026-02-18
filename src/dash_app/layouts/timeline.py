@@ -202,7 +202,7 @@ def _create_pep_table(table_id: str) -> dash_table.DataTable:  # type: ignore[na
         },
         style_cell={
             "textAlign": "left",
-            "padding": "0px 6px",
+            "padding": "4px 6px",
             "fontSize": "15px",
             "height": "auto",
             "minHeight": "18px",
@@ -220,7 +220,8 @@ def _create_pep_table(table_id: str) -> dash_table.DataTable:  # type: ignore[na
             {"if": {"column_id": "created"}, "width": "100px"},
         ],
         style_data={
-            "lineHeight": "0.9",
+            "lineHeight": "1.1",
+            "verticalAlign": "middle",
         },
         style_header={
             "fontWeight": "bold",
@@ -230,6 +231,13 @@ def _create_pep_table(table_id: str) -> dash_table.DataTable:  # type: ignore[na
             {
                 "if": {"row_index": "odd"},
                 "backgroundColor": "#fafafa",
-            }
+            },
+            {
+                "if": {"column_id": "pep"},
+                "paddingTop": "11px",
+                "paddingBottom": "0px",
+                "fontSize": "14px",
+                "vertical-align": "bottom",
+            },
         ],
     )
