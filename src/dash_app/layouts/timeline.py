@@ -115,7 +115,8 @@ def _create_legend_section() -> html.Div:
             _create_python_release_checkboxes(),
         ],
         style={
-            "marginBottom": "16px",
+            "marginBottom": "0px",
+            "marginTop": "0px",
         },
     )
 
@@ -351,7 +352,7 @@ def _create_python_release_checkboxes() -> html.Div:
             ),
         ],
         style={
-            "marginTop": "8px",
+            "marginTop": "4px",
             "fontSize": "12px",
         },
     )

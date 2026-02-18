@@ -55,12 +55,13 @@ def create_status_legend() -> html.Div:
                 style={
                     "fontSize": "12px",
                     "color": "#666",
-                    "marginBottom": "8px",
+                    "marginBottom": "0px",
                 },
             ),
             html.Div(legend_items),
         ],
         style={
-            "padding": "8px 0",
+            "padding": "0",
+            # "backgroundColor": "yellow",
         },
     )
