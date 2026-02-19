@@ -9,6 +9,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent.parent
 
 # データディレクトリ
 DATA_DIR = PROJECT_ROOT / "data" / "processed"
+STATIC_DIR = PROJECT_ROOT / "data" / "static"
 
 # PEPページのベースURL
 PEP_BASE_URL = "https://peps.python.org/pep-{pep_number:04d}/"
@@ -87,3 +88,13 @@ TIMELINE_ANNOTATION_ARROW_WIDTH = 1.5
 TIMELINE_ANNOTATION_ARROW_COLOR = "#000000"
 TIMELINE_ANNOTATION_TEXT_COLOR = "#000000"
 TIMELINE_ANNOTATION_TEXT_SIZE = 12
+
+# === Python リリース日表示定数 ===
+
+# Python リリース日の縦線色（ラベル色と統一）
+PYTHON_2_LINE_COLOR = "#DDAD3E"  # 黄色
+PYTHON_3_LINE_COLOR = "#2E6495"  # 青
+
+# Pythonリリースバージョンラベルのタイムライン上Y座標
+TIMELINE_Y_PYTHON2_LABEL = 1.85  # Python 2系バージョンラベル
+TIMELINE_Y_PYTHON3_LABEL = 1.65  # Python 3系バージョンラベル

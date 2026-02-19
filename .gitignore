@@ -211,8 +211,6 @@ __marimo__/
 # Project-specific: PEP Map data files
 # Raw data downloaded from GitHub (large files, can be regenerated)
 data/raw/*
-# Processed data files (can be regenerated from raw data)
-data/processed/*
 # Keep the directory structure
 !data/raw/.gitkeep
 !data/processed/.gitkeep
