@@ -90,11 +90,9 @@ TIMELINE_ANNOTATION_TEXT_SIZE = 12
 
 # === Python リリース日表示定数 ===
 
-# Python リリース日の縦線色
+# Python リリース日の縦線色（ラベル色と統一）
 PYTHON_2_LINE_COLOR = "#DDAD3E"  # 黄色
 PYTHON_3_LINE_COLOR = "#2E6495"  # 青
-PYTHON_2_RELEASE_LABEL_COLOR = "#DDAD3E"  # ラベル色（黄色）
-PYTHON_3_RELEASE_LABEL_COLOR = "#2E6495"  # ラベル色（青）
 
 # Pythonリリースバージョンラベルのタイムライン上Y座標
 TIMELINE_Y_PYTHON2_LABEL = 1.85  # Python 2系バージョンラベル

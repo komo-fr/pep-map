@@ -30,8 +30,6 @@ from src.dash_app.utils.constants import (
     TIMELINE_Y_TICKVALS,
     PYTHON_2_LINE_COLOR,
     PYTHON_3_LINE_COLOR,
-    PYTHON_2_RELEASE_LABEL_COLOR,
-    PYTHON_3_RELEASE_LABEL_COLOR,
     TIMELINE_Y_PYTHON2_LABEL,
     TIMELINE_Y_PYTHON3_LABEL,
 )
@@ -639,9 +637,7 @@ def _add_release_lines_for_major_version(
             yref="y",
             font=dict(
                 size=10,
-                color=PYTHON_2_RELEASE_LABEL_COLOR
-                if major_version == 2
-                else PYTHON_3_RELEASE_LABEL_COLOR,
+                color=line_color,
             ),
             xanchor="left",
             yanchor="middle",
