@@ -8,7 +8,13 @@ from src.dash_app.callbacks.timeline_callbacks import (
     _compute_table_titles,
     _parse_pep_number,
 )
-from src.dash_app.utils.constants import PYTHON_2_LINE_COLOR, PYTHON_3_LINE_COLOR
+from src.dash_app.utils import data_loader
+from src.dash_app.utils.constants import (
+    PYTHON_2_LINE_COLOR,
+    PYTHON_3_LINE_COLOR,
+    TIMELINE_Y_PYTHON2_LABEL,
+    TIMELINE_Y_PYTHON3_LABEL,
+)
 
 
 class TestParsePepNumber:
@@ -59,7 +65,6 @@ class TestComputeTableTitles:
     def test_existing_pep(self, mock_data_files, monkeypatch):
         """存在するPEP番号の場合はPEP番号入りのタイトルを返す"""
         monkeypatch.setattr("src.dash_app.utils.data_loader.DATA_DIR", mock_data_files)
-        from src.dash_app.utils import data_loader
 
         data_loader.clear_cache()
 
@@ -71,7 +76,6 @@ class TestComputeTableTitles:
     def test_nonexistent_pep(self, mock_data_files, monkeypatch):
         """存在しないPEP番号の場合はデフォルトのタイトルを返す"""
         monkeypatch.setattr("src.dash_app.utils.data_loader.DATA_DIR", mock_data_files)
-        from src.dash_app.utils import data_loader
 
         data_loader.clear_cache()
 
@@ -92,8 +96,6 @@ class TestAddPythonReleaseLines:
         monkeypatch.setattr(
             "src.dash_app.utils.data_loader.STATIC_DIR", mock_static_dir
         )
-        from src.dash_app.utils import data_loader
-
         data_loader.clear_cache()
 
         fig = go.Figure()
@@ -110,8 +112,6 @@ class TestAddPythonReleaseLines:
         monkeypatch.setattr(
             "src.dash_app.utils.data_loader.STATIC_DIR", mock_static_dir
         )
-        from src.dash_app.utils import data_loader
-
         data_loader.clear_cache()
 
         fig = go.Figure()
@@ -129,8 +129,6 @@ class TestAddPythonReleaseLines:
         monkeypatch.setattr(
             "src.dash_app.utils.data_loader.STATIC_DIR", mock_static_dir
         )
-        from src.dash_app.utils import data_loader
-
         data_loader.clear_cache()
 
         fig = go.Figure()
@@ -148,8 +146,6 @@ class TestAddPythonReleaseLines:
         monkeypatch.setattr(
             "src.dash_app.utils.data_loader.STATIC_DIR", mock_static_dir
         )
-        from src.dash_app.utils import data_loader
-
         data_loader.clear_cache()
 
         fig = go.Figure()
@@ -168,9 +164,6 @@ class TestAddReleaseLinesForMajorVersion:
         monkeypatch.setattr(
             "src.dash_app.utils.data_loader.STATIC_DIR", mock_static_dir
         )
-        from src.dash_app.utils import data_loader
-        from src.dash_app.utils.constants import TIMELINE_Y_PYTHON2_LABEL
-
         data_loader.clear_cache()
 
         fig = go.Figure()
@@ -188,9 +181,6 @@ class TestAddReleaseLinesForMajorVersion:
         monkeypatch.setattr(
             "src.dash_app.utils.data_loader.STATIC_DIR", mock_static_dir
         )
-        from src.dash_app.utils import data_loader
-        from src.dash_app.utils.constants import TIMELINE_Y_PYTHON3_LABEL
-
         data_loader.clear_cache()
 
         fig = go.Figure()
@@ -207,9 +197,6 @@ class TestAddReleaseLinesForMajorVersion:
         monkeypatch.setattr(
             "src.dash_app.utils.data_loader.STATIC_DIR", mock_static_dir
         )
-        from src.dash_app.utils import data_loader
-        from src.dash_app.utils.constants import TIMELINE_Y_PYTHON3_LABEL
-
         data_loader.clear_cache()
 
         fig = go.Figure()
@@ -225,9 +212,6 @@ class TestAddReleaseLinesForMajorVersion:
         monkeypatch.setattr(
             "src.dash_app.utils.data_loader.STATIC_DIR", mock_static_dir
         )
-        from src.dash_app.utils import data_loader
-        from src.dash_app.utils.constants import TIMELINE_Y_PYTHON2_LABEL
-
         data_loader.clear_cache()
 
         fig = go.Figure()
