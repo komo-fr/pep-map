@@ -9,6 +9,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent.parent
 
 # データディレクトリ
 DATA_DIR = PROJECT_ROOT / "data" / "processed"
+STATIC_DIR = PROJECT_ROOT / "data" / "static"
 
 # PEPページのベースURL
 PEP_BASE_URL = "https://peps.python.org/pep-{pep_number:04d}/"

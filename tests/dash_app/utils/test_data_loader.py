@@ -179,18 +179,22 @@ class TestGeneratePepUrl:
 class TestLoadPythonReleases:
     """load_python_releases関数のテスト"""
 
-    def test_returns_dataframe(self, mock_data_files, monkeypatch):
+    def test_returns_dataframe(self, mock_static_dir, monkeypatch):
         """DataFrameを返す"""
-        monkeypatch.setattr("src.dash_app.utils.data_loader.DATA_DIR", mock_data_files)
+        monkeypatch.setattr(
+            "src.dash_app.utils.data_loader.STATIC_DIR", mock_static_dir
+        )
         data_loader.clear_cache()
 
         df = data_loader.load_python_releases()
 
         assert isinstance(df, pd.DataFrame)
 
-    def test_has_required_columns(self, mock_data_files, monkeypatch):
+    def test_has_required_columns(self, mock_static_dir, monkeypatch):
         """必要な列が存在する"""
-        monkeypatch.setattr("src.dash_app.utils.data_loader.DATA_DIR", mock_data_files)
+        monkeypatch.setattr(
+            "src.dash_app.utils.data_loader.STATIC_DIR", mock_static_dir
+        )
         data_loader.clear_cache()
 
         df = data_loader.load_python_releases()
@@ -199,27 +203,33 @@ class TestLoadPythonReleases:
         assert "release_date" in df.columns
         assert "major_version" in df.columns
 
-    def test_release_date_is_datetime(self, mock_data_files, monkeypatch):
+    def test_release_date_is_datetime(self, mock_static_dir, monkeypatch):
         """release_date列がdatetime型"""
-        monkeypatch.setattr("src.dash_app.utils.data_loader.DATA_DIR", mock_data_files)
+        monkeypatch.setattr(
+            "src.dash_app.utils.data_loader.STATIC_DIR", mock_static_dir
+        )
         data_loader.clear_cache()
 
         df = data_loader.load_python_releases()
 
         assert pd.api.types.is_datetime64_any_dtype(df["release_date"])
 
-    def test_major_version_is_int(self, mock_data_files, monkeypatch):
+    def test_major_version_is_int(self, mock_static_dir, monkeypatch):
         """major_version列がint型"""
-        monkeypatch.setattr("src.dash_app.utils.data_loader.DATA_DIR", mock_data_files)
+        monkeypatch.setattr(
+            "src.dash_app.utils.data_loader.STATIC_DIR", mock_static_dir
+        )
         data_loader.clear_cache()
 
         df = data_loader.load_python_releases()
 
         assert pd.api.types.is_integer_dtype(df["major_version"])
 
-    def test_python_releases_cache(self, mock_data_files, monkeypatch):
+    def test_python_releases_cache(self, mock_static_dir, monkeypatch):
         """キャッシュが機能する"""
-        monkeypatch.setattr("src.dash_app.utils.data_loader.DATA_DIR", mock_data_files)
+        monkeypatch.setattr(
+            "src.dash_app.utils.data_loader.STATIC_DIR", mock_static_dir
+        )
         data_loader.clear_cache()
 
         # 1回目の読み込み
@@ -234,27 +244,33 @@ class TestLoadPythonReleases:
 class TestGetPythonReleasesByMajorVersion:
     """get_python_releases_by_major_version関数のテスト"""
 
-    def test_filter_python2(self, mock_data_files, monkeypatch):
+    def test_filter_python2(self, mock_static_dir, monkeypatch):
         """Python 2系のみフィルタリング"""
-        monkeypatch.setattr("src.dash_app.utils.data_loader.DATA_DIR", mock_data_files)
+        monkeypatch.setattr(
+            "src.dash_app.utils.data_loader.STATIC_DIR", mock_static_dir
+        )
         data_loader.clear_cache()
 
         df = data_loader.get_python_releases_by_major_version(2)
 
         assert all(df["major_version"] == 2)
 
-    def test_filter_python3(self, mock_data_files, monkeypatch):
+    def test_filter_python3(self, mock_static_dir, monkeypatch):
         """Python 3系のみフィルタリング"""
-        monkeypatch.setattr("src.dash_app.utils.data_loader.DATA_DIR", mock_data_files)
+        monkeypatch.setattr(
+            "src.dash_app.utils.data_loader.STATIC_DIR", mock_static_dir
+        )
         data_loader.clear_cache()
 
         df = data_loader.get_python_releases_by_major_version(3)
 
         assert all(df["major_version"] == 3)
 
-    def test_returns_copy(self, mock_data_files, monkeypatch):
+    def test_returns_copy(self, mock_static_dir, monkeypatch):
         """返すDataFrameは独立したコピー"""
-        monkeypatch.setattr("src.dash_app.utils.data_loader.DATA_DIR", mock_data_files)
+        monkeypatch.setattr(
+            "src.dash_app.utils.data_loader.STATIC_DIR", mock_static_dir
+        )
         data_loader.clear_cache()
 
         df1 = data_loader.get_python_releases_by_major_version(2)
@@ -269,9 +285,12 @@ class TestGetPythonReleasesByMajorVersion:
 class TestClearCache:
     """clear_cache関数のテスト"""
 
-    def test_clear_cache(self, mock_data_files, monkeypatch):
+    def test_clear_cache(self, mock_data_files, mock_static_dir, monkeypatch):
         """キャッシュがクリアされる"""
         monkeypatch.setattr("src.dash_app.utils.data_loader.DATA_DIR", mock_data_files)
+        monkeypatch.setattr(
+            "src.dash_app.utils.data_loader.STATIC_DIR", mock_static_dir
+        )
 
         # キャッシュをクリア
         data_loader.clear_cache()

@@ -87,7 +87,6 @@ def mock_data_files(
     sample_peps_metadata,
     sample_citations,
     sample_metadata,
-    sample_python_releases,
 ):
     """テスト用データファイルを一時ディレクトリに作成"""
     data_dir = tmp_path / "data"
@@ -100,9 +99,6 @@ def mock_data_files(
     citations_csv = data_dir / "citations.csv"
     sample_citations.to_csv(citations_csv, index=False)
 
-    python_releases_csv = data_dir / "python_release_dates.csv"
-    sample_python_releases.to_csv(python_releases_csv, index=False)
-
     # JSONファイル作成
     metadata_json = data_dir / "metadata.json"
     metadata_json.write_text(
@@ -113,3 +109,15 @@ def mock_data_files(
     )
 
     return data_dir
+
+
+@pytest.fixture
+def mock_static_dir(tmp_path, sample_python_releases):
+    """テスト用静的データファイルを一時ディレクトリに作成"""
+    static_dir = tmp_path / "static"
+    static_dir.mkdir()
+
+    python_releases_csv = static_dir / "python_release_dates.csv"
+    sample_python_releases.to_csv(python_releases_csv, index=False)
+
+    return static_dir

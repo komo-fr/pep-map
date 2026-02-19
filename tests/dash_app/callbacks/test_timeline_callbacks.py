@@ -84,9 +84,14 @@ class TestComputeTableTitles:
 class TestAddPythonReleaseLines:
     """_add_python_release_lines関数のテスト"""
 
-    def test_no_options_adds_no_shapes(self, mock_data_files, monkeypatch):
+    def test_no_options_adds_no_shapes(
+        self, mock_data_files, mock_static_dir, monkeypatch
+    ):
         """オプションが空の場合はshapesを追加しない"""
         monkeypatch.setattr("src.dash_app.utils.data_loader.DATA_DIR", mock_data_files)
+        monkeypatch.setattr(
+            "src.dash_app.utils.data_loader.STATIC_DIR", mock_static_dir
+        )
         from src.dash_app.utils import data_loader
 
         data_loader.clear_cache()
@@ -97,9 +102,14 @@ class TestAddPythonReleaseLines:
         assert len(fig.layout.shapes) == 0
         assert len(fig.layout.annotations) == 0
 
-    def test_python2_option_adds_shapes(self, mock_data_files, monkeypatch):
+    def test_python2_option_adds_shapes(
+        self, mock_data_files, mock_static_dir, monkeypatch
+    ):
         """python2オプションでshapesが追加される"""
         monkeypatch.setattr("src.dash_app.utils.data_loader.DATA_DIR", mock_data_files)
+        monkeypatch.setattr(
+            "src.dash_app.utils.data_loader.STATIC_DIR", mock_static_dir
+        )
         from src.dash_app.utils import data_loader
 
         data_loader.clear_cache()
@@ -111,9 +121,14 @@ class TestAddPythonReleaseLines:
         assert len(fig.layout.shapes) == 1
         assert len(fig.layout.annotations) == 1
 
-    def test_python3_option_adds_shapes(self, mock_data_files, monkeypatch):
+    def test_python3_option_adds_shapes(
+        self, mock_data_files, mock_static_dir, monkeypatch
+    ):
         """python3オプションでshapesが追加される"""
         monkeypatch.setattr("src.dash_app.utils.data_loader.DATA_DIR", mock_data_files)
+        monkeypatch.setattr(
+            "src.dash_app.utils.data_loader.STATIC_DIR", mock_static_dir
+        )
         from src.dash_app.utils import data_loader
 
         data_loader.clear_cache()
@@ -125,9 +140,14 @@ class TestAddPythonReleaseLines:
         assert len(fig.layout.shapes) == 2
         assert len(fig.layout.annotations) == 2
 
-    def test_both_options_adds_all_shapes(self, mock_data_files, monkeypatch):
+    def test_both_options_adds_all_shapes(
+        self, mock_data_files, mock_static_dir, monkeypatch
+    ):
         """両方のオプションでPython 2/3合計のshapesが追加される"""
         monkeypatch.setattr("src.dash_app.utils.data_loader.DATA_DIR", mock_data_files)
+        monkeypatch.setattr(
+            "src.dash_app.utils.data_loader.STATIC_DIR", mock_static_dir
+        )
         from src.dash_app.utils import data_loader
 
         data_loader.clear_cache()
@@ -143,9 +163,11 @@ class TestAddPythonReleaseLines:
 class TestAddReleaseLinesForMajorVersion:
     """_add_release_lines_for_major_version関数のテスト"""
 
-    def test_python2_line_color_is_correct(self, mock_data_files, monkeypatch):
+    def test_python2_line_color_is_correct(self, mock_static_dir, monkeypatch):
         """Python 2縦線の色が正しい"""
-        monkeypatch.setattr("src.dash_app.utils.data_loader.DATA_DIR", mock_data_files)
+        monkeypatch.setattr(
+            "src.dash_app.utils.data_loader.STATIC_DIR", mock_static_dir
+        )
         from src.dash_app.utils import data_loader
         from src.dash_app.utils.constants import TIMELINE_Y_PYTHON2_LABEL
 
@@ -161,9 +183,11 @@ class TestAddReleaseLinesForMajorVersion:
         for shape in fig.layout.shapes:
             assert shape.line.color == PYTHON_2_LINE_COLOR
 
-    def test_python3_line_color_is_correct(self, mock_data_files, monkeypatch):
+    def test_python3_line_color_is_correct(self, mock_static_dir, monkeypatch):
         """Python 3縦線の色が正しい"""
-        monkeypatch.setattr("src.dash_app.utils.data_loader.DATA_DIR", mock_data_files)
+        monkeypatch.setattr(
+            "src.dash_app.utils.data_loader.STATIC_DIR", mock_static_dir
+        )
         from src.dash_app.utils import data_loader
         from src.dash_app.utils.constants import TIMELINE_Y_PYTHON3_LABEL
 
@@ -178,9 +202,11 @@ class TestAddReleaseLinesForMajorVersion:
         for shape in fig.layout.shapes:
             assert shape.line.color == PYTHON_3_LINE_COLOR
 
-    def test_annotation_count_matches_releases(self, mock_data_files, monkeypatch):
+    def test_annotation_count_matches_releases(self, mock_static_dir, monkeypatch):
         """追加されるアノテーション数がリリース数と一致する"""
-        monkeypatch.setattr("src.dash_app.utils.data_loader.DATA_DIR", mock_data_files)
+        monkeypatch.setattr(
+            "src.dash_app.utils.data_loader.STATIC_DIR", mock_static_dir
+        )
         from src.dash_app.utils import data_loader
         from src.dash_app.utils.constants import TIMELINE_Y_PYTHON3_LABEL
 
@@ -194,9 +220,11 @@ class TestAddReleaseLinesForMajorVersion:
         # モックデータのPython 3系は3.0, 3.10の2件
         assert len(fig.layout.annotations) == 2
 
-    def test_annotation_contains_version_text(self, mock_data_files, monkeypatch):
+    def test_annotation_contains_version_text(self, mock_static_dir, monkeypatch):
         """アノテーションにバージョン番号が含まれる"""
-        monkeypatch.setattr("src.dash_app.utils.data_loader.DATA_DIR", mock_data_files)
+        monkeypatch.setattr(
+            "src.dash_app.utils.data_loader.STATIC_DIR", mock_static_dir
+        )
         from src.dash_app.utils import data_loader
         from src.dash_app.utils.constants import TIMELINE_Y_PYTHON2_LABEL
 

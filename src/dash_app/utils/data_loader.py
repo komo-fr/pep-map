@@ -5,7 +5,7 @@ from datetime import datetime
 
 import pandas as pd
 
-from src.dash_app.utils.constants import DATA_DIR
+from src.dash_app.utils.constants import DATA_DIR, STATIC_DIR
 
 
 # モジュールレベルでキャッシュ（アプリ起動時に一度だけ読み込む）
@@ -209,7 +209,7 @@ def load_python_releases() -> pd.DataFrame:
     if _python_releases_cache is not None:
         return _python_releases_cache
 
-    file_path = DATA_DIR / "python_release_dates.csv"
+    file_path = STATIC_DIR / "python_release_dates.csv"
 
     df = pd.read_csv(file_path, dtype={"version": str})
 
