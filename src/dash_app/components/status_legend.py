@@ -62,6 +62,5 @@ def create_status_legend() -> html.Div:
         ],
         style={
             "padding": "0",
-            # "backgroundColor": "yellow",
         },
     )
