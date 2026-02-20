@@ -3,6 +3,7 @@
 from dash import Dash, html, Input, Output
 from dash_bootstrap_components import themes
 
+from src.dash_app.components.header import create_header
 from src.dash_app.layouts.common import create_tab_navigation
 from src.dash_app.layouts.timeline import create_timeline_layout
 from src.dash_app.callbacks.timeline_callbacks import register_timeline_callbacks
@@ -17,6 +18,8 @@ app = Dash(
 # アプリレイアウトの定義
 app.layout = html.Div(
     [
+        # ヘッダー
+        create_header(),
         # タブナビゲーション
         create_tab_navigation(),
         # タブコンテンツ表示エリア
