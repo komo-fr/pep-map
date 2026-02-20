@@ -50,8 +50,8 @@ class TestComputeTableTitles:
 
         citing_title, cited_title = _compute_table_titles(None)
 
-        assert citing_title == "PEP N is linked from..."
-        assert cited_title == "PEP N links to..."
+        assert citing_title == "PEP N is cited by..."
+        assert cited_title == "PEP N cites..."
 
     def test_empty_string(self, mock_data_files, monkeypatch):
         """入力が空文字の場合はデフォルトのタイトルを返す"""
@@ -59,8 +59,8 @@ class TestComputeTableTitles:
 
         citing_title, cited_title = _compute_table_titles("")
 
-        assert citing_title == "PEP N is linked from..."
-        assert cited_title == "PEP N links to..."
+        assert citing_title == "PEP N is cited by..."
+        assert cited_title == "PEP N cites..."
 
     def test_existing_pep(self, mock_data_files, monkeypatch):
         """存在するPEP番号の場合はPEP番号入りのタイトルを返す"""
@@ -70,8 +70,8 @@ class TestComputeTableTitles:
 
         citing_title, cited_title = _compute_table_titles(484)
 
-        assert citing_title == "PEP 484 is linked from..."
-        assert cited_title == "PEP 484 links to..."
+        assert citing_title == "PEP 484 is cited by..."
+        assert cited_title == "PEP 484 cites..."
 
     def test_nonexistent_pep(self, mock_data_files, monkeypatch):
         """存在しないPEP番号の場合はデフォルトのタイトルを返す"""
@@ -81,8 +81,8 @@ class TestComputeTableTitles:
 
         citing_title, cited_title = _compute_table_titles(9999)
 
-        assert citing_title == "PEP N is linked from..."
-        assert cited_title == "PEP N links to..."
+        assert citing_title == "PEP N is cited by..."
+        assert cited_title == "PEP N cites..."
 
 
 class TestAddPythonReleaseLines:

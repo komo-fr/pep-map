@@ -13,16 +13,16 @@ def create_initial_info_message() -> html.Div:
     return html.Div(
         [
             html.P(
-                "Enter a PEP number in the left text box (e.g. 8).",
+                "Enter a PEP number in the text box on the left (e.g., 8).",
                 style={"marginBottom": "8px"},
             ),
             html.P(
-                "You can then see the following information ordered by creation date:"
+                "The following information will be displayed in order of creation date:"
             ),
             html.Ul(
                 [
-                    html.Li("Which PEPs link to that PEP?"),
-                    html.Li("Which PEPs are linked from that PEP?"),
+                    html.Li("Which PEPs cite the selected PEP?"),
+                    html.Li("Which PEPs does the selected PEP cite?"),
                 ]
             ),
         ],

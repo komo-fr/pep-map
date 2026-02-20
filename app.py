@@ -3,6 +3,7 @@
 from dash import Dash, html, Input, Output
 from dash_bootstrap_components import themes
 
+from src.dash_app.components.header import create_header
 from src.dash_app.layouts.common import create_tab_navigation
 from src.dash_app.layouts.timeline import create_timeline_layout
 from src.dash_app.callbacks.timeline_callbacks import register_timeline_callbacks
@@ -17,6 +18,8 @@ app = Dash(
 # アプリレイアウトの定義
 app.layout = html.Div(
     [
+        # ヘッダー
+        create_header(),
         # タブナビゲーション
         create_tab_navigation(),
         # タブコンテンツ表示エリア
@@ -41,28 +44,15 @@ def render_tab_content(active_tab):
     elif active_tab == "network":
         return html.Div(
             [
-                html.H2("Network"),
-                html.P("Network機能は将来実装予定です。"),
-            ]
-        )
-    elif active_tab == "community":
-        return html.Div(
-            [
-                html.H2("Community"),
-                html.P("Community機能は将来実装予定です。"),
-            ]
-        )
-    elif active_tab == "history":
-        return html.Div(
-            [
-                html.H2("History"),
-                html.P("History機能は将来実装予定です。"),
-            ]
+                html.H2("Network - Coming Soon"),
+                html.P("Interactive network graph visualization is under development."),
+            ],
+            style={"padding": "20px", "textAlign": "center"},
         )
     else:
         return html.Div(
             [
-                html.P("不明なタブです。"),
+                html.P("Unknown tab."),
             ]
         )
 

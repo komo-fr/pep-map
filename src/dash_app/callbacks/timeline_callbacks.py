@@ -235,12 +235,12 @@ def _compute_table_titles(pep_number_input) -> tuple[str, str]:
     pep_number = _parse_pep_number(pep_number_input)
 
     if pep_number is None:
-        return "PEP N is linked from...", "PEP N links to..."
+        return "PEP N is cited by...", "PEP N cites..."
 
     if get_pep_by_number(pep_number) is None:
-        return "PEP N is linked from...", "PEP N links to..."
+        return "PEP N is cited by...", "PEP N cites..."
 
-    return f"PEP {pep_number} is linked from...", f"PEP {pep_number} links to..."
+    return f"PEP {pep_number} is cited by...", f"PEP {pep_number} cites..."
 
 
 def _convert_df_to_table_data(df) -> list[dict]:
@@ -412,7 +412,7 @@ def _create_pep_annotations(pep_number: int) -> list[dict]:
         ),
         # 上部テキスト: TIMELINE_Y_CITING と TIMELINE_Y_SELECTED の中間より下
         dict(
-            text=f"PEP {pep_number} is linked from ...",
+            text=f"PEP {pep_number} is cited by ...",
             xref="paper",
             yref="y",
             x=TIMELINE_ANNOTATION_X,
