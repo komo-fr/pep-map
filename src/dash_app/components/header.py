@@ -2,9 +2,9 @@
 
 from dash import html
 
-from src.dash_app.utils.constants import PYTHON_2_LINE_COLOR, PYTHON_3_LINE_COLOR
-
+HEADER_BG_COLOR = "#2E6495"
 HEADER_FONT_COLOR = "#FAFAFA"
+HEADER_SUBTITLE_COLOR = "#DDAD3E"
 HEADER_FONT_FAMILY = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"
 GITHUB_URL = "https://github.com/komo-fr/pep-map"
 
@@ -35,7 +35,7 @@ def create_header() -> html.Header:
                         html.Span(
                             "Visualization of Citation Relationships in PEPs",
                             style={
-                                "color": PYTHON_2_LINE_COLOR,
+                                "color": HEADER_SUBTITLE_COLOR,
                                 "fontFamily": HEADER_FONT_FAMILY,
                                 "fontSize": "13px",
                             },
@@ -68,6 +68,6 @@ def create_header() -> html.Header:
             },
         ),
         style={
-            "backgroundColor": PYTHON_3_LINE_COLOR,
+            "backgroundColor": HEADER_BG_COLOR,
         },
     )
