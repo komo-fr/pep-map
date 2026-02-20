@@ -165,7 +165,7 @@ def _create_tables_section() -> html.Div:
                 [
                     html.H4(
                         id="citing-peps-title",
-                        children="PEP N is linked from...",
+                        children="PEP N is cited by...",
                         style={"marginBottom": "8px"},
                     ),
                     _create_pep_table("citing-peps-table"),
