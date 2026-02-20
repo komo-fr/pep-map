@@ -30,22 +30,8 @@ def create_tab_navigation():
                 selected_style=tab_selected_style,
             ),
             dcc.Tab(
-                label="Network",
+                label="Network (Coming Soon)",
                 value="network",
-                disabled=True,
-                style=tab_style,
-                selected_style=tab_selected_style,
-            ),
-            dcc.Tab(
-                label="Community",
-                value="community",
-                disabled=True,
-                style=tab_style,
-                selected_style=tab_selected_style,
-            ),
-            dcc.Tab(
-                label="History",
-                value="history",
                 disabled=True,
                 style=tab_style,
                 selected_style=tab_selected_style,

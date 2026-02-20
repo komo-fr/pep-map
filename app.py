@@ -44,28 +44,15 @@ def render_tab_content(active_tab):
     elif active_tab == "network":
         return html.Div(
             [
-                html.H2("Network"),
-                html.P("Network機能は将来実装予定です。"),
-            ]
-        )
-    elif active_tab == "community":
-        return html.Div(
-            [
-                html.H2("Community"),
-                html.P("Community機能は将来実装予定です。"),
-            ]
-        )
-    elif active_tab == "history":
-        return html.Div(
-            [
-                html.H2("History"),
-                html.P("History機能は将来実装予定です。"),
-            ]
+                html.H2("Network - Coming Soon"),
+                html.P("Interactive network graph visualization is under development."),
+            ],
+            style={"padding": "20px", "textAlign": "center"},
         )
     else:
         return html.Div(
             [
-                html.P("不明なタブです。"),
+                html.P("Unknown tab."),
             ]
         )
 
