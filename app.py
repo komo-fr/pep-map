@@ -1,5 +1,7 @@
 """PEP Map - Timeline機能"""
 
+import os
+
 from dash import Dash, html, Input, Output
 from dash_bootstrap_components import themes
 
@@ -14,6 +16,7 @@ app = Dash(
     suppress_callback_exceptions=True,  # 動的コンテンツのためコールバック例外を抑制
     external_stylesheets=[themes.BOOTSTRAP],
 )
+server = app.server  # for gunicorn
 
 # アプリレイアウトの定義
 app.layout = html.Div(
@@ -62,4 +65,6 @@ register_timeline_callbacks(app)
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=10000, debug=False)
+    # debugモードはセキュリティ上、明示的に有効化された場合のみTrue
+    debug = os.environ.get("DEBUG", "").lower() in ("true", "1")
+    app.run(debug=debug)
