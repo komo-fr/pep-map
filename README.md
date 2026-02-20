@@ -7,6 +7,10 @@ PEP Map is a web application that **visualizes citation relationships between PE
 - **Timeline:** Citation relationships between PEPs in chronological order
 - **Network:** Citation relationships between PEPs as a network graph **(coming soon)**
 
+**Note:**
+This project is a redesigned and reimplemented version of [pep_map_site](https://github.com/komo-fr/pep_map_site), originally built with Bokeh and PyScript.
+It is now built using Dash.
+
 ## Timeline
 Enter a PEP number in the text box on the left (e.g., 8).
 The following information will be displayed in order of creation date:
