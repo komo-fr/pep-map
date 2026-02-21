@@ -5,7 +5,10 @@ from datetime import datetime
 
 import pandas as pd
 
-from src.dash_app.utils.constants import DATA_DIR, STATIC_DIR
+from src.dash_app.utils.constants import (
+    DATA_DIR,
+    STATIC_DIR,
+)
 
 
 # モジュールレベルでキャッシュ（アプリ起動時に一度だけ読み込む）

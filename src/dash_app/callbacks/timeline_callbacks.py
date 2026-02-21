@@ -234,6 +234,12 @@ def register_timeline_callbacks(app):
             const newAnnotations = [...baseAnnotations];
 
             // Pythonリリース日の縦線スタイル定義
+            // NOTE: 以下の値は constants.py と同期する必要があります：
+            //   - 'python2'.color と PYTHON_2_LINE_COLOR
+            //   - 'python3'.color と PYTHON_3_LINE_COLOR
+            //   - 'python2'.yLabel と TIMELINE_Y_PYTHON2_LABEL
+            //   - 'python3'.yLabel と TIMELINE_Y_PYTHON3_LABEL
+            // constants.py の値を変更する際は、このJavaScriptコードも更新してください。
             const styles = {
                 'python2': {color: '#DDAD3E', yLabel: 1.85},
                 'python3': {color: '#2E6495', yLabel: 1.65}
