@@ -3,7 +3,12 @@
 import dash_cytoscape as cyto
 from dash import html
 
-from src.dash_app.components import create_status_legend
+from src.dash_app.components import (
+    create_status_legend,
+    build_cytoscape_elements,
+    get_base_stylesheet,
+    get_cose_layout_options,
+)
 from src.dash_app.utils.data_loader import load_metadata
 
 
@@ -147,55 +152,25 @@ def _create_main_content_section() -> html.Div:
 
 def _create_network_graph() -> cyto.Cytoscape:
     """
-    空のネットワークグラフコンポーネントを生成する
+    ネットワークグラフコンポーネントを生成する
+
+    全PEPの引用関係をグラフとして表示する。
 
     Returns:
         cyto.Cytoscape: Cytoscapeグラフコンポーネント
     """
+    # グラフデータを構築
+    elements = build_cytoscape_elements()
+
     return cyto.Cytoscape(
         id="network-graph",
-        elements=[],  # フェーズ2でデータを追加
-        layout={"name": "cose"},
+        elements=elements,
+        layout=get_cose_layout_options(),
         style={
             "width": "100%",
             "height": "600px",
             "border": "1px solid #ddd",
             "backgroundColor": "#fafafa",
         },
-        stylesheet=_get_base_stylesheet(),
+        stylesheet=get_base_stylesheet(),
     )
-
-
-def _get_base_stylesheet() -> list:
-    """
-    Cytoscapeグラフの基本スタイルシートを取得する
-
-    Returns:
-        list: スタイルシート定義のリスト
-    """
-    return [
-        # ノード基本スタイル
-        {
-            "selector": "node",
-            "style": {
-                "label": "data(label)",
-                "width": 20,
-                "height": 20,
-                "font-size": "10px",
-                "text-valign": "top",
-                "text-halign": "center",
-                "background-color": "#666",
-            },
-        },
-        # エッジ基本スタイル
-        {
-            "selector": "edge",
-            "style": {
-                "width": 1,
-                "line-color": "#ccc",
-                "target-arrow-color": "#ccc",
-                "target-arrow-shape": "triangle",
-                "curve-style": "bezier",
-            },
-        },
-    ]
