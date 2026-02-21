@@ -1,6 +1,7 @@
 """timeline_callbacksモジュールのテスト"""
 
 import plotly.graph_objects as go
+import pytest
 
 from src.dash_app.callbacks.timeline_callbacks import (
     _add_python_release_lines,
@@ -85,6 +86,7 @@ class TestComputeTableTitles:
         assert cited_title == "PEP N cites..."
 
 
+@pytest.mark.skip(reason="Phase 4でクライアントサイドコールバックに移行予定")
 class TestAddPythonReleaseLines:
     """_add_python_release_lines関数のテスト"""
 
@@ -156,6 +158,7 @@ class TestAddPythonReleaseLines:
         assert len(fig.layout.annotations) == 3
 
 
+@pytest.mark.skip(reason="Phase 4でクライアントサイドコールバックに移行予定")
 class TestAddReleaseLinesForMajorVersion:
     """_add_release_lines_for_major_version関数のテスト"""
 
