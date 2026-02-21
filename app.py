@@ -9,6 +9,7 @@ from dash_bootstrap_components import themes
 from src.dash_app.components.header import create_header
 from src.dash_app.layouts.common import create_tab_navigation
 from src.dash_app.layouts.timeline import create_timeline_layout
+from src.dash_app.layouts.network import create_network_layout
 from src.dash_app.callbacks.timeline_callbacks import register_timeline_callbacks
 from src.dash_app.utils.data_loader import (
     load_peps_metadata,
@@ -63,13 +64,7 @@ def render_tab_content(active_tab):
     if active_tab == "timeline":
         return create_timeline_layout()
     elif active_tab == "network":
-        return html.Div(
-            [
-                html.H2("Network - Coming Soon"),
-                html.P("Interactive network graph visualization is under development."),
-            ],
-            style={"padding": "20px", "textAlign": "center"},
-        )
+        return create_network_layout()
     else:
         return html.Div(
             [
