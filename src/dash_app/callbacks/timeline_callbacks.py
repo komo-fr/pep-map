@@ -156,20 +156,23 @@ def register_timeline_callbacks(app):
 
         return citing_table_data, cited_table_data
 
-    # === グラフ更新コールバック（新規追加） ===
+    # === グラフ更新コールバック（ベースfigureを中間Storeに保存） ===
     @app.callback(
-        Output("timeline-graph", "figure"),
+        Output("timeline-figure-base", "data"),
         Input("pep-input", "value"),
     )
     def update_timeline_graph(pep_number):
         """
-        PEP番号入力に連動してタイムライングラフを更新する
+        PEP番号入力に連動してベースタイムライングラフを生成し、中間Storeに保存する
+
+        クライアントサイドコールバックがこのStoreをトリガーとして受け取り、
+        Pythonリリース日の縦線を追加する
 
         Args:
             pep_number: 入力されたPEP番号（str, int または None）
 
         Returns:
-            go.Figure: Plotlyのfigureオブジェクト
+            dict: Plotlyのfigureオブジェクトの辞書形式、または None
         """
         # 入力値を整数に変換
         pep_number = _parse_pep_number(pep_number)
@@ -209,19 +212,22 @@ def register_timeline_callbacks(app):
             return generate_pep_url(pep_number)
         return no_update
 
-    # === クライアントサイドコールバック: Pythonリリース日の縦線表示 ===
+    # === クライアントサイドコールバック: ベースfigureにPythonリリース日の縦線を追加 ===
     clientside_callback(
         """
-        function(checkboxValues, releaseData, currentFigure) {
+        function(baseFigureData, checkboxValues, releaseData) {
             // データがない場合はno_updateを返す
-            if (!currentFigure || !releaseData) {
+            if (!baseFigureData || !releaseData) {
                 return window.dash_clientside.no_update;
             }
 
+            // ベースfigureをコピー
+            const baseFigure = {...baseFigureData};
+
             // 既存のshapesとannotationsをコピー（リリース線以外を保持）
-            const baseShapes = (currentFigure.layout.shapes || [])
+            const baseShapes = (baseFigure.layout?.shapes || [])
                 .filter(s => !s._isPythonRelease);
-            const baseAnnotations = (currentFigure.layout.annotations || [])
+            const baseAnnotations = (baseFigure.layout?.annotations || [])
                 .filter(a => !a._isPythonRelease);
 
             const newShapes = [...baseShapes];
@@ -269,18 +275,18 @@ def register_timeline_callbacks(app):
             });
 
             // 新しいfigureオブジェクトを作成して返す
-            const updatedFigure = {...currentFigure};
-            updatedFigure.layout = {...currentFigure.layout};
+            const updatedFigure = {...baseFigure};
+            updatedFigure.layout = {...baseFigure.layout};
             updatedFigure.layout.shapes = newShapes;
             updatedFigure.layout.annotations = newAnnotations;
 
             return updatedFigure;
         }
         """,
-        Output("timeline-graph", "figure", allow_duplicate=True),
+        Output("timeline-graph", "figure"),
+        Input("timeline-figure-base", "data"),
         Input("python-release-checkboxes", "value"),
         State("python-releases-store", "data"),
-        State("timeline-graph", "figure"),
         prevent_initial_call=True,
     )
 

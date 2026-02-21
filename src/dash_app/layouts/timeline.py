@@ -138,6 +138,9 @@ def _create_graph_section() -> html.Div:
             #     "python3": [{"version": "3.0", "release_date": "2008-12-03"}, ...]
             # }
             dcc.Store(id="python-releases-store", data=python_releases_data),
+            # サーバーサイドコールバックが生成したベースfigureを保存する中間Store
+            # クライアントサイドコールバックが縦線を追加する前のfigureデータを保持
+            dcc.Store(id="timeline-figure-base"),
             dcc.Graph(
                 id="timeline-graph",
                 figure=create_empty_figure(),
