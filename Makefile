@@ -17,9 +17,9 @@ format:
 # mypyによる型チェック
 typecheck:
 	@echo "🔬 Running mypy..."
-	@mypy src 2>/dev/null || echo "⚠️  src: No files to check"
-	@mypy tests 2>/dev/null || echo "⚠️  tests: No files to check"
-	@mypy scripts 2>/dev/null || echo "⚠️  scripts: No files to check"
+	mypy src
+	mypy tests
+	mypy scripts
 
 # テスト実行（将来的に追加）
 test:
