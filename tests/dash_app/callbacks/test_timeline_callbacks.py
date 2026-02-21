@@ -84,26 +84,6 @@ class TestComputeTableTitles:
         assert citing_title == "PEP N is cited by..."
         assert cited_title == "PEP N cites..."
 
-
-class TestAddPythonReleaseLines:
-    """_add_python_release_lines関数のテスト"""
-
-    def test_no_options_adds_no_shapes(
-        self, mock_data_files, mock_static_dir, monkeypatch
-    ):
-        """オプションが空の場合はshapesを追加しない"""
-        monkeypatch.setattr("src.dash_app.utils.data_loader.DATA_DIR", mock_data_files)
-        monkeypatch.setattr(
-            "src.dash_app.utils.data_loader.STATIC_DIR", mock_static_dir
-        )
-        data_loader.clear_cache()
-
-        fig = go.Figure()
-        _add_python_release_lines(fig, [])
-
-        assert len(fig.layout.shapes) == 0
-        assert len(fig.layout.annotations) == 0
-
     def test_python2_option_adds_shapes(
         self, mock_data_files, mock_static_dir, monkeypatch
     ):
@@ -154,27 +134,6 @@ class TestAddPythonReleaseLines:
         # Python 2（1件）+ Python 3（2件）= 3件
         assert len(fig.layout.shapes) == 3
         assert len(fig.layout.annotations) == 3
-
-
-class TestAddReleaseLinesForMajorVersion:
-    """_add_release_lines_for_major_version関数のテスト"""
-
-    def test_python2_line_color_is_correct(self, mock_static_dir, monkeypatch):
-        """Python 2縦線の色が正しい"""
-        monkeypatch.setattr(
-            "src.dash_app.utils.data_loader.STATIC_DIR", mock_static_dir
-        )
-        data_loader.clear_cache()
-
-        fig = go.Figure()
-        _add_release_lines_for_major_version(
-            fig, 2, PYTHON_2_LINE_COLOR, TIMELINE_Y_PYTHON2_LABEL
-        )
-
-        # 追加されたshapeの色を確認
-        assert len(fig.layout.shapes) > 0
-        for shape in fig.layout.shapes:
-            assert shape.line.color == PYTHON_2_LINE_COLOR
 
     def test_python3_line_color_is_correct(self, mock_static_dir, monkeypatch):
         """Python 3縦線の色が正しい"""

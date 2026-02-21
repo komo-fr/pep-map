@@ -5,7 +5,10 @@ from datetime import datetime
 
 import pandas as pd
 
-from src.dash_app.utils.constants import DATA_DIR, STATIC_DIR
+from src.dash_app.utils.constants import (
+    DATA_DIR,
+    STATIC_DIR,
+)
 
 
 # モジュールレベルでキャッシュ（アプリ起動時に一度だけ読み込む）
@@ -236,6 +239,40 @@ def get_python_releases_by_major_version(major_version: int) -> pd.DataFrame:
     """
     df = load_python_releases()
     return df[df["major_version"] == major_version].copy()
+
+
+def get_python_releases_for_store() -> dict:
+    """
+    dcc.Store用のPythonリリース日データを取得する
+
+    Returns:
+        dict: クライアントサイドコールバック用のデータ構造
+            {
+                "python2": [
+                    {"version": "2.0", "release_date": "2000-10-16"},
+                    ...
+                ],
+                "python3": [
+                    {"version": "3.0", "release_date": "2008-12-03"},
+                    ...
+                ]
+            }
+    """
+    result: dict[str, list[dict[str, str]]] = {"python2": [], "python3": []}
+
+    for major_version in [2, 3]:
+        releases = get_python_releases_by_major_version(major_version)
+        key = f"python{major_version}"
+
+        for _, row in releases.iterrows():
+            result[key].append(
+                {
+                    "version": row["version"],
+                    "release_date": row["release_date"].strftime("%Y-%m-%d"),
+                }
+            )
+
+    return result
 
 
 def generate_pep_url(pep_number: int) -> str:
