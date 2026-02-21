@@ -255,7 +255,7 @@ def get_python_releases_for_store() -> dict:
                 ]
             }
     """
-    result = {"python2": [], "python3": []}
+    result: dict[str, list[dict[str, str]]] = {"python2": [], "python3": []}
 
     for major_version in [2, 3]:
         releases = get_python_releases_by_major_version(major_version)
