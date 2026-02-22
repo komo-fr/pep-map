@@ -1,7 +1,7 @@
 """Networkタブのレイアウト"""
 
-import dash_cytoscape as cyto
-from dash import html
+import dash_cytoscape as cyto  # type: ignore[import-untyped]
+from dash import dcc, html
 
 from src.dash_app.components import (
     create_status_legend,
@@ -26,7 +26,7 @@ def create_network_layout() -> html.Div:
     return html.Div(
         [
             # === 上部セクション: 入力欄 + PEP情報(プレースホルダー) ===
-            _create_top_section_placeholder(),
+            _create_top_section(),
             # === Status凡例セクション ===
             _create_legend_section(),
             # === データ取得日付セクション ===
@@ -40,11 +40,11 @@ def create_network_layout() -> html.Div:
     )
 
 
-def _create_top_section_placeholder() -> html.Div:
-    """上部セクション: PEP番号入力欄 + PEP情報表示エリア(プレースホルダー)"""
+def _create_top_section() -> html.Div:
+    """上部セクション: PEP番号入力欄 + PEP情報表示エリア"""
     return html.Div(
         [
-            # 左側: PEP番号入力(プレースホルダー)
+            # 左側: PEP番号入力
             html.Div(
                 [
                     html.Label(
@@ -54,9 +54,24 @@ def _create_top_section_placeholder() -> html.Div:
                             "marginRight": "8px",
                         },
                     ),
-                    html.Span(
-                        "(Coming in Phase 3)",
-                        style={"color": "#999", "fontSize": "12px"},
+                    dcc.Input(
+                        id="network-pep-input",
+                        type="text",
+                        placeholder="Enter PEP number",
+                        inputMode="numeric",
+                        pattern="[0-9]*",
+                        style={
+                            "width": "180px",
+                        },
+                    ),
+                    # エラーメッセージ表示エリア
+                    html.Div(
+                        id="network-pep-error-message",
+                        style={
+                            "color": "red",
+                            "fontSize": "14px",
+                            "marginTop": "4px",
+                        },
                     ),
                 ],
                 style={
@@ -65,13 +80,10 @@ def _create_top_section_placeholder() -> html.Div:
                     "width": "200px",
                 },
             ),
-            # 右側: PEP情報表示(プレースホルダー)
+            # 右側: PEP情報表示
             html.Div(
                 id="network-pep-info-display",
-                children=html.P(
-                    "Enter a PEP number to see details.",
-                    style={"color": "#666", "fontStyle": "italic"},
-                ),
+                children=_create_initial_info_message(),
                 style={
                     "display": "inline-block",
                     "verticalAlign": "top",
@@ -83,6 +95,27 @@ def _create_top_section_placeholder() -> html.Div:
             "marginBottom": "16px",
             "borderBottom": "1px solid #ddd",
             "paddingBottom": "16px",
+        },
+    )
+
+
+def _create_initial_info_message() -> html.Div:
+    """
+    初期状態のPEP情報表示（説明文）を生成する
+
+    Returns:
+        html.Div: 初期説明文のコンポーネント
+    """
+    return html.Div(
+        [
+            html.P(
+                "Enter a PEP number in the text box on the left (e.g., 8).",
+                style={"marginBottom": "8px"},
+            ),
+            html.P("The selected PEP will be highlighted in the network graph."),
+        ],
+        style={
+            "color": "#666",
         },
     )
 

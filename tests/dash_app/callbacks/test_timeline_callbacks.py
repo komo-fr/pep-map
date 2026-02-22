@@ -6,8 +6,8 @@ from src.dash_app.callbacks.timeline_callbacks import (
     _add_python_release_lines,
     _add_release_lines_for_major_version,
     _compute_table_titles,
-    _parse_pep_number,
 )
+from src.dash_app.components import parse_pep_number
 from src.dash_app.utils import data_loader
 from src.dash_app.utils.constants import (
     PYTHON_2_LINE_COLOR,
@@ -18,27 +18,27 @@ from src.dash_app.utils.constants import (
 
 
 class TestParsePepNumber:
-    """_parse_pep_number関数のテスト"""
+    """parse_pep_number関数のテスト"""
 
     def test_none_input(self):
         """Noneを渡すとNoneを返す"""
-        assert _parse_pep_number(None) is None
+        assert parse_pep_number(None) is None
 
     def test_empty_string(self):
         """空文字を渡すとNoneを返す"""
-        assert _parse_pep_number("") is None
+        assert parse_pep_number("") is None
 
     def test_integer_string(self):
         """数値文字列を整数に変換する"""
-        assert _parse_pep_number("484") == 484
+        assert parse_pep_number("484") == 484
 
     def test_integer(self):
         """整数をそのまま返す"""
-        assert _parse_pep_number(8) == 8
+        assert parse_pep_number(8) == 8
 
     def test_invalid_string(self):
         """数値に変換できない文字列はNoneを返す"""
-        assert _parse_pep_number("abc") is None
+        assert parse_pep_number("abc") is None
 
 
 class TestComputeTableTitles:

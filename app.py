@@ -12,6 +12,7 @@ from src.dash_app.layouts.common import create_tab_navigation
 from src.dash_app.layouts.timeline import create_timeline_layout
 from src.dash_app.layouts.network import create_network_layout
 from src.dash_app.callbacks.timeline_callbacks import register_timeline_callbacks
+from src.dash_app.callbacks.network_callbacks import register_network_callbacks
 from src.dash_app.utils.data_loader import (
     load_peps_metadata,
     load_citations,
@@ -77,6 +78,9 @@ def render_tab_content(active_tab):
 
 # Timelineコールバックを登録
 register_timeline_callbacks(app)
+
+# Networkコールバックを登録
+register_network_callbacks(app)
 
 
 if __name__ == "__main__":

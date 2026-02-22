@@ -8,6 +8,11 @@ from src.dash_app.components.network_graph import (
     get_base_stylesheet,
     get_preset_layout_options,
 )
+from src.dash_app.components.pep_info import (
+    parse_pep_number,
+    create_status_badge,
+    create_pep_info_display,
+)
 
 __all__ = [
     "create_status_legend",
@@ -16,4 +21,7 @@ __all__ = [
     "build_cytoscape_elements",
     "get_base_stylesheet",
     "get_preset_layout_options",
+    "parse_pep_number",
+    "create_status_badge",
+    "create_pep_info_display",
 ]
