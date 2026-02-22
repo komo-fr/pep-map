@@ -126,7 +126,7 @@ def convert_df_to_table_data(df) -> list[dict]:
         return []
 
     table_data: list[dict] = []
-    for idx, row in df.iterrows():
+    for _, row in df.iterrows():
         pep_number = row["pep_number"]
         pep_url = generate_pep_url(pep_number)
 
