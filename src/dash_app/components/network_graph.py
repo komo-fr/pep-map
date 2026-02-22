@@ -342,28 +342,23 @@ def get_connected_elements(pep_number: int) -> dict:
     if pep_number not in existing_peps:
         return {"connected_nodes": set(), "connected_edges": set()}
 
-    connected_nodes = set()
-    connected_edges = set()
+    # 条件でフィルタ（自己ループ・存在しないPEP・選択PEPに無関係なエッジを除外）
+    no_self = citations_df["citing"] != citations_df["cited"]
+    valid_peps = citations_df["citing"].isin(existing_peps) & citations_df[
+        "cited"
+    ].isin(existing_peps)
+    involves_pep = (citations_df["citing"] == pep_number) | (
+        citations_df["cited"] == pep_number
+    )
+    filtered = citations_df.loc[no_self & valid_peps & involves_pep]
 
-    for _, row in citations_df.iterrows():
-        citing = row["citing"]
-        cited = row["cited"]
-
-        # 自己ループを除外
-        if citing == cited:
-            continue
-
-        # 存在しないPEPへのエッジを除外
-        if citing not in existing_peps or cited not in existing_peps:
-            continue
-
-        # 選択中PEPが引用元または引用先の場合
-        if citing == pep_number:
-            connected_nodes.add(cited)
-            connected_edges.add(f"edge_{citing}_{cited}")
-        elif cited == pep_number:
-            connected_nodes.add(citing)
-            connected_edges.add(f"edge_{citing}_{cited}")
+    # 接続ノード: 選択PEPが引用元なら cited、引用先なら citing
+    connected_nodes = set(
+        filtered.loc[filtered["citing"] == pep_number, "cited"]
+    ) | set(filtered.loc[filtered["cited"] == pep_number, "citing"])
+    connected_edges = set(
+        "edge_" + filtered["citing"].astype(str) + "_" + filtered["cited"].astype(str)
+    )
 
     return {
         "connected_nodes": connected_nodes,
