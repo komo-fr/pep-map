@@ -15,6 +15,11 @@ from src.dash_app.components.pep_info import (
     create_status_badge,
     create_pep_info_display,
 )
+from src.dash_app.components.pep_tables import (
+    create_pep_table,
+    generate_status_styles,
+    convert_df_to_table_data,
+)
 
 __all__ = [
     "create_status_legend",
@@ -28,4 +33,7 @@ __all__ = [
     "parse_pep_number",
     "create_status_badge",
     "create_pep_info_display",
+    "create_pep_table",
+    "generate_status_styles",
+    "convert_df_to_table_data",
 ]

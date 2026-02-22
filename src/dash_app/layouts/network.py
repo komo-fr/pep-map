@@ -8,6 +8,7 @@ from src.dash_app.components import (
     build_cytoscape_elements,
     get_base_stylesheet,
     get_preset_layout_options,
+    create_pep_table,
 )
 from src.dash_app.utils.data_loader import load_metadata
 
@@ -164,13 +165,10 @@ def _create_main_content_section() -> html.Div:
                     "verticalAlign": "top",
                 },
             ),
-            # 右側: テーブルエリア(プレースホルダー)
+            # 右側: テーブルエリア
             html.Div(
                 [
-                    html.P(
-                        "Tables will appear here (Phase 5)",
-                        style={"color": "#999", "fontStyle": "italic"},
-                    ),
+                    _create_tables_section(),
                 ],
                 style={
                     "display": "inline-block",
@@ -178,6 +176,39 @@ def _create_main_content_section() -> html.Div:
                     "verticalAlign": "top",
                     "marginLeft": "2%",
                 },
+            ),
+        ],
+    )
+
+
+def _create_tables_section() -> html.Div:
+    """テーブルセクション: 引用しているPEP + 引用されているPEP"""
+    return html.Div(
+        [
+            # 上部: 選択中PEPを引用しているPEP
+            html.Div(
+                [
+                    html.H4(
+                        id="network-citing-peps-title",
+                        children="PEP N is cited by...",
+                        style={"marginBottom": "8px", "marginTop": "0"},
+                    ),
+                    create_pep_table("network-citing-peps-table"),
+                ],
+                style={
+                    "marginBottom": "16px",
+                },
+            ),
+            # 下部: 選択中PEPから引用されているPEP
+            html.Div(
+                [
+                    html.H4(
+                        id="network-cited-peps-title",
+                        children="PEP N cites...",
+                        style={"marginBottom": "8px", "marginTop": "0"},
+                    ),
+                    create_pep_table("network-cited-peps-table"),
+                ],
             ),
         ],
     )

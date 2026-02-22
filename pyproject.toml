@@ -22,6 +22,14 @@ exclude_lines = [
 
 # 型スタブのないライブラリ: インポートされる側のモジュール名で ignore_missing_imports を指定
 [[tool.mypy.overrides]]
+module = "dash"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "dash.dash_table"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
 module = "dash_cytoscape"
 ignore_missing_imports = true
 

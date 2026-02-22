@@ -8,6 +8,7 @@ from src.dash_app.components import (
     create_initial_info_message,
     parse_pep_number,
     create_pep_info_display,
+    convert_df_to_table_data,
 )
 from src.dash_app.components.timeline_figures import (
     _get_guideline_shapes,
@@ -134,11 +135,11 @@ def register_timeline_callbacks(app):
 
         # このPEPを引用しているPEPを取得
         citing_peps_df = get_citing_peps(pep_number)
-        citing_table_data = _convert_df_to_table_data(citing_peps_df)
+        citing_table_data = convert_df_to_table_data(citing_peps_df)
 
         # このPEPに引用されているPEPを取得
         cited_peps_df = get_cited_peps(pep_number)
-        cited_table_data = _convert_df_to_table_data(cited_peps_df)
+        cited_table_data = convert_df_to_table_data(cited_peps_df)
 
         return citing_table_data, cited_table_data
 
@@ -302,41 +303,6 @@ def _compute_table_titles(pep_number_input) -> tuple[str, str]:
         return "PEP N is cited by...", "PEP N cites..."
 
     return f"PEP {pep_number} is cited by...", f"PEP {pep_number} cites..."
-
-
-def _convert_df_to_table_data(df) -> list[dict]:
-    """
-    DataFrameをDataTable用のデータ形式に変換する
-
-    Args:
-        df: PEPメタデータのDataFrame
-
-    Returns:
-        list[dict]: DataTable用のレコードリスト
-    """
-    if df.empty:
-        return []
-
-    table_data: list[dict] = []
-    for idx, row in df.iterrows():
-        pep_number = row["pep_number"]
-        pep_url = generate_pep_url(pep_number)
-
-        # 日付をフォーマット（YYYY-MM-DD）
-        created_str = row["created"].strftime("%Y-%m-%d")
-
-        table_data.append(
-            {
-                "row_num": len(table_data) + 1,  # 通し番号（1から開始）
-                "pep": f"[PEP {pep_number}]({pep_url})",  # Markdownリンク
-                "pep_number": pep_number,  # ソート用（非表示）
-                "title": row["title"],
-                "status": row["status"],
-                "created": created_str,
-            }
-        )
-
-    return table_data
 
 
 def _create_pep_annotations(pep_number: int) -> list[dict]:

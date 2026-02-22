@@ -7,8 +7,13 @@ from src.dash_app.components import (
     create_pep_info_display,
     build_cytoscape_elements,
     apply_highlight_classes,
+    convert_df_to_table_data,
 )
-from src.dash_app.utils.data_loader import get_pep_by_number
+from src.dash_app.utils.data_loader import (
+    get_pep_by_number,
+    get_citing_peps,
+    get_cited_peps,
+)
 
 
 def _create_initial_info_message() -> html.Div:
@@ -124,3 +129,60 @@ def register_network_callbacks(app):
         highlighted_elements = apply_highlight_classes(elements, pep_number)
 
         return highlighted_elements
+
+    @app.callback(
+        Output("network-citing-peps-title", "children"),
+        Output("network-cited-peps-title", "children"),
+        Input("network-pep-input", "value"),
+    )
+    def update_table_titles(pep_number):
+        """
+        PEP番号入力に連動してテーブルタイトルを更新する
+
+        Args:
+            pep_number: 入力されたPEP番号（str, int または None）
+
+        Returns:
+            tuple: (citing_title, cited_title)
+        """
+        pep_number = parse_pep_number(pep_number)
+
+        if pep_number is None:
+            return "PEP N is cited by...", "PEP N cites..."
+
+        if get_pep_by_number(pep_number) is None:
+            return "PEP N is cited by...", "PEP N cites..."
+
+        return f"PEP {pep_number} is cited by...", f"PEP {pep_number} cites..."
+
+    @app.callback(
+        Output("network-citing-peps-table", "data"),
+        Output("network-cited-peps-table", "data"),
+        Input("network-pep-input", "value"),
+    )
+    def update_tables(pep_number):
+        """
+        PEP番号入力に連動してテーブルデータを更新する
+
+        Args:
+            pep_number: 入力されたPEP番号（str, int または None）
+
+        Returns:
+            tuple: (citing_tableのデータ, cited_tableのデータ)
+        """
+        pep_number = parse_pep_number(pep_number)
+
+        if pep_number is None:
+            return [], []
+
+        pep_data = get_pep_by_number(pep_number)
+        if pep_data is None:
+            return [], []
+
+        citing_peps_df = get_citing_peps(pep_number)
+        citing_table_data = convert_df_to_table_data(citing_peps_df)
+
+        cited_peps_df = get_cited_peps(pep_number)
+        cited_table_data = convert_df_to_table_data(cited_peps_df)
+
+        return citing_table_data, cited_table_data
