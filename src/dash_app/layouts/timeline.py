@@ -7,6 +7,7 @@ from src.dash_app.components import (
     create_initial_info_message,
     create_status_legend,
     create_pep_table,
+    create_pep_table_description,
 )
 from src.dash_app.utils.constants import (
     PYTHON_2_LINE_COLOR,
@@ -183,6 +184,7 @@ def _create_tables_section() -> html.Div:
                         children="PEP N is cited by...",
                         style={"marginBottom": "8px"},
                     ),
+                    create_pep_table_description(),
                     create_pep_table("citing-peps-table"),
                 ],
                 style={
@@ -200,6 +202,7 @@ def _create_tables_section() -> html.Div:
                         children="PEP N links to...",
                         style={"marginBottom": "8px"},
                     ),
+                    create_pep_table_description(),
                     create_pep_table("cited-peps-table"),
                 ],
                 style={

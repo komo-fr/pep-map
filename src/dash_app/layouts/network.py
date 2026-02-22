@@ -10,6 +10,7 @@ from src.dash_app.components import (
     get_preset_layout_options,
     create_pep_table,
     create_network_initial_info_message,
+    create_pep_table_description,
 )
 from src.dash_app.utils.data_loader import load_metadata
 
@@ -33,6 +34,8 @@ def create_network_layout() -> html.Div:
             create_status_legend(),
             # === データ取得日付セクション ===
             _create_toolbar_section(fetched_at),
+            # === 操作説明セクション ===
+            _create_operation_description_section(),
             # === メインコンテンツ: グラフ + テーブル ===
             _create_main_content_section(),
         ],
@@ -181,8 +184,29 @@ def _create_toolbar_section(fetched_at: str) -> html.Div:
             ),
         ],
         style={
-            "marginBottom": "16px",
+            "marginBottom": "2px",
         },
+    )
+
+
+def _create_operation_description_section() -> html.Div:
+    """操作説明セクション"""
+    return html.Div(
+        [
+            html.P(
+                [
+                    html.Strong("Zoom in/out: "),
+                    "Pinch in/out or use the mouse wheel.",
+                    html.Span("   ", style={"marginRight": "16px"}),
+                    html.Strong("Move a node: "),
+                    "Click and drag it.",
+                    html.Span("   ", style={"marginRight": "16px"}),
+                    html.Strong("View PEP details: "),
+                    "Tap a node.",
+                ],
+                style={"fontSize": "12px", "color": "#666", "margin": "0"},
+            ),
+        ],
     )
 
 
@@ -218,32 +242,46 @@ def _create_main_content_section() -> html.Div:
 
 
 def _create_tables_section() -> html.Div:
-    """テーブルセクション: 引用しているPEP + 引用されているPEP"""
+    """テーブルセクション: タブで切り替え可能な引用関係テーブル"""
+    tab_style = {
+        "padding": "8px 16px",
+        "fontWeight": "500",
+    }
+
     return html.Div(
         [
-            # 上部: 選択中PEPを引用しているPEP
-            html.Div(
-                [
-                    html.H4(
-                        id="network-citing-peps-title",
-                        children="PEP N is cited by...",
-                        style={"marginBottom": "8px", "marginTop": "0"},
+            dcc.Tabs(
+                id="network-citation-tabs",
+                value="cited-by",
+                children=[
+                    dcc.Tab(
+                        label="Cited by",
+                        value="cited-by",
+                        children=[
+                            html.H4(
+                                id="network-citing-peps-title",
+                                children="PEP N is cited by...",
+                                style={"marginBottom": "8px", "marginTop": "8px"},
+                            ),
+                            create_pep_table_description(),
+                            create_pep_table("network-citing-peps-table"),
+                        ],
+                        style=tab_style,
                     ),
-                    create_pep_table("network-citing-peps-table"),
-                ],
-                style={
-                    "marginBottom": "16px",
-                },
-            ),
-            # 下部: 選択中PEPから引用されているPEP
-            html.Div(
-                [
-                    html.H4(
-                        id="network-cited-peps-title",
-                        children="PEP N cites...",
-                        style={"marginBottom": "8px", "marginTop": "0"},
+                    dcc.Tab(
+                        label="Cites",
+                        value="cites",
+                        children=[
+                            html.H4(
+                                id="network-cited-peps-title",
+                                children="PEP N cites...",
+                                style={"marginBottom": "8px", "marginTop": "8px"},
+                            ),
+                            create_pep_table_description(),
+                            create_pep_table("network-cited-peps-table"),
+                        ],
+                        style=tab_style,
                     ),
-                    create_pep_table("network-cited-peps-table"),
                 ],
             ),
         ],
