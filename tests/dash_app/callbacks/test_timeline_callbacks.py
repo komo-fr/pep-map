@@ -5,10 +5,10 @@ import plotly.graph_objects as go
 from src.dash_app.callbacks.timeline_callbacks import (
     _add_python_release_lines,
     _add_release_lines_for_major_version,
-    _compute_table_titles,
 )
 from src.dash_app.components import parse_pep_number
 from src.dash_app.utils import data_loader
+from src.dash_app.utils.table_helpers import compute_table_titles
 from src.dash_app.utils.constants import (
     PYTHON_2_LINE_COLOR,
     PYTHON_3_LINE_COLOR,
@@ -42,13 +42,13 @@ class TestParsePepNumber:
 
 
 class TestComputeTableTitles:
-    """_compute_table_titles関数のテスト"""
+    """compute_table_titles関数のテスト"""
 
     def test_none_input(self, mock_data_files, monkeypatch):
         """入力がNoneの場合はデフォルトのタイトルを返す"""
         monkeypatch.setattr("src.dash_app.utils.data_loader.DATA_DIR", mock_data_files)
 
-        citing_title, cited_title = _compute_table_titles(None)
+        citing_title, cited_title = compute_table_titles(None)
 
         assert citing_title == "PEP N is cited by..."
         assert cited_title == "PEP N cites..."
@@ -57,7 +57,7 @@ class TestComputeTableTitles:
         """入力が空文字の場合はデフォルトのタイトルを返す"""
         monkeypatch.setattr("src.dash_app.utils.data_loader.DATA_DIR", mock_data_files)
 
-        citing_title, cited_title = _compute_table_titles("")
+        citing_title, cited_title = compute_table_titles("")
 
         assert citing_title == "PEP N is cited by..."
         assert cited_title == "PEP N cites..."
@@ -68,7 +68,7 @@ class TestComputeTableTitles:
 
         data_loader.clear_cache()
 
-        citing_title, cited_title = _compute_table_titles(484)
+        citing_title, cited_title = compute_table_titles(484)
 
         assert citing_title == "PEP 484 is cited by..."
         assert cited_title == "PEP 484 cites..."
@@ -79,7 +79,7 @@ class TestComputeTableTitles:
 
         data_loader.clear_cache()
 
-        citing_title, cited_title = _compute_table_titles(9999)
+        citing_title, cited_title = compute_table_titles(9999)
 
         assert citing_title == "PEP N is cited by..."
         assert cited_title == "PEP N cites..."

@@ -9,6 +9,7 @@ from src.dash_app.components import (
     get_base_stylesheet,
     get_preset_layout_options,
     create_pep_table,
+    create_network_initial_info_message,
 )
 from src.dash_app.utils.data_loader import load_metadata
 
@@ -84,7 +85,7 @@ def _create_top_section() -> html.Div:
             # 右側: PEP情報表示
             html.Div(
                 id="network-pep-info-display",
-                children=_create_initial_info_message(),
+                children=create_network_initial_info_message(),
                 style={
                     "display": "inline-block",
                     "verticalAlign": "top",
@@ -96,27 +97,6 @@ def _create_top_section() -> html.Div:
             "marginBottom": "16px",
             "borderBottom": "1px solid #ddd",
             "paddingBottom": "16px",
-        },
-    )
-
-
-def _create_initial_info_message() -> html.Div:
-    """
-    初期状態のPEP情報表示（説明文）を生成する
-
-    Returns:
-        html.Div: 初期説明文のコンポーネント
-    """
-    return html.Div(
-        [
-            html.P(
-                "Enter a PEP number in the text box on the left (e.g., 8).",
-                style={"marginBottom": "8px"},
-            ),
-            html.P("The selected PEP will be highlighted in the network graph."),
-        ],
-        style={
-            "color": "#666",
         },
     )
 

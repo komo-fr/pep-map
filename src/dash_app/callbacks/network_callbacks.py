@@ -1,10 +1,11 @@
 """Networkタブのコールバック関数"""
 
-from dash import Input, Output, State, html, no_update
+from dash import Input, Output, State, no_update
 
 from src.dash_app.components import (
     parse_pep_number,
     create_pep_info_display,
+    create_network_initial_info_message,
     build_cytoscape_elements,
     apply_highlight_classes,
     convert_df_to_table_data,
@@ -14,29 +15,7 @@ from src.dash_app.utils.data_loader import (
     get_citing_peps,
     get_cited_peps,
 )
-
-
-def _create_initial_info_message() -> html.Div:
-    """
-    初期状態のPEP情報表示（説明文）を生成する
-
-    Network専用のメッセージを表示する。
-
-    Returns:
-        html.Div: 初期説明文のコンポーネント
-    """
-    return html.Div(
-        [
-            html.P(
-                "Enter a PEP number in the text box on the left (e.g., 8).",
-                style={"marginBottom": "8px"},
-            ),
-            html.P("The selected PEP will be highlighted in the network graph."),
-        ],
-        style={
-            "color": "#666",
-        },
-    )
+from src.dash_app.utils.table_helpers import compute_table_titles
 
 
 def register_network_callbacks(app):
@@ -67,7 +46,7 @@ def register_network_callbacks(app):
 
         # 入力が空/Noneの場合: 初期説明文を表示
         if pep_number is None:
-            return _create_initial_info_message(), ""
+            return create_network_initial_info_message(), ""
 
         # PEPの存在確認
         pep_data = get_pep_by_number(pep_number)
@@ -75,7 +54,7 @@ def register_network_callbacks(app):
         # 存在しない場合: エラーメッセージを表示
         if pep_data is None:
             error_message = f"Not Found: PEP {pep_number}"
-            return _create_initial_info_message(), error_message
+            return create_network_initial_info_message(), error_message
 
         # 存在する場合: PEP情報を表示
         return create_pep_info_display(pep_data), ""
@@ -153,15 +132,7 @@ def register_network_callbacks(app):
         Returns:
             tuple: (citing_title, cited_title)
         """
-        pep_number = parse_pep_number(pep_number)
-
-        if pep_number is None:
-            return "PEP N is cited by...", "PEP N cites..."
-
-        if get_pep_by_number(pep_number) is None:
-            return "PEP N is cited by...", "PEP N cites..."
-
-        return f"PEP {pep_number} is cited by...", f"PEP {pep_number} cites..."
+        return compute_table_titles(pep_number)
 
     @app.callback(
         Output("network-citing-peps-table", "data"),

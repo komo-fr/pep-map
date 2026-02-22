@@ -67,6 +67,27 @@ def create_status_badge(status: str) -> html.Span:
     )
 
 
+def create_network_initial_info_message() -> html.Div:
+    """
+    Network タブの初期状態のPEP情報表示（説明文）を生成する
+
+    Returns:
+        html.Div: 初期説明文のコンポーネント
+    """
+    return html.Div(
+        [
+            html.P(
+                "Enter a PEP number in the text box on the left (e.g., 8).",
+                style={"marginBottom": "8px"},
+            ),
+            html.P("The selected PEP will be highlighted in the network graph."),
+        ],
+        style={
+            "color": "#666",
+        },
+    )
+
+
 def create_pep_info_display(pep_data) -> html.Div:
     """
     PEP情報表示コンポーネントを生成する
