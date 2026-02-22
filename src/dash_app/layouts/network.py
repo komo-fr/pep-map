@@ -30,7 +30,7 @@ def create_network_layout() -> html.Div:
             # === 上部セクション: 入力欄 + PEP情報(プレースホルダー) ===
             _create_top_section(),
             # === Status凡例セクション ===
-            _create_legend_section(),
+            create_status_legend(),
             # === データ取得日付セクション ===
             _create_toolbar_section(fetched_at),
             # === メインコンテンツ: グラフ + テーブル ===
@@ -97,19 +97,6 @@ def _create_top_section() -> html.Div:
             "marginBottom": "16px",
             "borderBottom": "1px solid #ddd",
             "paddingBottom": "16px",
-        },
-    )
-
-
-def _create_legend_section() -> html.Div:
-    """Status凡例セクション"""
-    return html.Div(
-        [
-            create_status_legend(),
-        ],
-        style={
-            "marginBottom": "0px",
-            "marginTop": "0px",
         },
     )
 
