@@ -36,6 +36,8 @@ def create_timeline_layout() -> html.Div:
             _create_top_section(),
             # === Status凡例セクション ===
             _create_legend_section(),
+            # === Timeline説明セクション ===
+            _create_timeline_description(),
             # === タイムライングラフセクション ===
             _create_graph_section(),
             # === データ取得日付セクション ===
@@ -124,6 +126,40 @@ def _create_legend_section() -> html.Div:
     )
 
 
+def _create_timeline_description() -> html.Div:
+    """Timelineタブの説明を生成する"""
+    description = html.Div(
+        [
+            html.P(
+                [
+                    html.Strong("View PEP details:"),
+                    html.Span(" ", style={"marginRight": "6px"}),
+                    html.Span("Hover over a point."),
+                    html.Span(" ", style={"marginRight": "16px"}),
+                    html.Strong("Open official PEP page:"),
+                    html.Span(" ", style={"marginRight": "6px"}),
+                    html.Span("Click a point."),
+                    html.Span(" ", style={"marginRight": "16px"}),
+                    html.Strong("Zoom in:"),
+                    html.Span(" ", style={"marginRight": "6px"}),
+                    html.Span("Drag to select a range."),
+                    html.Span(" ", style={"marginRight": "16px"}),
+                    html.Strong("Reset the view:"),
+                    html.Span(" ", style={"marginRight": "6px"}),
+                    html.Span("Click the home icon in the top-right corner."),
+                ],
+                style={
+                    "fontSize": "12px",
+                    "color": "#666",
+                    "margin": "0",
+                },
+            ),
+        ],
+    )
+
+    return html.Div(description)
+
+
 def _create_graph_section() -> html.Div:
     """タイムライングラフセクション"""
     # Pythonリリース日データを取得（アプリ起動時に1回のみ実行）
@@ -146,6 +182,13 @@ def _create_graph_section() -> html.Div:
                 figure=create_empty_figure(),
                 style={
                     "height": "350px",
+                },
+                config={
+                    "displayModeBar": True,
+                    "modeBarButtonsToRemove": [
+                        "lasso2d",
+                        "select2d",
+                    ],
                 },
             ),
             dcc.Location(id="pep-url", refresh=True),
