@@ -115,10 +115,10 @@ def _create_legend_section() -> html.Div:
 
 
 def _create_metadata_section(fetched_at: str) -> html.Div:
-    """データ取得日付 + ノードサイズ切り替えセクション"""
+    """データ取得日付 + Clear selectionボタン + ノードサイズ切り替えセクション"""
     return html.Div(
         [
-            # 左側: データ取得日付
+            # 1行目: データ取得日付
             html.Div(
                 html.P(
                     f"Data as of: {fetched_at}",
@@ -129,45 +129,67 @@ def _create_metadata_section(fetched_at: str) -> html.Div:
                     },
                 ),
                 style={
-                    "display": "inline-block",
-                    "verticalAlign": "middle",
+                    "marginBottom": "8px",
                 },
             ),
-            # 右側: ノードサイズ切り替えラジオボタン
+            # 2行目: Clear selectionボタン + ノードサイズ切り替えラジオボタン
             html.Div(
                 [
-                    html.Label(
-                        "Node Size:",
+                    # 左側: Clear selectionボタン
+                    html.Button(
+                        "Clear selection",
+                        id="network-clear-selection-btn",
                         style={
+                            "padding": "4px 12px",
+                            "cursor": "pointer",
+                            "backgroundColor": "#2E6495",
+                            "border": "1px solid #2E6495",
+                            "borderRadius": "4px",
                             "fontSize": "12px",
-                            "fontWeight": "bold",
-                            "marginRight": "8px",
-                            "display": "inline-block",
+                            "marginRight": "24px",
+                            "color": "#FFFFFF",
                         },
                     ),
-                    dcc.RadioItems(
-                        id="network-node-size-type",
-                        options=[
-                            {"label": "In-degree", "value": "in_degree"},
-                            {"label": "Out-degree", "value": "out_degree"},
-                            {"label": "Degree", "value": "total_degree"},
-                            {"label": "Constant", "value": "constant"},
+                    # 右側: ノードサイズ切り替えラジオボタン
+                    html.Div(
+                        [
+                            html.Label(
+                                "Node Size:",
+                                style={
+                                    "fontSize": "12px",
+                                    "fontWeight": "bold",
+                                    "marginRight": "8px",
+                                    "display": "inline-block",
+                                },
+                            ),
+                            dcc.RadioItems(
+                                id="network-node-size-type",
+                                options=[
+                                    {"label": "In-degree", "value": "in_degree"},
+                                    {"label": "Out-degree", "value": "out_degree"},
+                                    {"label": "Degree", "value": "total_degree"},
+                                    {"label": "Constant", "value": "constant"},
+                                ],
+                                value="in_degree",
+                                inline=True,
+                                style={
+                                    "display": "inline-block",
+                                },
+                                labelStyle={
+                                    "marginRight": "12px",
+                                    "fontSize": "12px",
+                                },
+                            ),
                         ],
-                        value="in_degree",
-                        inline=True,
                         style={
                             "display": "inline-block",
-                        },
-                        labelStyle={
-                            "marginRight": "12px",
-                            "fontSize": "12px",
+                            "verticalAlign": "middle",
                         },
                     ),
                 ],
                 style={
-                    "display": "inline-block",
-                    "verticalAlign": "middle",
-                    "marginLeft": "32px",
+                    "display": "flex",
+                    "alignItems": "center",
                 },
             ),
         ],

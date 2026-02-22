@@ -600,7 +600,8 @@ def _clear_all_classes(elements: list[dict]) -> list[dict]:
         # ノードの場合は position も保持する
         if "position" in element:
             new_element["position"] = element["position"]
-        # classesキーを含めない（クラスなし）
+        # 明示的に空文字列を設定してクラスをクリア
+        new_element["classes"] = ""
         updated_elements.append(new_element)
 
     return updated_elements
