@@ -1,6 +1,6 @@
 """Networkタブのコールバック関数"""
 
-from dash import Input, Output, State, no_update
+from dash import Input, Output, State, no_update, callback_context
 
 from src.dash_app.components import (
     parse_pep_number,
@@ -9,6 +9,7 @@ from src.dash_app.components import (
     build_cytoscape_elements,
     apply_highlight_classes,
     convert_df_to_table_data,
+    get_base_stylesheet,
 )
 from src.dash_app.utils.data_loader import (
     get_pep_by_number,
@@ -62,25 +63,37 @@ def register_network_callbacks(app):
     @app.callback(
         Output("network-pep-input", "value"),
         Input("network-graph", "tapNodeData"),
+        Input("network-clear-selection-btn", "n_clicks"),
         prevent_initial_call=True,
     )
-    def update_input_from_node_click(tap_data):
+    def update_input_from_tap(tap_node_data, n_clicks):
         """
-        ノードクリック時にPEP番号入力欄を更新する
+        ノードクリック時にPEP番号を更新、クリアボタンクリック時に選択解除
 
         Args:
-            tap_data: クリックされたノードのデータ
+            tap_node_data: クリックされたノードのデータ
+            n_clicks: クリアボタンのクリック回数
 
         Returns:
-            str: PEP番号（入力欄に設定する値）
+            str | None | no_update: PEP番号または選択解除
         """
-        if tap_data is None:
+        # どのInputがトリガーしたかを判断
+        ctx = callback_context
+        if not ctx.triggered:
             return no_update
 
-        # クリックしたノードのPEP番号を返す
-        pep_number = tap_data.get("pep_number")
-        if pep_number is not None:
-            return str(pep_number)
+        triggered_id = ctx.triggered[0]["prop_id"]
+
+        # クリアボタンがクリックされた場合
+        if "network-clear-selection-btn" in triggered_id:
+            return None
+
+        # tapNodeDataがトリガーされた場合（ノードクリック）
+        if "tapNodeData" in triggered_id:
+            if tap_node_data is not None:
+                pep_number = tap_node_data.get("pep_number")
+                if pep_number is not None:
+                    return str(pep_number)
 
         return no_update
 
@@ -165,3 +178,19 @@ def register_network_callbacks(app):
         cited_table_data = convert_df_to_table_data(cited_peps_df)
 
         return citing_table_data, cited_table_data
+
+    @app.callback(
+        Output("network-graph", "stylesheet"),
+        Input("network-node-size-type", "value"),
+    )
+    def update_node_size_stylesheet(size_type):
+        """
+        ノードサイズタイプの選択に連動してスタイルシートを更新する
+
+        Args:
+            size_type: ノードサイズのタイプ ("in_degree", "out_degree", "total_degree", "constant")
+
+        Returns:
+            list[dict]: 更新されたスタイルシート
+        """
+        return get_base_stylesheet(size_type)

@@ -30,9 +30,9 @@ def create_network_layout() -> html.Div:
             # === 上部セクション: 入力欄 + PEP情報(プレースホルダー) ===
             _create_top_section(),
             # === Status凡例セクション ===
-            _create_legend_section(),
+            create_status_legend(),
             # === データ取得日付セクション ===
-            _create_metadata_section(fetched_at),
+            _create_toolbar_section(fetched_at),
             # === メインコンテンツ: グラフ + テーブル ===
             _create_main_content_section(),
         ],
@@ -101,29 +101,85 @@ def _create_top_section() -> html.Div:
     )
 
 
-def _create_legend_section() -> html.Div:
-    """Status凡例セクション"""
+def _create_toolbar_section(fetched_at: str) -> html.Div:
+    """データ取得日付 + Clear selectionボタン + ノードサイズ切り替えセクション"""
     return html.Div(
         [
-            create_status_legend(),
+            # 1行目: データ取得日付
+            html.Div(
+                html.P(
+                    f"Data as of: {fetched_at}",
+                    style={
+                        "fontSize": "12px",
+                        "color": "#666",
+                        "margin": "0",
+                    },
+                ),
+                style={
+                    "marginBottom": "8px",
+                },
+            ),
+            # 2行目: Clear selectionボタン + ノードサイズ切り替えラジオボタン
+            html.Div(
+                [
+                    # 左側: Clear selectionボタン
+                    html.Button(
+                        "Clear selection",
+                        id="network-clear-selection-btn",
+                        style={
+                            "padding": "4px 12px",
+                            "cursor": "pointer",
+                            "backgroundColor": "#2E6495",
+                            "border": "1px solid #2E6495",
+                            "borderRadius": "4px",
+                            "fontSize": "12px",
+                            "marginRight": "24px",
+                            "color": "#FFFFFF",
+                        },
+                    ),
+                    # 右側: ノードサイズ切り替えラジオボタン
+                    html.Div(
+                        [
+                            html.Label(
+                                "Node Size:",
+                                style={
+                                    "fontSize": "12px",
+                                    "fontWeight": "bold",
+                                    "marginRight": "8px",
+                                    "display": "inline-block",
+                                },
+                            ),
+                            dcc.RadioItems(
+                                id="network-node-size-type",
+                                options=[
+                                    {"label": "In-degree", "value": "in_degree"},
+                                    {"label": "Out-degree", "value": "out_degree"},
+                                    {"label": "Degree", "value": "total_degree"},
+                                    {"label": "Constant", "value": "constant"},
+                                ],
+                                value="in_degree",
+                                inline=True,
+                                style={
+                                    "display": "inline-block",
+                                },
+                                labelStyle={
+                                    "marginRight": "12px",
+                                    "fontSize": "12px",
+                                },
+                            ),
+                        ],
+                        style={
+                            "display": "inline-block",
+                            "verticalAlign": "middle",
+                        },
+                    ),
+                ],
+                style={
+                    "display": "flex",
+                    "alignItems": "center",
+                },
+            ),
         ],
-        style={
-            "marginBottom": "0px",
-            "marginTop": "0px",
-        },
-    )
-
-
-def _create_metadata_section(fetched_at: str) -> html.Div:
-    """データ取得日付セクション"""
-    return html.Div(
-        html.P(
-            f"Data as of: {fetched_at}",
-            style={
-                "fontSize": "12px",
-                "color": "#666",
-            },
-        ),
         style={
             "marginBottom": "16px",
         },

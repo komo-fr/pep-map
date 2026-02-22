@@ -1,6 +1,9 @@
 """ネットワークグラフ構築モジュール"""
 
+from typing import cast
+
 import networkx as nx
+import pandas as pd
 
 from src.dash_app.utils.constants import DEFAULT_STATUS_COLOR, STATUS_COLOR_MAP
 from src.dash_app.utils.data_loader import load_citations, load_peps_metadata
@@ -8,6 +11,28 @@ from src.dash_app.utils.data_loader import load_citations, load_peps_metadata
 
 # モジュールレベルでキャッシュ（アプリ起動時に一度だけ計算する）
 _cytoscape_elements_cache: list[dict] | None = None
+
+
+def _load_valid_edges_df() -> tuple[set[int], "pd.DataFrame"]:
+    """
+    PEPメタデータと引用データを読み込み、有効なエッジのDataFrameと存在するPEP番号のセットを返す。
+
+    有効なエッジ: 自己ループでなく、citing/citedがともに存在するPEP番号であるもの。
+    データ読み込み・有効エッジの計算を一箇所に集約し、重複と修正漏れを防ぐ。
+
+    Returns:
+        tuple[set[int], pd.DataFrame]: (存在するPEP番号のセット, 有効なエッジのみのDataFrame)
+    """
+    peps_df = load_peps_metadata()
+    citations_df = load_citations()
+    existing_peps = set(peps_df["pep_number"].tolist())
+    valid = (
+        (citations_df["citing"] != citations_df["cited"])
+        & citations_df["citing"].isin(existing_peps)
+        & citations_df["cited"].isin(existing_peps)
+    )
+    edges_df = citations_df.loc[valid, ["citing", "cited"]]
+    return existing_peps, edges_df
 
 
 def build_cytoscape_elements() -> list[dict]:
@@ -48,20 +73,7 @@ def _calculate_node_positions() -> dict[int, tuple[float, float]]:
     Returns:
         dict[int, tuple[float, float]]: PEP番号をキー、(x, y)座標を値とする辞書
     """
-
-    peps_df = load_peps_metadata()
-    citations_df = load_citations()
-
-    # 存在するPEP番号のセット
-    existing_peps = set(peps_df["pep_number"].tolist())
-
-    # 有効なエッジのみに絞る(自己ループ・存在しないPEPへの参照を除外)
-    valid = (
-        (citations_df["citing"] != citations_df["cited"])
-        & citations_df["citing"].isin(existing_peps)
-        & citations_df["cited"].isin(existing_peps)
-    )
-    edges_df = citations_df.loc[valid, ["citing", "cited"]]
+    existing_peps, edges_df = _load_valid_edges_df()
 
     # エッジリストから有向グラフを構築 (from_pandas_edgelist で一括追加)
     G = nx.from_pandas_edgelist(
@@ -88,12 +100,13 @@ def _calculate_node_positions() -> dict[int, tuple[float, float]]:
         # 座標を計算(spring_layout = Fruchterman-Reingold力指向アルゴリズム)
         connected_positions = nx.spring_layout(
             subgraph,
-            k=30,  # ノード間の理想的な距離(大きいほど広がる)
+            threshold=1e-6,
+            k=500,  # ノード間の理想的な距離(大きいほど広がる)
             iterations=500,  # イテレーション回数
             seed=42,  # 乱数シード(再現性のため)
-            scale=900,  # 座標のスケール
+            scale=1000,  # 座標のスケール
             method="energy",  # 未指定でもノード数が多いため"energy"が適用されるが、明瞭さのため明示
-            gravity=5,  # 重力の強さ
+            gravity=20,  # 重力の強さ
         )
 
         # connected_positionsをpositionsに追加(タプルに統一して型を揃える)
@@ -115,7 +128,16 @@ def _calculate_node_positions() -> dict[int, tuple[float, float]]:
         isolated_nodes_sorted = sorted(isolated_nodes)  # PEP番号順にソート
         num_cols = 3  # 列数
         col_spacing = 40  # 列間の間隔
-        x_start = -700  # 左端のx座標
+
+        # 非孤立ノードのX座標最小値を取得（基準点）
+        if connected_nodes:
+            connected_x_coords = [positions[n][0] for n in connected_nodes]
+            min_connected_x = min(connected_x_coords)
+            # 孤立ノードを非孤立ノードより左側に配置（100ピクセル左に）
+            x_start = min_connected_x - 100
+        else:
+            # 非孤立ノードがない場合はデフォルト値
+            x_start = -700
 
         # 各列の行数を計算
         num_nodes = len(isolated_nodes_sorted)
@@ -140,11 +162,70 @@ def _calculate_node_positions() -> dict[int, tuple[float, float]]:
     return positions
 
 
+def _calculate_degrees() -> dict[int, dict[str, int]]:
+    """
+    各PEPノードの次数情報を計算する
+
+    同じPEP間の複数回引用は1カウントとして計算する。
+
+    Returns:
+        dict[int, dict[str, int]]: PEP番号をキー、次数情報を値とする辞書
+            次数情報: {"in_degree": int, "out_degree": int, "total_degree": int}
+    """
+    existing_peps, edges_df = _load_valid_edges_df()
+
+    # 重複を除外（同じPEP間の複数回引用は1カウント）
+    unique_edges_df = edges_df.drop_duplicates()
+
+    # 次数情報を初期化
+    degrees = {
+        pep_num: {"in_degree": 0, "out_degree": 0, "total_degree": 0}
+        for pep_num in existing_peps
+    }
+
+    # 入次数を計算（cited列の出現回数）
+    in_degree_counts = unique_edges_df["cited"].value_counts().to_dict()
+    for pep_num, count in in_degree_counts.items():
+        degrees[cast(int, pep_num)]["in_degree"] = int(count)
+
+    # 出次数を計算（citing列の出現回数）
+    out_degree_counts = unique_edges_df["citing"].value_counts().to_dict()
+    for pep_num, count in out_degree_counts.items():
+        degrees[cast(int, pep_num)]["out_degree"] = int(count)
+
+    # 次数を計算（入次数 + 出次数）
+    for pep_num in degrees:
+        degrees[pep_num]["total_degree"] = (
+            degrees[pep_num]["in_degree"] + degrees[pep_num]["out_degree"]
+        )
+
+    return degrees
+
+
+def _calculate_node_size(degree: int) -> float:
+    """
+    次数に基づいてノードサイズを計算する
+
+    面積が次数に比例するように、サイズは√次数に比例する。
+    次数0の場合は最小サイズ7pxを返す。
+
+    Args:
+        degree: ノードの次数
+
+    Returns:
+        float: ノードサイズ（ピクセル）
+    """
+    if degree == 0:
+        return 10
+    return 10.0 * (degree**0.5)
+
+
 def _build_nodes() -> list[dict]:
     """
     PEPメタデータからノードを生成する
 
-    NetworkXで計算した座標をノードに付与する。
+    NetworkXで計算した座標とノードの次数情報をノードに付与する。
+    各次数タイプ（入次数/出次数/次数/一定）に対応したサイズを事前計算する。
 
     Returns:
         list[dict]: ノードのリスト
@@ -153,6 +234,9 @@ def _build_nodes() -> list[dict]:
 
     # 座標を計算
     positions = _calculate_node_positions()
+
+    # 次数を計算
+    degrees = _calculate_degrees()
 
     nodes = []
 
@@ -164,6 +248,17 @@ def _build_nodes() -> list[dict]:
         # 座標を取得(存在しない場合はデフォルト値)
         pos = positions.get(pep_number, (0, 0))
 
+        # 次数情報を取得（存在しない場合はデフォルト値）
+        degree_info = degrees.get(
+            pep_number, {"in_degree": 0, "out_degree": 0, "total_degree": 0}
+        )
+
+        # 各次数タイプに対応したノードサイズを計算
+        size_in_degree = _calculate_node_size(degree_info["in_degree"])
+        size_out_degree = _calculate_node_size(degree_info["out_degree"])
+        size_total_degree = _calculate_node_size(degree_info["total_degree"])
+        size_constant = 20.0  # 一定サイズ
+
         node = {
             "data": {
                 "id": f"pep_{pep_number}",
@@ -171,6 +266,13 @@ def _build_nodes() -> list[dict]:
                 "pep_number": pep_number,
                 "color": color,
                 "status": status,
+                "in_degree": degree_info["in_degree"],
+                "out_degree": degree_info["out_degree"],
+                "total_degree": degree_info["total_degree"],
+                "size_in_degree": size_in_degree,
+                "size_out_degree": size_out_degree,
+                "size_total_degree": size_total_degree,
+                "size_constant": size_constant,
             },
             "position": {
                 "x": pos[0],
@@ -231,15 +333,29 @@ def _build_edges() -> list[dict]:
     return edges
 
 
-def get_base_stylesheet() -> list[dict]:
+def get_base_stylesheet(size_type: str = "in_degree") -> list[dict]:
     """
     Cytoscapeグラフの基本スタイルシートを取得する
 
     ハイライト用のCSSクラススタイルも含む。
+    ノードサイズは指定されたサイズタイプに基づいて動的に設定される。
+
+    Args:
+        size_type: ノードサイズのタイプ ("in_degree", "out_degree", "total_degree", "constant")
 
     Returns:
         list[dict]: スタイルシート定義のリスト
     """
+    # サイズタイプに応じたデータフィールドを選択
+    size_field_map = {
+        "in_degree": "size_in_degree",
+        "out_degree": "size_out_degree",
+        "total_degree": "size_total_degree",
+        "constant": "size_constant",
+    }
+    size_field = size_field_map.get(size_type, "size_in_degree")
+    dark_status_text_color = "#CCCCCC"
+
     return [
         # ノード基本スタイル
         {
@@ -247,12 +363,11 @@ def get_base_stylesheet() -> list[dict]:
             "style": {
                 "label": "data(label)",
                 "background-color": "data(color)",
-                "width": 20,
-                "height": 20,
+                "width": f"data({size_field})",
+                "height": f"data({size_field})",
                 "font-size": "8px",
-                "text-valign": "top",
+                "text-valign": "center",
                 "text-halign": "center",
-                "text-margin-y": -5,
                 "border-width": 1,
                 "border-color": "#999",
                 "opacity": 0.5,
@@ -280,15 +395,67 @@ def get_base_stylesheet() -> list[dict]:
                 "border-color": "#FF0000",
                 "z-index": 9999,
                 "opacity": 1,
+                "color": "#000000",
+            },
+        },
+        # 選択中ノード - 暗い背景色のStatusはグレー文字
+        {
+            "selector": '.selected[status = "Rejected"]',
+            "style": {
+                "color": dark_status_text_color,
+            },
+        },
+        {
+            "selector": '.selected[status = "Superseded"]',
+            "style": {
+                "color": dark_status_text_color,
+            },
+        },
+        {
+            "selector": '.selected[status = "Withdrawn"]',
+            "style": {
+                "color": dark_status_text_color,
+            },
+        },
+        {
+            "selector": '.selected[status = "Deferred"]',
+            "style": {
+                "color": dark_status_text_color,
             },
         },
         # 接続ノード（太枠）
         {
             "selector": ".connected",
             "style": {
-                "border-width": 2,
-                "border-color": "#333",
+                "color": "#000000",
+                "border-width": 1,
+                "border-color": "#888",
                 "opacity": 1,
+            },
+        },
+        # 接続ノード - 暗い背景色のStatusはグレー文字
+        {
+            "selector": '.connected[status = "Rejected"]',
+            "style": {
+                "color": dark_status_text_color,
+            },
+        },
+        {
+            "selector": '.connected[status = "Superseded"]',
+            "style": {
+                "color": dark_status_text_color,
+            },
+        },
+        {
+            "selector": '.connected[status = "Withdrawn"]',
+            "style": {
+                "color": dark_status_text_color,
+            },
+        },
+        {
+            "selector": '.connected[status = "Deferred"]',
+            "style": {
+                "color": dark_status_text_color,
             },
         },
         # 入ってくるエッジ（橙色）
@@ -484,7 +651,8 @@ def _clear_all_classes(elements: list[dict]) -> list[dict]:
         # ノードの場合は position も保持する
         if "position" in element:
             new_element["position"] = element["position"]
-        # classesキーを含めない（クラスなし）
+        # 明示的に空文字列を設定してクラスをクリア
+        new_element["classes"] = ""
         updated_elements.append(new_element)
 
     return updated_elements
