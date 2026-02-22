@@ -207,7 +207,7 @@ def _calculate_node_size(degree: int) -> float:
     次数に基づいてノードサイズを計算する
 
     面積が次数に比例するように、サイズは√次数に比例する。
-    次数0の場合は最小サイズ10pxを返す。
+    次数0の場合は最小サイズ7pxを返す。
 
     Args:
         degree: ノードの次数
@@ -216,9 +216,8 @@ def _calculate_node_size(degree: int) -> float:
         float: ノードサイズ（ピクセル）
     """
     if degree == 0:
-        return 10.0
-    else:
-        return max(7, 10.0 * (degree**0.5))
+        return 10
+    return 10.0 * (degree**0.5)
 
 
 def _build_nodes() -> list[dict]:
