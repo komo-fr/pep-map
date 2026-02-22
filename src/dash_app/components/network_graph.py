@@ -88,12 +88,13 @@ def _calculate_node_positions() -> dict[int, tuple[float, float]]:
         # 座標を計算(spring_layout = Fruchterman-Reingold力指向アルゴリズム)
         connected_positions = nx.spring_layout(
             subgraph,
-            k=30,  # ノード間の理想的な距離(大きいほど広がる)
+            threshold=1e-6,
+            k=500,  # ノード間の理想的な距離(大きいほど広がる)
             iterations=500,  # イテレーション回数
             seed=42,  # 乱数シード(再現性のため)
-            scale=900,  # 座標のスケール
+            scale=1000,  # 座標のスケール
             method="energy",  # 未指定でもノード数が多いため"energy"が適用されるが、明瞭さのため明示
-            gravity=5,  # 重力の強さ
+            gravity=20,  # 重力の強さ
         )
 
         # connected_positionsをpositionsに追加(タプルに統一して型を揃える)
@@ -140,11 +141,64 @@ def _calculate_node_positions() -> dict[int, tuple[float, float]]:
     return positions
 
 
+def _calculate_degrees() -> dict[int, dict[str, int]]:
+    """
+    各PEPノードの次数情報を計算する
+
+    同じPEP間の複数回引用は1カウントとして計算する。
+
+    Returns:
+        dict[int, dict[str, int]]: PEP番号をキー、次数情報を値とする辞書
+            次数情報: {"in_degree": int, "out_degree": int, "total_degree": int}
+    """
+    peps_df = load_peps_metadata()
+    citations_df = load_citations()
+
+    # 存在するPEP番号のセット
+    existing_peps = set(peps_df["pep_number"].tolist())
+
+    # 有効なエッジのみに絞る(自己ループ・存在しないPEPへの参照を除外)
+    valid = (
+        (citations_df["citing"] != citations_df["cited"])
+        & citations_df["citing"].isin(existing_peps)
+        & citations_df["cited"].isin(existing_peps)
+    )
+    edges_df = citations_df.loc[valid, ["citing", "cited"]]
+
+    # 重複を除外（同じPEP間の複数回引用は1カウント）
+    unique_edges_df = edges_df.drop_duplicates()
+
+    # 次数情報を初期化
+    degrees = {
+        pep_num: {"in_degree": 0, "out_degree": 0, "total_degree": 0}
+        for pep_num in existing_peps
+    }
+
+    # 入次数を計算（cited列の出現回数）
+    in_degree_counts = unique_edges_df["cited"].value_counts().to_dict()
+    for pep_num, count in in_degree_counts.items():
+        degrees[pep_num]["in_degree"] = count
+
+    # 出次数を計算（citing列の出現回数）
+    out_degree_counts = unique_edges_df["citing"].value_counts().to_dict()
+    for pep_num, count in out_degree_counts.items():
+        degrees[pep_num]["out_degree"] = count
+
+    # 次数を計算（入次数 + 出次数）
+    for pep_num in degrees:
+        degrees[pep_num]["total_degree"] = (
+            degrees[pep_num]["in_degree"] + degrees[pep_num]["out_degree"]
+        )
+
+    return degrees
+
+
 def _build_nodes() -> list[dict]:
     """
     PEPメタデータからノードを生成する
 
-    NetworkXで計算した座標をノードに付与する。
+    NetworkXで計算した座標とノードの次数情報をノードに付与する。
+    ノードサイズは入次数に基づいて計算する（面積が入次数に比例）。
 
     Returns:
         list[dict]: ノードのリスト
@@ -153,6 +207,9 @@ def _build_nodes() -> list[dict]:
 
     # 座標を計算
     positions = _calculate_node_positions()
+
+    # 次数を計算
+    degrees = _calculate_degrees()
 
     nodes = []
 
@@ -164,6 +221,21 @@ def _build_nodes() -> list[dict]:
         # 座標を取得(存在しない場合はデフォルト値)
         pos = positions.get(pep_number, (0, 0))
 
+        # 次数情報を取得（存在しない場合はデフォルト値）
+        degree_info = degrees.get(
+            pep_number, {"in_degree": 0, "out_degree": 0, "total_degree": 0}
+        )
+        in_degree = degree_info["in_degree"]
+
+        # ノードサイズを計算（面積を入次数に比例させる）
+        # 入次数0: 10px (最小サイズ)
+        # 入次数1以上: 20 × √入次数 (面積が入次数に比例)
+        # 最小: 10px に制限
+        if in_degree == 0:
+            node_size = 10
+        else:
+            node_size = max(5, 10 * in_degree**0.5)
+
         node = {
             "data": {
                 "id": f"pep_{pep_number}",
@@ -171,6 +243,10 @@ def _build_nodes() -> list[dict]:
                 "pep_number": pep_number,
                 "color": color,
                 "status": status,
+                "in_degree": degree_info["in_degree"],
+                "out_degree": degree_info["out_degree"],
+                "total_degree": degree_info["total_degree"],
+                "node_size": node_size,
             },
             "position": {
                 "x": pos[0],
@@ -236,6 +312,7 @@ def get_base_stylesheet() -> list[dict]:
     Cytoscapeグラフの基本スタイルシートを取得する
 
     ハイライト用のCSSクラススタイルも含む。
+    ノードサイズは入次数に基づいて動的に設定される。
 
     Returns:
         list[dict]: スタイルシート定義のリスト
@@ -247,8 +324,8 @@ def get_base_stylesheet() -> list[dict]:
             "style": {
                 "label": "data(label)",
                 "background-color": "data(color)",
-                "width": 20,
-                "height": 20,
+                "width": "data(node_size)",
+                "height": "data(node_size)",
                 "font-size": "8px",
                 "text-valign": "top",
                 "text-halign": "center",
