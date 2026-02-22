@@ -218,7 +218,7 @@ def _calculate_node_size(degree: int) -> float:
     if degree == 0:
         return 10.0
     else:
-        return max(5.0, 10.0 * (degree**0.5))
+        return max(7, 10.0 * (degree**0.5))
 
 
 def _build_nodes() -> list[dict]:
@@ -355,6 +355,7 @@ def get_base_stylesheet(size_type: str = "in_degree") -> list[dict]:
         "constant": "size_constant",
     }
     size_field = size_field_map.get(size_type, "size_in_degree")
+    NODE_TEXT_COLOR_FOR_DARK_STATUS = "#CCCCCC"
 
     return [
         # ノード基本スタイル
@@ -366,9 +367,8 @@ def get_base_stylesheet(size_type: str = "in_degree") -> list[dict]:
                 "width": f"data({size_field})",
                 "height": f"data({size_field})",
                 "font-size": "8px",
-                "text-valign": "top",
+                "text-valign": "center",
                 "text-halign": "center",
-                "text-margin-y": -5,
                 "border-width": 1,
                 "border-color": "#999",
                 "opacity": 0.5,
@@ -396,15 +396,67 @@ def get_base_stylesheet(size_type: str = "in_degree") -> list[dict]:
                 "border-color": "#FF0000",
                 "z-index": 9999,
                 "opacity": 1,
+                "color": "#000000",
+            },
+        },
+        # 選択中ノード - 暗い背景色のStatusはグレー文字
+        {
+            "selector": '.selected[status = "Rejected"]',
+            "style": {
+                "color": NODE_TEXT_COLOR_FOR_DARK_STATUS,
+            },
+        },
+        {
+            "selector": '.selected[status = "Superseded"]',
+            "style": {
+                "color": NODE_TEXT_COLOR_FOR_DARK_STATUS,
+            },
+        },
+        {
+            "selector": '.selected[status = "Withdrawn"]',
+            "style": {
+                "color": NODE_TEXT_COLOR_FOR_DARK_STATUS,
+            },
+        },
+        {
+            "selector": '.selected[status = "Deferred"]',
+            "style": {
+                "color": NODE_TEXT_COLOR_FOR_DARK_STATUS,
             },
         },
         # 接続ノード（太枠）
         {
             "selector": ".connected",
             "style": {
-                "border-width": 2,
-                "border-color": "#333",
+                "color": "#000000",
+                "border-width": 1,
+                "border-color": "#888",
                 "opacity": 1,
+            },
+        },
+        # 接続ノード - 暗い背景色のStatusはグレー文字
+        {
+            "selector": '.connected[status = "Rejected"]',
+            "style": {
+                "color": NODE_TEXT_COLOR_FOR_DARK_STATUS,
+            },
+        },
+        {
+            "selector": '.connected[status = "Superseded"]',
+            "style": {
+                "color": NODE_TEXT_COLOR_FOR_DARK_STATUS,
+            },
+        },
+        {
+            "selector": '.connected[status = "Withdrawn"]',
+            "style": {
+                "color": NODE_TEXT_COLOR_FOR_DARK_STATUS,
+            },
+        },
+        {
+            "selector": '.connected[status = "Deferred"]',
+            "style": {
+                "color": NODE_TEXT_COLOR_FOR_DARK_STATUS,
             },
         },
         # 入ってくるエッジ（橙色）
