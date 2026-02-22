@@ -1,9 +1,15 @@
 """Timelineタブのコールバック関数"""
 
-import plotly.graph_objects as go
-from dash import Input, Output, State, clientside_callback, html, no_update
+import plotly.graph_objects as go  # type: ignore[import-untyped]
+from dash import Input, Output, State, clientside_callback, no_update
 
-from src.dash_app.components import create_empty_figure, create_initial_info_message
+from src.dash_app.components import (
+    create_empty_figure,
+    create_initial_info_message,
+    parse_pep_number,
+    create_pep_info_display,
+    convert_df_to_table_data,
+)
 from src.dash_app.components.timeline_figures import (
     _get_guideline_shapes,
     _get_xaxis_config,
@@ -40,25 +46,7 @@ from src.dash_app.utils.data_loader import (
     get_pep_by_number,
     get_python_releases_by_major_version,
 )
-
-
-def _parse_pep_number(value):
-    """
-    PEP番号の入力値を整数に変換する
-
-    Args:
-        value: 入力値（str, int, None）
-
-    Returns:
-        int | None: 整数に変換されたPEP番号、または None
-    """
-    if value is None or value == "":
-        return None
-
-    try:
-        return int(value)
-    except (ValueError, TypeError):
-        return None
+from src.dash_app.utils.table_helpers import compute_table_titles
 
 
 def register_timeline_callbacks(app):
@@ -85,7 +73,7 @@ def register_timeline_callbacks(app):
             tuple: (PEP情報表示コンテンツ, エラーメッセージ)
         """
         # 入力値を整数に変換
-        pep_number = _parse_pep_number(pep_number)
+        pep_number = parse_pep_number(pep_number)
 
         # 入力が空/Noneの場合: 初期説明文を表示
         if pep_number is None:
@@ -100,7 +88,7 @@ def register_timeline_callbacks(app):
             return create_initial_info_message(), error_message
 
         # 存在する場合: PEP情報を表示
-        return _create_pep_info_display(pep_data), ""
+        return create_pep_info_display(pep_data), ""
 
     @app.callback(
         Output("citing-peps-title", "children"),
@@ -117,7 +105,7 @@ def register_timeline_callbacks(app):
         Returns:
             tuple: (citing_title, cited_title)
         """
-        return _compute_table_titles(pep_number)
+        return compute_table_titles(pep_number)
 
     # === テーブル更新コールバック（新規追加） ===
     @app.callback(
@@ -136,7 +124,7 @@ def register_timeline_callbacks(app):
             tuple: (citing_tableのデータ, cited_tableのデータ)
         """
         # 入力値を整数に変換
-        pep_number = _parse_pep_number(pep_number)
+        pep_number = parse_pep_number(pep_number)
 
         # 入力が空/Noneまたは存在しないPEPの場合: 空のテーブル
         if pep_number is None:
@@ -148,11 +136,11 @@ def register_timeline_callbacks(app):
 
         # このPEPを引用しているPEPを取得
         citing_peps_df = get_citing_peps(pep_number)
-        citing_table_data = _convert_df_to_table_data(citing_peps_df)
+        citing_table_data = convert_df_to_table_data(citing_peps_df)
 
         # このPEPに引用されているPEPを取得
         cited_peps_df = get_cited_peps(pep_number)
-        cited_table_data = _convert_df_to_table_data(cited_peps_df)
+        cited_table_data = convert_df_to_table_data(cited_peps_df)
 
         return citing_table_data, cited_table_data
 
@@ -175,7 +163,7 @@ def register_timeline_callbacks(app):
             dict: Plotlyのfigureオブジェクトの辞書形式、または None
         """
         # 入力値を整数に変換
-        pep_number = _parse_pep_number(pep_number)
+        pep_number = parse_pep_number(pep_number)
 
         # 入力が空/Noneの場合: 空のグラフを返す
         if pep_number is None:
@@ -294,167 +282,6 @@ def register_timeline_callbacks(app):
         Input("python-release-checkboxes", "value"),
         State("python-releases-store", "data"),
         prevent_initial_call=True,
-    )
-
-
-def _compute_table_titles(pep_number_input) -> tuple[str, str]:
-    """
-    テーブルタイトルを計算する
-
-    Args:
-        pep_number_input: 入力されたPEP番号（str, int または None）
-
-    Returns:
-        tuple: (citing_title, cited_title)
-    """
-    pep_number = _parse_pep_number(pep_number_input)
-
-    if pep_number is None:
-        return "PEP N is cited by...", "PEP N cites..."
-
-    if get_pep_by_number(pep_number) is None:
-        return "PEP N is cited by...", "PEP N cites..."
-
-    return f"PEP {pep_number} is cited by...", f"PEP {pep_number} cites..."
-
-
-def _convert_df_to_table_data(df) -> list[dict]:
-    """
-    DataFrameをDataTable用のデータ形式に変換する
-
-    Args:
-        df: PEPメタデータのDataFrame
-
-    Returns:
-        list[dict]: DataTable用のレコードリスト
-    """
-    if df.empty:
-        return []
-
-    table_data: list[dict] = []
-    for idx, row in df.iterrows():
-        pep_number = row["pep_number"]
-        pep_url = generate_pep_url(pep_number)
-
-        # 日付をフォーマット（YYYY-MM-DD）
-        created_str = row["created"].strftime("%Y-%m-%d")
-
-        table_data.append(
-            {
-                "row_num": len(table_data) + 1,  # 通し番号（1から開始）
-                "pep": f"[PEP {pep_number}]({pep_url})",  # Markdownリンク
-                "pep_number": pep_number,  # ソート用（非表示）
-                "title": row["title"],
-                "status": row["status"],
-                "created": created_str,
-            }
-        )
-
-    return table_data
-
-
-def _create_status_badge(status: str):
-    """
-    Statusバッジ（色付き四角 + テキスト）を生成する
-
-    Args:
-        status: PEPのステータス
-
-    Returns:
-        html.Span: 色付きバッジコンポーネント
-    """
-    bg_color = STATUS_COLOR_MAP.get(status, DEFAULT_STATUS_COLOR)
-
-    return html.Span(
-        [
-            # 色付き四角
-            html.Span(
-                style={
-                    "display": "inline-block",
-                    "width": "12px",
-                    "height": "12px",
-                    "backgroundColor": bg_color,
-                    "marginRight": "4px",
-                    "verticalAlign": "middle",
-                    "border": "1px solid #ccc",
-                }
-            ),
-            # Statusテキスト
-            html.Span(
-                status,
-                style={
-                    "verticalAlign": "middle",
-                    "fontWeight": "normal",
-                },
-            ),
-        ],
-        style={
-            "display": "inline",
-            "marginLeft": "0px",
-        },
-    )
-
-
-def _create_pep_info_display(pep_data) -> html.Div:
-    """
-    PEP情報表示コンポーネントを生成する
-
-    Args:
-        pep_data: PEPのメタデータ（pd.Series）
-
-    Returns:
-        html.Div: PEP情報のコンポーネント
-    """
-    pep_number = pep_data["pep_number"]
-    title = pep_data["title"]
-    status = pep_data["status"]
-    pep_type = pep_data["type"]
-    created = pep_data["created"]
-
-    # 日付をフォーマット（YYYY-MM-DD）
-    created_str = created.strftime("%Y-%m-%d")
-
-    # PEPページへのURL
-    pep_url = generate_pep_url(pep_number)
-
-    return html.Div(
-        [
-            # 1行目: PEP番号（リンク付き）とタイトル
-            html.H3(
-                [
-                    html.A(
-                        f"PEP {pep_number}",
-                        href=pep_url,
-                        target="_blank",
-                        style={
-                            "color": "#0066cc",
-                            "textDecoration": "underline",
-                        },
-                    ),
-                    f": {title}",
-                ],
-                style={
-                    "marginBottom": "4px",
-                    "marginTop": "0",
-                },
-            ),
-            # 2行目: Created、Type、Status
-            html.P(
-                [
-                    html.Span("Created: "),
-                    created_str,
-                    html.Span("Type: ", style={"marginLeft": "20px"}),
-                    pep_type,
-                    html.Span("Status: ", style={"marginLeft": "20px"}),
-                    _create_status_badge(status),
-                ],
-                style={
-                    "marginBottom": "0",
-                    "color": "#666",
-                    "fontSize": "14px",
-                },
-            ),
-        ]
     )
 
 

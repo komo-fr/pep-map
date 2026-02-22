@@ -7,9 +7,12 @@ from dash import Dash, html, Input, Output
 from dash_bootstrap_components import themes
 
 from src.dash_app.components.header import create_header
+from src.dash_app.components.network_graph import build_cytoscape_elements
 from src.dash_app.layouts.common import create_tab_navigation
 from src.dash_app.layouts.timeline import create_timeline_layout
+from src.dash_app.layouts.network import create_network_layout
 from src.dash_app.callbacks.timeline_callbacks import register_timeline_callbacks
+from src.dash_app.callbacks.network_callbacks import register_network_callbacks
 from src.dash_app.utils.data_loader import (
     load_peps_metadata,
     load_citations,
@@ -34,6 +37,7 @@ load_peps_metadata()
 load_citations()
 load_metadata()
 load_python_releases()
+build_cytoscape_elements()  # Networkグラフの座標計算（2秒程度）
 logger.info("Data preload complete.")
 
 # アプリレイアウトの定義
@@ -63,13 +67,7 @@ def render_tab_content(active_tab):
     if active_tab == "timeline":
         return create_timeline_layout()
     elif active_tab == "network":
-        return html.Div(
-            [
-                html.H2("Network - Coming Soon"),
-                html.P("Interactive network graph visualization is under development."),
-            ],
-            style={"padding": "20px", "textAlign": "center"},
-        )
+        return create_network_layout()
     else:
         return html.Div(
             [
@@ -80,6 +78,9 @@ def render_tab_content(active_tab):
 
 # Timelineコールバックを登録
 register_timeline_callbacks(app)
+
+# Networkコールバックを登録
+register_network_callbacks(app)
 
 
 if __name__ == "__main__":
