@@ -255,19 +255,20 @@ def get_base_stylesheet() -> list[dict]:
                 "text-margin-y": -5,
                 "border-width": 1,
                 "border-color": "#999",
+                "opacity": 0.5,
             },
         },
         # エッジ基本スタイル
         {
             "selector": "edge",
             "style": {
-                "width": 0.5,
-                "line-color": "#ccc",
-                "target-arrow-color": "#ccc",
+                "width": 2,
+                "line-color": "#999",
+                "target-arrow-color": "#999",
                 "target-arrow-shape": "triangle",
-                "arrow-scale": 0.5,
+                "arrow-scale": 1,
                 "curve-style": "bezier",
-                "opacity": 0.6,
+                "opacity": 0.5,
             },
         },
         # === ハイライト用スタイル ===
@@ -278,6 +279,7 @@ def get_base_stylesheet() -> list[dict]:
                 "border-width": 4,
                 "border-color": "#FF0000",
                 "z-index": 9999,
+                "opacity": 1,
             },
         },
         # 接続ノード（太枠）
@@ -286,15 +288,27 @@ def get_base_stylesheet() -> list[dict]:
             "style": {
                 "border-width": 2,
                 "border-color": "#333",
+                "opacity": 1,
             },
         },
-        # 接続エッジ（太く、色濃く）
+        # 入ってくるエッジ（橙色）
         {
-            "selector": ".connected-edge",
+            "selector": ".incoming-edge",
             "style": {
                 "width": 2,
-                "line-color": "#333",
-                "target-arrow-color": "#333",
+                "line-color": "#FF8C00",
+                "target-arrow-color": "#FF8C00",
+                "opacity": 1,
+                "z-index": 9998,
+            },
+        },
+        # 出ていくエッジ（青色）
+        {
+            "selector": ".outgoing-edge",
+            "style": {
+                "width": 2,
+                "line-color": "#1E90FF",
+                "target-arrow-color": "#1E90FF",
                 "opacity": 1,
                 "z-index": 9998,
             },
@@ -336,7 +350,8 @@ def get_connected_elements(pep_number: int) -> dict:
     Returns:
         dict: 接続情報
             - connected_nodes: 接続しているPEP番号のセット
-            - connected_edges: 接続しているエッジIDのセット
+            - incoming_edges: 選択ノードに入ってくるエッジIDのセット
+            - outgoing_edges: 選択ノードから出ていくエッジIDのセット
     """
     citations_df = load_citations()
     peps_df = load_peps_metadata()
@@ -346,7 +361,11 @@ def get_connected_elements(pep_number: int) -> dict:
 
     # 指定されたPEPが存在しない場合
     if pep_number not in existing_peps:
-        return {"connected_nodes": set(), "connected_edges": set()}
+        return {
+            "connected_nodes": set(),
+            "incoming_edges": set(),
+            "outgoing_edges": set(),
+        }
 
     # 条件でフィルタ（自己ループ・存在しないPEP・選択PEPに無関係なエッジを除外）
     no_self = citations_df["citing"] != citations_df["cited"]
@@ -362,13 +381,23 @@ def get_connected_elements(pep_number: int) -> dict:
     connected_nodes = set(
         filtered.loc[filtered["citing"] == pep_number, "cited"]
     ) | set(filtered.loc[filtered["cited"] == pep_number, "citing"])
-    connected_edges = set(
-        "edge_" + filtered["citing"].astype(str) + "_" + filtered["cited"].astype(str)
+
+    # 入ってくるエッジ（他のPEPから選択PEPへ）
+    incoming = filtered.loc[filtered["cited"] == pep_number]
+    incoming_edges = set(
+        "edge_" + incoming["citing"].astype(str) + "_" + incoming["cited"].astype(str)
+    )
+
+    # 出ていくエッジ（選択PEPから他のPEPへ）
+    outgoing = filtered.loc[filtered["citing"] == pep_number]
+    outgoing_edges = set(
+        "edge_" + outgoing["citing"].astype(str) + "_" + outgoing["cited"].astype(str)
     )
 
     return {
         "connected_nodes": connected_nodes,
-        "connected_edges": connected_edges,
+        "incoming_edges": incoming_edges,
+        "outgoing_edges": outgoing_edges,
     }
 
 
@@ -392,7 +421,8 @@ def apply_highlight_classes(
     # 接続情報を取得
     connection_info = get_connected_elements(selected_pep_number)
     connected_nodes = connection_info["connected_nodes"]
-    connected_edges = connection_info["connected_edges"]
+    incoming_edges = connection_info["incoming_edges"]
+    outgoing_edges = connection_info["outgoing_edges"]
 
     updated_elements = []
 
@@ -422,9 +452,12 @@ def apply_highlight_classes(
         else:
             edge_id = data["id"]
 
-            if edge_id in connected_edges:
-                # 接続エッジ
-                new_element["classes"] = "connected-edge"
+            if edge_id in incoming_edges:
+                # 入ってくるエッジ（橙色）
+                new_element["classes"] = "incoming-edge"
+            elif edge_id in outgoing_edges:
+                # 出ていくエッジ（青色）
+                new_element["classes"] = "outgoing-edge"
             else:
                 # 非接続エッジ
                 new_element["classes"] = "faded"
