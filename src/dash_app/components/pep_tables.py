@@ -40,6 +40,8 @@ def create_pep_table(table_id: str) -> dash_table.DataTable:  # type: ignore[nam
         page_action="none",
         style_table={
             "overflowX": "auto",
+            "overflowY": "scroll",
+            "height": "400px",
         },
         style_cell={
             "textAlign": "left",
