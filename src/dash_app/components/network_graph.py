@@ -55,18 +55,24 @@ def _calculate_node_positions() -> dict[int, tuple[float, float]]:
     # 存在するPEP番号のセット
     existing_peps = set(peps_df["pep_number"].tolist())
 
-    # 有向グラフを構築
-    G: nx.DiGraph = nx.DiGraph()
+    # 有効なエッジのみに絞る(自己ループ・存在しないPEPへの参照を除外)
+    valid = (
+        (citations_df["citing"] != citations_df["cited"])
+        & citations_df["citing"].isin(existing_peps)
+        & citations_df["cited"].isin(existing_peps)
+    )
+    edges_df = citations_df.loc[valid, ["citing", "cited"]]
 
-    # ノードを追加
+    # エッジリストから有向グラフを構築 (from_pandas_edgelist で一括追加)
+    G = nx.from_pandas_edgelist(
+        edges_df,
+        source="citing",
+        target="cited",
+        create_using=nx.DiGraph,
+    )
+
+    # 孤立点(エッジに現れないPEP)をノードとして追加
     G.add_nodes_from(existing_peps)
-
-    # エッジを追加(自己ループと存在しないPEPへのエッジを除外)
-    for _, row in citations_df.iterrows():
-        citing = row["citing"]
-        cited = row["cited"]
-        if citing != cited and citing in existing_peps and cited in existing_peps:
-            G.add_edge(citing, cited)
 
     # 孤立ノードと引用関係のあるノードを分離
     isolated_nodes = [node for node in G.nodes() if G.degree(node) == 0]
