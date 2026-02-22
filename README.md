@@ -17,8 +17,8 @@ It is now built using Dash.
 Enter a PEP number in the text box on the left (e.g., 8).
 The following information will be displayed in order of creation date:
 
-- Which PEPs cite the selected PEP?
-- Which PEPs does the selected PEP cite?
+- PEPs that cite this PEP
+- PEPs cited by this PEP
 
 ![](images/timeline.png)
 
