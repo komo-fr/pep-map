@@ -355,7 +355,7 @@ def get_base_stylesheet(size_type: str = "in_degree") -> list[dict]:
         "constant": "size_constant",
     }
     size_field = size_field_map.get(size_type, "size_in_degree")
-    NODE_TEXT_COLOR_FOR_DARK_STATUS = "#CCCCCC"
+    dark_status_text_color = "#CCCCCC"
 
     return [
         # ノード基本スタイル
@@ -403,25 +403,25 @@ def get_base_stylesheet(size_type: str = "in_degree") -> list[dict]:
         {
             "selector": '.selected[status = "Rejected"]',
             "style": {
-                "color": NODE_TEXT_COLOR_FOR_DARK_STATUS,
+                "color": dark_status_text_color,
             },
         },
         {
             "selector": '.selected[status = "Superseded"]',
             "style": {
-                "color": NODE_TEXT_COLOR_FOR_DARK_STATUS,
+                "color": dark_status_text_color,
             },
         },
         {
             "selector": '.selected[status = "Withdrawn"]',
             "style": {
-                "color": NODE_TEXT_COLOR_FOR_DARK_STATUS,
+                "color": dark_status_text_color,
             },
         },
         {
             "selector": '.selected[status = "Deferred"]',
             "style": {
-                "color": NODE_TEXT_COLOR_FOR_DARK_STATUS,
+                "color": dark_status_text_color,
             },
         },
         # 接続ノード（太枠）
@@ -438,25 +438,25 @@ def get_base_stylesheet(size_type: str = "in_degree") -> list[dict]:
         {
             "selector": '.connected[status = "Rejected"]',
             "style": {
-                "color": NODE_TEXT_COLOR_FOR_DARK_STATUS,
+                "color": dark_status_text_color,
             },
         },
         {
             "selector": '.connected[status = "Superseded"]',
             "style": {
-                "color": NODE_TEXT_COLOR_FOR_DARK_STATUS,
+                "color": dark_status_text_color,
             },
         },
         {
             "selector": '.connected[status = "Withdrawn"]',
             "style": {
-                "color": NODE_TEXT_COLOR_FOR_DARK_STATUS,
+                "color": dark_status_text_color,
             },
         },
         {
             "selector": '.connected[status = "Deferred"]',
             "style": {
-                "color": NODE_TEXT_COLOR_FOR_DARK_STATUS,
+                "color": dark_status_text_color,
             },
         },
         # 入ってくるエッジ（橙色）
