@@ -115,15 +115,62 @@ def _create_legend_section() -> html.Div:
 
 
 def _create_metadata_section(fetched_at: str) -> html.Div:
-    """データ取得日付セクション"""
+    """データ取得日付 + ノードサイズ切り替えセクション"""
     return html.Div(
-        html.P(
-            f"Data as of: {fetched_at}",
-            style={
-                "fontSize": "12px",
-                "color": "#666",
-            },
-        ),
+        [
+            # 左側: データ取得日付
+            html.Div(
+                html.P(
+                    f"Data as of: {fetched_at}",
+                    style={
+                        "fontSize": "12px",
+                        "color": "#666",
+                        "margin": "0",
+                    },
+                ),
+                style={
+                    "display": "inline-block",
+                    "verticalAlign": "middle",
+                },
+            ),
+            # 右側: ノードサイズ切り替えラジオボタン
+            html.Div(
+                [
+                    html.Label(
+                        "Node Size:",
+                        style={
+                            "fontSize": "12px",
+                            "fontWeight": "bold",
+                            "marginRight": "8px",
+                            "display": "inline-block",
+                        },
+                    ),
+                    dcc.RadioItems(
+                        id="network-node-size-type",
+                        options=[
+                            {"label": "In-degree", "value": "in_degree"},
+                            {"label": "Out-degree", "value": "out_degree"},
+                            {"label": "Degree", "value": "total_degree"},
+                            {"label": "Constant", "value": "constant"},
+                        ],
+                        value="in_degree",
+                        inline=True,
+                        style={
+                            "display": "inline-block",
+                        },
+                        labelStyle={
+                            "marginRight": "12px",
+                            "fontSize": "12px",
+                        },
+                    ),
+                ],
+                style={
+                    "display": "inline-block",
+                    "verticalAlign": "middle",
+                    "marginLeft": "32px",
+                },
+            ),
+        ],
         style={
             "marginBottom": "16px",
         },

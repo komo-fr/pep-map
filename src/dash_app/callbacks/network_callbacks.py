@@ -9,6 +9,7 @@ from src.dash_app.components import (
     build_cytoscape_elements,
     apply_highlight_classes,
     convert_df_to_table_data,
+    get_base_stylesheet,
 )
 from src.dash_app.utils.data_loader import (
     get_pep_by_number,
@@ -165,3 +166,19 @@ def register_network_callbacks(app):
         cited_table_data = convert_df_to_table_data(cited_peps_df)
 
         return citing_table_data, cited_table_data
+
+    @app.callback(
+        Output("network-graph", "stylesheet"),
+        Input("network-node-size-type", "value"),
+    )
+    def update_node_size_stylesheet(size_type):
+        """
+        ノードサイズタイプの選択に連動してスタイルシートを更新する
+
+        Args:
+            size_type: ノードサイズのタイプ ("in_degree", "out_degree", "total_degree", "constant")
+
+        Returns:
+            list[dict]: 更新されたスタイルシート
+        """
+        return get_base_stylesheet(size_type)

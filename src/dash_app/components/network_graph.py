@@ -116,7 +116,16 @@ def _calculate_node_positions() -> dict[int, tuple[float, float]]:
         isolated_nodes_sorted = sorted(isolated_nodes)  # PEP番号順にソート
         num_cols = 3  # 列数
         col_spacing = 40  # 列間の間隔
-        x_start = -700  # 左端のx座標
+
+        # 非孤立ノードのX座標最小値を取得（基準点）
+        if connected_nodes:
+            connected_x_coords = [positions[n][0] for n in connected_nodes]
+            min_connected_x = min(connected_x_coords)
+            # 孤立ノードを非孤立ノードより左側に配置（100ピクセル左に）
+            x_start = min_connected_x - 100
+        else:
+            # 非孤立ノードがない場合はデフォルト値
+            x_start = -700
 
         # 各列の行数を計算
         num_nodes = len(isolated_nodes_sorted)
@@ -193,12 +202,31 @@ def _calculate_degrees() -> dict[int, dict[str, int]]:
     return degrees
 
 
+def _calculate_node_size(degree: int) -> float:
+    """
+    次数に基づいてノードサイズを計算する
+
+    面積が次数に比例するように、サイズは√次数に比例する。
+    次数0の場合は最小サイズ10pxを返す。
+
+    Args:
+        degree: ノードの次数
+
+    Returns:
+        float: ノードサイズ（ピクセル）
+    """
+    if degree == 0:
+        return 10.0
+    else:
+        return max(5.0, 10.0 * (degree**0.5))
+
+
 def _build_nodes() -> list[dict]:
     """
     PEPメタデータからノードを生成する
 
     NetworkXで計算した座標とノードの次数情報をノードに付与する。
-    ノードサイズは入次数に基づいて計算する（面積が入次数に比例）。
+    各次数タイプ（入次数/出次数/次数/一定）に対応したサイズを事前計算する。
 
     Returns:
         list[dict]: ノードのリスト
@@ -225,16 +253,12 @@ def _build_nodes() -> list[dict]:
         degree_info = degrees.get(
             pep_number, {"in_degree": 0, "out_degree": 0, "total_degree": 0}
         )
-        in_degree = degree_info["in_degree"]
 
-        # ノードサイズを計算（面積を入次数に比例させる）
-        # 入次数0: 10px (最小サイズ)
-        # 入次数1以上: 20 × √入次数 (面積が入次数に比例)
-        # 最小: 10px に制限
-        if in_degree == 0:
-            node_size = 10
-        else:
-            node_size = max(5, 10 * in_degree**0.5)
+        # 各次数タイプに対応したノードサイズを計算
+        size_in_degree = _calculate_node_size(degree_info["in_degree"])
+        size_out_degree = _calculate_node_size(degree_info["out_degree"])
+        size_total_degree = _calculate_node_size(degree_info["total_degree"])
+        size_constant = 20.0  # 一定サイズ
 
         node = {
             "data": {
@@ -246,7 +270,10 @@ def _build_nodes() -> list[dict]:
                 "in_degree": degree_info["in_degree"],
                 "out_degree": degree_info["out_degree"],
                 "total_degree": degree_info["total_degree"],
-                "node_size": node_size,
+                "size_in_degree": size_in_degree,
+                "size_out_degree": size_out_degree,
+                "size_total_degree": size_total_degree,
+                "size_constant": size_constant,
             },
             "position": {
                 "x": pos[0],
@@ -307,16 +334,28 @@ def _build_edges() -> list[dict]:
     return edges
 
 
-def get_base_stylesheet() -> list[dict]:
+def get_base_stylesheet(size_type: str = "in_degree") -> list[dict]:
     """
     Cytoscapeグラフの基本スタイルシートを取得する
 
     ハイライト用のCSSクラススタイルも含む。
-    ノードサイズは入次数に基づいて動的に設定される。
+    ノードサイズは指定されたサイズタイプに基づいて動的に設定される。
+
+    Args:
+        size_type: ノードサイズのタイプ ("in_degree", "out_degree", "total_degree", "constant")
 
     Returns:
         list[dict]: スタイルシート定義のリスト
     """
+    # サイズタイプに応じたデータフィールドを選択
+    size_field_map = {
+        "in_degree": "size_in_degree",
+        "out_degree": "size_out_degree",
+        "total_degree": "size_total_degree",
+        "constant": "size_constant",
+    }
+    size_field = size_field_map.get(size_type, "size_in_degree")
+
     return [
         # ノード基本スタイル
         {
@@ -324,8 +363,8 @@ def get_base_stylesheet() -> list[dict]:
             "style": {
                 "label": "data(label)",
                 "background-color": "data(color)",
-                "width": "data(node_size)",
-                "height": "data(node_size)",
+                "width": f"data({size_field})",
+                "height": f"data({size_field})",
                 "font-size": "8px",
                 "text-valign": "top",
                 "text-halign": "center",
