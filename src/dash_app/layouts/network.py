@@ -32,7 +32,7 @@ def create_network_layout() -> html.Div:
             # === Status凡例セクション ===
             _create_legend_section(),
             # === データ取得日付セクション ===
-            _create_metadata_section(fetched_at),
+            _create_toolbar_section(fetched_at),
             # === メインコンテンツ: グラフ + テーブル ===
             _create_main_content_section(),
         ],
@@ -114,7 +114,7 @@ def _create_legend_section() -> html.Div:
     )
 
 
-def _create_metadata_section(fetched_at: str) -> html.Div:
+def _create_toolbar_section(fetched_at: str) -> html.Div:
     """データ取得日付 + Clear selectionボタン + ノードサイズ切り替えセクション"""
     return html.Div(
         [
