@@ -1,10 +1,12 @@
 """Networkタブのコールバック関数"""
 
-from dash import Input, Output, html
+from dash import Input, Output, html, no_update
 
 from src.dash_app.components import (
     parse_pep_number,
     create_pep_info_display,
+    build_cytoscape_elements,
+    apply_highlight_classes,
 )
 from src.dash_app.utils.data_loader import get_pep_by_number
 
@@ -72,3 +74,53 @@ def register_network_callbacks(app):
 
         # 存在する場合: PEP情報を表示
         return create_pep_info_display(pep_data), ""
+
+    @app.callback(
+        Output("network-pep-input", "value"),
+        Input("network-graph", "tapNodeData"),
+        prevent_initial_call=True,
+    )
+    def update_input_from_node_click(tap_data):
+        """
+        ノードクリック時にPEP番号入力欄を更新する
+
+        Args:
+            tap_data: クリックされたノードのデータ
+
+        Returns:
+            str: PEP番号（入力欄に設定する値）
+        """
+        if tap_data is None:
+            return no_update
+
+        # クリックしたノードのPEP番号を返す
+        pep_number = tap_data.get("pep_number")
+        if pep_number is not None:
+            return str(pep_number)
+
+        return no_update
+
+    @app.callback(
+        Output("network-graph", "elements"),
+        Input("network-pep-input", "value"),
+    )
+    def update_graph_highlight(pep_number):
+        """
+        PEP番号入力に連動してグラフのハイライトを更新する
+
+        Args:
+            pep_number: 入力されたPEP番号
+
+        Returns:
+            list[dict]: ハイライトが適用されたelements
+        """
+        # 全elementsを取得
+        elements = build_cytoscape_elements()
+
+        # PEP番号を解析
+        pep_number = parse_pep_number(pep_number)
+
+        # ハイライトを適用
+        highlighted_elements = apply_highlight_classes(elements, pep_number)
+
+        return highlighted_elements

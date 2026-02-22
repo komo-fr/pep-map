@@ -228,6 +228,8 @@ def get_base_stylesheet() -> list[dict]:
     """
     Cytoscapeグラフの基本スタイルシートを取得する
 
+    ハイライト用のCSSクラススタイルも含む。
+
     Returns:
         list[dict]: スタイルシート定義のリスト
     """
@@ -261,6 +263,42 @@ def get_base_stylesheet() -> list[dict]:
                 "opacity": 0.6,
             },
         },
+        # === ハイライト用スタイル ===
+        # 選択中ノード（赤い太枠）
+        {
+            "selector": ".selected",
+            "style": {
+                "border-width": 4,
+                "border-color": "#FF0000",
+                "z-index": 9999,
+            },
+        },
+        # 接続ノード（太枠）
+        {
+            "selector": ".connected",
+            "style": {
+                "border-width": 2,
+                "border-color": "#333",
+            },
+        },
+        # 接続エッジ（太く、色濃く）
+        {
+            "selector": ".connected-edge",
+            "style": {
+                "width": 2,
+                "line-color": "#333",
+                "target-arrow-color": "#333",
+                "opacity": 1,
+                "z-index": 9998,
+            },
+        },
+        # 非接続（減衰）
+        {
+            "selector": ".faded",
+            "style": {
+                "opacity": 0.15,
+            },
+        },
     ]
 
 
@@ -279,3 +317,132 @@ def get_preset_layout_options() -> dict:
         "fit": True,  # グラフを画面に収める
         "padding": 30,  # 余白
     }
+
+
+def get_connected_elements(pep_number: int) -> dict:
+    """
+    指定されたPEP番号に接続しているノードとエッジを取得する
+
+    Args:
+        pep_number: 選択中のPEP番号
+
+    Returns:
+        dict: 接続情報
+            - connected_nodes: 接続しているPEP番号のセット
+            - connected_edges: 接続しているエッジIDのセット
+    """
+    citations_df = load_citations()
+    peps_df = load_peps_metadata()
+
+    # 存在するPEP番号のセット
+    existing_peps = set(peps_df["pep_number"].tolist())
+
+    # 指定されたPEPが存在しない場合
+    if pep_number not in existing_peps:
+        return {"connected_nodes": set(), "connected_edges": set()}
+
+    connected_nodes = set()
+    connected_edges = set()
+
+    for _, row in citations_df.iterrows():
+        citing = row["citing"]
+        cited = row["cited"]
+
+        # 自己ループを除外
+        if citing == cited:
+            continue
+
+        # 存在しないPEPへのエッジを除外
+        if citing not in existing_peps or cited not in existing_peps:
+            continue
+
+        # 選択中PEPが引用元または引用先の場合
+        if citing == pep_number:
+            connected_nodes.add(cited)
+            connected_edges.add(f"edge_{citing}_{cited}")
+        elif cited == pep_number:
+            connected_nodes.add(citing)
+            connected_edges.add(f"edge_{citing}_{cited}")
+
+    return {
+        "connected_nodes": connected_nodes,
+        "connected_edges": connected_edges,
+    }
+
+
+def apply_highlight_classes(
+    elements: list[dict], selected_pep_number: int | None
+) -> list[dict]:
+    """
+    elementsにハイライト用のCSSクラスを適用する
+
+    Args:
+        elements: Cytoscapeのelementsリスト
+        selected_pep_number: 選択中のPEP番号（Noneの場合はハイライトなし）
+
+    Returns:
+        list[dict]: CSSクラスが適用されたelementsリスト
+    """
+    # PEPが選択されていない場合、クラスをクリアして返す
+    if selected_pep_number is None:
+        return _clear_all_classes(elements)
+
+    # 接続情報を取得
+    connection_info = get_connected_elements(selected_pep_number)
+    connected_nodes = connection_info["connected_nodes"]
+    connected_edges = connection_info["connected_edges"]
+
+    updated_elements = []
+
+    for element in elements:
+        data = element["data"]
+        new_element = {"data": data.copy()}
+
+        # ノードの場合
+        if "source" not in data:
+            pep_num = data["pep_number"]
+
+            if pep_num == selected_pep_number:
+                # 選択中ノード
+                new_element["classes"] = "selected"
+            elif pep_num in connected_nodes:
+                # 接続ノード
+                new_element["classes"] = "connected"
+            else:
+                # 非接続ノード
+                new_element["classes"] = "faded"
+
+        # エッジの場合
+        else:
+            edge_id = data["id"]
+
+            if edge_id in connected_edges:
+                # 接続エッジ
+                new_element["classes"] = "connected-edge"
+            else:
+                # 非接続エッジ
+                new_element["classes"] = "faded"
+
+        updated_elements.append(new_element)
+
+    return updated_elements
+
+
+def _clear_all_classes(elements: list[dict]) -> list[dict]:
+    """
+    全elementsからCSSクラスを削除する
+
+    Args:
+        elements: Cytoscapeのelementsリスト
+
+    Returns:
+        list[dict]: クラスが削除されたelementsリスト
+    """
+    updated_elements = []
+
+    for element in elements:
+        new_element = {"data": element["data"].copy()}
+        # classesキーを含めない（クラスなし）
+        updated_elements.append(new_element)
+
+    return updated_elements

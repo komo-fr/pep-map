@@ -20,10 +20,20 @@ exclude_lines = [
 
 [tool.mypy]
 
+# 型スタブのないライブラリ: インポートされる側のモジュール名で ignore_missing_imports を指定
 [[tool.mypy.overrides]]
-module = "plotly.*"
-disable_error_code = ["import-untyped"]
+module = "dash_cytoscape"
+ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
-module = "dash_cytoscape.*"
+module = "plotly.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "plotly"
+ignore_missing_imports = true
+
+# 上記ライブラリを import しているモジュールでは [import-untyped] を出さない
+[[tool.mypy.overrides]]
+module = ["dash_app.layouts.network", "dash_app.callbacks.timeline_callbacks"]
 disable_error_code = ["import-untyped"]

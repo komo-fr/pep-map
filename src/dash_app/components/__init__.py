@@ -7,6 +7,8 @@ from src.dash_app.components.network_graph import (
     build_cytoscape_elements,
     get_base_stylesheet,
     get_preset_layout_options,
+    get_connected_elements,
+    apply_highlight_classes,
 )
 from src.dash_app.components.pep_info import (
     parse_pep_number,
@@ -21,6 +23,8 @@ __all__ = [
     "build_cytoscape_elements",
     "get_base_stylesheet",
     "get_preset_layout_options",
+    "get_connected_elements",
+    "apply_highlight_classes",
     "parse_pep_number",
     "create_status_badge",
     "create_pep_info_display",
