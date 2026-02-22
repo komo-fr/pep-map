@@ -255,19 +255,20 @@ def get_base_stylesheet() -> list[dict]:
                 "text-margin-y": -5,
                 "border-width": 1,
                 "border-color": "#999",
+                "opacity": 0.5,
             },
         },
         # エッジ基本スタイル
         {
             "selector": "edge",
             "style": {
-                "width": 0.5,
-                "line-color": "#ccc",
-                "target-arrow-color": "#ccc",
+                "width": 2,
+                "line-color": "#999",
+                "target-arrow-color": "#999",
                 "target-arrow-shape": "triangle",
-                "arrow-scale": 0.5,
+                "arrow-scale": 1,
                 "curve-style": "bezier",
-                "opacity": 0.6,
+                "opacity": 0.5,
             },
         },
         # === ハイライト用スタイル ===
@@ -278,6 +279,7 @@ def get_base_stylesheet() -> list[dict]:
                 "border-width": 4,
                 "border-color": "#FF0000",
                 "z-index": 9999,
+                "opacity": 1,
             },
         },
         # 接続ノード（太枠）
@@ -286,6 +288,7 @@ def get_base_stylesheet() -> list[dict]:
             "style": {
                 "border-width": 2,
                 "border-color": "#333",
+                "opacity": 1,
             },
         },
         # 接続エッジ（太く、色濃く）
