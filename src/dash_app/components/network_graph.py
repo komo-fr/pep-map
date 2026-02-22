@@ -1,6 +1,9 @@
 """ネットワークグラフ構築モジュール"""
 
+from typing import cast
+
 import networkx as nx
+import pandas as pd
 
 from src.dash_app.utils.constants import DEFAULT_STATUS_COLOR, STATUS_COLOR_MAP
 from src.dash_app.utils.data_loader import load_citations, load_peps_metadata
@@ -8,6 +11,28 @@ from src.dash_app.utils.data_loader import load_citations, load_peps_metadata
 
 # モジュールレベルでキャッシュ（アプリ起動時に一度だけ計算する）
 _cytoscape_elements_cache: list[dict] | None = None
+
+
+def _load_valid_edges_df() -> tuple[set[int], "pd.DataFrame"]:
+    """
+    PEPメタデータと引用データを読み込み、有効なエッジのDataFrameと存在するPEP番号のセットを返す。
+
+    有効なエッジ: 自己ループでなく、citing/citedがともに存在するPEP番号であるもの。
+    データ読み込み・有効エッジの計算を一箇所に集約し、重複と修正漏れを防ぐ。
+
+    Returns:
+        tuple[set[int], pd.DataFrame]: (存在するPEP番号のセット, 有効なエッジのみのDataFrame)
+    """
+    peps_df = load_peps_metadata()
+    citations_df = load_citations()
+    existing_peps = set(peps_df["pep_number"].tolist())
+    valid = (
+        (citations_df["citing"] != citations_df["cited"])
+        & citations_df["citing"].isin(existing_peps)
+        & citations_df["cited"].isin(existing_peps)
+    )
+    edges_df = citations_df.loc[valid, ["citing", "cited"]]
+    return existing_peps, edges_df
 
 
 def build_cytoscape_elements() -> list[dict]:
@@ -48,20 +73,7 @@ def _calculate_node_positions() -> dict[int, tuple[float, float]]:
     Returns:
         dict[int, tuple[float, float]]: PEP番号をキー、(x, y)座標を値とする辞書
     """
-
-    peps_df = load_peps_metadata()
-    citations_df = load_citations()
-
-    # 存在するPEP番号のセット
-    existing_peps = set(peps_df["pep_number"].tolist())
-
-    # 有効なエッジのみに絞る(自己ループ・存在しないPEPへの参照を除外)
-    valid = (
-        (citations_df["citing"] != citations_df["cited"])
-        & citations_df["citing"].isin(existing_peps)
-        & citations_df["cited"].isin(existing_peps)
-    )
-    edges_df = citations_df.loc[valid, ["citing", "cited"]]
+    existing_peps, edges_df = _load_valid_edges_df()
 
     # エッジリストから有向グラフを構築 (from_pandas_edgelist で一括追加)
     G = nx.from_pandas_edgelist(
@@ -160,19 +172,7 @@ def _calculate_degrees() -> dict[int, dict[str, int]]:
         dict[int, dict[str, int]]: PEP番号をキー、次数情報を値とする辞書
             次数情報: {"in_degree": int, "out_degree": int, "total_degree": int}
     """
-    peps_df = load_peps_metadata()
-    citations_df = load_citations()
-
-    # 存在するPEP番号のセット
-    existing_peps = set(peps_df["pep_number"].tolist())
-
-    # 有効なエッジのみに絞る(自己ループ・存在しないPEPへの参照を除外)
-    valid = (
-        (citations_df["citing"] != citations_df["cited"])
-        & citations_df["citing"].isin(existing_peps)
-        & citations_df["cited"].isin(existing_peps)
-    )
-    edges_df = citations_df.loc[valid, ["citing", "cited"]]
+    existing_peps, edges_df = _load_valid_edges_df()
 
     # 重複を除外（同じPEP間の複数回引用は1カウント）
     unique_edges_df = edges_df.drop_duplicates()
@@ -186,12 +186,12 @@ def _calculate_degrees() -> dict[int, dict[str, int]]:
     # 入次数を計算（cited列の出現回数）
     in_degree_counts = unique_edges_df["cited"].value_counts().to_dict()
     for pep_num, count in in_degree_counts.items():
-        degrees[pep_num]["in_degree"] = count
+        degrees[cast(int, pep_num)]["in_degree"] = int(count)
 
     # 出次数を計算（citing列の出現回数）
     out_degree_counts = unique_edges_df["citing"].value_counts().to_dict()
     for pep_num, count in out_degree_counts.items():
-        degrees[pep_num]["out_degree"] = count
+        degrees[cast(int, pep_num)]["out_degree"] = int(count)
 
     # 次数を計算（入次数 + 出次数）
     for pep_num in degrees:
