@@ -86,6 +86,7 @@ def _calculate_node_positions() -> dict[int, tuple[float, float]]:
             iterations=500,  # イテレーション回数
             seed=42,  # 乱数シード(再現性のため)
             scale=900,  # 座標のスケール
+            method="energy",  # 未指定でもノード数が多いため"energy"が適用されるが、明瞭さのため明示
             gravity=5,  # 重力の強さ
         )
 
@@ -398,6 +399,10 @@ def apply_highlight_classes(
         data = element["data"]
         new_element = {"data": data.copy()}
 
+        # ノードの場合は position も保持する
+        if "position" in element:
+            new_element["position"] = element["position"]
+
         # ノードの場合
         if "source" not in data:
             pep_num = data["pep_number"]
@@ -442,6 +447,9 @@ def _clear_all_classes(elements: list[dict]) -> list[dict]:
 
     for element in elements:
         new_element = {"data": element["data"].copy()}
+        # ノードの場合は position も保持する
+        if "position" in element:
+            new_element["position"] = element["position"]
         # classesキーを含めない（クラスなし）
         updated_elements.append(new_element)
 

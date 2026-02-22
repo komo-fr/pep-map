@@ -1,6 +1,6 @@
 """Networkタブのコールバック関数"""
 
-from dash import Input, Output, html, no_update
+from dash import Input, Output, State, html, no_update
 
 from src.dash_app.components import (
     parse_pep_number,
@@ -108,19 +108,27 @@ def register_network_callbacks(app):
     @app.callback(
         Output("network-graph", "elements"),
         Input("network-pep-input", "value"),
+        State("network-graph", "elements"),
     )
-    def update_graph_highlight(pep_number):
+    def update_graph_highlight(pep_number, current_elements):
         """
         PEP番号入力に連動してグラフのハイライトを更新する
 
+        ユーザーが手動でノードを移動した位置を保持するため、
+        現在の elements の状態を State として取得する。
+
         Args:
             pep_number: 入力されたPEP番号
+            current_elements: 現在のグラフのelements（ユーザー移動後の位置を含む）
 
         Returns:
             list[dict]: ハイライトが適用されたelements
         """
-        # 全elementsを取得
-        elements = build_cytoscape_elements()
+        # 現在の elements がない場合（初回）はキャッシュから取得
+        if current_elements is None:
+            elements = build_cytoscape_elements()
+        else:
+            elements = current_elements
 
         # PEP番号を解析
         pep_number = parse_pep_number(pep_number)
