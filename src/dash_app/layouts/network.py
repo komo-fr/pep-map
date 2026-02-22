@@ -7,7 +7,7 @@ from src.dash_app.components import (
     create_status_legend,
     build_cytoscape_elements,
     get_base_stylesheet,
-    get_cose_layout_options,
+    get_preset_layout_options,
 )
 from src.dash_app.utils.data_loader import load_metadata
 
@@ -165,7 +165,7 @@ def _create_network_graph() -> cyto.Cytoscape:
     return cyto.Cytoscape(
         id="network-graph",
         elements=elements,
-        layout=get_cose_layout_options(),
+        layout=get_preset_layout_options(),
         style={
             "width": "100%",
             "height": "600px",

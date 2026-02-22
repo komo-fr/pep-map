@@ -7,6 +7,7 @@ from dash import Dash, html, Input, Output
 from dash_bootstrap_components import themes
 
 from src.dash_app.components.header import create_header
+from src.dash_app.components.network_graph import build_cytoscape_elements
 from src.dash_app.layouts.common import create_tab_navigation
 from src.dash_app.layouts.timeline import create_timeline_layout
 from src.dash_app.layouts.network import create_network_layout
@@ -35,6 +36,7 @@ load_peps_metadata()
 load_citations()
 load_metadata()
 load_python_releases()
+build_cytoscape_elements()  # Networkグラフの座標計算（2秒程度）
 logger.info("Data preload complete.")
 
 # アプリレイアウトの定義

@@ -1,5 +1,6 @@
 requests==2.32.5
 pandas==3.0.0
+scipy==1.17.0
 networkx==3.6.1
 plotly==6.5.2
 dash==4.0.0
@@ -15,3 +16,4 @@ ruff
 mypy
 types-requests
 pandas-stubs
+types-networkx

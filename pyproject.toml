@@ -19,6 +19,11 @@ exclude_lines = [
 ]
 
 [tool.mypy]
+
 [[tool.mypy.overrides]]
-module = ["plotly.*", "dash_cytoscape"]
+module = "plotly.*"
+disable_error_code = ["import-untyped"]
+
+[[tool.mypy.overrides]]
+module = "dash_cytoscape.*"
 disable_error_code = ["import-untyped"]
