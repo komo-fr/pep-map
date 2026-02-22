@@ -4,6 +4,7 @@ import plotly.graph_objects as go
 
 from src.dash_app.utils.constants import (
     TIMELINE_ANNOTATION_FONT_COLOR,
+    TIMELINE_ANNOTATION_FONT_SIZE,
     TIMELINE_MARGIN,
     TIMELINE_Y_RANGE,
     TIMELINE_Y_TICKVALS,
@@ -116,7 +117,7 @@ def create_empty_figure() -> go.Figure:
                 y=0.7,
                 showarrow=False,
                 font=dict(
-                    size=30,
+                    size=TIMELINE_ANNOTATION_FONT_SIZE,
                     color=TIMELINE_ANNOTATION_FONT_COLOR,
                 ),
             )
