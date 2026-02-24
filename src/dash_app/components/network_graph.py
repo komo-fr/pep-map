@@ -240,7 +240,7 @@ def _calculate_font_size(degree: int) -> float:
     # 次数^0.7に基づいてフォントサイズを計算（面積と直径の中間的な成長率）
     font_size = min_font_size + 2.0 * (degree**0.7)
     # 8px以上24px以下に制限
-    return min(max(font_size, min_font_size), max_font_size)
+    return min(font_size, max_font_size)
 
 
 def _build_nodes() -> list[dict]:
