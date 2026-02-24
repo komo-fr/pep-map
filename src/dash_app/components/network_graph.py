@@ -224,8 +224,8 @@ def _calculate_font_size(degree: int) -> float:
     """
     次数に基づいてフォントサイズを計算する
 
-    次数^0.7に比例して増加するが、最小8px、最大24pxに制限される。
-    次数0の場合は最小サイズ8pxを返す。
+    次数^0.7に比例して増加するが、最小サイズ以上、最大サイズ以下に制限される。
+    次数0の場合は最小サイズを返す。
 
     Args:
         degree: ノードの次数
@@ -239,7 +239,6 @@ def _calculate_font_size(degree: int) -> float:
         return min_font_size
     # 次数^0.7に基づいてフォントサイズを計算（面積と直径の中間的な成長率）
     font_size = min_font_size + 2.0 * (degree**0.7)
-    # 8px以上24px以下に制限
     return min(font_size, max_font_size)
 
 
