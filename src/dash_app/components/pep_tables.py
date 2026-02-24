@@ -1,12 +1,22 @@
 """PEPテーブルの共通コンポーネント"""
 
-from dash import dash_table
+from dash import dash_table, html
 
 from src.dash_app.utils.constants import (
     STATUS_COLOR_MAP,
     STATUS_FONT_COLOR_MAP,
 )
 from src.dash_app.utils.data_loader import generate_pep_url
+
+
+def create_pep_table_description() -> html.P:
+    """
+    PEPテーブルの説明を生成する
+    """
+    return html.P(
+        "Scroll the table to view all rows.",
+        style={"fontSize": "12px", "color": "#666", "margin": "0"},
+    )
 
 
 def create_pep_table(table_id: str) -> dash_table.DataTable:  # type: ignore[name-defined]
@@ -40,6 +50,8 @@ def create_pep_table(table_id: str) -> dash_table.DataTable:  # type: ignore[nam
         page_action="none",
         style_table={
             "overflowX": "auto",
+            "overflowY": "scroll",
+            "height": "500px",
         },
         style_cell={
             "textAlign": "left",
