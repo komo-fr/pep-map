@@ -250,6 +250,11 @@ def _create_tables_section() -> html.Div:
         "padding": "8px 16px",
         "fontWeight": "500",
     }
+    tab_selected_style = {
+        "padding": "8px 16px",
+        "fontWeight": "bold",
+        "borderTop": "10px solid #DDAD3E",
+    }
 
     return html.Div(
         [
@@ -270,6 +275,7 @@ def _create_tables_section() -> html.Div:
                             create_pep_table("network-citing-peps-table"),
                         ],
                         style=tab_style,
+                        selected_style=tab_selected_style,
                     ),
                     dcc.Tab(
                         label="Cites",
@@ -284,6 +290,7 @@ def _create_tables_section() -> html.Div:
                             create_pep_table("network-cited-peps-table"),
                         ],
                         style=tab_style,
+                        selected_style=tab_selected_style,
                     ),
                 ],
             ),
