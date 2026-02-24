@@ -207,6 +207,9 @@ def _create_operation_description_section() -> html.Div:
                 style={"fontSize": "12px", "color": "#666", "margin": "0"},
             ),
         ],
+        style={
+            "margin": "10px 0",
+        },
     )
 
 
