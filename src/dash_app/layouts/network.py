@@ -197,10 +197,10 @@ def _create_operation_description_section() -> html.Div:
                 [
                     html.Strong("Zoom in/out: "),
                     "Pinch in/out or use the mouse wheel.",
-                    html.Span("   ", style={"marginRight": "16px"}),
+                    html.Span("", style={"marginRight": "16px"}),
                     html.Strong("Move a node: "),
                     "Click and drag it.",
-                    html.Span("   ", style={"marginRight": "16px"}),
+                    html.Span("", style={"marginRight": "16px"}),
                     html.Strong("View PEP details: "),
                     "Tap a node.",
                 ],
