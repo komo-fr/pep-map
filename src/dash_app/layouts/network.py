@@ -224,7 +224,7 @@ def _create_main_content_section() -> html.Div:
                 ],
                 style={
                     "display": "inline-block",
-                    "width": "60%",
+                    "width": "55%",
                     "verticalAlign": "top",
                 },
             ),
@@ -235,7 +235,7 @@ def _create_main_content_section() -> html.Div:
                 ],
                 style={
                     "display": "inline-block",
-                    "width": "38%",
+                    "width": "43%",
                     "verticalAlign": "top",
                     "marginLeft": "2%",
                 },
