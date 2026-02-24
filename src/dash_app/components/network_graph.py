@@ -220,6 +220,29 @@ def _calculate_node_size(degree: int) -> float:
     return 10.0 * (degree**0.5)
 
 
+def _calculate_font_size(degree: int) -> float:
+    """
+    次数に基づいてフォントサイズを計算する
+
+    次数^0.7に比例して増加するが、最小8px、最大24pxに制限される。
+    次数0の場合は最小サイズ8pxを返す。
+
+    Args:
+        degree: ノードの次数
+
+    Returns:
+        float: フォントサイズ（ピクセル）
+    """
+    min_font_size = 6.0
+    max_font_size = 24.0
+    if degree == 0:
+        return min_font_size
+    # 次数^0.7に基づいてフォントサイズを計算（面積と直径の中間的な成長率）
+    font_size = min_font_size + 2.0 * (degree**0.7)
+    # 8px以上24px以下に制限
+    return min(max(font_size, min_font_size), max_font_size)
+
+
 def _build_nodes() -> list[dict]:
     """
     PEPメタデータからノードを生成する
@@ -259,6 +282,12 @@ def _build_nodes() -> list[dict]:
         size_total_degree = _calculate_node_size(degree_info["total_degree"])
         size_constant = 20.0  # 一定サイズ
 
+        # 各次数タイプに対応したフォントサイズを計算
+        font_size_in_degree = _calculate_font_size(degree_info["in_degree"])
+        font_size_out_degree = _calculate_font_size(degree_info["out_degree"])
+        font_size_total_degree = _calculate_font_size(degree_info["total_degree"])
+        font_size_constant = 8.0  # 一定サイズの場合は最小値
+
         node = {
             "data": {
                 "id": f"pep_{pep_number}",
@@ -273,6 +302,10 @@ def _build_nodes() -> list[dict]:
                 "size_out_degree": size_out_degree,
                 "size_total_degree": size_total_degree,
                 "size_constant": size_constant,
+                "font_size_in_degree": font_size_in_degree,
+                "font_size_out_degree": font_size_out_degree,
+                "font_size_total_degree": font_size_total_degree,
+                "font_size_constant": font_size_constant,
             },
             "position": {
                 "x": pos[0],
@@ -338,7 +371,7 @@ def get_base_stylesheet(size_type: str = "in_degree") -> list[dict]:
     Cytoscapeグラフの基本スタイルシートを取得する
 
     ハイライト用のCSSクラススタイルも含む。
-    ノードサイズは指定されたサイズタイプに基づいて動的に設定される。
+    ノードサイズとフォントサイズは指定されたサイズタイプに基づいて動的に設定される。
 
     Args:
         size_type: ノードサイズのタイプ ("in_degree", "out_degree", "total_degree", "constant")
@@ -353,7 +386,14 @@ def get_base_stylesheet(size_type: str = "in_degree") -> list[dict]:
         "total_degree": "size_total_degree",
         "constant": "size_constant",
     }
+    font_size_field_map = {
+        "in_degree": "font_size_in_degree",
+        "out_degree": "font_size_out_degree",
+        "total_degree": "font_size_total_degree",
+        "constant": "font_size_constant",
+    }
     size_field = size_field_map.get(size_type, "size_in_degree")
+    font_size_field = font_size_field_map.get(size_type, "font_size_in_degree")
     dark_status_text_color = "#CCCCCC"
 
     return [
@@ -365,7 +405,7 @@ def get_base_stylesheet(size_type: str = "in_degree") -> list[dict]:
                 "background-color": "data(color)",
                 "width": f"data({size_field})",
                 "height": f"data({size_field})",
-                "font-size": "8px",
+                "font-size": f"data({font_size_field})",
                 "text-valign": "center",
                 "text-halign": "center",
                 "border-width": 1,
