@@ -21,8 +21,8 @@ def create_initial_info_message() -> html.Div:
             ),
             html.Ul(
                 [
-                    html.Li("Which PEPs cite the selected PEP?"),
-                    html.Li("Which PEPs does the selected PEP cite?"),
+                    html.Li("PEPs that cite this PEP"),
+                    html.Li("PEPs cited by this PEP"),
                 ]
             ),
         ],

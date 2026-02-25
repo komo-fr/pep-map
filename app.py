@@ -1,6 +1,7 @@
 """PEP Map - Timeline機能"""
 
 import os
+import logging
 
 from dash import Dash, html, Input, Output
 from dash_bootstrap_components import themes
@@ -9,6 +10,15 @@ from src.dash_app.components.header import create_header
 from src.dash_app.layouts.common import create_tab_navigation
 from src.dash_app.layouts.timeline import create_timeline_layout
 from src.dash_app.callbacks.timeline_callbacks import register_timeline_callbacks
+from src.dash_app.utils.data_loader import (
+    load_peps_metadata,
+    load_citations,
+    load_metadata,
+    load_python_releases,
+)
+
+
+logger = logging.getLogger(__name__)
 
 # Dashアプリの初期化
 app = Dash(
@@ -17,6 +27,14 @@ app = Dash(
     external_stylesheets=[themes.BOOTSTRAP],
 )
 server = app.server  # for gunicorn
+
+# データのプリロード（Renderのヘルスチェックに間に合うよう、起動時に読み込む）
+logger.info("Starting data preload...")
+load_peps_metadata()
+load_citations()
+load_metadata()
+load_python_releases()
+logger.info("Data preload complete.")
 
 # アプリレイアウトの定義
 app.layout = html.Div(

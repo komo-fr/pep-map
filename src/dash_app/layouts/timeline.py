@@ -13,7 +13,10 @@ from src.dash_app.utils.constants import (
     PYTHON_2_LINE_COLOR,
     PYTHON_3_LINE_COLOR,
 )
-from src.dash_app.utils.data_loader import load_metadata
+from src.dash_app.utils.data_loader import (
+    get_python_releases_for_store,
+    load_metadata,
+)
 
 
 def create_timeline_layout() -> html.Div:
@@ -33,6 +36,8 @@ def create_timeline_layout() -> html.Div:
             _create_top_section(),
             # === Status凡例セクション ===
             _create_legend_section(),
+            # === Timeline説明セクション ===
+            _create_timeline_description(),
             # === タイムライングラフセクション ===
             _create_graph_section(),
             # === データ取得日付セクション ===
@@ -121,15 +126,69 @@ def _create_legend_section() -> html.Div:
     )
 
 
+def _create_timeline_description() -> html.Div:
+    """Timelineタブの説明を生成する"""
+    description = html.Div(
+        [
+            html.P(
+                [
+                    html.Strong("View PEP details:"),
+                    html.Span(" ", style={"marginRight": "6px"}),
+                    html.Span("Hover over a point."),
+                    html.Span(" ", style={"marginRight": "16px"}),
+                    html.Strong("Open official PEP page:"),
+                    html.Span(" ", style={"marginRight": "6px"}),
+                    html.Span("Click a point."),
+                    html.Span(" ", style={"marginRight": "16px"}),
+                    html.Strong("Zoom in:"),
+                    html.Span(" ", style={"marginRight": "6px"}),
+                    html.Span("Drag to select a range."),
+                    html.Span(" ", style={"marginRight": "16px"}),
+                    html.Strong("Reset the view:"),
+                    html.Span(" ", style={"marginRight": "6px"}),
+                    html.Span("Click the home icon in the top-right corner."),
+                ],
+                style={
+                    "fontSize": "12px",
+                    "color": "#666",
+                    "margin": "0",
+                },
+            ),
+        ],
+    )
+
+    return html.Div(description)
+
+
 def _create_graph_section() -> html.Div:
     """タイムライングラフセクション"""
+    # Pythonリリース日データを取得（アプリ起動時に1回のみ実行）
+    python_releases_data = get_python_releases_for_store()
+
     return html.Div(
         [
+            # Pythonリリース日データを保存するStore
+            # データ構造:
+            # {
+            #     "python2": [{"version": "2.0", "release_date": "2000-10-16"}, ...],
+            #     "python3": [{"version": "3.0", "release_date": "2008-12-03"}, ...]
+            # }
+            dcc.Store(id="python-releases-store", data=python_releases_data),
+            # サーバーサイドコールバックが生成したベースfigureを保存する中間Store
+            # クライアントサイドコールバックが縦線を追加する前のfigureデータを保持
+            dcc.Store(id="timeline-figure-base"),
             dcc.Graph(
                 id="timeline-graph",
                 figure=create_empty_figure(),
                 style={
                     "height": "350px",
+                },
+                config={
+                    "displayModeBar": True,
+                    "modeBarButtonsToRemove": [
+                        "lasso2d",
+                        "select2d",
+                    ],
                 },
             ),
             dcc.Location(id="pep-url", refresh=True),

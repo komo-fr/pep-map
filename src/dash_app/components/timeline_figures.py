@@ -114,7 +114,7 @@ def create_empty_figure() -> go.Figure:
                 xref="paper",
                 yref="paper",
                 x=0.5,
-                y=0.5,
+                y=0.7,
                 showarrow=False,
                 font=dict(
                     size=TIMELINE_ANNOTATION_FONT_SIZE,

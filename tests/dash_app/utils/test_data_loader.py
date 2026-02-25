@@ -282,6 +282,112 @@ class TestGetPythonReleasesByMajorVersion:
         assert df1.equals(df2)
 
 
+class TestGetPythonReleasesForStore:
+    """get_python_releases_for_store関数のテスト"""
+
+    def test_returns_dict(self, mock_static_dir, monkeypatch):
+        """dict型を返す"""
+        monkeypatch.setattr(
+            "src.dash_app.utils.data_loader.STATIC_DIR", mock_static_dir
+        )
+        data_loader.clear_cache()
+
+        result = data_loader.get_python_releases_for_store()
+
+        assert isinstance(result, dict)
+
+    def test_has_python2_and_python3_keys(self, mock_static_dir, monkeypatch):
+        """python2とpython3キーが存在する"""
+        monkeypatch.setattr(
+            "src.dash_app.utils.data_loader.STATIC_DIR", mock_static_dir
+        )
+        data_loader.clear_cache()
+
+        result = data_loader.get_python_releases_for_store()
+
+        assert "python2" in result
+        assert "python3" in result
+
+    def test_values_are_lists(self, mock_static_dir, monkeypatch):
+        """各キーの値がリスト"""
+        monkeypatch.setattr(
+            "src.dash_app.utils.data_loader.STATIC_DIR", mock_static_dir
+        )
+        data_loader.clear_cache()
+
+        result = data_loader.get_python_releases_for_store()
+
+        assert isinstance(result["python2"], list)
+        assert isinstance(result["python3"], list)
+
+    def test_python2_list_structure(self, mock_static_dir, monkeypatch):
+        """python2リストの要素が正しい構造"""
+        monkeypatch.setattr(
+            "src.dash_app.utils.data_loader.STATIC_DIR", mock_static_dir
+        )
+        data_loader.clear_cache()
+
+        result = data_loader.get_python_releases_for_store()
+        python2_data = result["python2"]
+
+        # モックデータには2.7が1件含まれる
+        assert len(python2_data) == 1
+        assert "version" in python2_data[0]
+        assert "release_date" in python2_data[0]
+
+    def test_python3_list_structure(self, mock_static_dir, monkeypatch):
+        """python3リストの要素が正しい構造"""
+        monkeypatch.setattr(
+            "src.dash_app.utils.data_loader.STATIC_DIR", mock_static_dir
+        )
+        data_loader.clear_cache()
+
+        result = data_loader.get_python_releases_for_store()
+        python3_data = result["python3"]
+
+        # モックデータには3.0と3.10の2件が含まれる
+        assert len(python3_data) == 2
+        for item in python3_data:
+            assert "version" in item
+            assert "release_date" in item
+
+    def test_release_date_format(self, mock_static_dir, monkeypatch):
+        """release_dateが文字列でISO形式（YYYY-MM-DD）"""
+        monkeypatch.setattr(
+            "src.dash_app.utils.data_loader.STATIC_DIR", mock_static_dir
+        )
+        data_loader.clear_cache()
+
+        result = data_loader.get_python_releases_for_store()
+
+        # Python 2のrelease_dateをチェック
+        for item in result["python2"]:
+            assert isinstance(item["release_date"], str)
+            # YYYY-MM-DD形式であることを確認
+            import re
+
+            assert re.match(r"\d{4}-\d{2}-\d{2}", item["release_date"])
+
+        # Python 3のrelease_dateをチェック
+        for item in result["python3"]:
+            assert isinstance(item["release_date"], str)
+            import re
+
+            assert re.match(r"\d{4}-\d{2}-\d{2}", item["release_date"])
+
+    def test_version_is_string(self, mock_static_dir, monkeypatch):
+        """versionが文字列"""
+        monkeypatch.setattr(
+            "src.dash_app.utils.data_loader.STATIC_DIR", mock_static_dir
+        )
+        data_loader.clear_cache()
+
+        result = data_loader.get_python_releases_for_store()
+
+        for item in result["python2"] + result["python3"]:
+            assert isinstance(item["version"], str)
+
+
 class TestClearCache:
     """clear_cache関数のテスト"""
 

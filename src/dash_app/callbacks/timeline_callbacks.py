@@ -1,7 +1,7 @@
 """Timelineタブのコールバック関数"""
 
 import plotly.graph_objects as go
-from dash import Input, Output, html, no_update
+from dash import Input, Output, State, clientside_callback, html, no_update
 
 from src.dash_app.components import create_empty_figure, create_initial_info_message
 from src.dash_app.components.timeline_figures import (
@@ -156,47 +156,38 @@ def register_timeline_callbacks(app):
 
         return citing_table_data, cited_table_data
 
-    # === グラフ更新コールバック（新規追加） ===
+    # === グラフ更新コールバック（ベースfigureを中間Storeに保存） ===
     @app.callback(
-        Output("timeline-graph", "figure"),
+        Output("timeline-figure-base", "data"),
         Input("pep-input", "value"),
-        Input("python-release-checkboxes", "value"),
     )
-    def update_timeline_graph(pep_number, python_release_options):
+    def update_timeline_graph(pep_number):
         """
-        PEP番号入力とチェックボックスに連動してタイムライングラフを更新する
+        PEP番号入力に連動してベースタイムライングラフを生成し、中間Storeに保存する
+
+        クライアントサイドコールバックがこのStoreをトリガーとして受け取り、
+        Pythonリリース日の縦線を追加する
 
         Args:
             pep_number: 入力されたPEP番号（str, int または None）
-            python_release_options: 選択されたPythonリリース表示オプション（list）
-                - "python2": Python 2系を表示
-                - "python3": Python 3系を表示
 
         Returns:
-            go.Figure: Plotlyのfigureオブジェクト
+            dict: Plotlyのfigureオブジェクトの辞書形式、または None
         """
         # 入力値を整数に変換
         pep_number = _parse_pep_number(pep_number)
 
-        # python_release_optionsがNoneの場合は空リストに
-        if python_release_options is None:
-            python_release_options = []
-
-        # 入力が空/Noneの場合: 空のグラフ + 縦線を返す
+        # 入力が空/Noneの場合: 空のグラフを返す
         if pep_number is None:
-            fig = create_empty_figure()
-            _add_python_release_lines(fig, python_release_options)
-            return fig
+            return create_empty_figure()
 
         # PEPの存在確認
         pep_data = get_pep_by_number(pep_number)
         if pep_data is None:
-            fig = create_empty_figure()
-            _add_python_release_lines(fig, python_release_options)
-            return fig
+            return create_empty_figure()
 
         # グラフデータを構築
-        return _create_timeline_figure(pep_number, pep_data, python_release_options)
+        return _create_timeline_figure(pep_number, pep_data)
 
     # === クリックイベント: 点をクリックしたときにPEPページへ遷移 ===
     @app.callback(
@@ -220,6 +211,90 @@ def register_timeline_callbacks(app):
             pep_number = int(click_data["points"][0]["customdata"])
             return generate_pep_url(pep_number)
         return no_update
+
+    # === クライアントサイドコールバック: ベースfigureにPythonリリース日の縦線を追加 ===
+    clientside_callback(
+        """
+        function(baseFigureData, checkboxValues, releaseData) {
+            // データがない場合はno_updateを返す
+            if (!baseFigureData || !releaseData) {
+                return window.dash_clientside.no_update;
+            }
+
+            // ベースfigureをコピー
+            const baseFigure = {...baseFigureData};
+
+            // 既存のshapesとannotationsをコピー（リリース線以外を保持）
+            const baseShapes = (baseFigure.layout?.shapes || [])
+                .filter(s => !s._isPythonRelease);
+            const baseAnnotations = (baseFigure.layout?.annotations || [])
+                .filter(a => !a._isPythonRelease);
+
+            const newShapes = [...baseShapes];
+            const newAnnotations = [...baseAnnotations];
+
+            // Pythonリリース日の縦線スタイル定義
+            // NOTE: 以下の値は constants.py と同期する必要があります：
+            //   - 'python2'.color と PYTHON_2_LINE_COLOR
+            //   - 'python3'.color と PYTHON_3_LINE_COLOR
+            //   - 'python2'.yLabel と TIMELINE_Y_PYTHON2_LABEL
+            //   - 'python3'.yLabel と TIMELINE_Y_PYTHON3_LABEL
+            // constants.py の値を変更する際は、このJavaScriptコードも更新してください。
+            const styles = {
+                'python2': {color: '#DDAD3E', yLabel: 1.85},
+                'python3': {color: '#2E6495', yLabel: 1.65}
+            };
+
+            // チェックされたバージョンの縦線とラベルを追加
+            (checkboxValues || []).forEach(version => {
+                const releases = releaseData[version] || [];
+                const style = styles[version];
+
+                releases.forEach(release => {
+                    // 縦線を追加
+                    newShapes.push({
+                        type: 'line',
+                        xref: 'x',
+                        yref: 'paper',
+                        x0: release.release_date,
+                        x1: release.release_date,
+                        y0: 0,
+                        y1: 1,
+                        line: {color: style.color, width: 1, dash: 'solid'},
+                        _isPythonRelease: true
+                    });
+
+                    // バージョンラベルを追加
+                    newAnnotations.push({
+                        x: release.release_date,
+                        y: style.yLabel,
+                        text: release.version,
+                        showarrow: false,
+                        xref: 'x',
+                        yref: 'y',
+                        font: {size: 10, color: style.color},
+                        xanchor: 'left',
+                        yanchor: 'middle',
+                        _isPythonRelease: true
+                    });
+                });
+            });
+
+            // 新しいfigureオブジェクトを作成して返す
+            const updatedFigure = {...baseFigure};
+            updatedFigure.layout = {...baseFigure.layout};
+            updatedFigure.layout.shapes = newShapes;
+            updatedFigure.layout.annotations = newAnnotations;
+
+            return updatedFigure;
+        }
+        """,
+        Output("timeline-graph", "figure"),
+        Input("timeline-figure-base", "data"),
+        Input("python-release-checkboxes", "value"),
+        State("python-releases-store", "data"),
+        prevent_initial_call=True,
+    )
 
 
 def _compute_table_titles(pep_number_input) -> tuple[str, str]:
@@ -461,22 +536,17 @@ def _create_pep_annotations(pep_number: int) -> list[dict]:
     ]
 
 
-def _create_timeline_figure(
-    pep_number: int, pep_data, python_release_options: list[str] | None = None
-) -> go.Figure:
+def _create_timeline_figure(pep_number: int, pep_data) -> go.Figure:
     """
     タイムライングラフを生成する
 
     Args:
         pep_number: 選択中のPEP番号
         pep_data: 選択中のPEPのメタデータ
-        python_release_options: Pythonリリース表示オプション
 
     Returns:
         go.Figure: Plotly figureオブジェクト
     """
-    if python_release_options is None:
-        python_release_options = []
     # 引用関係のPEPを取得
     citing_peps_df = get_citing_peps(pep_number)  # このPEPを引用しているPEP
     cited_peps_df = get_cited_peps(pep_number)  # このPEPに引用されているPEP
@@ -569,9 +639,6 @@ def _create_timeline_figure(
         shapes=_get_guideline_shapes(),
         annotations=_create_pep_annotations(pep_number),
     )
-
-    # Pythonリリース日の縦線を追加
-    _add_python_release_lines(fig, python_release_options)
 
     return fig
 

@@ -16,7 +16,7 @@ def create_tab_navigation():
     tab_selected_style = {
         "padding": "8px 16px",
         "fontWeight": "bold",
-        "borderTop": "2px solid #6c5ce7",
+        "borderTop": "10px solid #DDAD3E",
     }
 
     return dcc.Tabs(
