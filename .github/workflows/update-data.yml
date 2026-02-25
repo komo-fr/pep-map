@@ -25,8 +25,8 @@ jobs:
     # schedule実行時はproductionブランチでのみ実行
     # 手動実行時はdry_runモードまたはproductionブランチで実行
     if: |
-      github.event_name == 'schedule' && github.ref == 'refs/heads/production' ||
-      github.event_name == 'workflow_dispatch' && (github.event.inputs.dry_run == 'true' || github.ref == 'refs/heads/production')
+      (github.event_name == 'schedule' && github.ref == 'refs/heads/production') ||
+      (github.event_name == 'workflow_dispatch' && (github.event.inputs.dry_run == 'true' || github.ref == 'refs/heads/production'))
 
     steps:
       - name: Checkout branch
