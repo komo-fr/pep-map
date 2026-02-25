@@ -84,6 +84,18 @@ def _create_top_section() -> html.Div:
                             "marginTop": "4px",
                         },
                     ),
+                    # How to Useリンク
+                    html.A(
+                        "How to Use",
+                        href="https://github.com/komo-fr/pep-map/blob/production/README.md#timeline-tab",
+                        target="_blank",
+                        rel="noopener noreferrer",
+                        style={
+                            "fontSize": "12px",
+                            "marginTop": "4px",
+                            "display": "block",
+                        },
+                    ),
                 ],
                 style={
                     "display": "inline-block",
