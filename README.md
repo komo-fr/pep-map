@@ -90,6 +90,7 @@ If the selected metric is 0, the node is displayed with a default minimum size.
 
 ### Node Interaction
 Drag a node to reposition it manually.
+
 ![](images/network/move_node.gif)
 
 ## Local environment setup
