@@ -6,10 +6,10 @@
 
 [PEP Map](https://pep-map.onrender.com/) is a web application that **visualizes citation relationships between PEPs** (Python Enhancement Proposals).
 
-- **Timeline tab:**
+- **[Timeline tab](#timeline-tab):**
     - Explore citation relationships between PEPs **on a chronological timeline**.
     - It helps you trace the history of PEPs related to the selected PEP.
-- **Network tab:**
+- **[Network tab](#network-tab):**
     - Explore citation relationships between PEPs **as a network graph**.
     - It helps you understand the relationships between PEPs and identify influential ones.
 
