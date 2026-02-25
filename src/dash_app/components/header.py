@@ -46,7 +46,7 @@ def create_header() -> html.Header:
                         "alignItems": "center",
                     },
                 ),
-                # 右端:  + セパレーター + GitHubリンク
+                # 右端:  + セパレーター + ガイド + GitHubリンク
                 html.Div(
                     [
                         html.A(
@@ -62,7 +62,7 @@ def create_header() -> html.Header:
                             },
                         ),
                         html.Span(
-                            " | ",
+                            "|",
                             style={
                                 "color": HEADER_FONT_COLOR,
                                 "fontFamily": HEADER_FONT_FAMILY,
