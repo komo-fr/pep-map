@@ -117,7 +117,7 @@ def _create_top_section() -> html.Div:
 
 
 def _create_toolbar_section(fetched_at: str) -> html.Div:
-    """データ取得日付 + Clear selectionボタン + ノードサイズ切り替えセクション"""
+    """データ取得日付 + Reset selectionボタン + ノードサイズ切り替えセクション"""
     return html.Div(
         [
             # 1行目: データ取得日付
@@ -134,12 +134,12 @@ def _create_toolbar_section(fetched_at: str) -> html.Div:
                     "marginBottom": "8px",
                 },
             ),
-            # 2行目: Clear selectionボタン + ノードサイズ切り替えラジオボタン
+            # 2行目: Reset selectionボタン + ノードサイズ切り替えラジオボタン
             html.Div(
                 [
-                    # 左側: Clear selectionボタン
+                    # 左側: Reset selectionボタン
                     html.Button(
-                        "Clear selection",
+                        "Reset selection",
                         id="network-clear-selection-btn",
                         style={
                             "padding": "4px 12px",

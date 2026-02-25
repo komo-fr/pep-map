@@ -3,6 +3,7 @@
 ## What is this?
 **🐍PEP Map**: https://pep-map.onrender.com/
 
+
 [PEP Map](https://pep-map.onrender.com/) is a web application that **visualizes citation relationships between PEPs** (Python Enhancement Proposals).
 
 - **Timeline tab:**
@@ -67,7 +68,7 @@ The selected PEP and its citation connections will be highlighted in the network
 ### Reset selection
 Click the `Reset selection` button to clear the current node selection.
 
-![](images/network/clear.png)
+![](images/network/reset.png)
 
 ### Change node size
 You can change the node size using the following four metrics:
@@ -87,7 +88,7 @@ If the selected metric is 0, the node is displayed with a default minimum size.
 ![](images/network/zoom.gif)
 ![](images/network/move.gif)
 
-## Node Interaction
+### Node Interaction
 Drag a node to reposition it manually.
 ![](images/network/move_node.gif)
 
