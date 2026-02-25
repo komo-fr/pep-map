@@ -19,6 +19,9 @@ jobs:
     name: Fetch and Update PEP Data
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: write  # git pushのために必要
+
     # schedule実行時はproductionブランチでのみ実行
     # 手動実行時はdry_runモードまたはproductionブランチで実行
     if: |
