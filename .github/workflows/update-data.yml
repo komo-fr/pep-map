@@ -1,0 +1,88 @@
+name: Update PEP Data
+
+on:
+  # 毎週金曜日 12:00 PM UTC (日本時間 21:00)
+  schedule:
+    - cron: '0 12 * * 5'
+
+  # 手動実行を許可
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run (test mode - no commit/push)'
+        required: true
+        type: boolean
+        default: false
+
+jobs:
+  update-data:
+    name: Fetch and Update PEP Data
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    permissions:
+      contents: write  # git pushのために必要
+
+    # schedule実行時はproductionブランチでのみ実行
+    # 手動実行時はdry_runモードまたはproductionブランチで実行
+    if: |
+      (github.event_name == 'schedule' && github.ref == 'refs/heads/production') ||
+      (github.event_name == 'workflow_dispatch' && (github.event.inputs.dry_run == 'true' || github.ref == 'refs/heads/production'))
+
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          # dry_runモードでは現在のブランチ、本番ではproduction
+          ref: ${{ github.event.inputs.dry_run == 'true' && github.ref || 'production' }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Fetch PEP data
+        run: python scripts/fetch_peps.py
+
+      - name: Check for changes
+        id: check_changes
+        run: |
+          if git diff --quiet data/processed/; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+            echo "No changes detected in data/processed/"
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "Changes detected in data/processed/"
+            git diff data/processed/
+          fi
+
+      - name: Dry run summary
+        if: github.event.inputs.dry_run == 'true'
+        run: |
+          echo "🔍 DRY RUN MODE - No changes will be committed"
+          echo "Branch: ${{ github.ref }}"
+          echo "Changes detected: ${{ steps.check_changes.outputs.changed }}"
+
+      - name: Commit and push changes
+        if: steps.check_changes.outputs.changed == 'true' && github.event.inputs.dry_run != 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/processed/
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            git commit -m "Update PEP data (automated weekly update)"
+          else
+            git commit -m "Update PEP data (manual update)"
+          fi
+          git push origin production
+
+      - name: No changes to commit
+        if: steps.check_changes.outputs.changed == 'false'
+        run: echo "✅ Data is already up to date. Skipping commit."
