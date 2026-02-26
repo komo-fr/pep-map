@@ -11,6 +11,7 @@ from src.dash_app.utils.data_loader import load_citations, load_peps_metadata
 
 # モジュールレベルでキャッシュ（アプリ起動時に一度だけ計算する）
 _cytoscape_elements_cache: list[dict] | None = None
+_valid_edges_cache: tuple[set[int], "pd.DataFrame"] | None = None
 
 
 def _load_valid_edges_df() -> tuple[set[int], "pd.DataFrame"]:
@@ -20,9 +21,16 @@ def _load_valid_edges_df() -> tuple[set[int], "pd.DataFrame"]:
     有効なエッジ: 自己ループでなく、citing/citedがともに存在するPEP番号であるもの。
     データ読み込み・有効エッジの計算を一箇所に集約し、重複と修正漏れを防ぐ。
 
+    初回呼び出し時に計算し、以降はキャッシュを返す。
+
     Returns:
         tuple[set[int], pd.DataFrame]: (存在するPEP番号のセット, 有効なエッジのみのDataFrame)
     """
+    global _valid_edges_cache
+
+    if _valid_edges_cache is not None:
+        return _valid_edges_cache
+
     peps_df = load_peps_metadata()
     citations_df = load_citations()
     existing_peps = set(peps_df["pep_number"].tolist())
@@ -32,7 +40,9 @@ def _load_valid_edges_df() -> tuple[set[int], "pd.DataFrame"]:
         & citations_df["cited"].isin(existing_peps)
     )
     edges_df = citations_df.loc[valid, ["citing", "cited"]]
-    return existing_peps, edges_df
+
+    _valid_edges_cache = (existing_peps, edges_df)
+    return _valid_edges_cache
 
 
 def build_cytoscape_elements() -> list[dict]:
