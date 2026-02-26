@@ -202,6 +202,52 @@ def _calculate_degrees() -> dict[int, dict[str, int]]:
     return degrees
 
 
+def _calculate_adjacency_info() -> dict[int, dict[str, list[str]]]:
+    """
+    各PEPノードの隣接情報を計算する
+
+    Returns:
+        dict[int, dict[str, list[str]]]: PEP番号をキー、隣接情報を値とする辞書
+            隣接情報: {
+                "adjacent_nodes": list[str],  # 隣接ノードのID一覧
+                "incoming_edges": list[str],  # 入ってくるエッジのID一覧
+                "outgoing_edges": list[str],  # 出ていくエッジのID一覧
+            }
+    """
+    existing_peps, edges_df = _load_valid_edges_df()
+
+    # 重複を除外（同じPEP間の複数回引用は1カウント）
+    unique_edges_df = edges_df.drop_duplicates()
+
+    # 隣接情報を初期化
+    adjacency_info: dict[int, dict[str, list[str]]] = {
+        pep_num: {
+            "adjacent_nodes": [],
+            "incoming_edges": [],
+            "outgoing_edges": [],
+        }
+        for pep_num in existing_peps
+    }
+
+    # エッジを走査して隣接情報を構築
+    for _, row in unique_edges_df.iterrows():
+        citing = int(row["citing"])
+        cited = int(row["cited"])
+        edge_id = f"edge_{citing}_{cited}"
+
+        # citing側: 出ていくエッジと隣接ノードを追加
+        adjacency_info[citing]["outgoing_edges"].append(edge_id)
+        if f"pep_{cited}" not in adjacency_info[citing]["adjacent_nodes"]:
+            adjacency_info[citing]["adjacent_nodes"].append(f"pep_{cited}")
+
+        # cited側: 入ってくるエッジと隣接ノードを追加
+        adjacency_info[cited]["incoming_edges"].append(edge_id)
+        if f"pep_{citing}" not in adjacency_info[cited]["adjacent_nodes"]:
+            adjacency_info[cited]["adjacent_nodes"].append(f"pep_{citing}")
+
+    return adjacency_info
+
+
 def _calculate_node_size(degree: int) -> float:
     """
     次数に基づいてノードサイズを計算する
@@ -260,6 +306,9 @@ def _build_nodes() -> list[dict]:
     # 次数を計算
     degrees = _calculate_degrees()
 
+    # 隣接情報を計算
+    adjacency_info = _calculate_adjacency_info()
+
     nodes = []
 
     for _, row in peps_df.iterrows():
@@ -287,6 +336,12 @@ def _build_nodes() -> list[dict]:
         font_size_total_degree = _calculate_font_size(degree_info["total_degree"])
         font_size_constant = 8.0  # 一定サイズの場合は最小値
 
+        # 隣接情報を取得（存在しない場合はデフォルト値）
+        adj_info = adjacency_info.get(
+            pep_number,
+            {"adjacent_nodes": [], "incoming_edges": [], "outgoing_edges": []},
+        )
+
         node = {
             "data": {
                 "id": f"pep_{pep_number}",
@@ -305,6 +360,10 @@ def _build_nodes() -> list[dict]:
                 "font_size_out_degree": font_size_out_degree,
                 "font_size_total_degree": font_size_total_degree,
                 "font_size_constant": font_size_constant,
+                # 隣接情報（clientside_callback用）
+                "adjacent_nodes": adj_info["adjacent_nodes"],
+                "incoming_edges": adj_info["incoming_edges"],
+                "outgoing_edges": adj_info["outgoing_edges"],
             },
             "position": {
                 "x": pos[0],
@@ -560,6 +619,10 @@ def get_connected_elements(pep_number: int) -> dict:
     """
     指定されたPEP番号に接続しているノードとエッジを取得する
 
+    Note:
+        この関数はclientside_callbackに移行後は使用されない。
+        後方互換性のために残している。
+
     Args:
         pep_number: 選択中のPEP番号
 
@@ -622,6 +685,10 @@ def apply_highlight_classes(
 ) -> list[dict]:
     """
     elementsにハイライト用のCSSクラスを適用する
+
+    Note:
+        この関数はclientside_callbackに移行後は使用されない。
+        後方互換性のために残している。
 
     Args:
         elements: Cytoscapeのelementsリスト
@@ -686,6 +753,10 @@ def apply_highlight_classes(
 def _clear_all_classes(elements: list[dict]) -> list[dict]:
     """
     全elementsからCSSクラスを削除する
+
+    Note:
+        この関数はclientside_callbackに移行後は使用されない。
+        後方互換性のために残している。
 
     Args:
         elements: Cytoscapeのelementsリスト
