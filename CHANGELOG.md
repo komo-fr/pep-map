@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.1] - 2026-02-26
+
+### Changed
+- Improve responsiveness when tapping a node in the network graph.
+
 ## [0.2.0] - 2026-02-26
 
 ### Added
