@@ -46,12 +46,33 @@ def create_header() -> html.Header:
                         "alignItems": "center",
                     },
                 ),
-                # 右端:  + セパレーター + ガイド + GitHubリンク
+                # 右端:  + セパレーター + ガイド + Changelog + GitHubリンク
                 html.Div(
                     [
                         html.A(
                             "Guide",
                             href="https://github.com/komo-fr/pep-map/blob/production/README.md",
+                            target="_blank",
+                            rel="noopener noreferrer",
+                            style={
+                                "color": HEADER_FONT_COLOR,
+                                "textDecoration": "underline",
+                                "fontFamily": HEADER_FONT_FAMILY,
+                                "fontSize": "15px",
+                            },
+                        ),
+                        html.Span(
+                            "|",
+                            style={
+                                "color": HEADER_FONT_COLOR,
+                                "fontFamily": HEADER_FONT_FAMILY,
+                                "fontSize": "15px",
+                                "margin": "0 8px",
+                            },
+                        ),
+                        html.A(
+                            "Changelog",
+                            href="https://github.com/komo-fr/pep-map/blob/production/CHANGELOG.md",
                             target="_blank",
                             rel="noopener noreferrer",
                             style={
