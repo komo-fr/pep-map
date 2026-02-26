@@ -426,6 +426,16 @@ def get_base_stylesheet(size_type: str = "in_degree") -> list[dict]:
             },
         },
         # === ハイライト用スタイル ===
+        # Cytoscape組み込み:selectedセレクター（即時フィードバック用）
+        {
+            "selector": ":selected",
+            "style": {
+                "border-width": 4,
+                "border-color": "#FF0000",
+                "z-index": 9999,
+                "opacity": 1,
+            },
+        },
         # 選択中ノード（赤い太枠）
         {
             "selector": ".selected",
