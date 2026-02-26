@@ -1,15 +1,15 @@
 """Timelineタブのレイアウト"""
 
-from dash import dash_table, dcc, html
+from dash import dcc, html
 
 from src.dash_app.components import (
     create_empty_figure,
     create_initial_info_message,
     create_status_legend,
+    create_pep_table,
+    create_pep_table_description,
 )
 from src.dash_app.utils.constants import (
-    STATUS_COLOR_MAP,
-    STATUS_FONT_COLOR_MAP,
     PYTHON_2_LINE_COLOR,
     PYTHON_3_LINE_COLOR,
 )
@@ -82,6 +82,18 @@ def _create_top_section() -> html.Div:
                             "color": "red",
                             "fontSize": "14px",
                             "marginTop": "4px",
+                        },
+                    ),
+                    # How to Useリンク
+                    html.A(
+                        "How to Use",
+                        href="https://github.com/komo-fr/pep-map/blob/production/README.md#timeline-tab",
+                        target="_blank",
+                        rel="noopener noreferrer",
+                        style={
+                            "fontSize": "12px",
+                            "marginTop": "4px",
+                            "display": "block",
                         },
                     ),
                 ],
@@ -227,7 +239,8 @@ def _create_tables_section() -> html.Div:
                         children="PEP N is cited by...",
                         style={"marginBottom": "8px"},
                     ),
-                    _create_pep_table("citing-peps-table"),
+                    create_pep_table_description(),
+                    create_pep_table("citing-peps-table"),
                 ],
                 style={
                     "display": "inline-block",
@@ -244,7 +257,8 @@ def _create_tables_section() -> html.Div:
                         children="PEP N links to...",
                         style={"marginBottom": "8px"},
                     ),
-                    _create_pep_table("cited-peps-table"),
+                    create_pep_table_description(),
+                    create_pep_table("cited-peps-table"),
                 ],
                 style={
                     "display": "inline-block",
@@ -254,94 +268,6 @@ def _create_tables_section() -> html.Div:
             ),
         ],
     )
-
-
-def _create_pep_table(table_id: str) -> dash_table.DataTable:  # type: ignore[name-defined]
-    """PEPテーブルを生成する"""
-    # Status列の条件付きスタイルを生成
-    status_styles = _generate_status_styles()
-
-    return dash_table.DataTable(  # type: ignore[attr-defined]
-        id=table_id,
-        columns=[
-            {"name": "#", "id": "row_num", "type": "numeric"},
-            {"name": "PEP", "id": "pep", "type": "text", "presentation": "markdown"},
-            {"name": "Title", "id": "title", "type": "text"},
-            {"name": "Status", "id": "status", "type": "text"},
-            {"name": "Created", "id": "created", "type": "text"},
-        ],
-        data=[],
-        sort_action="native",
-        sort_mode="single",
-        page_action="none",
-        style_table={
-            "overflowX": "auto",
-        },
-        style_cell={
-            "textAlign": "left",
-            "padding": "4px 6px",
-            "fontSize": "15px",
-            "height": "auto",
-            "minHeight": "18px",
-        },
-        style_cell_conditional=[
-            {"if": {"column_id": "row_num"}, "width": "40px", "textAlign": "right"},
-            {"if": {"column_id": "pep"}, "width": "80px"},
-            {
-                "if": {"column_id": "title"},
-                "width": "300px",
-                "maxWidth": "300px",
-                "whiteSpace": "normal",
-            },
-            {"if": {"column_id": "status"}, "width": "100px", "textAlign": "center"},
-            {"if": {"column_id": "created"}, "width": "100px"},
-        ],
-        style_data={
-            "lineHeight": "1.1",
-            "verticalAlign": "middle",
-        },
-        style_header={
-            "fontWeight": "bold",
-            "backgroundColor": "#f5f5f5",
-        },
-        style_data_conditional=[
-            {
-                "if": {"row_index": "odd"},
-                "backgroundColor": "#fafafa",
-            },
-            {
-                "if": {"column_id": "pep"},
-                "paddingTop": "11px",
-                "paddingBottom": "0px",
-                "fontSize": "14px",
-                "verticalAlign": "bottom",
-            },
-        ]
-        + status_styles,
-    )
-
-
-def _generate_status_styles() -> list:
-    """
-    Status列の各ステータス値に対する条件付きスタイルを生成する
-
-    Returns:
-        list: 条件付きスタイルのリスト
-    """
-    styles = []
-    for status, bg_color in STATUS_COLOR_MAP.items():
-        font_color = STATUS_FONT_COLOR_MAP.get(status, "#545454")
-        styles.append(
-            {
-                "if": {
-                    "column_id": "status",
-                    "filter_query": f'{{status}} = "{status}"',
-                },
-                "backgroundColor": bg_color,
-                "color": font_color,
-            }
-        )
-    return styles
 
 
 def _create_python_release_checkboxes() -> html.Div:
