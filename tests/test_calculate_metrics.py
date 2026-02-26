@@ -22,9 +22,14 @@ class TestBuildPepGraph:
         # Given
         citations_path = sample_data_dir / "citations.csv"
         metadata_path = sample_data_dir / "metadata.json"
+        peps_metadata_path = sample_data_dir / "peps_metadata.csv"
 
         # When
-        G = build_pep_graph(citations_path, metadata_path=metadata_path)
+        G = build_pep_graph(
+            citations_path,
+            metadata_path=metadata_path,
+            peps_metadata_path=peps_metadata_path,
+        )
 
         # Then
         assert isinstance(G, nx.DiGraph)
@@ -37,9 +42,14 @@ class TestBuildPepGraph:
         # Given
         citations_path = sample_data_dir / "citations.csv"
         metadata_path = sample_data_dir / "metadata.json"
+        peps_metadata_path = sample_data_dir / "peps_metadata.csv"
 
         # When
-        G = build_pep_graph(citations_path, metadata_path=metadata_path)
+        G = build_pep_graph(
+            citations_path,
+            metadata_path=metadata_path,
+            peps_metadata_path=peps_metadata_path,
+        )
 
         # Then
         assert "fetched_at" in G.graph
@@ -71,11 +81,19 @@ class TestBuildPepGraph:
         citations_with_invalid.write_text(
             "citing,cited,count\n1,9999,1\n9999,8,1\n1,8,1\n"
         )
-
-        valid_peps = {1, 8, 20, 234, 257, 484, 3100, 3107, 3119, 3141}
+        # 有効PEPのみを列挙したpeps_metadata.csv（9999は含めない）
+        peps_metadata_path = tmp_path / "peps_metadata.csv"
+        peps_metadata_path.write_text(
+            "pep_number,title,status,type,created,authors,topic,requires,replaces\n"
+            "1,PEP Purpose,,,2000-06-13,,,,\n"
+            "8,Style Guide,,,2001-07-05,,,,\n"
+        )
 
         # When
-        G = build_pep_graph(citations_with_invalid, valid_peps=valid_peps)
+        G = build_pep_graph(
+            citations_with_invalid,
+            peps_metadata_path=peps_metadata_path,
+        )
 
         # Then
         assert 9999 not in G.nodes()
