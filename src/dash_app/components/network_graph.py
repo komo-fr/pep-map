@@ -11,6 +11,7 @@ from src.dash_app.utils.data_loader import load_citations, load_peps_metadata
 
 # モジュールレベルでキャッシュ（アプリ起動時に一度だけ計算する）
 _cytoscape_elements_cache: list[dict] | None = None
+_valid_edges_cache: tuple[set[int], "pd.DataFrame"] | None = None
 
 
 def _load_valid_edges_df() -> tuple[set[int], "pd.DataFrame"]:
@@ -20,9 +21,16 @@ def _load_valid_edges_df() -> tuple[set[int], "pd.DataFrame"]:
     有効なエッジ: 自己ループでなく、citing/citedがともに存在するPEP番号であるもの。
     データ読み込み・有効エッジの計算を一箇所に集約し、重複と修正漏れを防ぐ。
 
+    初回呼び出し時に計算し、以降はキャッシュを返す。
+
     Returns:
         tuple[set[int], pd.DataFrame]: (存在するPEP番号のセット, 有効なエッジのみのDataFrame)
     """
+    global _valid_edges_cache
+
+    if _valid_edges_cache is not None:
+        return _valid_edges_cache
+
     peps_df = load_peps_metadata()
     citations_df = load_citations()
     existing_peps = set(peps_df["pep_number"].tolist())
@@ -32,7 +40,9 @@ def _load_valid_edges_df() -> tuple[set[int], "pd.DataFrame"]:
         & citations_df["cited"].isin(existing_peps)
     )
     edges_df = citations_df.loc[valid, ["citing", "cited"]]
-    return existing_peps, edges_df
+
+    _valid_edges_cache = (existing_peps, edges_df)
+    return _valid_edges_cache
 
 
 def build_cytoscape_elements() -> list[dict]:
@@ -202,6 +212,52 @@ def _calculate_degrees() -> dict[int, dict[str, int]]:
     return degrees
 
 
+def _calculate_adjacency_info() -> dict[int, dict[str, list[str]]]:
+    """
+    各PEPノードの隣接情報を計算する
+
+    Returns:
+        dict[int, dict[str, list[str]]]: PEP番号をキー、隣接情報を値とする辞書
+            隣接情報: {
+                "adjacent_nodes": list[str],  # 隣接ノードのID一覧
+                "incoming_edges": list[str],  # 入ってくるエッジのID一覧
+                "outgoing_edges": list[str],  # 出ていくエッジのID一覧
+            }
+    """
+    existing_peps, edges_df = _load_valid_edges_df()
+
+    # 重複を除外（同じPEP間の複数回引用は1カウント）
+    unique_edges_df = edges_df.drop_duplicates()
+
+    # 隣接情報を初期化
+    adjacency_info: dict[int, dict[str, list[str]]] = {
+        pep_num: {
+            "adjacent_nodes": [],
+            "incoming_edges": [],
+            "outgoing_edges": [],
+        }
+        for pep_num in existing_peps
+    }
+
+    # エッジを走査して隣接情報を構築
+    for _, row in unique_edges_df.iterrows():
+        citing = int(row["citing"])
+        cited = int(row["cited"])
+        edge_id = f"edge_{citing}_{cited}"
+
+        # citing側: 出ていくエッジと隣接ノードを追加
+        adjacency_info[citing]["outgoing_edges"].append(edge_id)
+        if f"pep_{cited}" not in adjacency_info[citing]["adjacent_nodes"]:
+            adjacency_info[citing]["adjacent_nodes"].append(f"pep_{cited}")
+
+        # cited側: 入ってくるエッジと隣接ノードを追加
+        adjacency_info[cited]["incoming_edges"].append(edge_id)
+        if f"pep_{citing}" not in adjacency_info[cited]["adjacent_nodes"]:
+            adjacency_info[cited]["adjacent_nodes"].append(f"pep_{citing}")
+
+    return adjacency_info
+
+
 def _calculate_node_size(degree: int) -> float:
     """
     次数に基づいてノードサイズを計算する
@@ -260,6 +316,9 @@ def _build_nodes() -> list[dict]:
     # 次数を計算
     degrees = _calculate_degrees()
 
+    # 隣接情報を計算
+    adjacency_info = _calculate_adjacency_info()
+
     nodes = []
 
     for _, row in peps_df.iterrows():
@@ -287,6 +346,12 @@ def _build_nodes() -> list[dict]:
         font_size_total_degree = _calculate_font_size(degree_info["total_degree"])
         font_size_constant = 8.0  # 一定サイズの場合は最小値
 
+        # 隣接情報を取得（存在しない場合はデフォルト値）
+        adj_info = adjacency_info.get(
+            pep_number,
+            {"adjacent_nodes": [], "incoming_edges": [], "outgoing_edges": []},
+        )
+
         node = {
             "data": {
                 "id": f"pep_{pep_number}",
@@ -305,6 +370,10 @@ def _build_nodes() -> list[dict]:
                 "font_size_out_degree": font_size_out_degree,
                 "font_size_total_degree": font_size_total_degree,
                 "font_size_constant": font_size_constant,
+                # 隣接情報（clientside_callback用）
+                "adjacent_nodes": adj_info["adjacent_nodes"],
+                "incoming_edges": adj_info["incoming_edges"],
+                "outgoing_edges": adj_info["outgoing_edges"],
             },
             "position": {
                 "x": pos[0],
@@ -426,6 +495,16 @@ def get_base_stylesheet(size_type: str = "in_degree") -> list[dict]:
             },
         },
         # === ハイライト用スタイル ===
+        # Cytoscape組み込み:selectedセレクター（即時フィードバック用）
+        {
+            "selector": ":selected",
+            "style": {
+                "border-width": 4,
+                "border-color": "#FF0000",
+                "z-index": 9999,
+                "opacity": 1,
+            },
+        },
         # 選択中ノード（赤い太枠）
         {
             "selector": ".selected",
@@ -544,154 +623,3 @@ def get_preset_layout_options() -> dict:
         "fit": True,  # グラフを画面に収める
         "padding": 30,  # 余白
     }
-
-
-def get_connected_elements(pep_number: int) -> dict:
-    """
-    指定されたPEP番号に接続しているノードとエッジを取得する
-
-    Args:
-        pep_number: 選択中のPEP番号
-
-    Returns:
-        dict: 接続情報
-            - connected_nodes: 接続しているPEP番号のセット
-            - incoming_edges: 選択ノードに入ってくるエッジIDのセット
-            - outgoing_edges: 選択ノードから出ていくエッジIDのセット
-    """
-    citations_df = load_citations()
-    peps_df = load_peps_metadata()
-
-    # 存在するPEP番号のセット
-    existing_peps = set(peps_df["pep_number"].tolist())
-
-    # 指定されたPEPが存在しない場合
-    if pep_number not in existing_peps:
-        return {
-            "connected_nodes": set(),
-            "incoming_edges": set(),
-            "outgoing_edges": set(),
-        }
-
-    # 条件でフィルタ（自己ループ・存在しないPEP・選択PEPに無関係なエッジを除外）
-    no_self = citations_df["citing"] != citations_df["cited"]
-    valid_peps = citations_df["citing"].isin(existing_peps) & citations_df[
-        "cited"
-    ].isin(existing_peps)
-    involves_pep = (citations_df["citing"] == pep_number) | (
-        citations_df["cited"] == pep_number
-    )
-    filtered = citations_df.loc[no_self & valid_peps & involves_pep]
-
-    # 接続ノード: 選択PEPが引用元なら cited、引用先なら citing
-    connected_nodes = set(
-        filtered.loc[filtered["citing"] == pep_number, "cited"]
-    ) | set(filtered.loc[filtered["cited"] == pep_number, "citing"])
-
-    # 入ってくるエッジ（他のPEPから選択PEPへ）
-    incoming = filtered.loc[filtered["cited"] == pep_number]
-    incoming_edges = set(
-        "edge_" + incoming["citing"].astype(str) + "_" + incoming["cited"].astype(str)
-    )
-
-    # 出ていくエッジ（選択PEPから他のPEPへ）
-    outgoing = filtered.loc[filtered["citing"] == pep_number]
-    outgoing_edges = set(
-        "edge_" + outgoing["citing"].astype(str) + "_" + outgoing["cited"].astype(str)
-    )
-
-    return {
-        "connected_nodes": connected_nodes,
-        "incoming_edges": incoming_edges,
-        "outgoing_edges": outgoing_edges,
-    }
-
-
-def apply_highlight_classes(
-    elements: list[dict], selected_pep_number: int | None
-) -> list[dict]:
-    """
-    elementsにハイライト用のCSSクラスを適用する
-
-    Args:
-        elements: Cytoscapeのelementsリスト
-        selected_pep_number: 選択中のPEP番号（Noneの場合はハイライトなし）
-
-    Returns:
-        list[dict]: CSSクラスが適用されたelementsリスト
-    """
-    # PEPが選択されていない場合、クラスをクリアして返す
-    if selected_pep_number is None:
-        return _clear_all_classes(elements)
-
-    # 接続情報を取得
-    connection_info = get_connected_elements(selected_pep_number)
-    connected_nodes = connection_info["connected_nodes"]
-    incoming_edges = connection_info["incoming_edges"]
-    outgoing_edges = connection_info["outgoing_edges"]
-
-    updated_elements = []
-
-    for element in elements:
-        data = element["data"]
-        new_element = {"data": data.copy()}
-
-        # ノードの場合は position も保持する
-        if "position" in element:
-            new_element["position"] = element["position"]
-
-        # ノードの場合
-        if "source" not in data:
-            pep_num = data["pep_number"]
-
-            if pep_num == selected_pep_number:
-                # 選択中ノード
-                new_element["classes"] = "selected"
-            elif pep_num in connected_nodes:
-                # 接続ノード
-                new_element["classes"] = "connected"
-            else:
-                # 非接続ノード
-                new_element["classes"] = "faded"
-
-        # エッジの場合
-        else:
-            edge_id = data["id"]
-
-            if edge_id in incoming_edges:
-                # 入ってくるエッジ（橙色）
-                new_element["classes"] = "incoming-edge"
-            elif edge_id in outgoing_edges:
-                # 出ていくエッジ（青色）
-                new_element["classes"] = "outgoing-edge"
-            else:
-                # 非接続エッジ
-                new_element["classes"] = "faded"
-
-        updated_elements.append(new_element)
-
-    return updated_elements
-
-
-def _clear_all_classes(elements: list[dict]) -> list[dict]:
-    """
-    全elementsからCSSクラスを削除する
-
-    Args:
-        elements: Cytoscapeのelementsリスト
-
-    Returns:
-        list[dict]: クラスが削除されたelementsリスト
-    """
-    updated_elements = []
-
-    for element in elements:
-        new_element = {"data": element["data"].copy()}
-        # ノードの場合は position も保持する
-        if "position" in element:
-            new_element["position"] = element["position"]
-        # 明示的に空文字列を設定してクラスをクリア
-        new_element["classes"] = ""
-        updated_elements.append(new_element)
-
-    return updated_elements

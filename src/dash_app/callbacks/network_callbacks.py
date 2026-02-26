@@ -6,8 +6,6 @@ from src.dash_app.components import (
     parse_pep_number,
     create_pep_info_display,
     create_network_initial_info_message,
-    build_cytoscape_elements,
-    apply_highlight_classes,
     convert_df_to_table_data,
     get_base_stylesheet,
 )
@@ -27,6 +25,7 @@ def register_network_callbacks(app):
         app: Dashアプリケーションインスタンス
     """
 
+    # ===== PEP情報更新コールバック（サーバーサイド） =====
     @app.callback(
         Output("network-pep-info-display", "children"),
         Output("network-pep-error-message", "children"),
@@ -60,6 +59,7 @@ def register_network_callbacks(app):
         # 存在する場合: PEP情報を表示
         return create_pep_info_display(pep_data), ""
 
+    # ===== ノードタップ → 入力欄更新コールバック（サーバーサイド） =====
     @app.callback(
         Output("network-pep-input", "value"),
         Input("network-graph", "tapNodeData"),
@@ -97,39 +97,88 @@ def register_network_callbacks(app):
 
         return no_update
 
-    @app.callback(
+    # ===== ハイライト更新コールバック（クライアントサイド） =====
+    app.clientside_callback(
+        """
+        function(inputValue, currentElements) {
+            // inputValueが空の場合はクラスをクリア
+            if (!inputValue || inputValue === '') {
+                return currentElements.map(function(el) {
+                    var newEl = JSON.parse(JSON.stringify(el));
+                    newEl.classes = '';
+                    return newEl;
+                });
+            }
+
+            // 選択されたPEP番号を取得
+            var selectedPepNumber = parseInt(inputValue, 10);
+            if (isNaN(selectedPepNumber)) {
+                return window.dash_clientside.no_update;
+            }
+
+            var selectedNodeId = 'pep_' + selectedPepNumber;
+
+            // 選択ノードを探す
+            var selectedNode = null;
+            for (var i = 0; i < currentElements.length; i++) {
+                if (currentElements[i].data && currentElements[i].data.id === selectedNodeId) {
+                    selectedNode = currentElements[i];
+                    break;
+                }
+            }
+
+            // 選択ノードが見つからない場合は更新しない
+            if (!selectedNode) {
+                return window.dash_clientside.no_update;
+            }
+
+            // 隣接情報を取得
+            var adjacentNodes = selectedNode.data.adjacent_nodes || [];
+            var incomingEdges = selectedNode.data.incoming_edges || [];
+            var outgoingEdges = selectedNode.data.outgoing_edges || [];
+
+            // セットに変換（高速検索用）
+            var adjacentNodesSet = new Set(adjacentNodes);
+            var incomingEdgesSet = new Set(incomingEdges);
+            var outgoingEdgesSet = new Set(outgoingEdges);
+
+            // elementsを更新
+            return currentElements.map(function(el) {
+                var newEl = JSON.parse(JSON.stringify(el));
+                var data = newEl.data;
+
+                // ノードの場合
+                if (!data.source) {
+                    if (data.id === selectedNodeId) {
+                        newEl.classes = 'selected';
+                    } else if (adjacentNodesSet.has(data.id)) {
+                        newEl.classes = 'connected';
+                    } else {
+                        newEl.classes = 'faded';
+                    }
+                }
+                // エッジの場合
+                else {
+                    if (incomingEdgesSet.has(data.id)) {
+                        newEl.classes = 'incoming-edge';
+                    } else if (outgoingEdgesSet.has(data.id)) {
+                        newEl.classes = 'outgoing-edge';
+                    } else {
+                        newEl.classes = 'faded';
+                    }
+                }
+
+                return newEl;
+            });
+        }
+        """,
         Output("network-graph", "elements"),
         Input("network-pep-input", "value"),
         State("network-graph", "elements"),
+        prevent_initial_call=True,
     )
-    def update_graph_highlight(pep_number, current_elements):
-        """
-        PEP番号入力に連動してグラフのハイライトを更新する
 
-        ユーザーが手動でノードを移動した位置を保持するため、
-        現在の elements の状態を State として取得する。
-
-        Args:
-            pep_number: 入力されたPEP番号
-            current_elements: 現在のグラフのelements（ユーザー移動後の位置を含む）
-
-        Returns:
-            list[dict]: ハイライトが適用されたelements
-        """
-        # 現在の elements がない場合（初回）はキャッシュから取得
-        if current_elements is None:
-            elements = build_cytoscape_elements()
-        else:
-            elements = current_elements
-
-        # PEP番号を解析
-        pep_number = parse_pep_number(pep_number)
-
-        # ハイライトを適用
-        highlighted_elements = apply_highlight_classes(elements, pep_number)
-
-        return highlighted_elements
-
+    # ===== テーブルタイトル更新コールバック（サーバーサイド） =====
     @app.callback(
         Output("network-citing-peps-title", "children"),
         Output("network-cited-peps-title", "children"),
@@ -147,6 +196,7 @@ def register_network_callbacks(app):
         """
         return compute_table_titles(pep_number)
 
+    # ===== テーブルデータ更新コールバック（サーバーサイド） =====
     @app.callback(
         Output("network-citing-peps-table", "data"),
         Output("network-cited-peps-table", "data"),
@@ -179,6 +229,7 @@ def register_network_callbacks(app):
 
         return citing_table_data, cited_table_data
 
+    # ===== スタイルシート更新コールバック（サーバーサイド） =====
     @app.callback(
         Output("network-graph", "stylesheet"),
         Input("network-node-size-type", "value"),
