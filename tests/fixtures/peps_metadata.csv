@@ -1,0 +1,11 @@
+pep_number,title,status,type,created,authors,topic,requires,replaces
+1,PEP Purpose and Guidelines,Active,Process,2000-06-13,Barry Warsaw,,,
+8,Style Guide for Python Code,Active,Process,2001-07-05,Guido van Rossum,,,
+20,The Zen of Python,Active,Informational,2004-08-19,Tim Peters,,,
+234,Iterators,Final,Standards Track,2000-03-03,Ka-Ping Yee,,,
+257,Docstring Conventions,Active,Informational,2001-05-29,David Goodger,,,
+484,Type Hints,Final,Standards Track,2014-09-29,Guido van Rossum,typing,,
+3100,Miscellaneous Python 3.0 Plans,Final,Process,2006-04-17,Brett Cannon,,,
+3107,Function Annotations,Final,Standards Track,2006-12-02,Collin Winter,typing,,
+3119,Introducing Abstract Base Classes,Final,Standards Track,2007-04-04,Guido van Rossum,typing,,
+3141,A Type Hierarchy for Numbers,Final,Standards Track,2007-04-23,Jeffrey Yasskin,typing,,
