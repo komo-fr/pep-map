@@ -107,29 +107,21 @@ def calculate_node_metrics(G: nx.DiGraph) -> pd.DataFrame:
     """
     logger.info("Calculating node metrics")
 
-    # 各メトリクスを計算
-    metrics = []
-
-    # PageRankを計算
+    # 各メトリクスを辞書で一括取得
+    in_degrees = dict(G.in_degree())
+    out_degrees = dict(G.out_degree())
     pagerank_dict = nx.pagerank(G, alpha=0.85)
 
-    for node in G.nodes():
-        in_deg = G.in_degree(node)
-        out_deg = G.out_degree(node)
-        total_deg = in_deg + out_deg
-        pr = pagerank_dict[node]
-
-        metrics.append(
-            {
-                "pep_number": node,
-                "in_degree": in_deg,
-                "out_degree": out_deg,
-                "degree": total_deg,
-                "pagerank": pr,
-            }
-        )
-
-    metrics_df = pd.DataFrame(metrics)
+    nodes = list(G.nodes())
+    metrics_df = pd.DataFrame(
+        {
+            "pep_number": nodes,
+            "in_degree": [in_degrees[n] for n in nodes],
+            "out_degree": [out_degrees[n] for n in nodes],
+            "degree": [in_degrees[n] + out_degrees[n] for n in nodes],
+            "pagerank": [pagerank_dict[n] for n in nodes],
+        }
+    )
 
     logger.info(f"Calculated metrics for {len(metrics_df)} PEPs")
     logger.info(f"PageRank sum: {metrics_df['pagerank'].sum():.6f}")
