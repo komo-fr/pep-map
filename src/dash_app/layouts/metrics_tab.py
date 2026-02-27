@@ -3,6 +3,7 @@
 from dash import dash_table, html
 
 from src.dash_app.components.pep_tables import generate_status_styles
+from src.dash_app.utils.data_loader import load_metadata
 
 
 def create_metrics_tab_layout() -> html.Div:
@@ -12,6 +13,9 @@ def create_metrics_tab_layout() -> html.Div:
     Returns:
         html.Div: PEP Metricsタブのレイアウト
     """
+    # データ取得日付を取得
+    metadata = load_metadata()
+    fetched_at = metadata["fetched_at"]
 
     return html.Div(
         [
@@ -55,6 +59,46 @@ def create_metrics_tab_layout() -> html.Div:
                 style={
                     "fontSize": "14px",
                     "color": "#333",
+                },
+            ),
+            # メタデータセクション
+            html.Div(
+                [
+                    html.Span(
+                        [
+                            html.Span("Data as of:", style={"fontWeight": "bold"}),
+                            f" {fetched_at}",
+                        ],
+                        style={
+                            "fontSize": "12px",
+                            "color": "#666",
+                            "marginRight": "12px",
+                        },
+                    ),
+                    html.Span(
+                        "|",
+                        style={
+                            "fontSize": "12px",
+                            "color": "#999",
+                            "marginRight": "12px",
+                        },
+                    ),
+                    html.A(
+                        "Download CSV",
+                        href="https://raw.githubusercontent.com/komo-fr/pep-map/production/data/processed/node_metrics.csv",
+                        style={
+                            "fontSize": "12px",
+                            "color": "#0066cc",
+                            "textDecoration": "underline",
+                            "cursor": "pointer",
+                        },
+                    ),
+                ],
+                style={
+                    "marginBottom": "16px",
+                    "display": "flex",
+                    "alignItems": "center",
+                    "justifyContent": "flex-end",
                 },
             ),
             # メトリクステーブル
