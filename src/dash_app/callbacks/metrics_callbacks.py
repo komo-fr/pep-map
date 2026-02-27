@@ -1,6 +1,6 @@
 """PEP Metricsタブのコールバック関数"""
 
-from dash import Input, Output
+from dash import Input, Output, callback_context
 
 from src.dash_app.utils.data_loader import (
     load_peps_with_metrics,
@@ -20,25 +20,34 @@ def register_metrics_callbacks(app):
         [
             Output("metrics-table", "data"),
             Output("metrics-table", "style_data_conditional"),
+            Output("metrics-table", "page_count"),
         ],
-        Input("main-tabs", "value"),  # タブが切り替わったら更新
+        [
+            Input("main-tabs", "value"),  # タブが切り替わったら更新
+            Input("metrics-table", "page_current"),  # ページ切り替え
+            Input("metrics-table", "sort_by"),  # ソート変更
+        ],
     )
-    def update_metrics_table(active_tab: str) -> tuple[list[dict], list[dict]]:
+    def update_metrics_table(
+        active_tab: str, page_current: int, sort_by: list
+    ) -> tuple[list[dict], list[dict], int]:
         """
-        メトリクステーブルのデータとスタイルを更新
+        メトリクステーブルのデータとスタイルを更新（サーバサイドページング）
 
         スタイル条件（data_bars）はアプリ起動時に事前計算しているため、
-        ここではデータのみを更新する
+        ここではデータのみを更新する。
 
         Args:
             active_tab: アクティブなタブのvalue
+            page_current: 現在のページ番号（0-indexed）
+            sort_by: ソート設定のリスト
 
         Returns:
             tuple: (テーブルデータ, style_data_conditional)
         """
         if active_tab != "metrics":
             # Metricsタブ以外では更新しない（パフォーマンス向上）
-            return [], load_metrics_styles()
+            return [], load_metrics_styles(), 0
 
         # PEP基本情報 + メトリクスを取得
         df = load_peps_with_metrics()
@@ -52,13 +61,30 @@ def register_metrics_callbacks(app):
         if "pagerank" in df.columns:
             df["pagerank"] = df["pagerank"].round(4)
 
+        # ソート処理（全データに対して実行）
+        if sort_by and len(sort_by) > 0:
+            sort_col = sort_by[0]["column_id"]
+            sort_direction = sort_by[0]["direction"]
+            is_ascending = sort_direction == "asc"
+
+            # ソート用列がメトリクス関連の場合の処理
+            if sort_col in ["in_degree", "out_degree", "degree", "pagerank"]:
+                df = df.sort_values(sort_col, ascending=is_ascending)
+            else:
+                df = df.sort_values(sort_col, ascending=is_ascending)
+
         # created列を文字列に変換（YYYY-MM-DD形式）
         if "created" in df.columns:
             df["created"] = df["created"].dt.strftime("%Y-%m-%d")
 
+        # ページング処理（指定されたページのデータのみを抽出）
+        page_size = 50
+        offset = (page_current or 0) * page_size
+        paged_df = df.iloc[offset : offset + page_size]
+
         # 辞書のリストに変換（Markdownリンクは事前計算済み）
         table_data = []
-        for _, row in df.iterrows():
+        for _, row in paged_df.iterrows():
             table_data.append(
                 {
                     "pep": row["pep_markdown"],  # 事前計算されたMarkdownリンク
@@ -73,5 +99,83 @@ def register_metrics_callbacks(app):
                 }
             )
 
+        # 全ページ数を計算
+        page_size = 50
+        total_rows = len(df)
+        total_pages = (total_rows + page_size - 1) // page_size  # 切り上げ
+
         # スタイル条件はアプリ起動時に事前計算したものをキャッシュから取得
-        return table_data, load_metrics_styles()
+        return table_data, load_metrics_styles(), total_pages
+
+    @app.callback(
+        [
+            Output("metrics-table", "page_current"),
+            Output("metrics-pagination", "active_page"),
+            Output("metrics-pagination-bottom", "active_page"),
+        ],
+        [
+            Input("metrics-pagination", "active_page"),
+            Input("metrics-pagination-bottom", "active_page"),
+        ],
+    )
+    def sync_pagination_and_table(
+        top_active_page: int, bottom_active_page: int
+    ) -> tuple[int, int, int]:
+        """
+        上下のページネーションボタンとDataTableを同期
+
+        ページネーションボタンがクリックされたら：
+        1. DataTableのページを更新
+        2. もう一方のページネーションボタンも同期
+
+        Args:
+            top_active_page: 上のページネーションボタンのページ番号（1-indexed）
+            bottom_active_page: 下のページネーションボタンのページ番号（1-indexed）
+
+        Returns:
+            tuple: (DataTableのpage_current, 上のページネーション, 下のページネーション)
+        """
+        ctx = callback_context
+
+        # どのコンポーネントがトリガーされたかを確認
+        if not ctx.triggered:
+            return 0, 1, 1
+
+        triggered_id = ctx.triggered[0]["prop_id"].split(".")[0]
+
+        # トリガーされたコンポーネントから値を取得
+        if triggered_id == "metrics-pagination":
+            active_page = top_active_page
+        elif triggered_id == "metrics-pagination-bottom":
+            active_page = bottom_active_page
+        else:
+            return 0, 1, 1
+
+        if active_page is None:
+            return 0, 1, 1
+
+        # dbc.Paginationは1-indexed、DataTableは0-indexedなので変換
+        page_current = active_page - 1
+
+        # DataTableとページネーションボタンを同期（両方同じページを表示）
+        return page_current, active_page, active_page
+
+    @app.callback(
+        [
+            Output("metrics-pagination", "max_value"),
+            Output("metrics-pagination-bottom", "max_value"),
+        ],
+        Input("metrics-table", "page_count"),
+    )
+    def update_pagination_max_values(page_count: int) -> tuple[int, int]:
+        """
+        DataTableのページ数から、上下のページネーションボタンの最大値を更新する
+
+        Args:
+            page_count: DataTableの全ページ数
+
+        Returns:
+            tuple: (上のページネーション、下のページネーション)の最大値
+        """
+        max_value = page_count or 1
+        return max_value, max_value

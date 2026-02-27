@@ -1,6 +1,7 @@
 """PEP Metricsタブのレイアウト"""
 
 from dash import dash_table, html
+import dash_bootstrap_components as dbc
 
 from src.dash_app.utils.data_loader import load_metadata
 
@@ -100,6 +101,20 @@ def create_metrics_tab_layout() -> html.Div:
                     "justifyContent": "flex-end",
                 },
             ),
+            # ページネーションコンポーネント（テーブルの上）
+            html.Div(
+                dbc.Pagination(
+                    id="metrics-pagination",
+                    max_value=15,  # 初期値（コールバックで更新）
+                    fully_expanded=False,  # 中程度の表示（... で省略）
+                    first_last=True,  # 最初・最後のボタンを表示
+                ),
+                style={
+                    "marginBottom": "16px",
+                    "display": "flex",
+                    "justifyContent": "center",
+                },
+            ),
             # メトリクステーブル
             dash_table.DataTable(
                 id="metrics-table",
@@ -119,9 +134,11 @@ def create_metrics_tab_layout() -> html.Div:
                     {"name": "PageRank ⓘ", "id": "pagerank", "type": "numeric"},
                 ],
                 data=[],  # 初期は空、コールバックで更新
-                sort_action="native",  # ソート機能を有効化
+                sort_action="custom",  # サーバサイドソート
                 sort_mode="single",
-                page_action="none",  # ページングなし
+                page_action="custom",  # サーバサイドページング
+                page_size=50,  # 1ページあたり50行
+                page_count=0,  # 全ページ数（コールバックで更新）
                 style_table={
                     "overflowX": "auto",
                 },
@@ -190,6 +207,20 @@ def create_metrics_tab_layout() -> html.Div:
                         "rule": "background-color: #222; color: white; font-size: 12px;",
                     }
                 ],
+            ),
+            # ページネーションコンポーネント（テーブルの下）
+            html.Div(
+                dbc.Pagination(
+                    id="metrics-pagination-bottom",
+                    max_value=15,  # 初期値（コールバックで更新）
+                    fully_expanded=False,  # 中程度の表示（... で省略）
+                    first_last=True,  # 最初・最後のボタンを表示
+                ),
+                style={
+                    "marginTop": "16px",
+                    "display": "flex",
+                    "justifyContent": "center",
+                },
             ),
         ],
         style={
