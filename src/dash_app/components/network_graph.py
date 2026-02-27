@@ -275,7 +275,7 @@ def _calculate_node_size_pagerank(pagerank: float, multiplier: float = 2000.0) -
         float: ノードサイズ（ピクセル）
     """
     if pagerank <= 0:
-        return 10
+        return 10.0
     return 10.0 * ((pagerank * multiplier) ** 0.5)
 
 
