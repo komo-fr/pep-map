@@ -40,7 +40,7 @@ def data_bars(df: pd.DataFrame, column: str) -> list[dict]:
                     ).format(column=column, min_bound=min_bound, max_bound=max_bound),
                     "column_id": column,
                 },
-                "background": (
+                "backgroundImage": (
                     """
                     linear-gradient(90deg,
                     rgba(25, 118, 210, 0.35) 0%,
