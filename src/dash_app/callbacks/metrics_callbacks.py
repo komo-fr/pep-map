@@ -119,21 +119,24 @@ def register_metrics_callbacks(app):
             total_pages = (total_rows + page_size - 1) // page_size  # 切り上げ
 
         # 辞書のリストに変換（Markdownリンクは事前計算済み）
-        table_data = []
-        for _, row in paged_df.iterrows():
-            table_data.append(
-                {
-                    "pep": row["pep_markdown"],  # 事前計算されたMarkdownリンク
-                    "pep_number": row["pep_number"],  # ソート用
-                    "title": row["title"],
-                    "status": row["status"],
-                    "created": row["created"],
-                    "in_degree": row.get("in_degree", 0),
-                    "out_degree": row.get("out_degree", 0),
-                    "degree": row.get("degree", 0),
-                    "pagerank": row.get("pagerank", 0),
-                }
-            )
+        table_data = (
+            paged_df[
+                [
+                    "pep_markdown",
+                    "pep_number",
+                    "title",
+                    "status",
+                    "created",
+                    "in_degree",
+                    "out_degree",
+                    "degree",
+                    "pagerank",
+                ]
+            ]
+            .fillna(0)
+            .rename(columns={"pep_markdown": "pep"})
+            .to_dict("records")
+        )
 
         # スタイル条件はアプリ起動時に事前計算したものをキャッシュから取得
         return table_data, load_metrics_styles(), total_pages
