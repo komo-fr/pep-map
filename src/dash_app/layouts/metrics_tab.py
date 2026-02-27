@@ -101,18 +101,77 @@ def create_metrics_tab_layout() -> html.Div:
                     "justifyContent": "flex-end",
                 },
             ),
-            # ページネーションコンポーネント（テーブルの上）
+            # ページサイズ選択 + ページネーションコンポーネント（テーブルの上）
             html.Div(
-                dbc.Pagination(
-                    id="metrics-pagination",
-                    max_value=15,  # 初期値（コールバックで更新）
-                    fully_expanded=False,  # 中程度の表示（... で省略）
-                    first_last=True,  # 最初・最後のボタンを表示
-                ),
+                [
+                    # ページサイズドロップダウン
+                    html.Div(
+                        [
+                            html.Label(
+                                "Rows per page:",
+                                style={
+                                    "marginRight": "6px",
+                                    "fontSize": "13px",
+                                    "fontWeight": "500",
+                                    "whiteSpace": "nowrap",
+                                    "lineHeight": "1",
+                                    "margin": "0",
+                                    "padding": "0",
+                                    "display": "flex",
+                                    "alignItems": "center",
+                                },
+                            ),
+                            dbc.Select(
+                                id="metrics-page-size-select",
+                                options=[
+                                    {"label": "50", "value": 50},
+                                    {"label": "100", "value": 100},
+                                    {"label": "200", "value": 200},
+                                    {"label": "All", "value": -1},
+                                ],
+                                value=50,
+                                style={
+                                    "width": "80px",
+                                    "height": "32px",
+                                    "fontSize": "13px",
+                                    "margin": "0 !important",
+                                    "padding": "4px 6px",
+                                },
+                            ),
+                        ],
+                        style={
+                            "display": "flex",
+                            "alignItems": "center",
+                            "margin": "0",
+                            "padding": "0",
+                        },
+                    ),
+                    # ページネーション
+                    html.Div(
+                        dbc.Pagination(
+                            id="metrics-pagination",
+                            max_value=15,  # 初期値（コールバックで更新）
+                            fully_expanded=False,  # 中程度の表示（... で省略）
+                            first_last=True,  # 最初・最後のボタンを表示
+                            size="sm",  # 小さいサイズ
+                            class_name="metrics-pagination-custom",
+                        ),
+                        style={
+                            "display": "flex",
+                            "justifyContent": "flex-end",
+                            "margin": "0",
+                            "padding": "0",
+                        },
+                    ),
+                ],
                 style={
                     "marginBottom": "16px",
                     "display": "flex",
-                    "justifyContent": "center",
+                    "alignItems": "flex-start",
+                    "justifyContent": "space-between",
+                    "gap": "16px",
+                    "margin": "0",
+                    "padding": "0",
                 },
             ),
             # メトリクステーブル
@@ -205,7 +264,11 @@ def create_metrics_tab_layout() -> html.Div:
                     {
                         "selector": ".dash-table-tooltip",
                         "rule": "background-color: #222; color: white; font-size: 12px;",
-                    }
+                    },
+                    {
+                        "selector": ".previous-next-container",
+                        "rule": "display: none;",
+                    },
                 ],
             ),
             # ページネーションコンポーネント（テーブルの下）
@@ -215,11 +278,12 @@ def create_metrics_tab_layout() -> html.Div:
                     max_value=15,  # 初期値（コールバックで更新）
                     fully_expanded=False,  # 中程度の表示（... で省略）
                     first_last=True,  # 最初・最後のボタンを表示
+                    size="sm",  # 小さいサイズ
                 ),
                 style={
                     "marginTop": "16px",
                     "display": "flex",
-                    "justifyContent": "center",
+                    "justifyContent": "flex-end",
                 },
             ),
         ],

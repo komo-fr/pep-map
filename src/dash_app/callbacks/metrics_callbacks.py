@@ -26,10 +26,11 @@ def register_metrics_callbacks(app):
             Input("main-tabs", "value"),  # タブが切り替わったら更新
             Input("metrics-table", "page_current"),  # ページ切り替え
             Input("metrics-table", "sort_by"),  # ソート変更
+            Input("metrics-page-size-select", "value"),  # ページサイズ変更
         ],
     )
     def update_metrics_table(
-        active_tab: str, page_current: int, sort_by: list
+        active_tab: str, page_current: int, sort_by: list, page_size: int
     ) -> tuple[list[dict], list[dict], int]:
         """
         メトリクステーブルのデータとスタイルを更新（サーバサイドページング）
@@ -41,13 +42,17 @@ def register_metrics_callbacks(app):
             active_tab: アクティブなタブのvalue
             page_current: 現在のページ番号（0-indexed）
             sort_by: ソート設定のリスト
+            page_size: 1ページあたりの行数（-1の場合は全データ）
 
         Returns:
-            tuple: (テーブルデータ, style_data_conditional)
+            tuple: (テーブルデータ, style_data_conditional, 全ページ数)
         """
         if active_tab != "metrics":
             # Metricsタブ以外では更新しない（パフォーマンス向上）
             return [], load_metrics_styles(), 0
+
+        # page_sizeを整数に変換（dbc.Selectから文字列で受け取るため）
+        page_size = int(page_size)
 
         # PEP基本情報 + メトリクスを取得
         df = load_peps_with_metrics()
@@ -77,10 +82,19 @@ def register_metrics_callbacks(app):
         if "created" in df.columns:
             df["created"] = df["created"].dt.strftime("%Y-%m-%d")
 
-        # ページング処理（指定されたページのデータのみを抽出）
-        page_size = 50
-        offset = (page_current or 0) * page_size
-        paged_df = df.iloc[offset : offset + page_size]
+        # ページサイズが-1（全データ）の場合の処理
+        if page_size == -1:
+            # 全データを表示（ページングなし）
+            paged_df = df
+            total_pages = 1
+        else:
+            # ページング処理（指定されたページのデータのみを抽出）
+            offset = (page_current or 0) * page_size
+            paged_df = df.iloc[offset : offset + page_size]
+
+            # 全ページ数を計算
+            total_rows = len(df)
+            total_pages = (total_rows + page_size - 1) // page_size  # 切り上げ
 
         # 辞書のリストに変換（Markdownリンクは事前計算済み）
         table_data = []
@@ -99,11 +113,6 @@ def register_metrics_callbacks(app):
                 }
             )
 
-        # 全ページ数を計算
-        page_size = 50
-        total_rows = len(df)
-        total_pages = (total_rows + page_size - 1) // page_size  # 切り上げ
-
         # スタイル条件はアプリ起動時に事前計算したものをキャッシュから取得
         return table_data, load_metrics_styles(), total_pages
 
@@ -116,21 +125,25 @@ def register_metrics_callbacks(app):
         [
             Input("metrics-pagination", "active_page"),
             Input("metrics-pagination-bottom", "active_page"),
+            Input("metrics-page-size-select", "value"),
         ],
     )
     def sync_pagination_and_table(
-        top_active_page: int, bottom_active_page: int
+        top_active_page: int, bottom_active_page: int, page_size: int
     ) -> tuple[int, int, int]:
         """
-        上下のページネーションボタンとDataTableを同期
+        上下のページネーションボタンとDataTableを同期、ページサイズ変更対応
 
         ページネーションボタンがクリックされたら：
         1. DataTableのページを更新
         2. もう一方のページネーションボタンも同期
 
+        ページサイズが変更されたら、ページを1ページ目にリセット
+
         Args:
             top_active_page: 上のページネーションボタンのページ番号（1-indexed）
             bottom_active_page: 下のページネーションボタンのページ番号（1-indexed）
+            page_size: 選択されたページサイズ
 
         Returns:
             tuple: (DataTableのpage_current, 上のページネーション, 下のページネーション)
@@ -142,6 +155,10 @@ def register_metrics_callbacks(app):
             return 0, 1, 1
 
         triggered_id = ctx.triggered[0]["prop_id"].split(".")[0]
+
+        # ページサイズが変更された場合は、ページをリセット
+        if triggered_id == "metrics-page-size-select":
+            return 0, 1, 1
 
         # トリガーされたコンポーネントから値を取得
         if triggered_id == "metrics-pagination":
@@ -159,6 +176,28 @@ def register_metrics_callbacks(app):
 
         # DataTableとページネーションボタンを同期（両方同じページを表示）
         return page_current, active_page, active_page
+
+    @app.callback(
+        Output("metrics-table", "page_size"),
+        Input("metrics-page-size-select", "value"),
+    )
+    def update_table_page_size(selected_page_size) -> int:
+        """
+        ドロップダウンで選択されたページサイズをテーブルに反映
+
+        Args:
+            selected_page_size: ドロップダウンで選択されたページサイズ（-1は全データ）
+
+        Returns:
+            int: テーブルに設定するページサイズ
+        """
+        # 文字列から整数に変換
+        page_size = int(selected_page_size)
+
+        # -1（全データ）の場合は、十分に大きな数を返す（ページングが無効化される）
+        if page_size == -1:
+            return 10000
+        return page_size
 
     @app.callback(
         [
