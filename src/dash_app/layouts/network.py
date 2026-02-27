@@ -170,6 +170,7 @@ def _create_toolbar_section(fetched_at: str) -> html.Div:
                                     {"label": "In-degree", "value": "in_degree"},
                                     {"label": "Out-degree", "value": "out_degree"},
                                     {"label": "Degree", "value": "total_degree"},
+                                    {"label": "PageRank", "value": "pagerank"},
                                     {"label": "Constant", "value": "constant"},
                                 ],
                                 value="in_degree",
