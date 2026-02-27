@@ -49,6 +49,7 @@ def register_metrics_callbacks(app):
             page_current: 現在のページ番号（0-indexed）
             sort_by: ソート設定のリスト
             page_size: 1ページあたりの行数（-1の場合は全データ）
+            search_query: タイトル検索用の文字列（スペース区切りでAND検索）
 
         Returns:
             tuple: (テーブルデータ, style_data_conditional, 全ページ数)
