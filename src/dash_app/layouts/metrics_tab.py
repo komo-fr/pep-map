@@ -206,7 +206,6 @@ def create_metrics_tab_layout() -> html.Div:
                     ),
                 ],
                 style={
-                    "marginBottom": "16px",
                     "display": "flex",
                     "alignItems": "flex-start",
                     "justifyContent": "space-between",
