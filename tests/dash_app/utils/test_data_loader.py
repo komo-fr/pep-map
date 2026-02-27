@@ -88,6 +88,60 @@ class TestLoadFunctions:
 
         assert re.match(r"\d{4}-\d{2}-\d{2}", metadata["fetched_at"])
 
+    def test_load_node_metrics(self, mock_data_files, monkeypatch):
+        """node_metrics.csvが正しく読み込まれるか"""
+        # キャッシュをクリア
+        data_loader.clear_cache()
+
+        # DATA_DIRをモック
+        monkeypatch.setattr("src.dash_app.utils.data_loader.DATA_DIR", mock_data_files)
+
+        df = data_loader.load_node_metrics()
+
+        assert isinstance(df, pd.DataFrame)
+        assert "pep_number" in df.columns
+        assert "in_degree" in df.columns
+        assert "out_degree" in df.columns
+        assert "degree" in df.columns
+        assert "pagerank" in df.columns
+
+    def test_load_node_metrics_caching(self, mock_data_files, monkeypatch):
+        """2回目以降はキャッシュから読み込まれるか"""
+        # キャッシュをクリア
+        data_loader.clear_cache()
+
+        monkeypatch.setattr("src.dash_app.utils.data_loader.DATA_DIR", mock_data_files)
+
+        # 1回目の読み込み
+        df1 = data_loader.load_node_metrics()
+        # 2回目の読み込み（キャッシュから）
+        df2 = data_loader.load_node_metrics()
+
+        # 同じオブジェクトであることを確認
+        assert df1 is df2
+
+    def test_load_node_metrics_file_not_found(self, tmp_path, monkeypatch):
+        """node_metrics.csvが存在しない場合は空のDataFrameを返す"""
+        # キャッシュをクリア
+        data_loader.clear_cache()
+
+        # 空のディレクトリを使用
+        empty_dir = tmp_path / "empty"
+        empty_dir.mkdir()
+        monkeypatch.setattr("src.dash_app.utils.data_loader.DATA_DIR", empty_dir)
+
+        df = data_loader.load_node_metrics()
+
+        assert isinstance(df, pd.DataFrame)
+        assert len(df) == 0
+        assert list(df.columns) == [
+            "pep_number",
+            "in_degree",
+            "out_degree",
+            "degree",
+            "pagerank",
+        ]
+
 
 class TestGetPepByNumber:
     """get_pep_by_number関数のテスト"""
@@ -386,6 +440,76 @@ class TestGetPythonReleasesForStore:
 
         for item in result["python2"] + result["python3"]:
             assert isinstance(item["version"], str)
+
+
+class TestLoadPepsWithMetrics:
+    """load_peps_with_metrics関数のテスト"""
+
+    def test_load_peps_with_metrics(self, mock_data_files, monkeypatch):
+        """PEP基本情報とメトリクスが統合されるか"""
+        # キャッシュをクリア
+        data_loader.clear_cache()
+
+        monkeypatch.setattr("src.dash_app.utils.data_loader.DATA_DIR", mock_data_files)
+
+        df = data_loader.load_peps_with_metrics()
+
+        # peps_metadata.csvの列
+        assert "pep_number" in df.columns
+        assert "title" in df.columns
+        assert "status" in df.columns
+
+        # node_metrics.csvの列
+        assert "in_degree" in df.columns
+        assert "out_degree" in df.columns
+        assert "degree" in df.columns
+        assert "pagerank" in df.columns
+
+    def test_load_peps_with_metrics_left_join(self, tmp_path, monkeypatch):
+        """メトリクスがないPEPも含まれるか（left join）"""
+        # キャッシュをクリア
+        data_loader.clear_cache()
+
+        # テストデータを作成
+        data_dir = tmp_path / "data"
+        data_dir.mkdir()
+
+        # peps_metadata.csv（PEP 1, 2, 3）
+        peps_csv = data_dir / "peps_metadata.csv"
+        peps_csv.write_text(
+            "pep_number,title,status,type,created,authors,topic,requires,replaces\n"
+            "1,Test PEP 1,Active,Process,01-Jan-2000,Author 1,,,\n"
+            "2,Test PEP 2,Draft,Standards Track,02-Jan-2000,Author 2,,,\n"
+            "3,Test PEP 3,Final,Standards Track,03-Jan-2000,Author 3,,,\n"
+        )
+
+        # node_metrics.csv（PEP 1, 2のみ。PEP 3はなし）
+        metrics_csv = data_dir / "node_metrics.csv"
+        metrics_csv.write_text(
+            "pep_number,in_degree,out_degree,degree,pagerank\n"
+            "1,0,2,2,0.3\n"
+            "2,1,1,2,0.7\n"
+        )
+
+        # citations.csv（ダミー）
+        citations_csv = data_dir / "citations.csv"
+        citations_csv.write_text("citing,cited,count\n")
+
+        # metadata.json（ダミー）
+        metadata_json = data_dir / "metadata.json"
+        metadata_json.write_text('{"fetched_at": "2026-01-01T00:00:00+00:00"}')
+
+        monkeypatch.setattr("src.dash_app.utils.data_loader.DATA_DIR", data_dir)
+
+        df = data_loader.load_peps_with_metrics()
+
+        # 全PEPが含まれていることを確認
+        assert len(df) == 3
+        assert set(df["pep_number"]) == {1, 2, 3}
+
+        # PEP 3のメトリクスがNaNであることを確認
+        pep3 = df[df["pep_number"] == 3].iloc[0]
+        assert pd.isna(pep3["pagerank"])
 
 
 class TestClearCache:
