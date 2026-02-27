@@ -11,6 +11,9 @@ from src.dash_app.utils.data_loader import (
 )
 
 
+# モジュールレベル定数
+PAGERANK_MULTIPLIER = 2000.0  # PageRankをノードサイズ・フォントサイズに変換する係数
+
 # モジュールレベルでキャッシュ（アプリ起動時に一度だけ計算する）
 _cytoscape_elements_cache: list[dict] | None = None
 _valid_edges_cache: tuple[set[int], "pd.DataFrame"] | None = None
@@ -260,35 +263,33 @@ def _calculate_font_size(degree: int) -> float:
     return min(font_size, max_font_size)
 
 
-def _calculate_node_size_pagerank(pagerank: float, multiplier: float = 2000.0) -> float:
+def _calculate_node_size_pagerank(pagerank: float) -> float:
     """
     PageRankに基づいてノードサイズを計算する
 
-    PageRankは0-1の値なので、multiplierでスケール変換してから平方根を取る。
+    PageRankは0-1の値なので、PAGERANK_MULTIPLIERでスケール変換してから平方根を取る。
     PageRankが0以下の場合は最小サイズを返す。
 
     Args:
         pagerank: PageRank値（0-1）
-        multiplier: スケール変換係数（デフォルト: 2000.0）
 
     Returns:
         float: ノードサイズ（ピクセル）
     """
     if pagerank <= 0:
         return 10.0
-    return 10.0 * ((pagerank * multiplier) ** 0.5)
+    return 10.0 * ((pagerank * PAGERANK_MULTIPLIER) ** 0.5)
 
 
-def _calculate_font_size_pagerank(pagerank: float, multiplier: float = 2000.0) -> float:
+def _calculate_font_size_pagerank(pagerank: float) -> float:
     """
     PageRankに基づいてフォントサイズを計算する
 
-    PageRankは0-1の値なので、multiplierでスケール変換してから0.7乗を取る。
+    PageRankは0-1の値なので、PAGERANK_MULTIPLIERでスケール変換してから0.7乗を取る。
     最小サイズ以上、最大サイズ以下に制限される。
 
     Args:
         pagerank: PageRank値（0-1）
-        multiplier: スケール変換係数（デフォルト: 2000.0）
 
     Returns:
         float: フォントサイズ（ピクセル）
@@ -297,8 +298,8 @@ def _calculate_font_size_pagerank(pagerank: float, multiplier: float = 2000.0) -
     max_font_size = 24.0
     if pagerank <= 0:
         return min_font_size
-    # PageRank * multiplierの0.7乗に基づいてフォントサイズを計算
-    scaled_value = pagerank * multiplier
+    # PageRank * PAGERANK_MULTIPLIERの0.7乗に基づいてフォントサイズを計算
+    scaled_value = pagerank * PAGERANK_MULTIPLIER
     font_size = min_font_size + 2.0 * (scaled_value**0.7)
     return min(font_size, max_font_size)
 
