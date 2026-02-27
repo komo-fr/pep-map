@@ -137,7 +137,7 @@ def mock_data_files(
     metadata_json = data_dir / "metadata.json"
     metadata_json.write_text(
         json.dumps(
-            {"fetched_at": "2026-02-14T15:25:50.027772+00:00", **sample_metadata}
+            {**sample_metadata, "fetched_at": "2026-02-14T15:25:50.027772+00:00"}
         ),
         encoding="utf-8",
     )
