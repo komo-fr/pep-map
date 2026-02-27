@@ -55,7 +55,7 @@ def register_metrics_callbacks(app):
         """
         if active_tab != "metrics":
             # Metricsタブ以外では更新しない（パフォーマンス向上）
-            return [], load_metrics_styles(), 0
+            return [], [], 0
 
         # page_sizeを整数に変換（dbc.Selectから文字列で受け取るため）
         page_size = int(page_size)
