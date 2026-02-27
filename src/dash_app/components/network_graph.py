@@ -1,7 +1,5 @@
 """ネットワークグラフ構築モジュール"""
 
-from typing import cast
-
 import networkx as nx
 import pandas as pd
 
@@ -176,46 +174,6 @@ def _calculate_node_positions() -> dict[int, tuple[float, float]]:
     return positions
 
 
-def _calculate_degrees() -> dict[int, dict[str, int]]:
-    """
-    各PEPノードの次数情報を計算する
-
-    同じPEP間の複数回引用は1カウントとして計算する。
-
-    Returns:
-        dict[int, dict[str, int]]: PEP番号をキー、次数情報を値とする辞書
-            次数情報: {"in_degree": int, "out_degree": int, "total_degree": int}
-    """
-    existing_peps, edges_df = _load_valid_edges_df()
-
-    # 重複を除外（同じPEP間の複数回引用は1カウント）
-    unique_edges_df = edges_df.drop_duplicates()
-
-    # 次数情報を初期化
-    degrees = {
-        pep_num: {"in_degree": 0, "out_degree": 0, "total_degree": 0}
-        for pep_num in existing_peps
-    }
-
-    # 入次数を計算（cited列の出現回数）
-    in_degree_counts = unique_edges_df["cited"].value_counts().to_dict()
-    for pep_num, count in in_degree_counts.items():
-        degrees[cast(int, pep_num)]["in_degree"] = int(count)
-
-    # 出次数を計算（citing列の出現回数）
-    out_degree_counts = unique_edges_df["citing"].value_counts().to_dict()
-    for pep_num, count in out_degree_counts.items():
-        degrees[cast(int, pep_num)]["out_degree"] = int(count)
-
-    # 次数を計算（入次数 + 出次数）
-    for pep_num in degrees:
-        degrees[pep_num]["total_degree"] = (
-            degrees[pep_num]["in_degree"] + degrees[pep_num]["out_degree"]
-        )
-
-    return degrees
-
-
 def _calculate_adjacency_info() -> dict[int, dict[str, list[str]]]:
     """
     各PEPノードの隣接情報を計算する
@@ -349,7 +307,7 @@ def _build_nodes() -> list[dict]:
     """
     PEPメタデータからノードを生成する
 
-    NetworkXで計算した座標とノードの次数情報をノードに付与する。
+    NetworkXで計算した座標とnode_metrics.csvから読み込んだメトリクス情報をノードに付与する。
     各次数タイプ（入次数/出次数/次数/一定/PageRank）に対応したサイズを事前計算する。
 
     Returns:
@@ -360,15 +318,15 @@ def _build_nodes() -> list[dict]:
     # 座標を計算
     positions = _calculate_node_positions()
 
-    # 次数を計算
-    degrees = _calculate_degrees()
-
     # 隣接情報を計算
     adjacency_info = _calculate_adjacency_info()
 
-    # PageRankデータを読み込む
+    # メトリクスデータを読み込む（次数とPageRank）
     metrics_df = load_node_metrics()
     pagerank_dict = dict(zip(metrics_df["pep_number"], metrics_df["pagerank"]))
+    in_degree_dict = dict(zip(metrics_df["pep_number"], metrics_df["in_degree"]))
+    out_degree_dict = dict(zip(metrics_df["pep_number"], metrics_df["out_degree"]))
+    total_degree_dict = dict(zip(metrics_df["pep_number"], metrics_df["degree"]))
 
     nodes = []
 
@@ -380,25 +338,23 @@ def _build_nodes() -> list[dict]:
         # 座標を取得(存在しない場合はデフォルト値)
         pos = positions.get(pep_number, (0, 0))
 
-        # 次数情報を取得（存在しない場合はデフォルト値）
-        degree_info = degrees.get(
-            pep_number, {"in_degree": 0, "out_degree": 0, "total_degree": 0}
-        )
-
-        # PageRankを取得（存在しない場合は0.0）
+        # メトリクス情報を取得（存在しない場合はデフォルト値0）
+        in_degree = in_degree_dict.get(pep_number, 0)
+        out_degree = out_degree_dict.get(pep_number, 0)
+        total_degree = total_degree_dict.get(pep_number, 0)
         pagerank = pagerank_dict.get(pep_number, 0.0)
 
         # 各次数タイプに対応したノードサイズを計算
-        size_in_degree = _calculate_node_size(degree_info["in_degree"])
-        size_out_degree = _calculate_node_size(degree_info["out_degree"])
-        size_total_degree = _calculate_node_size(degree_info["total_degree"])
+        size_in_degree = _calculate_node_size(in_degree)
+        size_out_degree = _calculate_node_size(out_degree)
+        size_total_degree = _calculate_node_size(total_degree)
         size_constant = 20.0  # 一定サイズ
         size_pagerank = _calculate_node_size_pagerank(pagerank)
 
         # 各次数タイプに対応したフォントサイズを計算
-        font_size_in_degree = _calculate_font_size(degree_info["in_degree"])
-        font_size_out_degree = _calculate_font_size(degree_info["out_degree"])
-        font_size_total_degree = _calculate_font_size(degree_info["total_degree"])
+        font_size_in_degree = _calculate_font_size(in_degree)
+        font_size_out_degree = _calculate_font_size(out_degree)
+        font_size_total_degree = _calculate_font_size(total_degree)
         font_size_constant = 8.0  # 一定サイズの場合は最小値
         font_size_pagerank = _calculate_font_size_pagerank(pagerank)
 
@@ -415,9 +371,9 @@ def _build_nodes() -> list[dict]:
                 "pep_number": pep_number,
                 "color": color,
                 "status": status,
-                "in_degree": degree_info["in_degree"],
-                "out_degree": degree_info["out_degree"],
-                "total_degree": degree_info["total_degree"],
+                "in_degree": in_degree,
+                "out_degree": out_degree,
+                "total_degree": total_degree,
                 "pagerank": pagerank,
                 "size_in_degree": size_in_degree,
                 "size_out_degree": size_out_degree,

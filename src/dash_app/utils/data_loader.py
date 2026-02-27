@@ -428,10 +428,12 @@ def clear_cache() -> None:
         _metadata_cache, \
         _python_releases_cache, \
         _node_metrics_cache, \
+        _peps_with_metrics_cache, \
         _metrics_styles_cache
     _peps_metadata_cache = None
     _citations_cache = None
     _metadata_cache = None
     _python_releases_cache = None
     _node_metrics_cache = None
+    _peps_with_metrics_cache = None
     _metrics_styles_cache = None
