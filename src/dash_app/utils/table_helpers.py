@@ -43,12 +43,57 @@ def data_bars(df: pd.DataFrame, column: str) -> list[dict]:
                 "background": (
                     """
                     linear-gradient(90deg,
-                    #0074D9 0%,
-                    #0074D9 {max_bound_percentage}%,
+                    rgba(25, 118, 210, 0.35) 0%,
+                    rgba(25, 118, 210, 0.35) {max_bound_percentage}%,
                     white {max_bound_percentage}%,
                     white 100%)
                 """.format(max_bound_percentage=max_bound_percentage)
                 ),
+                "paddingBottom": 2,
+                "paddingTop": 2,
+            }
+        )
+
+    return styles
+
+
+def gradient_backgrounds(df: pd.DataFrame, column: str) -> list[dict]:
+    """
+    DataTableの列に数値に応じたグラデーション背景色を生成
+    セル全体の背景色が値に応じて濃淡が変わる
+
+    Args:
+        df: データフレーム
+        column: グラデーション背景を適用する列名
+
+    Returns:
+        list[dict]: style_data_conditionalに追加するスタイルのリスト
+    """
+    n_bins = 30
+    bounds = [i * (1.0 / n_bins) for i in range(n_bins + 1)]
+    ranges = [
+        ((df[column].max() - df[column].min()) * i) + df[column].min() for i in bounds
+    ]
+    styles = []
+    for i in range(1, len(bounds)):
+        min_bound = ranges[i - 1]
+        max_bound = ranges[i]
+        # 値の大きさに応じて不透明度を変化（0.05〜0.4の範囲）
+        opacity = 0.05 + (bounds[i] * 0.35)
+        styles.append(
+            {
+                "if": {
+                    "filter_query": (
+                        "{{{column}}} >= {min_bound}"
+                        + (
+                            " && {{{column}}} < {max_bound}"
+                            if (i < len(bounds) - 1)
+                            else ""
+                        )
+                    ).format(column=column, min_bound=min_bound, max_bound=max_bound),
+                    "column_id": column,
+                },
+                "backgroundColor": f"rgba(156, 39, 176, {opacity:.3f})",
                 "paddingBottom": 2,
                 "paddingTop": 2,
             }

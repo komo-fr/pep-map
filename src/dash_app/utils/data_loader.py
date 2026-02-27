@@ -356,12 +356,13 @@ def load_metrics_styles() -> list[dict]:
     メトリクステーブルのスタイル条件を事前計算
 
     In-degree, Out-degree, Degree列に対してデータバースタイルを生成
+    PageRank列に対してグラデーション背景を生成
     他のスタイル条件（ステータスカラー、縞模様）も含める
 
     Returns:
         list[dict]: style_data_conditionalに使用するスタイルのリスト
     """
-    from src.dash_app.utils.table_helpers import data_bars
+    from src.dash_app.utils.table_helpers import data_bars, gradient_backgrounds
     from src.dash_app.components.pep_tables import generate_status_styles
 
     global _metrics_styles_cache
@@ -373,7 +374,7 @@ def load_metrics_styles() -> list[dict]:
     df = load_peps_with_metrics()
 
     # メトリクス列の欠損値を処理
-    for col in ["in_degree", "out_degree", "degree"]:
+    for col in ["in_degree", "out_degree", "degree", "pagerank"]:
         if col in df.columns:
             df[col] = df[col].fillna(0)
 
@@ -392,14 +393,19 @@ def load_metrics_styles() -> list[dict]:
         },
     ] + generate_status_styles()
 
-    # データバースタイルを生成
+    # データバースタイルを生成（In-degree, Out-degree, Degree）
     data_bar_styles = []
     for column in ["in_degree", "out_degree", "degree"]:
         if column in df.columns and len(df) > 0:
             data_bar_styles.extend(data_bars(df, column))
 
+    # PageRank列にグラデーション背景を生成
+    gradient_styles = []
+    if "pagerank" in df.columns and len(df) > 0:
+        gradient_styles.extend(gradient_backgrounds(df, "pagerank"))
+
     # 全てのスタイルを結合
-    all_styles = base_styles + data_bar_styles
+    all_styles = base_styles + data_bar_styles + gradient_styles
 
     _metrics_styles_cache = all_styles
     return all_styles
