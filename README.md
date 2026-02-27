@@ -72,10 +72,11 @@ Click the `Reset selection` button to clear the current node selection.
 
 ### Change node size
 You can change the node size using the following four metrics:
-- `in-degree`: The number of PEPs that cite the selected PEP. PEPs with a high in-degree are widely referenced and often influential.
-- `out-degree`: The number of PEPs that the selected PEP cites. PEPs with a high out-degree tend to reference many other PEPs and may serve as integrative or coordinating proposals.
-- `degree`: The sum of in-degree and out-degree.
-- `constant`: All nodes are displayed with the same size.
+- `In-degree`: The number of PEPs that cite the selected PEP. PEPs with a high in-degree are widely referenced and often influential.
+- `Out-degree`: The number of PEPs that the selected PEP cites. PEPs with a high out-degree tend to reference many other PEPs and may serve as integrative or coordinating proposals.
+- `Degree`: The sum of in-degree and out-degree.
+- `Constant`: All nodes are displayed with the same size.
+- `PageRank` : Network-based importance score computed from the overall citation structure.
 
 If the selected metric is 0, the node is displayed with a default minimum size.
 

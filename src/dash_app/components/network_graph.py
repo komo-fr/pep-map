@@ -6,7 +6,11 @@ import networkx as nx
 import pandas as pd
 
 from src.dash_app.utils.constants import DEFAULT_STATUS_COLOR, STATUS_COLOR_MAP
-from src.dash_app.utils.data_loader import load_citations, load_peps_metadata
+from src.dash_app.utils.data_loader import (
+    load_citations,
+    load_peps_metadata,
+    load_node_metrics,
+)
 
 
 # モジュールレベルでキャッシュ（アプリ起動時に一度だけ計算する）
@@ -298,12 +302,55 @@ def _calculate_font_size(degree: int) -> float:
     return min(font_size, max_font_size)
 
 
+def _calculate_node_size_pagerank(pagerank: float, multiplier: float = 2000.0) -> float:
+    """
+    PageRankに基づいてノードサイズを計算する
+
+    PageRankは0-1の値なので、multiplierでスケール変換してから平方根を取る。
+    PageRankが0以下の場合は最小サイズを返す。
+
+    Args:
+        pagerank: PageRank値（0-1）
+        multiplier: スケール変換係数（デフォルト: 2000.0）
+
+    Returns:
+        float: ノードサイズ（ピクセル）
+    """
+    if pagerank <= 0:
+        return 10
+    return 10.0 * ((pagerank * multiplier) ** 0.5)
+
+
+def _calculate_font_size_pagerank(pagerank: float, multiplier: float = 2000.0) -> float:
+    """
+    PageRankに基づいてフォントサイズを計算する
+
+    PageRankは0-1の値なので、multiplierでスケール変換してから0.7乗を取る。
+    最小サイズ以上、最大サイズ以下に制限される。
+
+    Args:
+        pagerank: PageRank値（0-1）
+        multiplier: スケール変換係数（デフォルト: 2000.0）
+
+    Returns:
+        float: フォントサイズ（ピクセル）
+    """
+    min_font_size = 6.0
+    max_font_size = 24.0
+    if pagerank <= 0:
+        return min_font_size
+    # PageRank * multiplierの0.7乗に基づいてフォントサイズを計算
+    scaled_value = pagerank * multiplier
+    font_size = min_font_size + 2.0 * (scaled_value**0.7)
+    return min(font_size, max_font_size)
+
+
 def _build_nodes() -> list[dict]:
     """
     PEPメタデータからノードを生成する
 
     NetworkXで計算した座標とノードの次数情報をノードに付与する。
-    各次数タイプ（入次数/出次数/次数/一定）に対応したサイズを事前計算する。
+    各次数タイプ（入次数/出次数/次数/一定/PageRank）に対応したサイズを事前計算する。
 
     Returns:
         list[dict]: ノードのリスト
@@ -318,6 +365,10 @@ def _build_nodes() -> list[dict]:
 
     # 隣接情報を計算
     adjacency_info = _calculate_adjacency_info()
+
+    # PageRankデータを読み込む
+    metrics_df = load_node_metrics()
+    pagerank_dict = dict(zip(metrics_df["pep_number"], metrics_df["pagerank"]))
 
     nodes = []
 
@@ -334,17 +385,22 @@ def _build_nodes() -> list[dict]:
             pep_number, {"in_degree": 0, "out_degree": 0, "total_degree": 0}
         )
 
+        # PageRankを取得（存在しない場合は0.0）
+        pagerank = pagerank_dict.get(pep_number, 0.0)
+
         # 各次数タイプに対応したノードサイズを計算
         size_in_degree = _calculate_node_size(degree_info["in_degree"])
         size_out_degree = _calculate_node_size(degree_info["out_degree"])
         size_total_degree = _calculate_node_size(degree_info["total_degree"])
         size_constant = 20.0  # 一定サイズ
+        size_pagerank = _calculate_node_size_pagerank(pagerank)
 
         # 各次数タイプに対応したフォントサイズを計算
         font_size_in_degree = _calculate_font_size(degree_info["in_degree"])
         font_size_out_degree = _calculate_font_size(degree_info["out_degree"])
         font_size_total_degree = _calculate_font_size(degree_info["total_degree"])
         font_size_constant = 8.0  # 一定サイズの場合は最小値
+        font_size_pagerank = _calculate_font_size_pagerank(pagerank)
 
         # 隣接情報を取得（存在しない場合はデフォルト値）
         adj_info = adjacency_info.get(
@@ -362,14 +418,17 @@ def _build_nodes() -> list[dict]:
                 "in_degree": degree_info["in_degree"],
                 "out_degree": degree_info["out_degree"],
                 "total_degree": degree_info["total_degree"],
+                "pagerank": pagerank,
                 "size_in_degree": size_in_degree,
                 "size_out_degree": size_out_degree,
                 "size_total_degree": size_total_degree,
                 "size_constant": size_constant,
+                "size_pagerank": size_pagerank,
                 "font_size_in_degree": font_size_in_degree,
                 "font_size_out_degree": font_size_out_degree,
                 "font_size_total_degree": font_size_total_degree,
                 "font_size_constant": font_size_constant,
+                "font_size_pagerank": font_size_pagerank,
                 # 隣接情報（clientside_callback用）
                 "adjacent_nodes": adj_info["adjacent_nodes"],
                 "incoming_edges": adj_info["incoming_edges"],
@@ -442,7 +501,7 @@ def get_base_stylesheet(size_type: str = "in_degree") -> list[dict]:
     ノードサイズとフォントサイズは指定されたサイズタイプに基づいて動的に設定される。
 
     Args:
-        size_type: ノードサイズのタイプ ("in_degree", "out_degree", "total_degree", "constant")
+        size_type: ノードサイズのタイプ ("in_degree", "out_degree", "total_degree", "pagerank", "constant")
 
     Returns:
         list[dict]: スタイルシート定義のリスト
@@ -452,12 +511,14 @@ def get_base_stylesheet(size_type: str = "in_degree") -> list[dict]:
         "in_degree": "size_in_degree",
         "out_degree": "size_out_degree",
         "total_degree": "size_total_degree",
+        "pagerank": "size_pagerank",
         "constant": "size_constant",
     }
     font_size_field_map = {
         "in_degree": "font_size_in_degree",
         "out_degree": "font_size_out_degree",
         "total_degree": "font_size_total_degree",
+        "pagerank": "font_size_pagerank",
         "constant": "font_size_constant",
     }
     size_field = size_field_map.get(size_type, "size_in_degree")
