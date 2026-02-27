@@ -61,44 +61,85 @@ def create_metrics_tab_layout() -> html.Div:
                     "color": "#333",
                 },
             ),
-            # メタデータセクション
+            # 区切り線
+            html.Hr(
+                style={
+                    "margin": "16px 0",
+                    "border": "none",
+                    "borderTop": "1px solid #888",
+                }
+            ),
+            # 検索ボックス + メタデータセクション
             html.Div(
                 [
-                    html.Span(
+                    # 検索ボックス（左寄せ）
+                    html.Div(
+                        dbc.Input(
+                            id="metrics-search-input",
+                            type="text",
+                            placeholder="Search by title... (e.g., 'async coroutine' for AND search)",
+                            debounce=True,
+                            style={
+                                "fontSize": "14px",
+                                "padding": "8px 12px",
+                                "height": "32px",
+                            },
+                        ),
+                        style={
+                            "flex": "0 0 auto",
+                            "minWidth": "400px",
+                            "maxWidth": "500px",
+                        },
+                    ),
+                    # データ取得日付 + ダウンロードリンク（右寄せ）
+                    html.Div(
                         [
-                            html.Span("Data as of:", style={"fontWeight": "bold"}),
-                            f" {fetched_at}",
+                            html.Span(
+                                [
+                                    html.Span(
+                                        "Data as of:", style={"fontWeight": "bold"}
+                                    ),
+                                    f" {fetched_at}",
+                                ],
+                                style={
+                                    "fontSize": "12px",
+                                    "color": "#666",
+                                    "marginRight": "12px",
+                                },
+                            ),
+                            html.Span(
+                                "|",
+                                style={
+                                    "fontSize": "12px",
+                                    "color": "#999",
+                                    "marginRight": "12px",
+                                },
+                            ),
+                            html.A(
+                                "Download CSV",
+                                href="https://raw.githubusercontent.com/komo-fr/pep-map/production/data/processed/node_metrics.csv",
+                                style={
+                                    "fontSize": "12px",
+                                    "color": "#0066cc",
+                                    "textDecoration": "underline",
+                                    "cursor": "pointer",
+                                },
+                            ),
                         ],
                         style={
-                            "fontSize": "12px",
-                            "color": "#666",
-                            "marginRight": "12px",
-                        },
-                    ),
-                    html.Span(
-                        "|",
-                        style={
-                            "fontSize": "12px",
-                            "color": "#999",
-                            "marginRight": "12px",
-                        },
-                    ),
-                    html.A(
-                        "Download CSV",
-                        href="https://raw.githubusercontent.com/komo-fr/pep-map/production/data/processed/node_metrics.csv",
-                        style={
-                            "fontSize": "12px",
-                            "color": "#0066cc",
-                            "textDecoration": "underline",
-                            "cursor": "pointer",
+                            "display": "flex",
+                            "alignItems": "center",
+                            "marginLeft": "auto",
                         },
                     ),
                 ],
                 style={
-                    "marginBottom": "16px",
+                    "marginBottom": "8px",
+                    "marginTop": "8px",
                     "display": "flex",
                     "alignItems": "center",
-                    "justifyContent": "flex-end",
+                    "justifyContent": "space-between",
+                    "gap": "16px",
                 },
             ),
             # ページサイズ選択 + ページネーションコンポーネント（テーブルの上）

@@ -1,5 +1,6 @@
 """PEP Metricsタブのコールバック関数"""
 
+import re
 from dash import Input, Output, callback_context
 
 from src.dash_app.utils.data_loader import (
@@ -27,10 +28,15 @@ def register_metrics_callbacks(app):
             Input("metrics-table", "page_current"),  # ページ切り替え
             Input("metrics-table", "sort_by"),  # ソート変更
             Input("metrics-page-size-select", "value"),  # ページサイズ変更
+            Input("metrics-search-input", "value"),  # 検索文字列
         ],
     )
     def update_metrics_table(
-        active_tab: str, page_current: int, sort_by: list, page_size: int
+        active_tab: str,
+        page_current: int,
+        sort_by: list,
+        page_size: int,
+        search_query: str,
     ) -> tuple[list[dict], list[dict], int]:
         """
         メトリクステーブルのデータとスタイルを更新（サーバサイドページング）
@@ -65,6 +71,22 @@ def register_metrics_callbacks(app):
         # PageRankを小数点4桁に丸める
         if "pagerank" in df.columns:
             df["pagerank"] = df["pagerank"].round(4)
+
+        # 検索フィルタリング処理
+        if search_query and search_query.strip():
+            # 半角スペースと全角スペースで分割してAND検索
+            keywords = re.split(r"[ 　]+", search_query.strip())
+            # 各キーワードでフィルタリング（すべてのキーワードを含む行のみ残す）
+            keywords = [kw for kw in keywords if kw]
+            if keywords:
+                # すべてのキーワードがTitle列に含まれる行のみを残す（AND検索）
+                for keyword in keywords:
+                    # 各キーワードをエスケープして検索（大文字小文字を区別しない）
+                    escaped_keyword = re.escape(keyword)
+                    mask = df["title"].str.contains(
+                        escaped_keyword, case=False, na=False, regex=True
+                    )
+                    df = df[mask]
 
         # ソート処理（全データに対して実行）
         if sort_by and len(sort_by) > 0:
@@ -126,10 +148,11 @@ def register_metrics_callbacks(app):
             Input("metrics-pagination", "active_page"),
             Input("metrics-pagination-bottom", "active_page"),
             Input("metrics-page-size-select", "value"),
+            Input("metrics-search-input", "value"),
         ],
     )
     def sync_pagination_and_table(
-        top_active_page: int, bottom_active_page: int, page_size: int
+        top_active_page: int, bottom_active_page: int, page_size: int, search_query: str
     ) -> tuple[int, int, int]:
         """
         上下のページネーションボタンとDataTableを同期、ページサイズ変更対応
@@ -156,8 +179,8 @@ def register_metrics_callbacks(app):
 
         triggered_id = ctx.triggered[0]["prop_id"].split(".")[0]
 
-        # ページサイズが変更された場合は、ページをリセット
-        if triggered_id == "metrics-page-size-select":
+        # ページサイズまたは検索文字列が変更された場合は、ページをリセット
+        if triggered_id in ["metrics-page-size-select", "metrics-search-input"]:
             return 0, 1, 1
 
         # トリガーされたコンポーネントから値を取得
