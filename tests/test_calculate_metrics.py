@@ -34,7 +34,7 @@ class TestBuildPepGraph:
         # Then
         assert isinstance(G, nx.DiGraph)
         assert len(G.nodes()) == 10  # サンプルデータのPEP数
-        assert len(G.edges()) >= 15  # サンプルデータのエッジ数
+        assert len(G.edges()) == 15  # サンプルデータのエッジ数
         assert G.has_edge(1, 8)  # 特定のエッジが存在
 
     def test_graph_has_metadata(self, sample_data_dir):
