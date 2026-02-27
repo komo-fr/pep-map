@@ -1,7 +1,7 @@
 """PEP Metricsタブのレイアウト"""
 
 from dash import dash_table, html
-import dash_bootstrap_components as dbc
+import dash_bootstrap_components as dbc  # type: ignore[import-untyped]
 
 from src.dash_app.utils.data_loader import load_metadata
 
@@ -216,7 +216,7 @@ def create_metrics_tab_layout() -> html.Div:
                 },
             ),
             # メトリクステーブル
-            dash_table.DataTable(
+            dash_table.DataTable(  # type: ignore[attr-defined]
                 id="metrics-table",
                 columns=[
                     {
