@@ -1,0 +1,168 @@
+"""PEP Metricsタブのレイアウト"""
+
+from dash import dash_table, html
+
+from src.dash_app.components.pep_tables import generate_status_styles
+
+
+def create_metrics_tab_layout() -> html.Div:
+    """
+    PEP Metricsタブのレイアウトを作成
+
+    Returns:
+        html.Div: PEP Metricsタブのレイアウト
+    """
+
+    return html.Div(
+        [
+            # 説明文
+            html.Div(
+                [
+                    html.P(
+                        "This table shows structural metrics derived from PEP citation relationships.",
+                        style={"marginBottom": "8px"},
+                    ),
+                    html.Ul(
+                        [
+                            html.Li(
+                                [
+                                    html.Code("In-degree"),
+                                    " : Number of PEPs that cite a given PEP. PEPs with a high in-degree are widely referenced and often influential.",
+                                ]
+                            ),
+                            html.Li(
+                                [
+                                    html.Code("Out-degree"),
+                                    " : Number of PEPs cited by a given PEP. PEPs with a high out-degree tend to reference many other PEPs and may serve as integrative or coordinating proposals.",
+                                ]
+                            ),
+                            html.Li(
+                                [
+                                    html.Code("Degree"),
+                                    " : Sum of in-degree and out-degree.",
+                                ]
+                            ),
+                            html.Li(
+                                [
+                                    html.Code("PageRank"),
+                                    " : Network-based importance score computed from the overall citation structure.",
+                                ]
+                            ),
+                        ],
+                        style={"marginBottom": "8px", "color": "#666"},
+                    ),
+                ],
+                style={
+                    "fontSize": "14px",
+                    "color": "#333",
+                },
+            ),
+            # メトリクステーブル
+            dash_table.DataTable(
+                id="metrics-table",
+                columns=[
+                    {
+                        "name": "PEP",
+                        "id": "pep",
+                        "type": "text",
+                        "presentation": "markdown",
+                    },
+                    {"name": "Title", "id": "title", "type": "text"},
+                    {"name": "Status", "id": "status", "type": "text"},
+                    {"name": "Created", "id": "created", "type": "text"},
+                    {"name": "In-degree ⓘ", "id": "in_degree", "type": "numeric"},
+                    {"name": "Out-degree ⓘ", "id": "out_degree", "type": "numeric"},
+                    {"name": "Degree ⓘ", "id": "degree", "type": "numeric"},
+                    {"name": "PageRank ⓘ", "id": "pagerank", "type": "numeric"},
+                ],
+                data=[],  # 初期は空、コールバックで更新
+                sort_action="native",  # ソート機能を有効化
+                sort_mode="single",
+                page_action="none",  # ページングなし
+                style_table={
+                    "overflowX": "auto",
+                },
+                tooltip_header={
+                    "in_degree": "Number of PEPs that cite this PEP. PEPs with a high in-degree are widely referenced and often influential.",
+                    "out_degree": "Number of PEPs cited by this PEP. PEPs with a high out-degree tend to reference many other PEPs and may serve as integrative or coordinating proposals.",
+                    "degree": "Sum of in-degree and out-degree.",
+                    "pagerank": "Network-based importance score.",
+                },
+                tooltip_delay=0,
+                tooltip_duration=None,
+                style_cell={
+                    "textAlign": "left",
+                    "padding": "4px 6px",
+                    "fontSize": "15px",
+                    "height": "auto",
+                    "minHeight": "18px",
+                },
+                style_cell_conditional=[
+                    {"if": {"column_id": "pep"}, "width": "80px"},
+                    {
+                        "if": {"column_id": "title"},
+                        "width": "300px",
+                        "maxWidth": "300px",
+                        "whiteSpace": "normal",
+                    },
+                    {
+                        "if": {"column_id": "status"},
+                        "width": "100px",
+                        "textAlign": "center",
+                    },
+                    {"if": {"column_id": "created"}, "width": "100px"},
+                    {
+                        "if": {"column_id": "in_degree"},
+                        "width": "90px",
+                        "textAlign": "right",
+                    },
+                    {
+                        "if": {"column_id": "out_degree"},
+                        "width": "90px",
+                        "textAlign": "right",
+                    },
+                    {
+                        "if": {"column_id": "degree"},
+                        "width": "80px",
+                        "textAlign": "right",
+                    },
+                    {
+                        "if": {"column_id": "pagerank"},
+                        "width": "100px",
+                        "textAlign": "right",
+                    },
+                ],
+                style_header={
+                    "backgroundColor": "#f5f5f5",
+                    "fontWeight": "bold",
+                },
+                style_data={
+                    "lineHeight": "1.1",
+                    "verticalAlign": "middle",
+                },
+                style_data_conditional=[
+                    {
+                        "if": {"row_index": "odd"},
+                        "backgroundColor": "#fafafa",
+                    },
+                    {
+                        "if": {"column_id": "pep"},
+                        "paddingTop": "11px",
+                        "paddingBottom": "0px",
+                        "fontSize": "14px",
+                        "verticalAlign": "bottom",
+                    },
+                ]
+                + generate_status_styles(),
+                css=[
+                    {
+                        "selector": ".dash-table-tooltip",
+                        "rule": "background-color: #222; color: white; font-size: 12px;",
+                    }
+                ],
+            ),
+        ],
+        style={
+            "padding": "16px",
+        },
+    )
