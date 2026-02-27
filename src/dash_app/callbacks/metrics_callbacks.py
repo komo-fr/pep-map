@@ -72,9 +72,9 @@ def register_metrics_callbacks(app):
             sort_direction = sort_by[0]["direction"]
             is_ascending = sort_direction == "asc"
 
-            # ソート用列がメトリクス関連の場合の処理
-            if sort_col in ["in_degree", "out_degree", "degree", "pagerank"]:
-                df = df.sort_values(sort_col, ascending=is_ascending)
+            # "pep"列でソートする場合は、pep_number列を使用
+            if sort_col == "pep":
+                df = df.sort_values("pep_number", ascending=is_ascending)
             else:
                 df = df.sort_values(sort_col, ascending=is_ascending)
 
