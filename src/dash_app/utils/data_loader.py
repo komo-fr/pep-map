@@ -17,6 +17,7 @@ _citations_cache: pd.DataFrame | None = None
 _metadata_cache: dict | None = None
 _python_releases_cache: pd.DataFrame | None = None
 _node_metrics_cache: pd.DataFrame | None = None
+_peps_with_metrics_cache: pd.DataFrame | None = None
 _metrics_styles_cache: list[dict] | None = None
 
 
@@ -342,12 +343,18 @@ def load_peps_with_metrics() -> pd.DataFrame:
     Returns:
         pd.DataFrame: peps_metadata + node_metrics の統合DataFrame
     """
+    global _peps_with_metrics_cache
+
+    if _peps_with_metrics_cache is not None:
+        return _peps_with_metrics_cache.copy()
+
     peps_df = load_peps_metadata()
     metrics_df = load_node_metrics()
 
     # left joinでメトリクスがないPEPも残す
     merged_df = peps_df.merge(metrics_df, on="pep_number", how="left")
 
+    _peps_with_metrics_cache = merged_df
     return merged_df
 
 
