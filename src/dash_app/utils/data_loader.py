@@ -17,6 +17,7 @@ _citations_cache: pd.DataFrame | None = None
 _metadata_cache: dict | None = None
 _python_releases_cache: pd.DataFrame | None = None
 _node_metrics_cache: pd.DataFrame | None = None
+_metrics_styles_cache: list[dict] | None = None
 
 
 def load_peps_metadata() -> pd.DataFrame:
@@ -36,6 +37,7 @@ def load_peps_metadata() -> pd.DataFrame:
         - topic (str): トピック
         - requires (str): 必要とするPEP
         - replaces (str): 置き換えるPEP
+        - pep_markdown (str): Markdownリンク形式のPEP表記
     """
     global _peps_metadata_cache
 
@@ -49,6 +51,11 @@ def load_peps_metadata() -> pd.DataFrame:
     # created列を日付型に変換
     # フォーマット: "13-Jun-2000" → %d-%b-%Y
     df["created"] = pd.to_datetime(df["created"], format="%d-%b-%Y")
+
+    # Markdownリンク列を事前計算
+    df["pep_markdown"] = df["pep_number"].apply(
+        lambda pep_num: f"[PEP {pep_num}]({generate_pep_url(pep_num)})"
+    )
 
     _peps_metadata_cache = df
     return df
@@ -344,6 +351,60 @@ def load_peps_with_metrics() -> pd.DataFrame:
     return merged_df
 
 
+def load_metrics_styles() -> list[dict]:
+    """
+    メトリクステーブルのスタイル条件を事前計算
+
+    In-degree, Out-degree, Degree列に対してデータバースタイルを生成
+    他のスタイル条件（ステータスカラー、縞模様）も含める
+
+    Returns:
+        list[dict]: style_data_conditionalに使用するスタイルのリスト
+    """
+    from src.dash_app.utils.table_helpers import data_bars
+    from src.dash_app.components.pep_tables import generate_status_styles
+
+    global _metrics_styles_cache
+
+    if _metrics_styles_cache is not None:
+        return _metrics_styles_cache
+
+    # PEP + メトリクスデータを取得
+    df = load_peps_with_metrics()
+
+    # メトリクス列の欠損値を処理
+    for col in ["in_degree", "out_degree", "degree"]:
+        if col in df.columns:
+            df[col] = df[col].fillna(0)
+
+    # デフォルトのスタイル条件
+    base_styles = [
+        {
+            "if": {"row_index": "odd"},
+            "backgroundColor": "#fafafa",
+        },
+        {
+            "if": {"column_id": "pep"},
+            "paddingTop": "11px",
+            "paddingBottom": "0px",
+            "fontSize": "14px",
+            "verticalAlign": "bottom",
+        },
+    ] + generate_status_styles()
+
+    # データバースタイルを生成
+    data_bar_styles = []
+    for column in ["in_degree", "out_degree", "degree"]:
+        if column in df.columns and len(df) > 0:
+            data_bar_styles.extend(data_bars(df, column))
+
+    # 全てのスタイルを結合
+    all_styles = base_styles + data_bar_styles
+
+    _metrics_styles_cache = all_styles
+    return all_styles
+
+
 def clear_cache() -> None:
     """
     キャッシュをクリアする（テスト用）
@@ -353,9 +414,11 @@ def clear_cache() -> None:
         _citations_cache, \
         _metadata_cache, \
         _python_releases_cache, \
-        _node_metrics_cache
+        _node_metrics_cache, \
+        _metrics_styles_cache
     _peps_metadata_cache = None
     _citations_cache = None
     _metadata_cache = None
     _python_releases_cache = None
     _node_metrics_cache = None
+    _metrics_styles_cache = None

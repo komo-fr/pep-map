@@ -21,6 +21,7 @@ from src.dash_app.utils.data_loader import (
     load_metadata,
     load_python_releases,
     load_node_metrics,
+    load_metrics_styles,
 )
 
 
@@ -41,6 +42,7 @@ load_citations()
 load_metadata()
 load_python_releases()
 load_node_metrics()  # メトリクスデータを読み込む
+load_metrics_styles()  # メトリクステーブルのスタイル条件を事前計算
 build_cytoscape_elements()  # Networkグラフの座標計算（2秒程度）
 logger.info("Data preload complete.")
 
