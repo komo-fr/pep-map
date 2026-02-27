@@ -79,7 +79,7 @@ def build_pep_graph(
         f"Graph built: {G.number_of_nodes()} nodes, {G.number_of_edges()} edges"
     )
 
-    # 5. metadata.jsonを読み込んでG.graphに設定
+    # 6. metadata.jsonを読み込んでG.graphに設定
     if metadata_path is not None and metadata_path.exists():
         with open(metadata_path, encoding="utf-8") as f:
             metadata = json.load(f)
