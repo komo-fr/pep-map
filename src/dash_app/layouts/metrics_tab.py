@@ -2,7 +2,6 @@
 
 from dash import dash_table, html
 
-from src.dash_app.components.pep_tables import generate_status_styles
 from src.dash_app.utils.data_loader import load_metadata
 
 
@@ -184,20 +183,7 @@ def create_metrics_tab_layout() -> html.Div:
                     "lineHeight": "1.1",
                     "verticalAlign": "middle",
                 },
-                style_data_conditional=[
-                    {
-                        "if": {"row_index": "odd"},
-                        "backgroundColor": "#fafafa",
-                    },
-                    {
-                        "if": {"column_id": "pep"},
-                        "paddingTop": "11px",
-                        "paddingBottom": "0px",
-                        "fontSize": "14px",
-                        "verticalAlign": "bottom",
-                    },
-                ]
-                + generate_status_styles(),
+                style_data_conditional=[],  # コールバックで動的に設定
                 css=[
                     {
                         "selector": ".dash-table-tooltip",
