@@ -89,7 +89,7 @@ def register_metrics_callbacks(app):
                     df = df[mask]
 
         # ソート処理（全データに対して実行）
-        if sort_by and len(sort_by) > 0:
+        if sort_by:
             sort_col = sort_by[0]["column_id"]
             sort_direction = sort_by[0]["direction"]
             is_ascending = sort_direction == "asc"
