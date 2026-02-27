@@ -24,10 +24,10 @@ jobs:
       contents: write  # git pushのために必要
 
     # schedule実行時はmainブランチで実行（GitHub Actionsの仕様上デフォルトブランチでのみ実行される）
-    # 手動実行時はdry_runモードまたはproductionブランチで実行
+    # 手動実行時はdry_runモードまたはmainブランチで実行
     if: |
       (github.event_name == 'schedule' && github.ref == 'refs/heads/main') ||
-      (github.event_name == 'workflow_dispatch' && (github.event.inputs.dry_run == 'true' || github.ref == 'refs/heads/production'))
+      (github.event_name == 'workflow_dispatch' && (github.event.inputs.dry_run == 'true' || github.ref == 'refs/heads/main'))
 
     steps:
       - name: Checkout branch
