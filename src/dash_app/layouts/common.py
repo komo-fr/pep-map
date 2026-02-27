@@ -35,6 +35,12 @@ def create_tab_navigation():
                 style=tab_style,
                 selected_style=tab_selected_style,
             ),
+            dcc.Tab(
+                label="PEP Metrics",
+                value="metrics",
+                style=tab_style,
+                selected_style=tab_selected_style,
+            ),
         ],
         style={
             "height": "auto",
