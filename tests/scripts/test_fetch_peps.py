@@ -70,10 +70,15 @@ class TestFetchPepsHelpers:
         assert output_path.is_file()
 
     def test_save_metadata_json_correct_format(self, temp_dir):
-        """Test that save_metadata_json creates correctly formatted JSON."""
+        """Test that save_metadata_json creates correctly formatted JSON with all fields."""
         metadata = {
             "fetched_at": "2026-02-14T10:00:00+00:00",
+            "checked_at": "2026-02-14T10:00:00+00:00",
             "source_url": PEP_REPO_URL,
+            "data_hashes": {
+                "peps_metadata": "abc123",
+                "citations": "def456",
+            },
         }
 
         output_path = temp_dir / "metadata.json"
@@ -85,7 +90,11 @@ class TestFetchPepsHelpers:
 
         assert loaded_metadata == metadata
         assert "fetched_at" in loaded_metadata
+        assert "checked_at" in loaded_metadata
         assert "source_url" in loaded_metadata
+        assert "data_hashes" in loaded_metadata
+        assert "peps_metadata" in loaded_metadata["data_hashes"]
+        assert "citations" in loaded_metadata["data_hashes"]
 
     def test_parse_arguments_defaults(self):
         """Test parse_arguments with default values."""
