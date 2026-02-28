@@ -2,9 +2,11 @@
 
 import logging
 import re
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Optional
+
+import pandas as pd
 
 
 logger = logging.getLogger(__name__)
@@ -389,8 +391,6 @@ class PEPParser:
             DataFrame is sorted by pep_number (ascending) before saving
             to ensure consistent output for hash-based change detection.
         """
-        import pandas as pd
-        from dataclasses import asdict
 
         logger.info(f"Saving {len(metadata_list)} PEPs to {output_path}")
 

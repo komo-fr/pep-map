@@ -10,6 +10,8 @@ from typing import Optional
 from src.data_acquisition.citation_extractor import CitationExtractor
 from src.data_acquisition.github_fetcher import PEPFetcher
 from src.data_acquisition.pep_parser import PEPParser
+from src.utils.hash_utils import calculate_file_hash
+from src.utils.metadata_manager import MetadataManager
 
 logger = logging.getLogger(__name__)
 
@@ -87,8 +89,6 @@ def main() -> int:
         metadata_path = output_dir / "metadata.json"
 
         # ===== STEP 0: Load existing metadata (before fetching) =====
-        from src.utils.metadata_manager import MetadataManager
-
         metadata_manager = MetadataManager()
         old_metadata = metadata_manager.load_metadata(metadata_path)
 
@@ -144,8 +144,6 @@ def main() -> int:
         citation_extractor.save_to_csv(citations_df, citations_path)
 
         # ===== STEP 6: Calculate hashes =====
-        from src.utils.hash_utils import calculate_file_hash
-
         logger.info("Calculating file hashes...")
         new_hashes = {
             "peps_metadata": calculate_file_hash(csv_path),
