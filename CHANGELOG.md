@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+### Added
+- Store data retrieval date and data check date separately.
+
+### Changed
+- Skip metrics recomputation when no citation or metadata changes are detected.
+
 ## [0.3.0] - 2026-02-28
 
 ### Added

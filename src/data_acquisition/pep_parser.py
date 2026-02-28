@@ -1,11 +1,13 @@
 """PEP parser for extracting metadata from PEP RST files."""
 
-import csv
 import logging
 import re
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Optional
+
+import pandas as pd
+
 
 logger = logging.getLogger(__name__)
 
@@ -377,76 +379,59 @@ class PEPParser:
 
         return results
 
-    def save_to_csv(self, data: list[PEPMetadata], output_path: Path) -> None:
+    def save_to_csv(self, metadata_list: list[PEPMetadata], output_path: Path) -> None:
         """
         Save PEP metadata to CSV file.
 
         Args:
-            data: List of PEPMetadata objects to save
+            metadata_list: List of PEPMetadata objects
             output_path: Path where to save the CSV file
 
         Note:
-            - Multiple authors are joined with semicolons (;)
-            - Multiple topics are joined with semicolons (;)
-            - Multiple requires/replaces are joined with semicolons (;)
-            - Empty created fields are saved as empty strings
-            - Parent directory is created if it doesn't exist
+            DataFrame is sorted by pep_number (ascending) before saving
+            to ensure consistent output for hash-based change detection.
         """
-        logger.info(f"Saving {len(data)} PEPs to {output_path}")
 
-        # Ensure parent directory exists
+        logger.info(f"Saving {len(metadata_list)} PEPs to {output_path}")
+
+        # ディレクトリが存在しない場合は作成
         output_path.parent.mkdir(parents=True, exist_ok=True)
 
-        # Define CSV headers
-        fieldnames = [
-            "pep_number",
-            "title",
-            "status",
-            "type",
-            "created",
-            "authors",
-            "topic",
-            "requires",
-            "replaces",
-        ]
+        # DataFrameを作成
+        df = pd.DataFrame([asdict(m) for m in metadata_list])
 
-        # Write CSV file
-        with open(output_path, "w", encoding="utf-8", newline="") as csvfile:
-            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-            writer.writeheader()
-
-            for pep in data:
-                # Join multiple authors with semicolon
-                authors_str = "; ".join(pep.authors)
-
-                # Join multiple topics with semicolon
-                topic_str = "; ".join(pep.topic) if pep.topic else ""
-
-                # Handle None created field
-                created_str = pep.created if pep.created is not None else ""
-
-                # Join multiple requires with semicolon
-                requires_str = (
-                    "; ".join(str(req) for req in pep.requires) if pep.requires else ""
+        # リストフィールドをセミコロン区切りの文字列に変換
+        if "authors" in df.columns:
+            df["authors"] = df["authors"].apply(
+                lambda x: "; ".join(x) if isinstance(x, list) else x
+            )
+        if "topic" in df.columns:
+            df["topic"] = df["topic"].apply(
+                lambda x: "; ".join(x) if isinstance(x, list) and x else ""
+            )
+        if "requires" in df.columns:
+            df["requires"] = df["requires"].apply(
+                lambda x: (
+                    "; ".join(str(r) for r in x) if isinstance(x, list) and x else ""
                 )
-
-                # Join multiple replaces with semicolon
-                replaces_str = (
-                    "; ".join(str(rep) for rep in pep.replaces) if pep.replaces else ""
+            )
+        if "replaces" in df.columns:
+            df["replaces"] = df["replaces"].apply(
+                lambda x: (
+                    "; ".join(str(r) for r in x) if isinstance(x, list) and x else ""
                 )
+            )
 
-                writer.writerow(
-                    {
-                        "pep_number": pep.pep_number,
-                        "title": pep.title,
-                        "status": pep.status,
-                        "type": pep.type,
-                        "created": created_str,
-                        "authors": authors_str,
-                        "topic": topic_str,
-                        "requires": requires_str,
-                        "replaces": replaces_str,
-                    }
-                )
+        # NoneをNaN、そして空文字列に変換
+        df = df.fillna("")
+
+        # pep_numberでソート（昇順）
+        # 空のDataFrameの場合はソートをスキップ
+        if len(df) > 0 and "pep_number" in df.columns:
+            df = df.sort_values("pep_number", ascending=True)
+            logger.info("DataFrame sorted by pep_number (ascending)")
+
+        # CSVに保存
+        df.to_csv(output_path, index=False)
 
         logger.info(f"Successfully saved to {output_path}")
