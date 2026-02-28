@@ -1,7 +1,6 @@
 """Tests for fetch_peps.py script."""
 
 import csv
-import json
 import shutil
 import tempfile
 import zipfile
@@ -10,12 +9,9 @@ from pathlib import Path
 import pytest
 
 from scripts.fetch_peps import (
-    PEP_REPO_URL,
     main,
     parse_arguments,
-    save_metadata_json,
 )
-from src.data_acquisition.pep_parser import PEPMetadata
 
 
 class TestFetchPepsHelpers:
@@ -26,75 +22,6 @@ class TestFetchPepsHelpers:
         """Create a temporary directory for testing."""
         with tempfile.TemporaryDirectory() as tmpdir:
             yield Path(tmpdir)
-
-    @pytest.fixture
-    def sample_pep_metadata(self):
-        """Create sample PEP metadata for testing."""
-        return [
-            PEPMetadata(
-                pep_number=1,
-                title="PEP Purpose and Guidelines",
-                status="Active",
-                type="Process",
-                created="2000-06-13",
-                authors=["Barry Warsaw", "Jeremy Hylton"],
-                topic=None,
-                requires=None,
-                replaces=None,
-            ),
-            PEPMetadata(
-                pep_number=8,
-                title="Style Guide for Python Code",
-                status="Active",
-                type="Process",
-                created="2001-07-05",
-                authors=["Guido van Rossum", "Barry Warsaw"],
-                topic=["Governance"],
-                requires=[440, 508],
-                replaces=[245],
-            ),
-        ]
-
-    def test_save_metadata_json_creates_file(self, temp_dir):
-        """Test that save_metadata_json creates a JSON file."""
-        metadata = {
-            "fetched_at": "2026-02-14T10:00:00+00:00",
-            "source_url": PEP_REPO_URL,
-        }
-
-        output_path = temp_dir / "metadata.json"
-        save_metadata_json(metadata, output_path)
-
-        # ファイルが作成されたか確認
-        assert output_path.exists()
-        assert output_path.is_file()
-
-    def test_save_metadata_json_correct_format(self, temp_dir):
-        """Test that save_metadata_json creates correctly formatted JSON with all fields."""
-        metadata = {
-            "fetched_at": "2026-02-14T10:00:00+00:00",
-            "checked_at": "2026-02-14T10:00:00+00:00",
-            "source_url": PEP_REPO_URL,
-            "data_hashes": {
-                "peps_metadata": "abc123",
-                "citations": "def456",
-            },
-        }
-
-        output_path = temp_dir / "metadata.json"
-        save_metadata_json(metadata, output_path)
-
-        # JSONを読み込んで確認
-        with open(output_path, "r", encoding="utf-8") as f:
-            loaded_metadata = json.load(f)
-
-        assert loaded_metadata == metadata
-        assert "fetched_at" in loaded_metadata
-        assert "checked_at" in loaded_metadata
-        assert "source_url" in loaded_metadata
-        assert "data_hashes" in loaded_metadata
-        assert "peps_metadata" in loaded_metadata["data_hashes"]
-        assert "citations" in loaded_metadata["data_hashes"]
 
     def test_parse_arguments_defaults(self):
         """Test parse_arguments with default values."""

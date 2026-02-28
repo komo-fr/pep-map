@@ -1,7 +1,6 @@
 """Fetch and parse PEP metadata from GitHub repository."""
 
 import argparse
-import json
 import logging
 import sys
 from datetime import datetime, timezone
@@ -15,29 +14,6 @@ from src.data_acquisition.pep_parser import PEPParser
 logger = logging.getLogger(__name__)
 
 PEP_REPO_URL = "https://github.com/python/peps/archive/refs/heads/main.zip"
-
-
-def save_metadata_json(metadata: dict, output_path: Path) -> None:
-    """
-    Save metadata to JSON file.
-
-    Args:
-        metadata: Dictionary containing metadata (fetched_at, source_url, etc.)
-        output_path: Path where to save the JSON file
-
-    Note:
-        JSON is formatted with indentation for readability.
-    """
-    logger.info(f"Saving metadata to {output_path}")
-
-    # Ensure parent directory exists
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-
-    # Write JSON file with indentation
-    with open(output_path, "w", encoding="utf-8") as jsonfile:
-        json.dump(metadata, jsonfile, indent=2, ensure_ascii=False)
-
-    logger.info(f"Successfully saved metadata to {output_path}")
 
 
 def parse_arguments(args: Optional[list[str]] = None) -> argparse.Namespace:
