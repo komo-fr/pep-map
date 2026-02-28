@@ -12,6 +12,9 @@
 - **[Network tab](#network-tab):**
     - Explore citation relationships between PEPs **as a network graph**.
     - It helps you understand the relationships between PEPs and identify influential ones.
+- **PEP Metrics tab:**
+    - View structural metrics such as in-degree, out-degree, degree, and PageRank in a table format.
+    - It helps you compare PEPs using quantitative network measures.
 
 ![](images/pepmap_overview.png)
 
