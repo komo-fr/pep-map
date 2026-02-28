@@ -70,6 +70,36 @@ def sample_metadata():
 
 
 @pytest.fixture
+def sample_node_metrics():
+    """テスト用ノードメトリクスのDataFrame"""
+    return pd.DataFrame(
+        [
+            {
+                "pep_number": 8,
+                "in_degree": 1,
+                "out_degree": 1,
+                "degree": 2,
+                "pagerank": 0.25,
+            },
+            {
+                "pep_number": 484,
+                "in_degree": 1,
+                "out_degree": 2,
+                "degree": 3,
+                "pagerank": 0.50,
+            },
+            {
+                "pep_number": 3107,
+                "in_degree": 1,
+                "out_degree": 0,
+                "degree": 1,
+                "pagerank": 0.25,
+            },
+        ]
+    )
+
+
+@pytest.fixture
 def sample_python_releases():
     """テスト用Pythonリリース日のDataFrame"""
     return pd.DataFrame(
@@ -87,6 +117,7 @@ def mock_data_files(
     sample_peps_metadata,
     sample_citations,
     sample_metadata,
+    sample_node_metrics,
 ):
     """テスト用データファイルを一時ディレクトリに作成"""
     data_dir = tmp_path / "data"
@@ -99,11 +130,14 @@ def mock_data_files(
     citations_csv = data_dir / "citations.csv"
     sample_citations.to_csv(citations_csv, index=False)
 
+    node_metrics_csv = data_dir / "node_metrics.csv"
+    sample_node_metrics.to_csv(node_metrics_csv, index=False)
+
     # JSONファイル作成
     metadata_json = data_dir / "metadata.json"
     metadata_json.write_text(
         json.dumps(
-            {"fetched_at": "2026-02-14T15:25:50.027772+00:00", **sample_metadata}
+            {**sample_metadata, "fetched_at": "2026-02-14T15:25:50.027772+00:00"}
         ),
         encoding="utf-8",
     )

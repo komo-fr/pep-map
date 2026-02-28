@@ -239,7 +239,7 @@ def register_network_callbacks(app):
         ノードサイズタイプの選択に連動してスタイルシートを更新する
 
         Args:
-            size_type: ノードサイズのタイプ ("in_degree", "out_degree", "total_degree", "constant")
+            size_type: ノードサイズのタイプ ("in_degree", "out_degree", "total_degree", "pagerank", "constant")
 
         Returns:
             list[dict]: 更新されたスタイルシート

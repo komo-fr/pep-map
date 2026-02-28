@@ -174,3 +174,93 @@ class TestBuildCytoscapeElements:
         # PEP 484 → PEP 3107, PEP 484 → PEP 8 のエッジが含まれる
         assert "edge_484_3107" in outgoing_edges
         assert "edge_484_8" in outgoing_edges
+
+    def test_nodes_have_degree_fields(self):
+        """ノードに次数フィールド（in_degree, out_degree, total_degree）が含まれることを確認"""
+        elements = build_cytoscape_elements()
+        nodes = [e for e in elements if "source" not in e["data"]]
+
+        for node in nodes:
+            assert "in_degree" in node["data"], (
+                f"Node {node['data']['id']} missing in_degree field"
+            )
+            assert "out_degree" in node["data"], (
+                f"Node {node['data']['id']} missing out_degree field"
+            )
+            assert "total_degree" in node["data"], (
+                f"Node {node['data']['id']} missing total_degree field"
+            )
+            assert isinstance(node["data"]["in_degree"], int)
+            assert isinstance(node["data"]["out_degree"], int)
+            assert isinstance(node["data"]["total_degree"], int)
+
+    def test_nodes_have_pagerank_field(self):
+        """ノードにPageRankフィールドが含まれることを確認"""
+        elements = build_cytoscape_elements()
+        nodes = [e for e in elements if "source" not in e["data"]]
+
+        for node in nodes:
+            assert "pagerank" in node["data"], (
+                f"Node {node['data']['id']} missing pagerank field"
+            )
+            assert isinstance(node["data"]["pagerank"], float)
+
+    def test_degree_values_match_csv_data(self):
+        """ノードの次数データがnode_metrics.csvから読み込まれた値と一致することを確認"""
+        elements = build_cytoscape_elements()
+
+        # PEP 484のノードを探す
+        pep_484_node = None
+        for e in elements:
+            if e["data"].get("pep_number") == 484:
+                pep_484_node = e
+                break
+
+        assert pep_484_node is not None
+
+        # sample_node_metricsによると、PEP 484の値は:
+        # in_degree: 1, out_degree: 2, degree: 3, pagerank: 0.50
+        assert pep_484_node["data"]["in_degree"] == 1
+        assert pep_484_node["data"]["out_degree"] == 2
+        assert pep_484_node["data"]["total_degree"] == 3
+        assert pep_484_node["data"]["pagerank"] == 0.50
+
+    def test_degree_values_for_pep_8(self):
+        """PEP 8のノードの次数データがCSVの値と一致することを確認"""
+        elements = build_cytoscape_elements()
+
+        # PEP 8のノードを探す
+        pep_8_node = None
+        for e in elements:
+            if e["data"].get("pep_number") == 8:
+                pep_8_node = e
+                break
+
+        assert pep_8_node is not None
+
+        # sample_node_metricsによると、PEP 8の値は:
+        # in_degree: 1, out_degree: 1, degree: 2, pagerank: 0.25
+        assert pep_8_node["data"]["in_degree"] == 1
+        assert pep_8_node["data"]["out_degree"] == 1
+        assert pep_8_node["data"]["total_degree"] == 2
+        assert pep_8_node["data"]["pagerank"] == 0.25
+
+    def test_degree_values_for_pep_3107(self):
+        """PEP 3107のノードの次数データがCSVの値と一致することを確認"""
+        elements = build_cytoscape_elements()
+
+        # PEP 3107のノードを探す
+        pep_3107_node = None
+        for e in elements:
+            if e["data"].get("pep_number") == 3107:
+                pep_3107_node = e
+                break
+
+        assert pep_3107_node is not None
+
+        # sample_node_metricsによると、PEP 3107の値は:
+        # in_degree: 1, out_degree: 0, degree: 1, pagerank: 0.25
+        assert pep_3107_node["data"]["in_degree"] == 1
+        assert pep_3107_node["data"]["out_degree"] == 0
+        assert pep_3107_node["data"]["total_degree"] == 1
+        assert pep_3107_node["data"]["pagerank"] == 0.25
