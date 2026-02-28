@@ -44,6 +44,7 @@ class MetadataManager:
 
         with open(path, "w", encoding="utf-8") as f:
             json.dump(metadata, f, indent=2, ensure_ascii=False)
+            f.write("\n")  # 末尾改行を追加
 
         logger.info(f"Saved metadata to {path}")
 
