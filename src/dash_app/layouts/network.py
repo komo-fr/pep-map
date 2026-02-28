@@ -22,9 +22,10 @@ def create_network_layout() -> html.Div:
     Returns:
         html.Div: Networkタブのレイアウト
     """
-    # データ取得日付を取得
+    # データ取得日付とチェック日付を取得
     metadata = load_metadata()
     fetched_at = metadata["fetched_at"]
+    checked_at = metadata["checked_at"]
 
     return html.Div(
         [
@@ -33,7 +34,7 @@ def create_network_layout() -> html.Div:
             # === Status凡例セクション ===
             create_status_legend(),
             # === データ取得日付セクション ===
-            _create_toolbar_section(fetched_at),
+            _create_toolbar_section(fetched_at, checked_at),
             # === 操作説明セクション ===
             _create_operation_description_section(),
             # === メインコンテンツ: グラフ + テーブル ===
@@ -116,14 +117,20 @@ def _create_top_section() -> html.Div:
     )
 
 
-def _create_toolbar_section(fetched_at: str) -> html.Div:
-    """データ取得日付 + Reset selectionボタン + ノードサイズ切り替えセクション"""
+def _create_toolbar_section(fetched_at: str, checked_at: str) -> html.Div:
+    """データ取得日付・チェック日付 + Reset selectionボタン + ノードサイズ切り替えセクション"""
     return html.Div(
         [
-            # 1行目: データ取得日付
+            # 1行目: データ取得日付・チェック日付
             html.Div(
                 html.P(
-                    f"Data as of: {fetched_at}",
+                    [
+                        html.Strong("Data updated:"),
+                        f" {fetched_at}",
+                        html.Span(" | ", style={"margin": "0 8px", "color": "#999"}),
+                        html.Strong("Last checked:"),
+                        f" {checked_at}",
+                    ],
                     style={
                         "fontSize": "12px",
                         "color": "#666",
