@@ -3,6 +3,7 @@
 This module provides functionality to extract PEP citations from RST content.
 """
 
+import logging
 import re
 from collections import Counter
 from pathlib import Path
@@ -10,6 +11,8 @@ from pathlib import Path
 import pandas as pd
 
 from src.data_acquisition.pep_parser import PEPParser
+
+logger = logging.getLogger(__name__)
 
 
 class CitationExtractor:
@@ -195,18 +198,31 @@ class CitationExtractor:
 
         return df
 
-    def save_to_csv(self, citations_df: pd.DataFrame, output_path: Path) -> None:
+    def save_to_csv(self, df: pd.DataFrame, output_path: Path) -> None:
         """Save citations DataFrame to CSV file.
 
         Args:
-            citations_df: DataFrame with columns: citing, cited, count
-            output_path: Path where the CSV file should be saved
+            df: Citations DataFrame with columns [citing, cited, count]
+            output_path: Path where to save the CSV file
 
         Note:
-            Creates parent directories if they don't exist.
+            DataFrame is sorted by [citing, cited] (ascending) before saving
+            to ensure consistent output for hash-based change detection.
         """
-        # Create parent directory if it doesn't exist
+        logger.info(f"Saving citations to {output_path}")
+
+        # ディレクトリが存在しない場合は作成
         output_path.parent.mkdir(parents=True, exist_ok=True)
 
-        # Save to CSV without index
-        citations_df.to_csv(output_path, index=False)
+        # citing, citedでソート（両方とも昇順）
+        # 空のDataFrameの場合はソートをスキップ
+        if len(df) > 0 and "citing" in df.columns and "cited" in df.columns:
+            df_sorted = df.sort_values(["citing", "cited"], ascending=True)
+            logger.info("DataFrame sorted by [citing, cited] (ascending)")
+        else:
+            df_sorted = df
+
+        # CSVに保存
+        df_sorted.to_csv(output_path, index=False)
+
+        logger.info(f"Successfully saved to {output_path}")

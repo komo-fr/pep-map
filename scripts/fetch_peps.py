@@ -1,7 +1,6 @@
 """Fetch and parse PEP metadata from GitHub repository."""
 
 import argparse
-import json
 import logging
 import sys
 from datetime import datetime, timezone
@@ -11,33 +10,12 @@ from typing import Optional
 from src.data_acquisition.citation_extractor import CitationExtractor
 from src.data_acquisition.github_fetcher import PEPFetcher
 from src.data_acquisition.pep_parser import PEPParser
+from src.utils.hash_utils import calculate_file_hash
+from src.utils.metadata_manager import MetadataManager
 
 logger = logging.getLogger(__name__)
 
 PEP_REPO_URL = "https://github.com/python/peps/archive/refs/heads/main.zip"
-
-
-def save_metadata_json(metadata: dict, output_path: Path) -> None:
-    """
-    Save metadata to JSON file.
-
-    Args:
-        metadata: Dictionary containing metadata (fetched_at, source_url, etc.)
-        output_path: Path where to save the JSON file
-
-    Note:
-        JSON is formatted with indentation for readability.
-    """
-    logger.info(f"Saving metadata to {output_path}")
-
-    # Ensure parent directory exists
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-
-    # Write JSON file with indentation
-    with open(output_path, "w", encoding="utf-8") as jsonfile:
-        json.dump(metadata, jsonfile, indent=2, ensure_ascii=False)
-
-    logger.info(f"Successfully saved metadata to {output_path}")
 
 
 def parse_arguments(args: Optional[list[str]] = None) -> argparse.Namespace:
@@ -79,7 +57,10 @@ def main() -> int:
     Main function to fetch and parse PEP metadata.
 
     Returns:
-        Exit code (0 for success, non-zero for failure)
+        Exit code:
+        - 0: Success, no data changes
+        - 1: Error occurred
+        - 2: Success, data has changed
     """
     # Parse command-line arguments
     args = parse_arguments()
@@ -93,11 +74,6 @@ def main() -> int:
     logger.info("Starting PEP metadata fetch and parse")
 
     try:
-        # Initialize components
-        fetcher = PEPFetcher()
-        parser = PEPParser()
-        citation_extractor = CitationExtractor()
-
         # Set up paths
         project_root = Path(__file__).parent.parent
         raw_dir = project_root / "data" / "raw"
@@ -107,33 +83,41 @@ def main() -> int:
         raw_dir.mkdir(parents=True, exist_ok=True)
         output_dir.mkdir(parents=True, exist_ok=True)
 
-        # Generate timestamp for raw files (still need this for temp files)
-        timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
-        zip_path = raw_dir / f"peps_{timestamp}.zip"
-        extract_dir = raw_dir / f"peps_extracted_{timestamp}"
-
-        # Fixed output filenames (no timestamp)
+        # Fixed output filenames
         csv_path = output_dir / "peps_metadata.csv"
         citations_path = output_dir / "citations.csv"
         metadata_path = output_dir / "metadata.json"
 
-        # Step 1: Download PEP repository
+        # ===== STEP 0: Load existing metadata (before fetching) =====
+        metadata_manager = MetadataManager()
+        old_metadata = metadata_manager.load_metadata(metadata_path)
+
+        # ===== STEP 1-4: Fetch and parse PEP data =====
+        # Initialize components
+        fetcher = PEPFetcher()
+        parser = PEPParser()
+        citation_extractor = CitationExtractor()
+
+        # Generate timestamp for raw files
+        timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+        zip_path = raw_dir / f"peps_{timestamp}.zip"
+        extract_dir = raw_dir / f"peps_extracted_{timestamp}"
+
+        # Download PEP repository
         logger.info("Step 1/5: Downloading PEP repository...")
         fetcher.download_repo(PEP_REPO_URL, zip_path)
         logger.info(f"Downloaded to {zip_path}")
 
-        # Step 2: Extract zip file
+        # Extract zip file
         logger.info("Step 2/5: Extracting zip file...")
         fetcher.extract_zip(zip_path, extract_dir)
         logger.info(f"Extracted to {extract_dir}")
 
-        # Step 3: Find and parse PEP files
+        # Find and parse PEP files
         logger.info("Step 3/5: Finding PEP files...")
-        # The extracted directory structure is typically: peps-main/peps/
         pep_dir = extract_dir / "peps-main" / "peps"
 
         if not pep_dir.exists():
-            # Try to find the peps directory
             possible_dirs = list(extract_dir.glob("*/peps"))
             if possible_dirs:
                 pep_dir = possible_dirs[0]
@@ -149,31 +133,50 @@ def main() -> int:
         pep_metadata = parser.parse_multiple_peps(pep_files)
         logger.info(f"Successfully parsed {len(pep_metadata)} PEPs")
 
-        # Step 4: Extract citations
+        # Extract citations
         logger.info("Step 4/5: Extracting citations...")
         citations_df = citation_extractor.extract_from_multiple_files(pep_files)
         logger.info(f"Extracted {len(citations_df)} citation records")
 
-        # Step 5: Save all data
+        # Save CSVs (with sorting)
         logger.info("Step 5/5: Saving data...")
-
-        # Save PEP metadata CSV
-        logger.info("Saving PEP metadata CSV...")
         parser.save_to_csv(pep_metadata, csv_path)
-
-        # Save citations CSV
-        logger.info("Saving citations CSV...")
         citation_extractor.save_to_csv(citations_df, citations_path)
 
-        # Create and save metadata JSON
-        logger.info("Saving metadata JSON...")
-        metadata = {
-            "fetched_at": datetime.now(timezone.utc).isoformat(),
-            "source_url": PEP_REPO_URL,
+        # ===== STEP 6: Calculate hashes =====
+        logger.info("Calculating file hashes...")
+        new_hashes = {
+            "peps_metadata": calculate_file_hash(csv_path),
+            "citations": calculate_file_hash(citations_path),
         }
-        save_metadata_json(metadata, metadata_path)
+        logger.info(f"peps_metadata hash: {new_hashes['peps_metadata']}")
+        logger.info(f"citations hash: {new_hashes['citations']}")
 
-        # Clean up raw files if not keeping
+        # ===== STEP 7: Check if data changed =====
+        data_changed = metadata_manager.has_data_changed(new_hashes, old_metadata)
+
+        # ===== STEP 8: Update metadata =====
+        if data_changed:
+            logger.info("Data has changed. Updating fetched_at and data_hashes.")
+            # 初期化（source_urlは保持）
+            new_metadata = {
+                "source_url": PEP_REPO_URL,
+            }
+            # fetched_atとchecked_atを更新
+            new_metadata = metadata_manager.update_fetched_at(new_metadata)
+            new_metadata = metadata_manager.update_checked_at(new_metadata)
+            # data_hashesを更新
+            new_metadata = metadata_manager.update_data_hashes(new_metadata, new_hashes)
+        else:
+            logger.info("No data changes. Updating checked_at only.")
+            # checked_atだけ更新
+            new_metadata = old_metadata.copy()
+            new_metadata = metadata_manager.update_checked_at(new_metadata)
+
+        # ===== STEP 9: Save metadata =====
+        metadata_manager.save_metadata(new_metadata, metadata_path)
+
+        # ===== STEP 10: Clean up raw files =====
         if not args.keep_raw:
             logger.info("Cleaning up temporary files...")
             fetcher.cleanup(zip_path)
@@ -181,22 +184,26 @@ def main() -> int:
             logger.info("Cleanup complete")
         else:
             logger.info("Keeping raw files (--keep-raw flag set)")
-            logger.info(f"  Zip file: {zip_path}")
-            logger.info(f"  Extracted: {extract_dir}")
 
-        # Summary
+        # ===== Summary =====
         logger.info("\n" + "=" * 60)
         logger.info("SUCCESS: PEP metadata fetch complete")
         logger.info("=" * 60)
         logger.info(f"Total PEPs processed: {len(pep_metadata)}")
         logger.info(f"Total citations extracted: {len(citations_df)}")
+        logger.info(f"Data changed: {data_changed}")
         logger.info(f"PEP metadata CSV: {csv_path}")
         logger.info(f"Citations CSV: {citations_path}")
         logger.info(f"Metadata JSON: {metadata_path}")
-        logger.info(f"Fetched at: {metadata['fetched_at']}")
         logger.info("=" * 60)
 
-        return 0
+        # ===== Return exit code =====
+        if data_changed:
+            logger.info("Exit code: 2 (data changed)")
+            return 2
+        else:
+            logger.info("Exit code: 0 (no changes)")
+            return 0
 
     except Exception as e:
         logger.error(f"Failed to fetch and parse PEPs: {e}", exc_info=True)
