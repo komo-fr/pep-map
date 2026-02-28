@@ -190,8 +190,8 @@ This is a test PEP.
         # main()を実行
         exit_code = main()
 
-        # 正常終了を確認
-        assert exit_code == 0
+        # 初回実行なので終了コード2（データ変更あり）を確認
+        assert exit_code == 2
 
         # 3つの出力ファイルが作成されたか確認
         assert (output_dir / "peps_metadata.csv").exists()
@@ -228,7 +228,8 @@ This is a test PEP.
         # main()を実行
         exit_code = main()
 
-        assert exit_code == 0
+        # 初回実行なので終了コード2（データ変更あり）を確認
+        assert exit_code == 2
 
         # citations.csvのフォーマットを確認
         citations_path = output_dir / "citations.csv"
