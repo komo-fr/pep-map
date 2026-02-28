@@ -169,3 +169,40 @@ This is a test PEP.
         # 正しいカラムが存在するか確認
         expected_columns = ["citing", "cited", "count"]
         assert fieldnames == expected_columns
+
+    def test_main_no_data_change_on_second_run(
+        self, temp_dir, sample_pep_files, monkeypatch
+    ):
+        """Test that running main() twice with the same data returns exit code 0 on second run."""
+        # モックのzipファイルを作成
+        zip_path = temp_dir / "mock_peps.zip"
+        with zipfile.ZipFile(zip_path, "w") as zf:
+            for pep_file in sample_pep_files.glob("*.rst"):
+                arcname = f"peps-main/peps/{pep_file.name}"
+                zf.write(pep_file, arcname)
+
+        output_dir = temp_dir / "output"
+
+        # PEPFetcherのメソッドをモック
+        def mock_download_repo(self, url, output_path, timeout=60):
+            shutil.copy(zip_path, output_path)
+            return output_path
+
+        monkeypatch.setattr(
+            "src.data_acquisition.github_fetcher.PEPFetcher.download_repo",
+            mock_download_repo,
+        )
+        monkeypatch.setattr(
+            "sys.argv",
+            ["fetch_peps.py", "--output-dir", str(output_dir)],
+        )
+
+        # 1回目の実行
+        exit_code_first = main()
+        # 初回実行なので終了コード2（データ変更あり）
+        assert exit_code_first == 2
+
+        # 2回目の実行（同じデータ）
+        exit_code_second = main()
+        # データ変更なしなので終了コード0
+        assert exit_code_second == 0
