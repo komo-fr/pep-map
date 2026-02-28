@@ -658,8 +658,6 @@ Content here
         output_path = tmp_path / "test_output.csv"
         parser.save_to_csv(metadata_list, output_path)
 
-        import csv
-
         with open(output_path, "r", encoding="utf-8") as f:
             reader = csv.DictReader(f)
             row = next(reader)
