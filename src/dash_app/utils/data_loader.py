@@ -16,6 +16,9 @@ _peps_metadata_cache: pd.DataFrame | None = None
 _citations_cache: pd.DataFrame | None = None
 _metadata_cache: dict | None = None
 _python_releases_cache: pd.DataFrame | None = None
+_node_metrics_cache: pd.DataFrame | None = None
+_peps_with_metrics_cache: pd.DataFrame | None = None
+_metrics_styles_cache: list[dict] | None = None
 
 
 def load_peps_metadata() -> pd.DataFrame:
@@ -35,6 +38,7 @@ def load_peps_metadata() -> pd.DataFrame:
         - topic (str): トピック
         - requires (str): 必要とするPEP
         - replaces (str): 置き換えるPEP
+        - pep_markdown (str): Markdownリンク形式のPEP表記
     """
     global _peps_metadata_cache
 
@@ -48,6 +52,11 @@ def load_peps_metadata() -> pd.DataFrame:
     # created列を日付型に変換
     # フォーマット: "13-Jun-2000" → %d-%b-%Y
     df["created"] = pd.to_datetime(df["created"], format="%d-%b-%Y")
+
+    # Markdownリンク列を事前計算
+    df["pep_markdown"] = df["pep_number"].apply(
+        lambda pep_num: f"[PEP {pep_num}]({generate_pep_url(pep_num)})"
+    )
 
     _peps_metadata_cache = df
     return df
@@ -294,6 +303,121 @@ def generate_pep_url(pep_number: int) -> str:
     return PEP_BASE_URL.format(pep_number=pep_number)
 
 
+def load_node_metrics() -> pd.DataFrame:
+    """
+    ノードメトリクスデータを読み込む
+
+    Returns:
+        pd.DataFrame: ノードメトリクスのDataFrame
+
+    列:
+        - pep_number (int): PEP番号
+        - in_degree (int): 入次数
+        - out_degree (int): 出次数
+        - degree (int): 次数（入次数 + 出次数）
+        - pagerank (float): PageRank値
+    """
+    global _node_metrics_cache
+
+    if _node_metrics_cache is not None:
+        return _node_metrics_cache
+
+    file_path = DATA_DIR / "node_metrics.csv"
+
+    if not file_path.exists():
+        # フォールバック: 空のDataFrameを返す
+        return pd.DataFrame(
+            columns=["pep_number", "in_degree", "out_degree", "degree", "pagerank"]
+        )
+
+    df = pd.read_csv(file_path)
+
+    _node_metrics_cache = df
+    return df
+
+
+def load_peps_with_metrics() -> pd.DataFrame:
+    """
+    PEP基本情報とメトリクスを統合したDataFrameを返す
+
+    Returns:
+        pd.DataFrame: peps_metadata + node_metrics の統合DataFrame
+    """
+    global _peps_with_metrics_cache
+
+    if _peps_with_metrics_cache is not None:
+        return _peps_with_metrics_cache.copy()
+
+    peps_df = load_peps_metadata()
+    metrics_df = load_node_metrics()
+
+    # left joinでメトリクスがないPEPも残す
+    merged_df = peps_df.merge(metrics_df, on="pep_number", how="left")
+
+    _peps_with_metrics_cache = merged_df
+    return merged_df
+
+
+def load_metrics_styles() -> list[dict]:
+    """
+    メトリクステーブルのスタイル条件を事前計算
+
+    In-degree, Out-degree, Degree列に対してデータバースタイルを生成
+    PageRank列に対してグラデーション背景を生成
+    他のスタイル条件（ステータスカラー、縞模様）も含める
+
+    Returns:
+        list[dict]: style_data_conditionalに使用するスタイルのリスト
+    """
+    from src.dash_app.utils.table_helpers import data_bars, gradient_backgrounds
+    from src.dash_app.components.pep_tables import generate_status_styles
+
+    global _metrics_styles_cache
+
+    if _metrics_styles_cache is not None:
+        return _metrics_styles_cache
+
+    # PEP + メトリクスデータを取得
+    df = load_peps_with_metrics()
+
+    # メトリクス列の欠損値を処理
+    for col in ["in_degree", "out_degree", "degree", "pagerank"]:
+        if col in df.columns:
+            df[col] = df[col].fillna(0)
+
+    # デフォルトのスタイル条件
+    base_styles = [
+        {
+            "if": {"row_index": "odd"},
+            "backgroundColor": "#fafafa",
+        },
+        {
+            "if": {"column_id": "pep"},
+            "paddingTop": "11px",
+            "paddingBottom": "0px",
+            "fontSize": "14px",
+            "verticalAlign": "bottom",
+        },
+    ] + generate_status_styles()
+
+    # データバースタイルを生成（In-degree, Out-degree, Degree）
+    data_bar_styles = []
+    for column in ["in_degree", "out_degree", "degree"]:
+        if column in df.columns and len(df) > 0:
+            data_bar_styles.extend(data_bars(df, column))
+
+    # PageRank列にグラデーション背景を生成
+    gradient_styles = []
+    if "pagerank" in df.columns and len(df) > 0:
+        gradient_styles.extend(gradient_backgrounds(df, "pagerank"))
+
+    # 全てのスタイルを結合
+    all_styles = base_styles + data_bar_styles + gradient_styles
+
+    _metrics_styles_cache = all_styles
+    return all_styles
+
+
 def clear_cache() -> None:
     """
     キャッシュをクリアする（テスト用）
@@ -302,8 +426,14 @@ def clear_cache() -> None:
         _peps_metadata_cache, \
         _citations_cache, \
         _metadata_cache, \
-        _python_releases_cache
+        _python_releases_cache, \
+        _node_metrics_cache, \
+        _peps_with_metrics_cache, \
+        _metrics_styles_cache
     _peps_metadata_cache = None
     _citations_cache = None
     _metadata_cache = None
     _python_releases_cache = None
+    _node_metrics_cache = None
+    _peps_with_metrics_cache = None
+    _metrics_styles_cache = None

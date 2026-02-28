@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.0] - 2026-02-28
+
+### Added
+- Added the PEP Metrics tab.
+- Enabled node size scaling by PageRank in the Network tab.
+
+### Changed
+- Moved metric calculations to the scheduled data processing script.
+
 ## [0.2.1] - 2026-02-26
 
 ### Changed
