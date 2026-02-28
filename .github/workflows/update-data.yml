@@ -51,6 +51,9 @@ jobs:
       - name: Fetch PEP data
         run: PYTHONPATH=. python scripts/fetch_peps.py
 
+      - name: Calculate node metrics
+        run: PYTHONPATH=. python scripts/calculate_metrics.py
+
       - name: Check for changes
         id: check_changes
         run: |
@@ -77,9 +80,9 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data/processed/
           if [ "${{ github.event_name }}" = "schedule" ]; then
-            git commit -m "Update PEP data (automated weekly update)"
+            git commit -m "Update PEP data and metrics (automated weekly update)"
           else
-            git commit -m "Update PEP data (manual update)"
+            git commit -m "Update PEP data and metrics (manual update)"
           fi
           git push origin production
 
