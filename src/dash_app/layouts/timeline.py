@@ -26,9 +26,10 @@ def create_timeline_layout() -> html.Div:
     Returns:
         html.Div: Timelineタブのレイアウト
     """
-    # データ取得日付を取得
+    # データ取得日付とチェック日付を取得
     metadata = load_metadata()
     fetched_at = metadata["fetched_at"]
+    checked_at = metadata["checked_at"]
 
     return html.Div(
         [
@@ -41,7 +42,7 @@ def create_timeline_layout() -> html.Div:
             # === タイムライングラフセクション ===
             _create_graph_section(),
             # === データ取得日付セクション ===
-            _create_metadata_section(fetched_at),
+            _create_metadata_section(fetched_at, checked_at),
             # === テーブルセクション ===
             _create_tables_section(),
         ],
@@ -206,23 +207,43 @@ def _create_graph_section() -> html.Div:
             dcc.Location(id="pep-url", refresh=True),
         ],
         style={
-            "marginBottom": "16px",
+            "marginBottom": "0",
         },
     )
 
 
-def _create_metadata_section(fetched_at: str) -> html.Div:
-    """データ取得日付セクション"""
+def _create_metadata_section(fetched_at: str, checked_at: str) -> html.Div:
+    """データ取得日付・チェック日付セクション"""
     return html.Div(
-        html.P(
-            f"Data as of: {fetched_at}",
-            style={
-                "fontSize": "12px",
-                "color": "#666",
-            },
-        ),
+        [
+            html.P(
+                [
+                    html.Strong("Data updated:"),
+                    f" {fetched_at}",
+                ],
+                style={
+                    "fontSize": "12px",
+                    "color": "#666",
+                    "marginBottom": "0px",
+                    "marginTop": "0px",
+                },
+            ),
+            html.P(
+                [
+                    html.Strong("Last checked:"),
+                    f" {checked_at}",
+                ],
+                style={
+                    "fontSize": "12px",
+                    "color": "#666",
+                    "marginBottom": "0px",
+                    "marginTop": "0px",
+                },
+            ),
+        ],
         style={
             "marginBottom": "16px",
+            "textAlign": "right",
         },
     )
 

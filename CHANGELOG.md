@@ -5,9 +5,11 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 ### Added
 - Store data retrieval date and data check date separately.
+- Display the data check date in the UI.
 
 ### Changed
 - Skip metrics recomputation when no citation or metadata changes are detected.
+- Update the layout of the data updated date in the dashboard.
 
 ## [0.3.0] - 2026-02-28
 
