@@ -65,6 +65,7 @@ def sample_metadata():
     """テスト用メタデータの辞書"""
     return {
         "fetched_at": "2026-02-14",
+        "checked_at": "2026-02-14",
         "source_url": "https://github.com/python/peps/archive/refs/heads/main.zip",
     }
 
@@ -137,7 +138,11 @@ def mock_data_files(
     metadata_json = data_dir / "metadata.json"
     metadata_json.write_text(
         json.dumps(
-            {**sample_metadata, "fetched_at": "2026-02-14T15:25:50.027772+00:00"}
+            {
+                **sample_metadata,
+                "fetched_at": "2026-02-14T15:25:50.027772+00:00",
+                "checked_at": "2026-02-14T15:26:00.000000+00:00",
+            }
         ),
         encoding="utf-8",
     )

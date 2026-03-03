@@ -325,7 +325,7 @@ See https://peps.python.org/pep-0008/ for details.
     # Phase 7: CSV output tests (Red)
 
     def test_save_to_csv(self, extractor, fixtures_dir, tmp_path):
-        """Test saving citations to CSV file."""
+        """Test saving citations to CSV file with sorted order."""
         # Extract citations from a file
         file_paths = [fixtures_dir / "pep-with-citations.rst"]
         df = extractor.extract_from_multiple_files(file_paths)
@@ -342,8 +342,20 @@ See https://peps.python.org/pep-0008/ for details.
         assert len(saved_df) == len(df)
         assert list(saved_df.columns) == ["citing", "cited", "count"]
 
+        # ソート順序を確認（citing, citedの昇順）
+        for i in range(len(saved_df) - 1):
+            current_row = saved_df.iloc[i]
+            next_row = saved_df.iloc[i + 1]
+
+            # citingで比較
+            if current_row["citing"] == next_row["citing"]:
+                # citingが同じ場合、citedで比較
+                assert current_row["cited"] <= next_row["cited"]
+            else:
+                assert current_row["citing"] < next_row["citing"]
+
     def test_csv_format(self, extractor, fixtures_dir, tmp_path):
-        """Test CSV file format."""
+        """Test CSV file format with sorted order."""
         # Create a simple DataFrame
         file_paths = [fixtures_dir / "pep-with-citations.rst"]
         df = extractor.extract_from_multiple_files(file_paths)
@@ -364,6 +376,21 @@ See https://peps.python.org/pep-0008/ for details.
             # Data lines should not start with a number followed by comma
             # They should start with citing PEP number
             assert not lines[1].startswith("0,")
+
+        # データ行がソートされていることを確認
+        if len(lines) > 2:
+            # 2行目と3行目を比較（簡易チェック）
+            row1 = lines[1].strip().split(",")
+            row2 = lines[2].strip().split(",")
+
+            citing1, cited1 = int(row1[0]), int(row1[1])
+            citing2, cited2 = int(row2[0]), int(row2[1])
+
+            # citing, citedの順でソート
+            if citing1 == citing2:
+                assert cited1 <= cited2
+            else:
+                assert citing1 <= citing2
 
     def test_save_to_csv_create_directory(self, extractor, tmp_path):
         """Test that parent directory is created if it doesn't exist."""

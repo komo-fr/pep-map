@@ -576,15 +576,31 @@ Content here
         assert fieldnames == expected_columns
 
     def test_save_to_csv_correct_data_types(self, parser, tmp_path):
-        """Test that save_to_csv saves data with correct types."""
+        """Test that save_to_csv saves data with correct types and sorted order."""
         metadata_list = [
             PEPMetadata(
                 pep_number=123,
-                title="Test PEP",
+                title="Test PEP 123",
                 status="Draft",
                 type="Process",
                 created="2000-01-01",
                 authors=["Author One"],
+            ),
+            PEPMetadata(
+                pep_number=8,  # 意図的に順序を逆にする
+                title="Test PEP 8",
+                status="Active",
+                type="Process",
+                created="2001-01-01",
+                authors=["Author Two"],
+            ),
+            PEPMetadata(
+                pep_number=456,
+                title="Test PEP 456",
+                status="Final",
+                type="Standards Track",
+                created="2002-01-01",
+                authors=["Author Three"],
             ),
         ]
 
@@ -594,12 +610,17 @@ Content here
         # CSVを読み込んで確認
         with open(output_path, "r", encoding="utf-8") as f:
             reader = csv.DictReader(f)
-            row = next(reader)
+            rows = list(reader)
 
-        # pep_numberが文字列として保存されているか確認（CSVは全て文字列）
-        assert row["pep_number"] == "123"
-        assert row["title"] == "Test PEP"
-        assert row["status"] == "Draft"
+        # pep_numberでソートされていることを確認
+        assert len(rows) == 3
+        assert rows[0]["pep_number"] == "8"  # 昇順
+        assert rows[1]["pep_number"] == "123"
+        assert rows[2]["pep_number"] == "456"
+
+        # その他の検証
+        assert rows[1]["title"] == "Test PEP 123"
+        assert rows[1]["status"] == "Draft"
 
     def test_save_to_csv_handles_empty_list(self, parser, tmp_path):
         """Test that save_to_csv handles empty list correctly."""
@@ -637,8 +658,6 @@ Content here
         output_path = tmp_path / "test_output.csv"
         parser.save_to_csv(metadata_list, output_path)
 
-        import csv
-
         with open(output_path, "r", encoding="utf-8") as f:
             reader = csv.DictReader(f)
             row = next(reader)
@@ -650,10 +669,18 @@ Content here
         assert row["replaces"] == ""
 
     def test_save_to_csv_handles_list_fields(self, parser, tmp_path):
-        """Test that save_to_csv handles list fields correctly."""
+        """Test that save_to_csv handles list fields correctly and sorts by pep_number."""
         metadata_list = [
             PEPMetadata(
-                pep_number=8,
+                pep_number=100,
+                title="Test PEP 100",
+                status="Draft",
+                type="Process",
+                created="2000-01-01",
+                authors=["Author A"],
+            ),
+            PEPMetadata(
+                pep_number=8,  # 意図的に順序を逆にする
                 title="Style Guide",
                 status="Active",
                 type="Process",
@@ -672,10 +699,15 @@ Content here
 
         with open(output_path, "r", encoding="utf-8") as f:
             reader = csv.DictReader(f)
-            row = next(reader)
+            rows = list(reader)
+
+        # pep_numberでソートされていることを確認
+        assert len(rows) == 2
+        assert rows[0]["pep_number"] == "8"  # 昇順
+        assert rows[1]["pep_number"] == "100"
 
         # リストフィールドはセミコロンで結合される
-        assert row["authors"] == "Guido van Rossum; Barry Warsaw; Alyssa Coghlan"
-        assert row["topic"] == "Governance; Packaging"
-        assert row["requires"] == "440; 508; 518"
-        assert row["replaces"] == "245; 246"
+        assert rows[0]["authors"] == "Guido van Rossum; Barry Warsaw; Alyssa Coghlan"
+        assert rows[0]["topic"] == "Governance; Packaging"
+        assert rows[0]["requires"] == "440; 508; 518"
+        assert rows[0]["replaces"] == "245; 246"
