@@ -53,6 +53,7 @@ jobs:
         # continue-on-error を使って終了コード2でも継続
         continue-on-error: true
         run: |
+          set +e
           PYTHONPATH=. python scripts/fetch_peps.py
           echo "exit_code=$?" >> $GITHUB_OUTPUT
 
