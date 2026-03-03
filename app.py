@@ -33,6 +33,7 @@ app = Dash(
     suppress_callback_exceptions=True,  # 動的コンテンツのためコールバック例外を抑制
     external_stylesheets=[themes.BOOTSTRAP],
 )
+app.title = "PEP Map | Visualization of Citation Relationships in PEPs"
 server = app.server  # for gunicorn
 
 # データのプリロード（Renderのヘルスチェックに間に合うよう、起動時に読み込む）

@@ -13,9 +13,10 @@ def create_metrics_tab_layout() -> html.Div:
     Returns:
         html.Div: PEP Metricsタブのレイアウト
     """
-    # データ取得日付を取得
+    # データ取得日付とチェック日付を取得
     metadata = load_metadata()
     fetched_at = metadata["fetched_at"]
+    checked_at = metadata["checked_at"]
 
     return html.Div(
         [
@@ -69,7 +70,7 @@ def create_metrics_tab_layout() -> html.Div:
                     "borderTop": "1px solid #888",
                 }
             ),
-            # 検索ボックス + メタデータセクション
+            # 検索ボックス + メタデータセクション（1行、下寄せ）
             html.Div(
                 [
                     # 検索ボックス（左寄せ）
@@ -91,44 +92,31 @@ def create_metrics_tab_layout() -> html.Div:
                             "maxWidth": "500px",
                         },
                     ),
-                    # データ取得日付 + ダウンロードリンク（右寄せ）
+                    # データ取得日付・チェック日付（右寄せ、縦並び）
                     html.Div(
                         [
-                            html.Span(
+                            html.Div(
                                 [
-                                    html.Span(
-                                        "Data as of:", style={"fontWeight": "bold"}
-                                    ),
+                                    html.Strong("Data updated:"),
                                     f" {fetched_at}",
                                 ],
                                 style={
                                     "fontSize": "12px",
                                     "color": "#666",
-                                    "marginRight": "12px",
                                 },
                             ),
-                            html.Span(
-                                "|",
+                            html.Div(
+                                [
+                                    html.Strong("Last checked:"),
+                                    f" {checked_at}",
+                                ],
                                 style={
                                     "fontSize": "12px",
-                                    "color": "#999",
-                                    "marginRight": "12px",
-                                },
-                            ),
-                            html.A(
-                                "Download CSV",
-                                href="https://raw.githubusercontent.com/komo-fr/pep-map/production/data/processed/node_metrics.csv",
-                                style={
-                                    "fontSize": "12px",
-                                    "color": "#0066cc",
-                                    "textDecoration": "underline",
-                                    "cursor": "pointer",
+                                    "color": "#666",
                                 },
                             ),
                         ],
                         style={
-                            "display": "flex",
-                            "alignItems": "center",
                             "marginLeft": "auto",
                         },
                     ),
@@ -142,41 +130,70 @@ def create_metrics_tab_layout() -> html.Div:
                     "gap": "16px",
                 },
             ),
-            # ページサイズ選択 + ページネーションコンポーネント（テーブルの上）
+            # ページサイズ選択 + ページネーション + Download CSVリンク（1行）
             html.Div(
                 [
-                    # ページサイズドロップダウン
+                    # 左側: ページサイズドロップダウン + ページネーション
                     html.Div(
                         [
-                            html.Label(
-                                "Rows per page:",
+                            # ページサイズドロップダウン
+                            html.Div(
+                                [
+                                    html.Label(
+                                        "Rows per page:",
+                                        style={
+                                            "marginRight": "6px",
+                                            "fontSize": "13px",
+                                            "fontWeight": "500",
+                                            "whiteSpace": "nowrap",
+                                            "lineHeight": "1",
+                                            "margin": "0",
+                                            "padding": "0",
+                                            "display": "flex",
+                                            "alignItems": "center",
+                                        },
+                                    ),
+                                    dbc.Select(
+                                        id="metrics-page-size-select",
+                                        options=[
+                                            {"label": "50", "value": 50},
+                                            {"label": "100", "value": 100},
+                                            {"label": "200", "value": 200},
+                                            {"label": "All", "value": -1},
+                                        ],
+                                        value=50,
+                                        style={
+                                            "width": "80px",
+                                            "height": "32px",
+                                            "fontSize": "13px",
+                                            "margin": "0 !important",
+                                            "padding": "4px 6px",
+                                        },
+                                    ),
+                                ],
                                 style={
-                                    "marginRight": "6px",
-                                    "fontSize": "13px",
-                                    "fontWeight": "500",
-                                    "whiteSpace": "nowrap",
-                                    "lineHeight": "1",
-                                    "margin": "0",
-                                    "padding": "0",
                                     "display": "flex",
                                     "alignItems": "center",
+                                    "margin": "0",
+                                    "padding": "0",
+                                    "marginRight": "16px",
                                 },
                             ),
-                            dbc.Select(
-                                id="metrics-page-size-select",
-                                options=[
-                                    {"label": "50", "value": 50},
-                                    {"label": "100", "value": 100},
-                                    {"label": "200", "value": 200},
-                                    {"label": "All", "value": -1},
-                                ],
-                                value=50,
+                            # ページネーション
+                            html.Div(
+                                dbc.Pagination(
+                                    id="metrics-pagination",
+                                    max_value=15,  # 初期値（コールバックで更新）
+                                    fully_expanded=False,  # 中程度の表示（... で省略）
+                                    first_last=True,  # 最初・最後のボタンを表示
+                                    size="sm",  # 小さいサイズ
+                                    class_name="metrics-pagination-custom",
+                                ),
                                 style={
-                                    "width": "80px",
-                                    "height": "32px",
-                                    "fontSize": "13px",
-                                    "margin": "0 !important",
-                                    "padding": "4px 6px",
+                                    "display": "flex",
+                                    "margin": "12px 0 0 0",
+                                    "padding": "0",
+                                    "alignItems": "center",
                                 },
                             ),
                         ],
@@ -187,19 +204,20 @@ def create_metrics_tab_layout() -> html.Div:
                             "padding": "0",
                         },
                     ),
-                    # ページネーション
+                    # 右側: Download CSVリンク
                     html.Div(
-                        dbc.Pagination(
-                            id="metrics-pagination",
-                            max_value=15,  # 初期値（コールバックで更新）
-                            fully_expanded=False,  # 中程度の表示（... で省略）
-                            first_last=True,  # 最初・最後のボタンを表示
-                            size="sm",  # 小さいサイズ
-                            class_name="metrics-pagination-custom",
+                        html.A(
+                            "Download CSV",
+                            href="https://raw.githubusercontent.com/komo-fr/pep-map/production/data/processed/node_metrics.csv",
+                            style={
+                                "fontSize": "12px",
+                                "color": "#0066cc",
+                                "textDecoration": "underline",
+                                "cursor": "pointer",
+                            },
                         ),
                         style={
-                            "display": "flex",
-                            "justifyContent": "flex-end",
+                            "marginLeft": "auto",
                             "margin": "0",
                             "padding": "0",
                         },
@@ -207,9 +225,8 @@ def create_metrics_tab_layout() -> html.Div:
                 ],
                 style={
                     "display": "flex",
-                    "alignItems": "flex-start",
+                    "alignItems": "center",
                     "justifyContent": "space-between",
-                    "gap": "16px",
                     "margin": "0",
                     "padding": "0",
                 },
