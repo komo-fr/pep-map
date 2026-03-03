@@ -49,9 +49,25 @@ jobs:
           pip install -r requirements.txt
 
       - name: Fetch PEP data
-        run: PYTHONPATH=. python scripts/fetch_peps.py
+        id: fetch
+        # continue-on-error を使って終了コード2でも継続
+        continue-on-error: true
+        run: |
+          set +e
+          PYTHONPATH=. python scripts/fetch_peps.py
+          echo "exit_code=$?" >> $GITHUB_OUTPUT
+
+      - name: Check fetch status
+        run: |
+          echo "Fetch exit code: ${{ steps.fetch.outputs.exit_code }}"
+          if [ "${{ steps.fetch.outputs.exit_code }}" = "1" ]; then
+            echo "Error occurred during fetch"
+            exit 1
+          fi
 
       - name: Calculate node metrics
+        # 終了コード2（変更あり）の時だけ実行
+        if: steps.fetch.outputs.exit_code == '2'
         run: PYTHONPATH=. python scripts/calculate_metrics.py
 
       - name: Check for changes
@@ -71,6 +87,7 @@ jobs:
         run: |
           echo "🔍 DRY RUN MODE - No changes will be committed"
           echo "Branch: ${{ github.ref }}"
+          echo "Fetch exit code: ${{ steps.fetch.outputs.exit_code }}"
           echo "Changes detected: ${{ steps.check_changes.outputs.changed }}"
 
       - name: Commit and push changes
@@ -79,13 +96,26 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data/processed/
-          if [ "${{ github.event_name }}" = "schedule" ]; then
-            git commit -m "Update PEP data and metrics (automated weekly update)"
+
+          # コミットメッセージを exit_code に応じて変更
+          if [ "${{ steps.fetch.outputs.exit_code }}" = "2" ]; then
+            # データ変更あり
+            if [ "${{ github.event_name }}" = "schedule" ]; then
+              git commit -m "Update PEP data and metrics (automated weekly update)"
+            else
+              git commit -m "Update PEP data and metrics (manual update)"
+            fi
           else
-            git commit -m "Update PEP data and metrics (manual update)"
+            # メタデータのみ更新（checked_at）
+            if [ "${{ github.event_name }}" = "schedule" ]; then
+              git commit -m "Update data check timestamp (no changes, automated weekly check)"
+            else
+              git commit -m "Update data check timestamp (no changes, manual check)"
+            fi
           fi
+
           git push origin production
 
       - name: No changes to commit
         if: steps.check_changes.outputs.changed == 'false'
-        run: echo "✅ Data is already up to date. Skipping commit."
+        run: echo "✅ No file changes detected. Skipping commit."
