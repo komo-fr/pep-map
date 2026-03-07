@@ -33,12 +33,37 @@ def test_citation_changes_table_columns():
     expected_column_ids = [
         "detected",
         "change_type",
-        "cited",
-        "cited_title",
         "citing",
+        "cited",
         "citing_title",
+        "cited_title",
         "count_before",
         "count_after",
     ]
     actual_column_ids = [col["id"] for col in datatable.columns]
     assert actual_column_ids == expected_column_ids
+
+
+def test_citation_changes_table_multi_headers():
+    """DataTableのマルチヘッダーが正しく定義されていることを確認"""
+    layout = create_citation_changes_tab_layout()
+
+    # layout.children[0] がDataTable
+    datatable = layout.children[0]
+
+    # merge_duplicate_headersが設定されていることを確認
+    assert datatable.merge_duplicate_headers is True
+
+    # 各列のヘッダー構造を確認
+    expected_headers = [
+        ["", "Detected"],
+        ["", "Change"],
+        ["PEP", "Citing"],
+        ["PEP", "Cited"],
+        ["Title", "Citing"],
+        ["Title", "Cited"],
+        ["Count", "Before"],
+        ["Count", "After"],
+    ]
+    actual_headers = [col["name"] for col in datatable.columns]
+    assert actual_headers == expected_headers
