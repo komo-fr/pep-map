@@ -29,7 +29,13 @@ def create_citation_changes_tab_layout() -> html.Div:
     df = df.rename(columns={"citing_markdown": "citing", "cited_markdown": "cited"})
 
     # Change Type ごとの背景色とフォント色のスタイルを作成
-    style_data_conditional = []
+    style_data_conditional = [
+        # 奇数行に背景色を適用（ストライプパターン）
+        {
+            "if": {"row_index": "odd"},
+            "backgroundColor": "#fafafa",
+        },
+    ]
     for change_type, bg_color in CHANGE_TYPE_COLOR_MAP.items():
         font_color = CHANGE_TYPE_FONT_COLOR_MAP[change_type]
         style_data_conditional.append(
