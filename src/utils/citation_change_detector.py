@@ -138,7 +138,7 @@ class CitationChangeDetector:
             changelog_path: Path to citation_changes.csv
         """
         # Skip if DataFrame is empty
-        if len(changelog_df) == 0:
+        if changelog_df.empty:
             logger.info("No changes to append to changelog")
             return
 
