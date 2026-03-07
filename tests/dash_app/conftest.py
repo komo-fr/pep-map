@@ -62,10 +62,11 @@ def sample_citations():
 
 @pytest.fixture
 def sample_metadata():
-    """テスト用メタデータの辞書"""
+    """テスト用メタデータの辞書（source_urlのみ）
+
+    fetched_at/checked_at は mock_data_files で ISO形式で設定される
+    """
     return {
-        "fetched_at": "2026-02-14",
-        "checked_at": "2026-02-14",
         "source_url": "https://github.com/python/peps/archive/refs/heads/main.zip",
     }
 

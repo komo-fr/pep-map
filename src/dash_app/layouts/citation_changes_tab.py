@@ -1,14 +1,12 @@
 """Citation Changesタブのレイアウト"""
 
-from src.dash_app.utils.data_loader import load_metadata
-
 from dash import dash_table, html
 
 from src.dash_app.utils.constants import (
     CHANGE_TYPE_COLOR_MAP,
     CHANGE_TYPE_FONT_COLOR_MAP,
 )
-from src.dash_app.utils.data_loader import load_citation_changes
+from src.dash_app.utils.data_loader import load_citation_changes, load_metadata
 
 
 def create_citation_changes_tab_layout() -> html.Div:
@@ -26,7 +24,10 @@ def create_citation_changes_tab_layout() -> html.Div:
     checked_at = metadata["checked_at"]
 
     # citing_markdown → citing, cited_markdown → cited にリネーム
-    df = df.rename(columns={"citing_markdown": "citing", "cited_markdown": "cited"})
+    # 元のint型カラムを先にdropしてから、markdown版をリネーム
+    df = df.drop(columns=["citing", "cited"]).rename(
+        columns={"citing_markdown": "citing", "cited_markdown": "cited"}
+    )
 
     # Change Type ごとの背景色とフォント色のスタイルを作成
     style_data_conditional = [
