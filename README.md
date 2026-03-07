@@ -15,6 +15,9 @@
 - **PEP Metrics tab:**
     - View structural metrics such as in-degree, out-degree, degree, and PageRank in a table format.
     - It helps you compare PEPs using quantitative network measures.
+- **Citation Changes tab:**
+    - View changes in citation relationships between PEPs detected by this system.
+    - It helps you track newly added, changed, or removed citation relationships.
 
 ![](images/pepmap_overview.png)
 
