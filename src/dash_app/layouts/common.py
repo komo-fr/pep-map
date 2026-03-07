@@ -41,6 +41,12 @@ def create_tab_navigation():
                 style=tab_style,
                 selected_style=tab_selected_style,
             ),
+            dcc.Tab(
+                label="Citation Changes",
+                value="citation_changes",
+                style=tab_style,
+                selected_style=tab_selected_style,
+            ),
         ],
         style={
             "height": "auto",

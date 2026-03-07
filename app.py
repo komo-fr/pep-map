@@ -15,6 +15,7 @@ from src.dash_app.layouts.metrics_tab import create_metrics_tab_layout
 from src.dash_app.callbacks.timeline_callbacks import register_timeline_callbacks
 from src.dash_app.callbacks.network_callbacks import register_network_callbacks
 from src.dash_app.callbacks.metrics_callbacks import register_metrics_callbacks
+from src.dash_app.layouts.citation_changes_tab import create_citation_changes_tab_layout
 from src.dash_app.utils.data_loader import (
     load_peps_metadata,
     load_citations,
@@ -22,6 +23,7 @@ from src.dash_app.utils.data_loader import (
     load_python_releases,
     load_node_metrics,
     load_metrics_styles,
+    load_citation_changes,
 )
 
 
@@ -45,6 +47,7 @@ load_python_releases()
 load_node_metrics()  # メトリクスデータを読み込む
 load_metrics_styles()  # メトリクステーブルのスタイル条件を事前計算
 build_cytoscape_elements()  # Networkグラフの座標計算（2秒程度）
+load_citation_changes()  # 引用変更履歴データを読み込む
 logger.info("Data preload complete.")
 
 # アプリレイアウトの定義
@@ -77,6 +80,8 @@ def render_tab_content(active_tab):
         return create_network_layout()
     elif active_tab == "metrics":
         return create_metrics_tab_layout()
+    elif active_tab == "citation_changes":
+        return create_citation_changes_tab_layout()
     else:
         return html.Div(
             [
