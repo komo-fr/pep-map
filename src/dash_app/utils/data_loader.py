@@ -369,6 +369,14 @@ def load_citation_changes() -> pd.DataFrame:
     df = df.rename(columns={"title": "citing_title"})
     df = df.drop(columns=["pep_number"])
 
+    # citing と cited の Markdown リンク列を追加
+    df["citing_markdown"] = df["citing"].apply(
+        lambda pep_num: f"[PEP {pep_num}]({generate_pep_url(pep_num)})"
+    )
+    df["cited_markdown"] = df["cited"].apply(
+        lambda pep_num: f"[PEP {pep_num}]({generate_pep_url(pep_num)})"
+    )
+
     _citation_changes_cache = df
     return df
 
