@@ -177,6 +177,16 @@ class CitationChangeDetector:
         try:
             # Load CSV file
             df = pd.read_csv(citations_path)
+
+            # Validate required columns
+            required_columns = {"citing", "cited", "count"}
+            if not required_columns.issubset(df.columns):
+                logger.error(
+                    f"Unexpected columns in {citations_path}: {df.columns.tolist()}. "
+                    f"Expected columns: {sorted(required_columns)}"
+                )
+                return None
+
             logger.info(f"Loaded {len(df)} citations from {citations_path}")
             return df
         except Exception as e:

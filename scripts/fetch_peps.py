@@ -106,17 +106,17 @@ def main() -> int:
         extract_dir = raw_dir / f"peps_extracted_{timestamp}"
 
         # Download PEP repository
-        logger.info("Step 1/5: Downloading PEP repository...")
+        logger.info("Step 1/6: Downloading PEP repository...")
         fetcher.download_repo(PEP_REPO_URL, zip_path)
         logger.info(f"Downloaded to {zip_path}")
 
         # Extract zip file
-        logger.info("Step 2/5: Extracting zip file...")
+        logger.info("Step 2/6: Extracting zip file...")
         fetcher.extract_zip(zip_path, extract_dir)
         logger.info(f"Extracted to {extract_dir}")
 
         # Find and parse PEP files
-        logger.info("Step 3/5: Finding PEP files...")
+        logger.info("Step 3/6: Finding PEP files...")
         pep_dir = extract_dir / "peps-main" / "peps"
 
         if not pep_dir.exists():
