@@ -336,10 +336,10 @@ class TestCitationChangeDetectorCreateChangelogEntry:
 
         # Assert
         # detected_at should be string
-        assert changelog_df["detected_at"].dtype == object
+        assert pd.api.types.is_string_dtype(changelog_df["detected_at"])
 
         # change_type should be string
-        assert changelog_df["change_type"].dtype == object
+        assert pd.api.types.is_string_dtype(changelog_df["change_type"])
 
         # citing and cited should be int
         assert changelog_df["citing"].dtype == "int64"
