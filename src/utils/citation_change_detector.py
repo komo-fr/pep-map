@@ -51,7 +51,7 @@ class CitationChangeDetector:
 
         # Added: only in new DataFrame
         added = merged[merged["_merge"] == "right_only"]
-        for _, row in added.iterrows():
+        for row in added.to_dict("records"):
             changes.append(
                 {
                     "change_type": "Added",
@@ -64,7 +64,7 @@ class CitationChangeDetector:
 
         # Deleted: only in old DataFrame
         deleted = merged[merged["_merge"] == "left_only"]
-        for _, row in deleted.iterrows():
+        for row in deleted.to_dict("records"):
             changes.append(
                 {
                     "change_type": "Deleted",
@@ -78,7 +78,7 @@ class CitationChangeDetector:
         # Changed: in both but count differs
         both = merged[merged["_merge"] == "both"]
         changed = both[both["count_before"] != both["count_after"]]
-        for _, row in changed.iterrows():
+        for row in changed.to_dict("records"):
             changes.append(
                 {
                     "change_type": "Changed",

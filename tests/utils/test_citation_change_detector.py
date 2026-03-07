@@ -526,3 +526,30 @@ class TestCitationChangeDetectorAppendToChangelog:
             existing_df_compare,
             check_dtype=False,  # Ignore dtype differences
         )
+
+
+class TestCitationChangeDetectorLoadOldCitations:
+    """Test cases for CitationChangeDetector.load_old_citations() method."""
+
+    @pytest.fixture
+    def detector(self):
+        """Create a CitationChangeDetector instance for testing."""
+        return CitationChangeDetector()
+
+    def test_load_citations_with_invalid_columns(self, detector, tmp_path):
+        """Test loading citations with missing required columns returns None."""
+        # Arrange
+        citations_path = tmp_path / "citations.csv"
+        invalid_df = pd.DataFrame(
+            {
+                "citing": [1, 2],
+                "wrong_column": [8, 9],
+            }
+        )
+        invalid_df.to_csv(citations_path, index=False)
+
+        # Act
+        result_df = detector.load_old_citations(citations_path)
+
+        # Assert
+        assert result_df is None
