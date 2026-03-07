@@ -10,6 +10,7 @@ from typing import Optional
 from src.data_acquisition.citation_extractor import CitationExtractor
 from src.data_acquisition.github_fetcher import PEPFetcher
 from src.data_acquisition.pep_parser import PEPParser
+from src.utils.citation_change_detector import CitationChangeDetector
 from src.utils.hash_utils import calculate_file_hash
 from src.utils.metadata_manager import MetadataManager
 
@@ -87,6 +88,7 @@ def main() -> int:
         csv_path = output_dir / "peps_metadata.csv"
         citations_path = output_dir / "citations.csv"
         metadata_path = output_dir / "metadata.json"
+        citation_changes_path = output_dir / "citation_changes.csv"
 
         # ===== STEP 0: Load existing metadata (before fetching) =====
         metadata_manager = MetadataManager()
@@ -134,12 +136,37 @@ def main() -> int:
         logger.info(f"Successfully parsed {len(pep_metadata)} PEPs")
 
         # Extract citations
-        logger.info("Step 4/5: Extracting citations...")
+        logger.info("Step 4/6: Extracting citations...")
         citations_df = citation_extractor.extract_from_multiple_files(pep_files)
         logger.info(f"Extracted {len(citations_df)} citation records")
 
+        # ===== STEP 4.5: Detect citation changes =====
+        # Generate fetched_at timestamp (used for both detected_at and metadata)
+        fetched_at = datetime.now(timezone.utc).isoformat()
+
+        if citations_path.exists():
+            logger.info("Step 5/6: Detecting citation changes...")
+            change_detector = CitationChangeDetector()
+            old_citations_df = change_detector.load_old_citations(citations_path)
+
+            if old_citations_df is not None:
+                changes = change_detector.detect_changes(old_citations_df, citations_df)
+
+                if changes:
+                    changelog_df = change_detector.create_changelog_entry(
+                        changes, fetched_at
+                    )
+                    change_detector.append_to_changelog(
+                        changelog_df, citation_changes_path
+                    )
+                    logger.info(f"Detected {len(changes)} citation changes")
+                else:
+                    logger.info("No citation changes detected")
+        else:
+            logger.info("Skipping citation change detection (first run)")
+
         # Save CSVs (with sorting)
-        logger.info("Step 5/5: Saving data...")
+        logger.info("Step 6/6: Saving data...")
         parser.save_to_csv(pep_metadata, csv_path)
         citation_extractor.save_to_csv(citations_df, citations_path)
 
@@ -162,8 +189,9 @@ def main() -> int:
             new_metadata = {
                 "source_url": PEP_REPO_URL,
             }
-            # fetched_atとchecked_atを更新
-            new_metadata = metadata_manager.update_fetched_at(new_metadata)
+            # fetched_atを設定（STEP 4.5で生成済みのタイムスタンプを使用）
+            new_metadata["fetched_at"] = fetched_at
+            # checked_atを更新
             new_metadata = metadata_manager.update_checked_at(new_metadata)
             # data_hashesを更新
             new_metadata = metadata_manager.update_data_hashes(new_metadata, new_hashes)
