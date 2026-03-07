@@ -27,8 +27,8 @@ def test_citation_changes_table_columns():
     """DataTableの列が正しく定義されていることを確認"""
     layout = create_citation_changes_tab_layout()
 
-    # layout.children[0] がDataTable
-    datatable = layout.children[0]
+    # layout.children[3] がDataTable
+    datatable = layout.children[3]
 
     expected_column_ids = [
         "detected",
@@ -48,8 +48,8 @@ def test_citation_changes_table_multi_headers():
     """DataTableのマルチヘッダーが正しく定義されていることを確認"""
     layout = create_citation_changes_tab_layout()
 
-    # layout.children[0] がDataTable
-    datatable = layout.children[0]
+    # layout.children[3] がDataTable
+    datatable = layout.children[3]
 
     # merge_duplicate_headersが設定されていることを確認
     assert datatable.merge_duplicate_headers is True

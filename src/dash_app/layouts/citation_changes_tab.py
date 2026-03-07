@@ -1,5 +1,7 @@
 """Citation Changesタブのレイアウト"""
 
+from src.dash_app.utils.data_loader import load_metadata
+
 from dash import dash_table, html
 
 from src.dash_app.utils.constants import (
@@ -18,6 +20,10 @@ def create_citation_changes_tab_layout() -> html.Div:
     """
     # データを読み込む
     df = load_citation_changes()
+
+    # チェック日付を取得
+    metadata = load_metadata()
+    checked_at = metadata["checked_at"]
 
     # citing_markdown → citing, cited_markdown → cited にリネーム
     df = df.rename(columns={"citing_markdown": "citing", "cited_markdown": "cited"})
@@ -61,6 +67,49 @@ def create_citation_changes_tab_layout() -> html.Div:
 
     return html.Div(
         [
+            # 説明文
+            html.Div(
+                [
+                    html.P(
+                        "This table lists changes in citation relationships (Added, Changed, or Deleted) detected during data checks.",
+                        style={"marginBottom": "8px"},
+                    ),
+                    html.P(
+                        [
+                            html.Strong("Note:"),
+                            " ",
+                            html.Code("Detected"),
+                            " indicates when the change was observed by this system, not when the change originally occurred in the PEP.",
+                        ],
+                        style={"marginBottom": "8px", "color": "#666"},
+                    ),
+                ],
+                style={
+                    "fontSize": "14px",
+                    "color": "#333",
+                },
+            ),
+            # 区切り線
+            html.Hr(
+                style={
+                    "margin": "16px 0",
+                    "border": "none",
+                    "borderTop": "1px solid #888",
+                }
+            ),
+            # Last checked（右寄せ）
+            html.Div(
+                [
+                    html.Strong("Last checked:"),
+                    f" {checked_at}",
+                ],
+                style={
+                    "fontSize": "12px",
+                    "color": "#666",
+                    "textAlign": "right",
+                    "margin": "8px 0",
+                },
+            ),
             # DataTableコンポーネント
             dash_table.DataTable(  # type: ignore[attr-defined]
                 id="citation-changes-table",
