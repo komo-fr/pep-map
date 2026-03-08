@@ -2,10 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [0.5.0] - 2026-03-08
 
 ### Added
 - Add a `Citation Changes` tab to show newly detected citation relationships between PEPs.
+- Add data documentation ( `data/README.md` ) and a `Data` link in the dashboard header.
 
 ### Changed
 - Detect and record changes in citation relationships during the data preprocessing step.
