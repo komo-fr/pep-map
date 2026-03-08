@@ -68,7 +68,7 @@ def create_header() -> html.Header:
                         "alignItems": "center",
                     },
                 ),
-                # 右端:  + セパレーター + ガイド + Changelog + GitHubリンク
+                # 右端: ガイド + Data + Changelog + GitHubリンク
                 html.Div(
                     [
                         html.A(

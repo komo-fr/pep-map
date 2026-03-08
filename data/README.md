@@ -9,7 +9,7 @@ This document explains the structure of the data files and how they are generate
 data/
 ├── processed/     # Processed data used by the application
 ├── raw/           # Temporary downloaded files (usually deleted after processing)
-└── static/        Static data (managed manually)
+└── static/        # Static data (managed manually)
 ```
 
 ## Files in processed/
