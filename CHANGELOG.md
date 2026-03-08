@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 - Detect and record changes in citation relationships during the data preprocessing step.
+- Show hover descriptions for the node size options in the `Network` tab.
 
 ## [0.4.0] - 2026-03-03
 
