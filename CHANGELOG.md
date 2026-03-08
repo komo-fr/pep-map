@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Added
+- Add a `Citation Changes` tab to show newly detected citation relationships between PEPs.
+
+### Changed
+- Detect and record changes in citation relationships during the data preprocessing step.
+
 ## [0.4.0] - 2026-03-03
 
 ### Added
@@ -16,7 +24,7 @@ All notable changes to this project will be documented in this file.
 ## [0.3.0] - 2026-02-28
 
 ### Added
-- Added the PEP Metrics tab.
+- Added the `PEP Metrics` tab.
 - Enabled node size scaling by PageRank in the Network tab.
 
 ### Changed
@@ -30,7 +38,7 @@ All notable changes to this project will be documented in this file.
 ## [0.2.0] - 2026-02-26
 
 ### Added
-- Added the Network tab.
+- Added the `Network` tab.
 - Added links to the User Guide in the header and within each tab.
 - Added links to the Changelog in the header.
 - Added scheduled data update processing.

@@ -62,10 +62,11 @@ def sample_citations():
 
 @pytest.fixture
 def sample_metadata():
-    """テスト用メタデータの辞書"""
+    """テスト用メタデータの辞書（source_urlのみ）
+
+    fetched_at/checked_at は mock_data_files で ISO形式で設定される
+    """
     return {
-        "fetched_at": "2026-02-14",
-        "checked_at": "2026-02-14",
         "source_url": "https://github.com/python/peps/archive/refs/heads/main.zip",
     }
 
@@ -113,12 +114,46 @@ def sample_python_releases():
 
 
 @pytest.fixture
+def sample_citation_changes():
+    """テスト用引用変更履歴のDataFrame"""
+    return pd.DataFrame(
+        [
+            {
+                "detected_at": "2026-03-07T04:33:27.412587+00:00",
+                "change_type": "Added",
+                "citing": 484,
+                "cited": 3107,
+                "count_before": None,
+                "count_after": 5.0,
+            },
+            {
+                "detected_at": "2026-03-07T04:33:27.412587+00:00",
+                "change_type": "Changed",
+                "citing": 484,
+                "cited": 8,
+                "count_before": 1.0,
+                "count_after": 2.0,
+            },
+            {
+                "detected_at": "2026-03-06T10:00:00.000000+00:00",
+                "change_type": "Added",
+                "citing": 8,
+                "cited": 484,
+                "count_before": None,
+                "count_after": 1.0,
+            },
+        ]
+    )
+
+
+@pytest.fixture
 def mock_data_files(
     tmp_path,
     sample_peps_metadata,
     sample_citations,
     sample_metadata,
     sample_node_metrics,
+    sample_citation_changes,
 ):
     """テスト用データファイルを一時ディレクトリに作成"""
     data_dir = tmp_path / "data"
@@ -133,6 +168,9 @@ def mock_data_files(
 
     node_metrics_csv = data_dir / "node_metrics.csv"
     sample_node_metrics.to_csv(node_metrics_csv, index=False)
+
+    citation_changes_csv = data_dir / "citation_changes.csv"
+    sample_citation_changes.to_csv(citation_changes_csv, index=False)
 
     # JSONファイル作成
     metadata_json = data_dir / "metadata.json"

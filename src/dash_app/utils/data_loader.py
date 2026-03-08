@@ -19,6 +19,7 @@ _python_releases_cache: pd.DataFrame | None = None
 _node_metrics_cache: pd.DataFrame | None = None
 _peps_with_metrics_cache: pd.DataFrame | None = None
 _metrics_styles_cache: list[dict] | None = None
+_citation_changes_cache: pd.DataFrame | None = None
 
 
 def load_peps_metadata() -> pd.DataFrame:
@@ -309,6 +310,77 @@ def generate_pep_url(pep_number: int) -> str:
     return PEP_BASE_URL.format(pep_number=pep_number)
 
 
+def load_citation_changes() -> pd.DataFrame:
+    """
+    引用関係の変更履歴データを読み込む
+
+    Returns:
+        pd.DataFrame: 引用変更履歴のDataFrame
+
+    列:
+        - detected (str): 検出日（YYYY-MM-DD形式）
+        - change_type (str): 変更タイプ（Added/Changed）
+        - citing (int): 引用元PEP番号
+        - cited (int): 引用先PEP番号
+        - count_before (str): 変更前の引用回数（数値または"-"）
+        - count_after (str): 変更後の引用回数（数値または"-"）
+        - cited_title (str): 引用先PEPのタイトル
+        - citing_title (str): 引用元PEPのタイトル
+    """
+    global _citation_changes_cache
+
+    if _citation_changes_cache is not None:
+        return _citation_changes_cache
+
+    file_path = DATA_DIR / "citation_changes.csv"
+
+    df = pd.read_csv(file_path)
+
+    # detected_at → detected への変換処理
+    # ISO形式（2026-03-07T04:33:27.412587+00:00）から日付部分のみ抽出
+    # YYYY-MM-DD形式の文字列に変換
+    df["detected"] = pd.to_datetime(df["detected_at"]).dt.strftime("%Y-%m-%d")
+    df = df.drop(columns=["detected_at"])
+
+    # count_before/count_after の数値を整数文字列に変換し、空値を "-" に置換
+    for col in ["count_before", "count_after"]:
+        df[col] = df[col].apply(lambda x: str(int(x)) if pd.notna(x) else "-")
+
+    # peps_metadata から cited/citing に対応するタイトルを結合
+    peps_metadata = load_peps_metadata()
+
+    # cited に対応するタイトルを結合
+    df = df.merge(
+        peps_metadata[["pep_number", "title"]],
+        left_on="cited",
+        right_on="pep_number",
+        how="left",
+    )
+    df = df.rename(columns={"title": "cited_title"})
+    df = df.drop(columns=["pep_number"])
+
+    # citing に対応するタイトルを結合
+    df = df.merge(
+        peps_metadata[["pep_number", "title"]],
+        left_on="citing",
+        right_on="pep_number",
+        how="left",
+    )
+    df = df.rename(columns={"title": "citing_title"})
+    df = df.drop(columns=["pep_number"])
+
+    # citing と cited の Markdown リンク列を追加
+    df["citing_markdown"] = df["citing"].apply(
+        lambda pep_num: f"[PEP {pep_num}]({generate_pep_url(pep_num)})"
+    )
+    df["cited_markdown"] = df["cited"].apply(
+        lambda pep_num: f"[PEP {pep_num}]({generate_pep_url(pep_num)})"
+    )
+
+    _citation_changes_cache = df
+    return df
+
+
 def load_node_metrics() -> pd.DataFrame:
     """
     ノードメトリクスデータを読み込む
@@ -435,7 +507,8 @@ def clear_cache() -> None:
         _python_releases_cache, \
         _node_metrics_cache, \
         _peps_with_metrics_cache, \
-        _metrics_styles_cache
+        _metrics_styles_cache, \
+        _citation_changes_cache
     _peps_metadata_cache = None
     _citations_cache = None
     _metadata_cache = None
@@ -443,3 +516,4 @@ def clear_cache() -> None:
     _node_metrics_cache = None
     _peps_with_metrics_cache = None
     _metrics_styles_cache = None
+    _citation_changes_cache = None
