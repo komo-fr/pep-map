@@ -206,3 +206,130 @@ This is a test PEP.
         exit_code_second = main()
         # データ変更なしなので終了コード0
         assert exit_code_second == 0
+
+
+class TestCitationChangesIntegration:
+    """Integration tests for citation_changes.csv generation."""
+
+    def test_citation_changes_not_created_on_first_run(
+        self, temp_dir, mock_download_setup, monkeypatch
+    ):
+        """Test that citation_changes.csv is not created on first run."""
+        # Arrange
+        output_dir = temp_dir / "output"
+        monkeypatch.setattr(
+            "sys.argv",
+            ["fetch_peps.py", "--output-dir", str(output_dir)],
+        )
+        mock_download_setup({1: [8], 8: None})
+
+        # Act
+        main()
+
+        # Assert
+        citation_changes_path = output_dir / "citation_changes.csv"
+        assert not citation_changes_path.exists()
+
+    def test_citation_changes_created_on_data_change(
+        self, temp_dir, mock_download_setup, monkeypatch
+    ):
+        """Test that citation_changes.csv is created when citations change."""
+        import pandas as pd
+
+        # Arrange
+        output_dir = temp_dir / "output"
+        monkeypatch.setattr(
+            "sys.argv",
+            ["fetch_peps.py", "--output-dir", str(output_dir)],
+        )
+
+        # 初回実行: PEP 1 -> PEP 8
+        mock_download_setup({1: [8], 8: None})
+        main()
+
+        # 2回目実行: PEP 1 -> PEP 8, 20（PEP 20への引用を追加）
+        mock_download_setup({1: [8, 20], 8: None})
+
+        # Act
+        main()
+
+        # Assert
+        citation_changes_path = output_dir / "citation_changes.csv"
+        assert citation_changes_path.exists()
+
+        changes_df = pd.read_csv(citation_changes_path)
+        assert len(changes_df) == 1
+        assert changes_df.iloc[0]["change_type"] == "Added"
+        assert changes_df.iloc[0]["citing"] == 1
+        assert changes_df.iloc[0]["cited"] == 20
+
+    def test_citation_changes_not_created_when_no_change(
+        self, temp_dir, mock_download_setup, monkeypatch
+    ):
+        """Test that citation_changes.csv is not created when no citation changes."""
+        # Arrange
+        output_dir = temp_dir / "output"
+        monkeypatch.setattr(
+            "sys.argv",
+            ["fetch_peps.py", "--output-dir", str(output_dir)],
+        )
+
+        # 初回実行
+        mock_download_setup({1: [8], 8: None})
+        main()
+
+        # 2回目実行（同じデータ）
+        mock_download_setup({1: [8], 8: None})
+
+        # Act
+        main()
+
+        # Assert
+        citation_changes_path = output_dir / "citation_changes.csv"
+        assert not citation_changes_path.exists()
+
+    def test_citation_changes_appends_on_subsequent_changes(
+        self, temp_dir, mock_download_setup, monkeypatch
+    ):
+        """Test that subsequent changes are appended to citation_changes.csv."""
+        import pandas as pd
+
+        # Arrange
+        output_dir = temp_dir / "output"
+        monkeypatch.setattr(
+            "sys.argv",
+            ["fetch_peps.py", "--output-dir", str(output_dir)],
+        )
+
+        # 初回実行: PEP 1 -> PEP 8
+        mock_download_setup({1: [8], 8: None})
+        main()
+
+        # 2回目実行: PEP 1 -> PEP 8, 20（PEP 20への引用を追加）
+        mock_download_setup({1: [8, 20], 8: None})
+        main()
+
+        # 3回目実行: PEP 1 -> PEP 8, 100（PEP 20を削除、PEP 100を追加）
+        mock_download_setup({1: [8, 100], 8: None})
+
+        # Act
+        main()
+
+        # Assert
+        citation_changes_path = output_dir / "citation_changes.csv"
+        assert citation_changes_path.exists()
+
+        changes_df = pd.read_csv(citation_changes_path)
+        # 変更1: Added (1 -> 20)
+        # 変更2: Deleted (1 -> 20), Added (1 -> 100)
+        assert len(changes_df) == 3
+
+        # PEP 20への変更履歴（Added -> Deleted）
+        pep20_changes = changes_df[changes_df["cited"] == 20]
+        assert len(pep20_changes) == 2
+        assert set(pep20_changes["change_type"].values) == {"Added", "Deleted"}
+
+        # PEP 100への変更履歴（Added）
+        pep100_changes = changes_df[changes_df["cited"] == 100]
+        assert len(pep100_changes) == 1
+        assert pep100_changes.iloc[0]["change_type"] == "Added"

@@ -1,0 +1,20 @@
+/* Bootstrapツールチップのスタイル上書き */
+/* PEP Metricsのテーブルヘッダーツールチップと統一 */
+.tooltip-inner {
+    max-width: 400px !important;
+    background-color: #222 !important;
+    color: white !important;
+    font-size: 12px !important;
+    text-align: left !important;
+    padding: 8px 10px !important;
+}
+
+.tooltip.bs-tooltip-top .tooltip-arrow::before,
+.tooltip.bs-tooltip-auto[data-popper-placement^="top"] .tooltip-arrow::before {
+    border-top-color: #222 !important;
+}
+
+.tooltip.bs-tooltip-bottom .tooltip-arrow::before,
+.tooltip.bs-tooltip-auto[data-popper-placement^="bottom"] .tooltip-arrow::before {
+    border-bottom-color: #222 !important;
+}

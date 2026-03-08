@@ -98,3 +98,19 @@ PYTHON_3_LINE_COLOR = "#2E6495"  # 青
 # Pythonリリースバージョンラベルのタイムライン上Y座標
 TIMELINE_Y_PYTHON2_LABEL = 1.85  # Python 2系バージョンラベル
 TIMELINE_Y_PYTHON3_LABEL = 1.65  # Python 3系バージョンラベル
+
+# === Citation Changes タブ定数 ===
+
+# Change Type ごとの背景色定義
+CHANGE_TYPE_COLOR_MAP = {
+    "Added": "#58BE89",  # 緑 (Final と同じ)
+    "Changed": "#EDE496",  # 黄色 (Provisional と同じ)
+    "Deleted": "#8A0808",  # 暗い赤 (Rejected と同じ)
+}
+
+# Change Type ごとのフォント色定義
+CHANGE_TYPE_FONT_COLOR_MAP = {
+    "Added": "#FAFAFA",  # 白
+    "Changed": BASE_FONT_COLOR,  # #545454
+    "Deleted": "#FAFAFA",  # 白
+}
