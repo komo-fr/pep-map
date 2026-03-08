@@ -114,3 +114,60 @@ CHANGE_TYPE_FONT_COLOR_MAP = {
     "Changed": BASE_FONT_COLOR,  # #545454
     "Deleted": "#FAFAFA",  # 白
 }
+
+# === Group（コミュニティ検出）タブ定数 ===
+
+# グループカラーパレット（32色）
+# D3.jsのcategory20 + category20b + category20cから選択
+GROUP_COLOR_PALETTE = [
+    "#1f77b4",  # Group 0 - 青
+    "#ff7f0e",  # Group 1 - オレンジ
+    "#2ca02c",  # Group 2 - 緑
+    "#d62728",  # Group 3 - 赤
+    "#9467bd",  # Group 4 - 紫
+    "#8c564b",  # Group 5 - 茶
+    "#e377c2",  # Group 6 - ピンク
+    "#7f7f7f",  # Group 7 - グレー
+    "#bcbd22",  # Group 8 - 黄緑
+    "#17becf",  # Group 9 - シアン
+    "#aec7e8",  # Group 10 - 薄い青
+    "#ffbb78",  # Group 11 - 薄いオレンジ
+    "#98df8a",  # Group 12 - 薄い緑
+    "#ff9896",  # Group 13 - 薄い赤
+    "#c5b0d5",  # Group 14 - 薄い紫
+    "#c49c94",  # Group 15 - 薄い茶
+    "#f7b6d2",  # Group 16 - 薄いピンク
+    "#c7c7c7",  # Group 17 - 薄いグレー
+    "#dbdb8d",  # Group 18 - 薄い黄緑
+    "#9edae5",  # Group 19 - 薄いシアン
+    "#393b79",  # Group 20 - 濃い青紫
+    "#5254a3",  # Group 21 - 青紫
+    "#6b6ecf",  # Group 22 - 明るい青紫
+    "#9c9ede",  # Group 23 - 薄い青紫
+    "#637939",  # Group 24 - 濃い黄緑
+    "#8ca252",  # Group 25 - オリーブ
+    "#b5cf6b",  # Group 26 - 明るい黄緑
+    "#cedb9c",  # Group 27 - 薄い黄緑
+    "#8c6d31",  # Group 28 - 濃い茶
+    "#bd9e39",  # Group 29 - 金色
+    "#e7ba52",  # Group 30 - 明るい金色
+    "#e7cb94",  # Group 31 - 薄い金色
+]
+
+# 孤立ノード（group_id = -1）の色
+ISOLATED_NODE_COLOR = "#CCCCCC"
+
+
+def get_group_color(group_id: int) -> str:
+    """
+    グループIDに対応する色を取得する
+
+    Args:
+        group_id: グループID（-1は孤立ノード、0〜31はコミュニティ）
+
+    Returns:
+        str: 色コード（例: "#1f77b4"）
+    """
+    if group_id < 0:
+        return ISOLATED_NODE_COLOR
+    return GROUP_COLOR_PALETTE[group_id % len(GROUP_COLOR_PALETTE)]

@@ -20,6 +20,7 @@ _node_metrics_cache: pd.DataFrame | None = None
 _peps_with_metrics_cache: pd.DataFrame | None = None
 _metrics_styles_cache: list[dict] | None = None
 _citation_changes_cache: pd.DataFrame | None = None
+_group_data_cache: pd.DataFrame | None = None
 
 
 def load_peps_metadata() -> pd.DataFrame:
@@ -497,6 +498,67 @@ def load_metrics_styles() -> list[dict]:
     return all_styles
 
 
+def load_group_data() -> pd.DataFrame:
+    """
+    グループデータを読み込む（キャッシュあり）
+
+    Returns:
+        pd.DataFrame: グループデータ
+
+    列:
+        - PEP (int): PEP番号
+        - group_id (int): グループID（-1は孤立ノード、0〜31はコミュニティ）
+        - in-degree_group (int): グループ内入次数
+        - out-degree_group (int): グループ内出次数
+        - degeree-group (int): グループ内次数
+        - pagerank-group (float): グループ内PageRank
+    """
+    global _group_data_cache
+
+    if _group_data_cache is not None:
+        return _group_data_cache
+
+    group_file = DATA_DIR / "group" / "peps_group.csv"
+    _group_data_cache = pd.read_csv(group_file)
+    return _group_data_cache
+
+
+def get_peps_by_group(group_id: int) -> pd.DataFrame:
+    """
+    指定されたグループに所属するPEPを取得する
+
+    Args:
+        group_id: グループID
+
+    Returns:
+        pd.DataFrame: グループに所属するPEPのDataFrame
+    """
+    df = load_group_data()
+    return df[df["group_id"] == group_id].copy()
+
+
+def get_group_list() -> list[dict]:
+    """
+    グループ一覧を取得する（ドロップダウン用）
+
+    Returns:
+        list[dict]: [{"label": "All Groups", "value": "all"}, {"label": "Group 0 (58 PEPs)", "value": 0}, ...]
+    """
+    df = load_group_data()
+    group_counts = df.groupby("group_id").size().to_dict()
+
+    options = [{"label": "All Groups", "value": "all"}]
+    for group_id in sorted(group_counts.keys()):
+        count = group_counts[group_id]
+        if group_id == -1:
+            label = f"Isolated ({count} PEPs)"
+        else:
+            label = f"Group {group_id} ({count} PEPs)"
+        options.append({"label": label, "value": group_id})
+
+    return options
+
+
 def clear_cache() -> None:
     """
     キャッシュをクリアする（テスト用）
@@ -509,7 +571,8 @@ def clear_cache() -> None:
         _node_metrics_cache, \
         _peps_with_metrics_cache, \
         _metrics_styles_cache, \
-        _citation_changes_cache
+        _citation_changes_cache, \
+        _group_data_cache
     _peps_metadata_cache = None
     _citations_cache = None
     _metadata_cache = None
@@ -518,3 +581,4 @@ def clear_cache() -> None:
     _peps_with_metrics_cache = None
     _metrics_styles_cache = None
     _citation_changes_cache = None
+    _group_data_cache = None
