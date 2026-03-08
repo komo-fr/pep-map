@@ -1,6 +1,7 @@
 """Networkタブのレイアウト"""
 
 import dash_cytoscape as cyto  # type: ignore[import-untyped]
+import dash_bootstrap_components as dbc  # type: ignore[import-untyped]
 from dash import dcc, html
 
 from src.dash_app.components import (
@@ -174,11 +175,41 @@ def _create_toolbar_section(fetched_at: str, checked_at: str) -> html.Div:
                             dcc.RadioItems(
                                 id="network-node-size-type",
                                 options=[
-                                    {"label": "In-degree", "value": "in_degree"},
-                                    {"label": "Out-degree", "value": "out_degree"},
-                                    {"label": "Degree", "value": "total_degree"},
-                                    {"label": "PageRank", "value": "pagerank"},
-                                    {"label": "Constant", "value": "constant"},
+                                    {
+                                        "label": html.Span(
+                                            "In-degree",
+                                            id="node-size-in-degree-label",
+                                        ),
+                                        "value": "in_degree",
+                                    },
+                                    {
+                                        "label": html.Span(
+                                            "Out-degree",
+                                            id="node-size-out-degree-label",
+                                        ),
+                                        "value": "out_degree",
+                                    },
+                                    {
+                                        "label": html.Span(
+                                            "Degree",
+                                            id="node-size-degree-label",
+                                        ),
+                                        "value": "total_degree",
+                                    },
+                                    {
+                                        "label": html.Span(
+                                            "PageRank",
+                                            id="node-size-pagerank-label",
+                                        ),
+                                        "value": "pagerank",
+                                    },
+                                    {
+                                        "label": html.Span(
+                                            "Constant",
+                                            id="node-size-constant-label",
+                                        ),
+                                        "value": "constant",
+                                    },
                                 ],
                                 value="in_degree",
                                 inline=True,
@@ -189,6 +220,60 @@ def _create_toolbar_section(fetched_at: str, checked_at: str) -> html.Div:
                                     "marginRight": "12px",
                                     "fontSize": "12px",
                                 },
+                            ),
+                            # ツールチップ
+                            dbc.Tooltip(
+                                html.Div(
+                                    [
+                                        "Number of PEPs that cite a given PEP.",
+                                        html.Br(),
+                                        "PEPs with a high in-degree are widely referenced and often influential.",
+                                    ],
+                                    style={"textAlign": "left"},
+                                ),
+                                target="node-size-in-degree-label",
+                                placement="top",
+                                style={"maxWidth": "400px"},
+                            ),
+                            dbc.Tooltip(
+                                html.Div(
+                                    [
+                                        "Number of PEPs cited by a given PEP.",
+                                        html.Br(),
+                                        "PEPs with a high out-degree tend to reference many other PEPs.",
+                                    ],
+                                    style={"textAlign": "left"},
+                                ),
+                                target="node-size-out-degree-label",
+                                placement="top",
+                                style={"maxWidth": "400px"},
+                            ),
+                            dbc.Tooltip(
+                                html.Div(
+                                    "Sum of in-degree and out-degree.",
+                                    style={"textAlign": "left"},
+                                ),
+                                target="node-size-degree-label",
+                                placement="top",
+                                style={"maxWidth": "400px"},
+                            ),
+                            dbc.Tooltip(
+                                html.Div(
+                                    "Network-based importance score computed from the overall citation structure.",
+                                    style={"textAlign": "left"},
+                                ),
+                                target="node-size-pagerank-label",
+                                placement="top",
+                                style={"maxWidth": "400px"},
+                            ),
+                            dbc.Tooltip(
+                                html.Div(
+                                    "All nodes are displayed with the same size.",
+                                    style={"textAlign": "left"},
+                                ),
+                                target="node-size-constant-label",
+                                placement="top",
+                                style={"maxWidth": "400px"},
                             ),
                         ],
                         style={
