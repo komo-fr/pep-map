@@ -1,5 +1,6 @@
 """Timelineタブのコールバック関数"""
 
+import pandas as pd
 import plotly.graph_objects as go  # type: ignore[import-untyped]
 from dash import Input, Output, State, clientside_callback, no_update
 
@@ -392,12 +393,23 @@ def _create_timeline_figure(pep_number: int, pep_data) -> go.Figure:
     colors.append(STATUS_COLOR_MAP.get(pep_data["status"], DEFAULT_STATUS_COLOR))
     texts.append(str(pep_number))
     pep_numbers.append(pep_number)
-    hover_texts.append(
+
+    # Python-Versionの表示文字列を決定（NaNの場合は「-」）
+    python_version = pep_data.get("python_version")
+    if pd.notna(python_version) and str(python_version).strip():
+        python_version_str = str(python_version)
+    else:
+        python_version_str = "-"
+
+    # ツールチップのテキストを構築
+    hover_text = (
         f"PEP {pep_number}<br>"
         f"{pep_data['title']}<br>"
         f"Status: {pep_data['status']}<br>"
-        f"Created: {pep_data['created'].strftime('%Y-%m-%d')}"
+        f"Created: {pep_data['created'].strftime('%Y-%m-%d')}<br>"
+        f"Python-Version: {python_version_str}"
     )
+    hover_texts.append(hover_text)
 
     # 引用しているPEP（Y=1）
     for _, row in citing_peps_df.iterrows():
@@ -406,12 +418,23 @@ def _create_timeline_figure(pep_number: int, pep_data) -> go.Figure:
         colors.append(STATUS_COLOR_MAP.get(row["status"], DEFAULT_STATUS_COLOR))
         texts.append(str(row["pep_number"]))
         pep_numbers.append(row["pep_number"])
-        hover_texts.append(
+
+        # Python-Versionの表示文字列を決定（NaNの場合は「-」）
+        python_version = row.get("python_version")
+        if pd.notna(python_version) and str(python_version).strip():
+            python_version_str = str(python_version)
+        else:
+            python_version_str = "-"
+
+        # ツールチップのテキストを構築
+        hover_text = (
             f"PEP {row['pep_number']}<br>"
             f"{row['title']}<br>"
             f"Status: {row['status']}<br>"
-            f"Created: {row['created'].strftime('%Y-%m-%d')}"
+            f"Created: {row['created'].strftime('%Y-%m-%d')}<br>"
+            f"Python-Version: {python_version_str}"
         )
+        hover_texts.append(hover_text)
 
     # 引用されているPEP（Y=-1）
     for _, row in cited_peps_df.iterrows():
@@ -420,12 +443,23 @@ def _create_timeline_figure(pep_number: int, pep_data) -> go.Figure:
         colors.append(STATUS_COLOR_MAP.get(row["status"], DEFAULT_STATUS_COLOR))
         texts.append(str(row["pep_number"]))
         pep_numbers.append(row["pep_number"])
-        hover_texts.append(
+
+        # Python-Versionの表示文字列を決定（NaNの場合は「-」）
+        python_version = row.get("python_version")
+        if pd.notna(python_version) and str(python_version).strip():
+            python_version_str = str(python_version)
+        else:
+            python_version_str = "-"
+
+        # ツールチップのテキストを構築
+        hover_text = (
             f"PEP {row['pep_number']}<br>"
             f"{row['title']}<br>"
             f"Status: {row['status']}<br>"
-            f"Created: {row['created'].strftime('%Y-%m-%d')}"
+            f"Created: {row['created'].strftime('%Y-%m-%d')}<br>"
+            f"Python-Version: {python_version_str}"
         )
+        hover_texts.append(hover_text)
 
     # Plotly Figureを生成
     fig = go.Figure()

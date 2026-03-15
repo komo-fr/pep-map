@@ -1,5 +1,6 @@
 """PEP情報表示の共通コンポーネント"""
 
+import pandas as pd
 from dash import html
 
 from src.dash_app.utils.constants import DEFAULT_STATUS_COLOR, STATUS_COLOR_MAP
@@ -103,12 +104,31 @@ def create_pep_info_display(pep_data) -> html.Div:
     status = pep_data["status"]
     pep_type = pep_data["type"]
     created = pep_data["created"]
+    python_version = pep_data.get("python_version", None)
 
     # 日付をフォーマット（YYYY-MM-DD）
     created_str = created.strftime("%Y-%m-%d")
 
     # PEPページへのURL
     pep_url = generate_pep_url(pep_number)
+
+    # Python-Versionの表示文字列を決定（NaNの場合は「-」）
+    if pd.notna(python_version) and str(python_version).strip():
+        python_version_str = str(python_version)
+    else:
+        python_version_str = "-"
+
+    # 2行目の情報要素を構築
+    info_elements = [
+        html.Span("Created: "),
+        created_str,
+        html.Span("Python-Version: ", style={"marginLeft": "20px"}),
+        python_version_str,
+        html.Span("Type: ", style={"marginLeft": "20px"}),
+        pep_type,
+        html.Span("Status: ", style={"marginLeft": "20px"}),
+        create_status_badge(status),
+    ]
 
     return html.Div(
         [
@@ -131,16 +151,9 @@ def create_pep_info_display(pep_data) -> html.Div:
                     "marginTop": "0",
                 },
             ),
-            # 2行目: Created、Type、Status
+            # 2行目: Created、Python-Version (あれば)、Type、Status
             html.P(
-                [
-                    html.Span("Created: "),
-                    created_str,
-                    html.Span("Type: ", style={"marginLeft": "20px"}),
-                    pep_type,
-                    html.Span("Status: ", style={"marginLeft": "20px"}),
-                    create_status_badge(status),
-                ],
+                info_elements,
                 style={
                     "marginBottom": "0",
                     "color": "#666",
