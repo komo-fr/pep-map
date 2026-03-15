@@ -224,7 +224,7 @@ def generate_subgraph_images(
         subgraph = G.subgraph(peps)
 
         # レイアウト計算
-        pos = nx.spring_layout(subgraph, threshold=1e-6, k=1)
+        pos = nx.spring_layout(subgraph, threshold=1e-6, k=1, seed=42)
 
         # ノードカラーを取得
         node_colors = []
