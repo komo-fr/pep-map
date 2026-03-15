@@ -13,6 +13,7 @@ from src.dash_app.components.pep_info import (
     create_status_badge,
     create_pep_info_display,
     create_network_initial_info_message,
+    format_python_version,
 )
 from src.dash_app.components.pep_tables import (
     create_pep_table,
@@ -32,6 +33,7 @@ __all__ = [
     "create_status_badge",
     "create_pep_info_display",
     "create_network_initial_info_message",
+    "format_python_version",
     "create_pep_table",
     "create_pep_table_description",
     "generate_status_styles",

@@ -25,6 +25,7 @@ class PEPMetadata:
     topic: Optional[list[str]] = None
     requires: Optional[list[int]] = None
     replaces: Optional[list[int]] = None
+    python_version: Optional[str] = None
 
 
 class PEPParser:
@@ -272,6 +273,7 @@ class PEPParser:
         topic_string = self.parse_header_field(content, "Topic")
         requires_string = self.parse_header_field(content, "Requires")
         replaces_string = self.parse_header_field(content, "Replaces")
+        python_version = self.parse_header_field(content, "Python-Version")
 
         # Validate required fields
         if not title:
@@ -344,6 +346,7 @@ class PEPParser:
             topic=topic,
             requires=requires,
             replaces=replaces,
+            python_version=python_version,
         )
 
         logger.debug(f"Successfully parsed PEP {pep_number}: {title}")

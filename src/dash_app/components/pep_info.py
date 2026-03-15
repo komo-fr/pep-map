@@ -1,5 +1,6 @@
 """PEP情報表示の共通コンポーネント"""
 
+import pandas as pd
 from dash import html
 
 from src.dash_app.utils.constants import DEFAULT_STATUS_COLOR, STATUS_COLOR_MAP
@@ -23,6 +24,21 @@ def parse_pep_number(value):
         return int(value)
     except (ValueError, TypeError):
         return None
+
+
+def format_python_version(value) -> str:
+    """
+    Python-Versionの表示文字列を返す（未設定の場合は'-'）
+
+    Args:
+        value: Python-Versionの値（文字列、数値、またはNaN）
+
+    Returns:
+        str: フォーマットされた表示文字列（未設定の場合は"-"）
+    """
+    if pd.notna(value) and str(value).strip():
+        return str(value)
+    return "-"
 
 
 def create_status_badge(status: str) -> html.Span:
@@ -103,12 +119,28 @@ def create_pep_info_display(pep_data) -> html.Div:
     status = pep_data["status"]
     pep_type = pep_data["type"]
     created = pep_data["created"]
+    python_version = pep_data["python_version"]
 
     # 日付をフォーマット（YYYY-MM-DD）
     created_str = created.strftime("%Y-%m-%d")
 
     # PEPページへのURL
     pep_url = generate_pep_url(pep_number)
+
+    # Python-Versionの表示文字列を決定
+    python_version_str = format_python_version(python_version)
+
+    # 2行目の情報要素を構築
+    info_elements = [
+        html.Span("Created: "),
+        created_str,
+        html.Span("Python-Version: ", style={"marginLeft": "20px"}),
+        python_version_str,
+        html.Span("Type: ", style={"marginLeft": "20px"}),
+        pep_type,
+        html.Span("Status: ", style={"marginLeft": "20px"}),
+        create_status_badge(status),
+    ]
 
     return html.Div(
         [
@@ -131,16 +163,9 @@ def create_pep_info_display(pep_data) -> html.Div:
                     "marginTop": "0",
                 },
             ),
-            # 2行目: Created、Type、Status
+            # 2行目: Created、Python-Version (あれば)、Type、Status
             html.P(
-                [
-                    html.Span("Created: "),
-                    created_str,
-                    html.Span("Type: ", style={"marginLeft": "20px"}),
-                    pep_type,
-                    html.Span("Status: ", style={"marginLeft": "20px"}),
-                    create_status_badge(status),
-                ],
+                info_elements,
                 style={
                     "marginBottom": "0",
                     "color": "#666",
