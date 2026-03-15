@@ -339,6 +339,7 @@ def load_citation_changes() -> pd.DataFrame:
     # detected_at → detected への変換処理
     # ISO形式（2026-03-07T04:33:27.412587+00:00）から日付部分のみ抽出
     # YYYY-MM-DD形式の文字列に変換
+    df = df.sort_values("detected_at", ascending=False)
     df["detected"] = pd.to_datetime(df["detected_at"]).dt.strftime("%Y-%m-%d")
     df = df.drop(columns=["detected_at"])
 
