@@ -183,6 +183,14 @@ def get_group_selected_stylesheet() -> list[dict]:
     return base + override_styles
 
 
+def clear_cache() -> None:
+    """
+    キャッシュをクリアする（テスト用）
+    """
+    global _group_cytoscape_elements_cache
+    _group_cytoscape_elements_cache = None
+
+
 def get_preset_layout_options() -> dict:
     """
     presetレイアウトのオプションを取得する

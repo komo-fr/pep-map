@@ -566,6 +566,8 @@ def get_group_list() -> list[dict[str, str | int]]:
 def clear_cache() -> None:
     """
     キャッシュをクリアする（テスト用）
+
+    data_loaderのキャッシュに加えて、依存する各モジュールのキャッシュもクリアする。
     """
     global \
         _peps_metadata_cache, \
@@ -586,3 +588,9 @@ def clear_cache() -> None:
     _metrics_styles_cache = None
     _citation_changes_cache = None
     _group_data_cache = None
+
+    # 他モジュールのキャッシュもクリア（遅延インポートで循環参照を回避）
+    from src.dash_app.components import network_graph, group_network_graph
+
+    network_graph.clear_cache()
+    group_network_graph.clear_cache()
