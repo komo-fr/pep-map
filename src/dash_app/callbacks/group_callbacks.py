@@ -156,10 +156,14 @@ def register_group_callbacks(app):
         for _, row in df.iterrows():
             pep_num = int(row["PEP"])
             pep_url = generate_pep_url(pep_num)
+            # 日付をフォーマット（YYYY-MM-DD）
+            created_str = row["created"] if isinstance(row["created"], str) else ""
             table_data.append(
                 {
                     "pep": f"[PEP {pep_num}]({pep_url})",
                     "title": row["title"],
+                    "status": row["status"],
+                    "created": created_str,
                     "in_degree": int(row["in-degree_group"]),
                     "out_degree": int(row["out-degree_group"]),
                     "degree": int(row["degree_group"]),

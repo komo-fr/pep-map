@@ -86,7 +86,7 @@ def render_tab_content(active_tab):
         return create_metrics_tab_layout()
     elif active_tab == "citation_changes":
         return create_citation_changes_tab_layout()
-    elif active_tab == "group":
+    elif active_tab == "groups":
         return create_group_tab_layout()
     else:
         return html.Div(

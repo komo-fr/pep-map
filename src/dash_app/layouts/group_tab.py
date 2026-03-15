@@ -9,6 +9,7 @@ from src.dash_app.components.group_network_graph import (
     get_preset_layout_options,
 )
 from src.dash_app.components.pep_info import create_group_initial_info_message
+from src.dash_app.components.pep_tables import generate_status_styles
 from src.dash_app.utils.data_loader import get_group_list, load_metadata
 
 
@@ -31,6 +32,8 @@ def create_group_tab_layout() -> html.Div:
             dcc.Store(id="group-selection-source", data="dropdown"),
             # === 上部セクション: グループ選択 + PEP情報 ===
             _create_top_section(),
+            # === 注意書きセクション ===
+            _create_note_section(),
             # === データ取得日付セクション ===
             _create_data_info_section(fetched_at, checked_at),
             # === 操作説明セクション ===
@@ -102,6 +105,39 @@ def _create_group_selector_section() -> html.Div:
                 },
             ),
         ],
+    )
+
+
+def _create_note_section() -> html.Div:
+    """注意書きセクション"""
+    return html.Div(
+        [
+            html.P(
+                [
+                    html.Strong("Color"),
+                    " indicates the group of each PEP.",
+                ],
+                style={
+                    "fontSize": "12px",
+                    "color": "#666",
+                    "margin": "0",
+                },
+            ),
+            html.P(
+                [
+                    html.Strong("Node sizes"),
+                    " in the network graph are based on metrics computed from the full citation network.",
+                ],
+                style={
+                    "fontSize": "12px",
+                    "color": "#666",
+                    "margin": "0",
+                },
+            ),
+        ],
+        style={
+            "marginBottom": "8px",
+        },
     )
 
 
@@ -213,7 +249,11 @@ def _create_group_pep_table_section() -> html.Div:
                 style={"marginBottom": "8px", "marginTop": "8px"},
             ),
             html.P(
-                "Click a row to highlight the PEP in the graph.",
+                "Scroll the table to view all rows.",
+                style={"fontSize": "12px", "color": "#666", "marginBottom": "2px"},
+            ),
+            html.P(
+                "All metrics in this table are calculated within the selected group.",
                 style={"fontSize": "12px", "color": "#666", "marginBottom": "8px"},
             ),
             _create_group_pep_table(),
@@ -223,11 +263,16 @@ def _create_group_pep_table_section() -> html.Div:
 
 def _create_group_pep_table() -> dash_table.DataTable:  # type: ignore[name-defined]
     """グループPEPテーブルを生成する"""
+    # Status列の条件付きスタイルを生成
+    status_styles = generate_status_styles()
+
     return dash_table.DataTable(  # type: ignore[attr-defined]
         id="group-pep-table",
         columns=[
             {"name": "PEP", "id": "pep", "type": "text", "presentation": "markdown"},
             {"name": "Title", "id": "title", "type": "text"},
+            {"name": "Status", "id": "status", "type": "text"},
+            {"name": "Created", "id": "created", "type": "text"},
             {"name": "In-degree", "id": "in_degree", "type": "numeric"},
             {"name": "Out-degree", "id": "out_degree", "type": "numeric"},
             {"name": "Degree", "id": "degree", "type": "numeric"},
@@ -253,10 +298,12 @@ def _create_group_pep_table() -> dash_table.DataTable:  # type: ignore[name-defi
             {"if": {"column_id": "pep"}, "width": "80px"},
             {
                 "if": {"column_id": "title"},
-                "width": "300px",
-                "minWidth": "300px",
+                "width": "250px",
+                "minWidth": "250px",
                 "whiteSpace": "normal",
             },
+            {"if": {"column_id": "status"}, "width": "90px", "textAlign": "center"},
+            {"if": {"column_id": "created"}, "width": "90px"},
             {
                 "if": {"column_id": "in_degree"},
                 "minWidth": "30px",
@@ -302,6 +349,7 @@ def _create_group_pep_table() -> dash_table.DataTable:  # type: ignore[name-defi
                 "fontSize": "14px",
                 "verticalAlign": "bottom",
             },
-        ],
+        ]
+        + status_styles,
         markdown_options={"html": True},
     )

@@ -36,6 +36,12 @@ def create_tab_navigation():
                 selected_style=tab_selected_style,
             ),
             dcc.Tab(
+                label="Groups (beta)",
+                value="groups",
+                style=tab_style,
+                selected_style=tab_selected_style,
+            ),
+            dcc.Tab(
                 label="PEP Metrics",
                 value="metrics",
                 style=tab_style,
@@ -44,12 +50,6 @@ def create_tab_navigation():
             dcc.Tab(
                 label="Citation Changes",
                 value="citation_changes",
-                style=tab_style,
-                selected_style=tab_selected_style,
-            ),
-            dcc.Tab(
-                label="Group",
-                value="group",
                 style=tab_style,
                 selected_style=tab_selected_style,
             ),
