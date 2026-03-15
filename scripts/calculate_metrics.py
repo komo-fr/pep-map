@@ -75,11 +75,26 @@ def build_pep_graph(
         G.add_nodes_from(valid_peps)
         logger.info("Added all valid PEPs as nodes (including isolated nodes)")
 
+    # 6. peps_metadata.csvからノード属性を付与
+    if peps_metadata_path is not None and peps_metadata_path.exists():
+        # DataFrameをpep_numberをキーにした辞書の辞書に変換
+        # {pep_number: {title: ..., status: ..., ...}, ...}
+        node_attrs = peps_df.set_index("pep_number").to_dict(orient="index")
+
+        # グラフに存在するノードのみ属性を設定
+        node_attrs_filtered = {
+            node: attrs for node, attrs in node_attrs.items() if node in G
+        }
+        nx.set_node_attributes(G, node_attrs_filtered)
+        logger.info(
+            f"Set node attributes from peps_metadata.csv for {len(node_attrs_filtered)} nodes"
+        )
+
     logger.info(
         f"Graph built: {G.number_of_nodes()} nodes, {G.number_of_edges()} edges"
     )
 
-    # 6. metadata.jsonを読み込んでG.graphに設定
+    # 7. metadata.jsonを読み込んでG.graphに設定
     if metadata_path is not None and metadata_path.exists():
         with open(metadata_path, encoding="utf-8") as f:
             metadata = json.load(f)
