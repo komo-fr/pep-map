@@ -626,6 +626,15 @@ def get_base_stylesheet(size_type: str = "in_degree") -> list[dict]:
     ]
 
 
+def clear_cache() -> None:
+    """
+    キャッシュをクリアする（テスト用）
+    """
+    global _cytoscape_elements_cache, _valid_edges_cache
+    _cytoscape_elements_cache = None
+    _valid_edges_cache = None
+
+
 def get_preset_layout_options() -> dict:
     """
     presetレイアウトのオプションを取得する

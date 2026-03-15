@@ -2,6 +2,7 @@
 
 import json
 from datetime import datetime
+from typing import cast
 
 import pandas as pd
 
@@ -20,6 +21,7 @@ _node_metrics_cache: pd.DataFrame | None = None
 _peps_with_metrics_cache: pd.DataFrame | None = None
 _metrics_styles_cache: list[dict] | None = None
 _citation_changes_cache: pd.DataFrame | None = None
+_group_data_cache: pd.DataFrame | None = None
 
 
 def load_peps_metadata() -> pd.DataFrame:
@@ -339,7 +341,6 @@ def load_citation_changes() -> pd.DataFrame:
     # detected_at → detected への変換処理
     # ISO形式（2026-03-07T04:33:27.412587+00:00）から日付部分のみ抽出
     # YYYY-MM-DD形式の文字列に変換
-    df = df.sort_values("detected_at", ascending=False)
     df["detected"] = pd.to_datetime(df["detected_at"]).dt.strftime("%Y-%m-%d")
     df = df.drop(columns=["detected_at"])
 
@@ -497,9 +498,81 @@ def load_metrics_styles() -> list[dict]:
     return all_styles
 
 
+def load_group_data() -> pd.DataFrame:
+    """
+    グループデータを読み込む（キャッシュあり）
+
+    Returns:
+        pd.DataFrame: グループデータ
+
+    列:
+        - PEP (int): PEP番号
+        - title: PEPのタイトル
+        - status: PEPのステータス
+        - created: PEPの作成日
+        - group_id (int): グループID（-1は孤立ノード、0〜31はコミュニティ）
+        - in-degree_group (int): グループ内入次数
+        - out-degree_group (int): グループ内出次数
+        - degree_group (int): グループ内次数
+        - pagerank_group (float): グループ内PageRank
+        - pagerank_cumsum (float): グループ内PageRankの累積和
+    """
+    global _group_data_cache
+
+    if _group_data_cache is not None:
+        return _group_data_cache
+
+    group_file = DATA_DIR / "groups" / "peps_group.csv"
+    if not group_file.exists():
+        raise FileNotFoundError(
+            f"Group data file not found: {group_file}. "
+            "Run the data pipeline to generate this file."
+        )
+    _group_data_cache = pd.read_csv(group_file)
+    return _group_data_cache
+
+
+def get_peps_by_group(group_id: int) -> pd.DataFrame:
+    """
+    指定されたグループに所属するPEPを取得する
+
+    Args:
+        group_id: グループID
+
+    Returns:
+        pd.DataFrame: グループに所属するPEPのDataFrame
+    """
+    df = load_group_data()
+    return df[df["group_id"] == group_id].copy()
+
+
+def get_group_list() -> list[dict[str, str | int]]:
+    """
+    グループ一覧を取得する（ドロップダウン用）
+
+    Returns:
+        list[dict[str, str | int]]: [{"label": "All Groups", "value": "all"}, {"label": "Group 0 (58 PEPs)", "value": 0}, ...]
+    """
+    df = load_group_data()
+    group_counts = df.groupby("group_id").size().to_dict()
+
+    options: list[dict[str, str | int]] = [{"label": "All Groups", "value": "all"}]
+    for group_id in sorted(cast(list[int], list(group_counts.keys()))):
+        count = group_counts[group_id]
+        if group_id == -1:
+            label = f"Isolated ({count} PEPs)"
+        else:
+            label = f"Group {group_id} ({count} PEPs)"
+        options.append({"label": label, "value": group_id})
+
+    return options
+
+
 def clear_cache() -> None:
     """
     キャッシュをクリアする（テスト用）
+
+    data_loaderのキャッシュに加えて、依存する各モジュールのキャッシュもクリアする。
     """
     global \
         _peps_metadata_cache, \
@@ -509,7 +582,8 @@ def clear_cache() -> None:
         _node_metrics_cache, \
         _peps_with_metrics_cache, \
         _metrics_styles_cache, \
-        _citation_changes_cache
+        _citation_changes_cache, \
+        _group_data_cache
     _peps_metadata_cache = None
     _citations_cache = None
     _metadata_cache = None
@@ -518,3 +592,10 @@ def clear_cache() -> None:
     _peps_with_metrics_cache = None
     _metrics_styles_cache = None
     _citation_changes_cache = None
+    _group_data_cache = None
+
+    # 他モジュールのキャッシュもクリア（遅延インポートで循環参照を回避）
+    from src.dash_app.components import network_graph, group_network_graph
+
+    network_graph.clear_cache()
+    group_network_graph.clear_cache()

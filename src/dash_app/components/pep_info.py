@@ -104,6 +104,34 @@ def create_network_initial_info_message() -> html.Div:
     )
 
 
+def create_group_initial_info_message() -> html.Div:
+    """
+    Group タブの初期状態のPEP情報表示（説明文）を生成する
+
+    Returns:
+        html.Div: 初期説明文のコンポーネント
+    """
+    return html.Div(
+        [
+            html.P(
+                "Select a group from the dropdown on the left.",
+                style={"marginBottom": "4px"},
+            ),
+            html.P(
+                "PEPs belonging to the selected group will be highlighted in the network graph.",
+                style={"marginBottom": "8px"},
+            ),
+            html.P(
+                "Groups are detected automatically from the citation network using a community detection algorithm.",
+                style={"marginBottom": "0", "fontSize": "12px"},
+            ),
+        ],
+        style={
+            "color": "#666",
+        },
+    )
+
+
 def create_pep_info_display(pep_data) -> html.Div:
     """
     PEP情報表示コンポーネントを生成する
