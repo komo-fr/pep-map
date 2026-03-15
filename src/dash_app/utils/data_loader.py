@@ -507,11 +507,15 @@ def load_group_data() -> pd.DataFrame:
 
     列:
         - PEP (int): PEP番号
+        - title: PEPのタイトル
+        - status: PEPのステータス
+        - created: PEPの作成日
         - group_id (int): グループID（-1は孤立ノード、0〜31はコミュニティ）
         - in-degree_group (int): グループ内入次数
         - out-degree_group (int): グループ内出次数
         - degree_group (int): グループ内次数
         - pagerank_group (float): グループ内PageRank
+        - pagerank_cumsum (float): グループ内PageRankの累積和
     """
     global _group_data_cache
 
