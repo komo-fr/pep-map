@@ -1,0 +1,11 @@
+pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
+567,Context Variables,Final,12-Dec-2017,33,3,2,0.2807907037439693
+550,Execution Context,Withdrawn,11-Aug-2017,33,3,2,0.2180142047220703
+568,Generator-sensitivity for Context Variables,Deferred,04-Jan-2018,33,2,2,0.1529925802174226
+521,Managing global context via 'with' blocks in generators and coroutines,Withdrawn,27-Apr-2015,33,1,1,0.11663211679079144
+442,Safe object finalization,Final,18-May-2013,33,2,0,0.07143717653771259
+533,Deterministic cleanup for iterators,Deferred,18-Oct-2016,33,2,1,0.04384719272868626
+670,Convert macros to functions in the Python C API,Final,19-Oct-2021,33,1,0,0.03416655410719667
+789,Preventing task-cancellation bugs by limiting yield in async generators,Draft,14-May-2024,33,1,3,0.03416655410719667
+620,Hide implementation details from the C API,Withdrawn,19-Jun-2020,33,0,2,0.023976458522477272
+806,Mixed sync/async context managers with precise async marking,Draft,05-Sep-2025,33,0,2,0.023976458522477272

@@ -1,0 +1,17 @@
+{
+  "algorithm": "louvain",
+  "parameters": {
+    "resolution": 4,
+    "seed": 42
+  },
+  "statistics": {
+    "modularity": 0.6728830312766497,
+    "total_communities": 122,
+    "total_peps_in_communities": 646,
+    "isolated_peps": 74,
+    "max_community_size": 30,
+    "min_community_size": 2,
+    "avg_community_size": 13.458333333333334
+  },
+  "detected_at": "2026-03-15T11:33:47.868115+00:00"
+}

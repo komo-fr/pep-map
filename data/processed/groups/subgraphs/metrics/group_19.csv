@@ -1,0 +1,18 @@
+pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
+315,Enhanced While Loop,Rejected,25-Apr-2003,19,1,0,0.09637665940976217
+540,Add a new UTF-8 Mode,Final,05-Jan-2016,19,4,3,0.09237816397219165
+548,More Flexible Loop Control,Rejected,05-Sep-2017,19,1,1,0.07912428626661779
+528,Change Windows console encoding to UTF-8,Final,27-Aug-2016,19,2,0,0.07627933999634992
+529,Change Windows filesystem encoding to UTF-8,Final,27-Aug-2016,19,2,0,0.07627933999634992
+538,Coercing the legacy C locale to a UTF-8 based locale,Final,28-Dec-2016,19,3,3,0.074060279933394
+456,Secure and interchangeable hash algorithm,Final,27-Sep-2013,19,1,0,0.06982550289424427
+587,Python Initialization Configuration,Final,27-Mar-2019,19,2,4,0.06500671565605731
+553,Built-in breakpoint(),Final,05-Sep-2017,19,2,1,0.05882660355270214
+432,Restructuring the CPython startup sequence,Withdrawn,28-Dec-2012,19,2,2,0.05531271582161164
+552,Deterministic pycs,Final,04-Sep-2017,19,2,1,0.04788652419499024
+410,Use decimal.Decimal type for timestamps,Rejected,01-Feb-2012,19,1,0,0.043602862851557476
+418,"Add monotonic time, performance counter, and process time functions",Final,26-Mar-2012,19,1,0,0.043602862851557476
+564,Add new time functions with nanosecond resolution,Final,16-Oct-2017,19,1,2,0.03407263146396413
+537,Python 3.7 Release Schedule,Final,23-Dec-2016,19,0,5,0.029121837046216528
+559,Built-in noop(),Rejected,08-Sep-2017,19,0,1,0.029121837046216528
+741,Python Configuration C API,Final,18-Jan-2024,19,0,2,0.029121837046216528

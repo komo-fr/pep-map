@@ -1,0 +1,23 @@
+pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
+3000,Python 3000,Final,05-Apr-2006,4,4,3,0.11604603793556884
+344,Exception Chaining and Embedded Tracebacks,Superseded,12-May-2005,4,4,2,0.09938307544591368
+3134,Exception Chaining and Embedded Tracebacks,Final,12-May-2005,4,3,2,0.09508965321516755
+4,Deprecation of Standard Modules,Active,01-Oct-2000,4,4,0,0.08515867579669173
+3100,Miscellaneous Python 3.0 Plans,Final,20-Aug-2004,4,4,7,0.07737567221305594
+3099,Things that will Not Change in Python 3000,Final,04-Apr-2006,4,3,0,0.07138610997571987
+348,Exception Reorganization for Python 3.0,Rejected,28-Jul-2005,4,2,2,0.06923593940821804
+361,Python 2.6 and 3.0 Release Schedule,Final,29-Jun-2006,4,1,5,0.0486150000758915
+352,Required Superclass for Exceptions,Final,27-Oct-2005,4,4,1,0.04720443841966313
+290,Code Migration and Modernization,Active,06-Jun-2002,4,1,1,0.04516176148564879
+654,Exception Groups and except*,Final,22-Feb-2021,4,2,1,0.0357988132892201
+3001,Procedure for reviewing and improving standard library modules,Withdrawn,05-Apr-2006,4,1,0,0.025131459100256996
+3105,Make print a function,Final,19-Nov-2006,4,1,0,0.025131459100256996
+3110,Catching Exceptions in Python 3000,Final,16-Jan-2006,4,1,3,0.025131459100256996
+371,Addition of the multiprocessing package to the standard library,Final,06-May-2008,4,1,0,0.024000301586853484
+294,Type Names in the types Module,Rejected,19-Jun-2002,4,0,1,0.01573573483594522
+678,Enriching Exceptions with Notes,Final,20-Dec-2021,4,0,2,0.01573573483594522
+785,New methods for easier handling of ``ExceptionGroup``\ s,Draft,08-Apr-2025,4,0,1,0.01573573483594522
+3104,Access to Names in Outer Scopes,Final,12-Oct-2006,4,0,1,0.01573573483594522
+3109,Raising Exceptions in Python 3000,Final,19-Jan-2006,4,0,2,0.01573573483594522
+3111,Simple input built-in in Python 3000,Final,13-Sep-2006,4,0,1,0.01573573483594522
+3151,Reworking the OS and IO exception hierarchy,Final,21-Jul-2010,4,0,1,0.01573573483594522
