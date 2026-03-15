@@ -126,6 +126,16 @@ def get_group_base_stylesheet() -> list[dict]:
                 "opacity": 0.15,
             },
         },
+        # グループ選択時のエッジ（グループ内のエッジ）
+        {
+            "selector": ".group-selected-edge",
+            "style": {
+                "opacity": 1,
+                "line-color": "#666",
+                "target-arrow-color": "#666",
+                "width": 2,
+            },
+        },
         # ノードタップ時の選択スタイル
         {
             "selector": ":selected",
@@ -137,6 +147,40 @@ def get_group_base_stylesheet() -> list[dict]:
             },
         },
     ]
+
+
+def get_group_selected_stylesheet() -> list[dict]:
+    """
+    グループ選択時のスタイルシートを取得する
+
+    :selectedのスタイルをオーバーライドして、赤枠を無効化する。
+
+    Returns:
+        list[dict]: スタイルシート定義のリスト
+    """
+    base = get_group_base_stylesheet()
+
+    # :selectedのスタイルをオーバーライド（赤枠を無効化）
+    override_styles = [
+        {
+            "selector": ".group-selected:selected",
+            "style": {
+                "border-width": 2,
+                "border-color": "#333",
+                "opacity": 1,
+            },
+        },
+        {
+            "selector": ".group-faded:selected",
+            "style": {
+                "border-width": 1,
+                "border-color": "#999",
+                "opacity": 0.15,
+            },
+        },
+    ]
+
+    return base + override_styles
 
 
 def get_preset_layout_options() -> dict:

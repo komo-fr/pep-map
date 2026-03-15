@@ -510,8 +510,8 @@ def load_group_data() -> pd.DataFrame:
         - group_id (int): グループID（-1は孤立ノード、0〜31はコミュニティ）
         - in-degree_group (int): グループ内入次数
         - out-degree_group (int): グループ内出次数
-        - degeree-group (int): グループ内次数
-        - pagerank-group (float): グループ内PageRank
+        - degree_group (int): グループ内次数
+        - pagerank_group (float): グループ内PageRank
     """
     global _group_data_cache
 
