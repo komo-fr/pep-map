@@ -1,5 +1,6 @@
 """Groupタブのコールバック関数"""
 
+import pandas as pd
 from dash import Input, Output, State, callback_context
 from src.dash_app.components.pep_info import (
     create_group_initial_info_message,
@@ -179,7 +180,7 @@ def register_group_callbacks(app):
             pep_num = int(row["PEP"])
             pep_url = generate_pep_url(pep_num)
             # 日付をフォーマット（YYYY-MM-DD）
-            created_str = row["created"] if isinstance(row["created"], str) else ""
+            created_str = row["created"] if pd.notna(row["created"]) else ""
             table_data.append(
                 {
                     "pep": f"[PEP {pep_num}]({pep_url})",
