@@ -47,6 +47,12 @@ def create_tab_navigation():
                 style=tab_style,
                 selected_style=tab_selected_style,
             ),
+            dcc.Tab(
+                label="Group",
+                value="group",
+                style=tab_style,
+                selected_style=tab_selected_style,
+            ),
         ],
         style={
             "height": "auto",

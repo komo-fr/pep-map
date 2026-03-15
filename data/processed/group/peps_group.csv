@@ -1,4 +1,4 @@
-PEP,title,status,created,group_id,in-degree_group,out-degree_group,degeree_group,pagerank_group,pagerank_cumsum
+PEP,title,status,created,group_id,in-degree_group,out-degree_group,degree_group,pagerank_group,pagerank_cumsum
 508,Dependency specification for Python Software Packages,Final,11-Nov-2015,0,17,0,17,0.1938913883239763,0.1938913883239763
 517,A build-system independent format for source trees,Final,30-Sep-2015,0,13,3,16,0.15553970581218993,0.34943109413616624
 518,Specifying Minimum Build System Requirements for Python Projects,Final,10-May-2016,0,8,2,10,0.08771380973088876,0.43714490386705496

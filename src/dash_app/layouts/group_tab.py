@@ -8,7 +8,7 @@ from src.dash_app.components.group_network_graph import (
     get_group_base_stylesheet,
     get_preset_layout_options,
 )
-from src.dash_app.components.pep_info import create_network_initial_info_message
+from src.dash_app.components.pep_info import create_group_initial_info_message
 from src.dash_app.utils.data_loader import get_group_list, load_metadata
 
 
@@ -62,7 +62,7 @@ def _create_top_section() -> html.Div:
             # 右側: PEP情報表示
             html.Div(
                 id="group-pep-info-display",
-                children=create_network_initial_info_message(),
+                children=create_group_initial_info_message(),
                 style={
                     "display": "inline-block",
                     "verticalAlign": "top",
