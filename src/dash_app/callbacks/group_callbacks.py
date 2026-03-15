@@ -1,8 +1,7 @@
 """Groupタブのコールバック関数"""
 
-import copy
-
 from dash import Input, Output, State, no_update
+from src.dash_app.components.group_network_graph import _deep_copy_element
 from src.dash_app.components.pep_info import (
     create_network_initial_info_message,
     create_pep_info_display,
@@ -68,7 +67,7 @@ def register_group_callbacks(app):
         if selected_group is None or selected_group == "all":
             new_elements = []
             for el in current_elements:
-                new_el = copy.deepcopy(el)
+                new_el = _deep_copy_element(el)
                 new_el["classes"] = ""
                 new_el["selected"] = False  # ノードの選択状態をクリア
                 new_elements.append(new_el)
@@ -87,7 +86,7 @@ def register_group_callbacks(app):
         # elementsを更新
         new_elements = []
         for el in current_elements:
-            new_el = copy.deepcopy(el)
+            new_el = _deep_copy_element(el)
             new_el["selected"] = False  # ノードの選択状態をクリア
             data = new_el.get("data", {})
 
