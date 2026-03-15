@@ -115,7 +115,7 @@ def create_group_initial_info_message() -> html.Div:
         [
             html.P(
                 "Select a group from the dropdown on the left.",
-                style={"marginBottom": "8px"},
+                style={"marginBottom": "4px"},
             ),
             html.P(
                 "PEPs belonging to the selected group will be highlighted in the network graph.",
@@ -123,7 +123,7 @@ def create_group_initial_info_message() -> html.Div:
             ),
             html.P(
                 "Groups are detected automatically from the citation network using a community detection algorithm.",
-                style={"marginBottom": "0"},
+                style={"marginBottom": "0", "fontSize": "12px"},
             ),
         ],
         style={

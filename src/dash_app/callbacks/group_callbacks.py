@@ -1,9 +1,9 @@
 """Groupタブのコールバック関数"""
 
-from dash import Input, Output, State, no_update
+from dash import Input, Output, State, no_update, callback_context
 from src.dash_app.components.group_network_graph import _deep_copy_element
 from src.dash_app.components.pep_info import (
-    create_network_initial_info_message,
+    create_group_initial_info_message,
     create_pep_info_display,
 )
 from src.dash_app.utils.data_loader import (
@@ -25,27 +25,44 @@ def register_group_callbacks(app):
     @app.callback(
         Output("group-pep-info-display", "children"),
         Input("group-network-graph", "tapNodeData"),
+        Input("group-network-graph", "selectedNodeData"),
+        Input("group-selector-dropdown", "value"),
     )
-    def update_pep_info_from_tap(tap_data):
+    def update_pep_info_from_tap(tap_data, selected_data, selected_group):
         """
         ノードタップ時にPEP情報を更新する
+        選択が解除された場合やグループが変更された場合は初期メッセージを表示する
 
         Args:
             tap_data: クリックされたノードのデータ
+            selected_data: 選択されているノードのリスト
+            selected_group: 選択されているグループ
 
         Returns:
             html.Div: PEP情報表示コンテンツ
         """
+        # どの Input がトリガーしたかを判断
+        ctx = callback_context
+        if ctx.triggered:
+            triggered_id = ctx.triggered[0]["prop_id"]
+            # ドロップダウンが変更された場合は初期メッセージを表示
+            if "group-selector-dropdown" in triggered_id:
+                return create_group_initial_info_message()
+
+        # 選択されているノードがない場合は初期メッセージを表示
+        if not selected_data:
+            return create_group_initial_info_message()
+
         if tap_data is None:
-            return create_network_initial_info_message()
+            return create_group_initial_info_message()
 
         pep_number = tap_data.get("pep_number")
         if pep_number is None:
-            return create_network_initial_info_message()
+            return create_group_initial_info_message()
 
         pep_data = get_pep_by_number(pep_number)
         if pep_data is None:
-            return create_network_initial_info_message()
+            return create_group_initial_info_message()
 
         return create_pep_info_display(pep_data)
 
