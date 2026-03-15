@@ -119,7 +119,7 @@ def create_pep_info_display(pep_data) -> html.Div:
     status = pep_data["status"]
     pep_type = pep_data["type"]
     created = pep_data["created"]
-    python_version = pep_data.get("python_version", None)
+    python_version = pep_data["python_version"]
 
     # 日付をフォーマット（YYYY-MM-DD）
     created_str = created.strftime("%Y-%m-%d")
