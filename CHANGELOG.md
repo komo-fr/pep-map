@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - Change the sort order in the `Citation Changes` tab from ascending to descending by date.
+- Store PEP metadata as node attributes in the NetworkX `DiGraph` . (internal)
 
 ## [0.5.0] - 2026-03-08
 
