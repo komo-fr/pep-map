@@ -522,7 +522,7 @@ def load_group_data() -> pd.DataFrame:
     if _group_data_cache is not None:
         return _group_data_cache
 
-    group_file = DATA_DIR / "group" / "peps_group.csv"
+    group_file = DATA_DIR / "groups" / "peps_group.csv"
     if not group_file.exists():
         raise FileNotFoundError(
             f"Group data file not found: {group_file}. "
