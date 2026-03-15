@@ -82,26 +82,69 @@ def _create_top_section() -> html.Div:
 
 
 def _create_group_selector_section() -> html.Div:
-    """グループ選択ドロップダウンセクション"""
+    """グループ選択ドロップダウンセクション + PEP番号入力欄"""
     group_options = get_group_list()
 
     return html.Div(
         [
-            html.Label(
-                "Group:",
+            # グループ選択ドロップダウン
+            html.Div(
+                [
+                    html.Label(
+                        "Group:",
+                        style={
+                            "fontWeight": "bold",
+                            "marginRight": "8px",
+                        },
+                    ),
+                    dcc.Dropdown(
+                        id="group-selector-dropdown",
+                        options=group_options,
+                        value="all",
+                        clearable=False,
+                        maxHeight=500,
+                        style={
+                            "width": "250px",
+                        },
+                    ),
+                ],
                 style={
-                    "fontWeight": "bold",
-                    "marginRight": "8px",
+                    "display": "flex",
+                    "alignItems": "center",
                 },
             ),
-            dcc.Dropdown(
-                id="group-selector-dropdown",
-                options=group_options,
-                value="all",
-                clearable=False,
-                maxHeight=500,
+            # PEP番号入力欄（グループ選択のショートカット）
+            html.Div(
+                [
+                    html.Label(
+                        "PEP:",
+                        style={
+                            "fontWeight": "bold",
+                            "marginRight": "8px",
+                        },
+                    ),
+                    dcc.Input(
+                        id="group-pep-input",
+                        type="text",
+                        placeholder="Enter PEP number",
+                        inputMode="numeric",
+                        pattern="[0-9]*",
+                        style={
+                            "width": "180px",
+                        },
+                    ),
+                    # エラーメッセージ表示エリア
+                    html.Div(
+                        id="group-pep-error-message",
+                        style={
+                            "color": "red",
+                            "fontSize": "14px",
+                            "marginTop": "4px",
+                        },
+                    ),
+                ],
                 style={
-                    "width": "250px",
+                    "marginTop": "12px",
                 },
             ),
         ],
