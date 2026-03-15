@@ -572,6 +572,7 @@ Content here
             "topic",
             "requires",
             "replaces",
+            "python_version",
         ]
         assert fieldnames == expected_columns
 
@@ -711,3 +712,17 @@ Content here
         assert rows[0]["topic"] == "Governance; Packaging"
         assert rows[0]["requires"] == "440; 508; 518"
         assert rows[0]["replaces"] == "245; 246"
+
+    def test_parse_python_version_present(self, parser, fixtures_dir):
+        """Test parsing PEP with Python-Version field."""
+        pep_file = fixtures_dir / "pep-with-python-version.rst"
+        metadata = parser.parse_pep_file(pep_file)
+
+        assert metadata.python_version == "3.5"
+
+    def test_parse_python_version_not_present(self, parser, fixtures_dir):
+        """Test parsing PEP without Python-Version field returns None."""
+        pep_file = fixtures_dir / "pep-0001.rst"
+        metadata = parser.parse_pep_file(pep_file)
+
+        assert metadata.python_version is None
