@@ -1,0 +1,12 @@
+pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
+308,Conditional Expressions,Final,07-Feb-2003,30,4,0,0.21973514969953753
+318,Decorators for Functions and Methods,Final,05-Jun-2003,30,1,2,0.1931551104214719
+3129,Class Decorators,Final,01-May-2007,30,2,1,0.17081600010991568
+309,Partial Function Application,Final,08-Feb-2003,30,1,0,0.05611331327026955
+341,Unifying try-except and try-finally,Final,04-May-2005,30,1,0,0.05611331327026955
+353,Using ssize_t as the index type,Final,18-Dec-2005,30,1,0,0.05611331327026955
+357,Allowing Any Object to be Used for Slicing,Final,09-Feb-2006,30,1,0,0.05611331327026955
+312,Simple Implicit Lambda,Deferred,11-Feb-2003,30,0,1,0.04796012167199924
+356,Python 2.5 Release Schedule,Final,07-Feb-2006,30,0,5,0.04796012167199924
+463,Exception-catching expressions,Rejected,15-Feb-2014,30,0,1,0.04796012167199924
+3133,Introducing Roles,Rejected,01-May-2007,30,0,1,0.04796012167199924

@@ -1,0 +1,5 @@
+pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
+239,Adding a Rational Type to Python,Rejected,11-Mar-2001,39,3,2,0.41802423664627986
+327,Decimal Data Type,Final,17-Oct-2003,39,2,1,0.313377223499665
+240,Adding a Rational Literal to Python,Rejected,11-Mar-2001,39,2,2,0.23109853985405507
+313,Adding Roman Numeral Literals to Python,Rejected,01-Apr-2003,39,0,2,0.037500000000000006

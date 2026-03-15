@@ -1,0 +1,20 @@
+pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
+275,Switching on Multiple Values,Rejected,10-Nov-2001,9,2,1,0.17850283839617842
+3103,A Switch/Case Statement,Rejected,25-Jun-2006,9,2,1,0.17850283839617842
+448,Additional Unpacking Generalizations,Final,29-Jun-2013,9,2,0,0.06429133264751709
+634,Structural Pattern Matching: Specification,Final,12-Sep-2020,9,6,4,0.05961744845188033
+635,Structural Pattern Matching: Motivation and Rationale,Final,12-Sep-2020,9,5,7,0.05951920384729299
+572,Assignment Expressions,Final,28-Feb-2018,9,4,0,0.058983479334557234
+622,Structural Pattern Matching,Superseded,23-Jun-2020,9,4,3,0.05674935611406769
+636,Structural Pattern Matching: Tutorial,Final,12-Sep-2020,9,6,3,0.05632684027490002
+584,Add Union Operators To dict,Final,01-Mar-2019,9,2,1,0.042858330073110656
+617,New PEG parser for CPython,Final,24-Mar-2020,9,2,0,0.042858330073110656
+640,Unused variable syntax,Rejected,04-Oct-2020,9,2,4,0.029153262111941625
+626,Precise line numbers for debugging and other tools.,Final,15-Jul-2020,9,2,0,0.027861211501329742
+618,Add Optional Length-Checking To zip,Final,01-May-2020,9,1,0,0.022321516034879137
+644,Require OpenSSL 1.1.1 or newer,Final,27-Oct-2020,9,1,0,0.022321516034879137
+534,Improved Errors for Missing Standard Library Modules,Withdrawn,05-Sep-2016,9,1,0,0.021925823501561234
+619,Python 3.10 Release Schedule,Active,25-May-2020,9,0,6,0.019551668301653835
+642,Explicit Pattern Syntax for Structural Pattern Matching,Rejected,26-Sep-2020,9,0,7,0.019551668301653835
+653,Precise Semantics for Pattern Matching,Draft,09-Feb-2021,9,0,3,0.019551668301653835
+798,Unpacking in Comprehensions,Accepted,19-Jul-2025,9,0,2,0.019551668301653835
