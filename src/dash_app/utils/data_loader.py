@@ -523,6 +523,11 @@ def load_group_data() -> pd.DataFrame:
         return _group_data_cache
 
     group_file = DATA_DIR / "group" / "peps_group.csv"
+    if not group_file.exists():
+        raise FileNotFoundError(
+            f"Group data file not found: {group_file}. "
+            "Run the data pipeline to generate this file."
+        )
     _group_data_cache = pd.read_csv(group_file)
     return _group_data_cache
 
