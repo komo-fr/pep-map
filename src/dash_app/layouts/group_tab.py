@@ -126,7 +126,7 @@ def _create_note_section() -> html.Div:
             html.P(
                 [
                     html.Strong("Node sizes"),
-                    " in the network graph are based on metrics computed from the full citation network.",
+                    " in the network graph are based on PageRank computed from the full citation network.",
                 ],
                 style={
                     "fontSize": "12px",

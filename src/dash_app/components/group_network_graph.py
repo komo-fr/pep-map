@@ -86,9 +86,9 @@ def get_group_base_stylesheet() -> list[dict]:
             "style": {
                 "label": "data(label)",
                 "background-color": "data(group_color)",
-                "width": "data(size_in_degree)",
-                "height": "data(size_in_degree)",
-                "font-size": "data(font_size_in_degree)",
+                "width": "data(size_pagerank)",
+                "height": "data(size_pagerank)",
+                "font-size": "data(font_size_pagerank)",
                 "text-valign": "center",
                 "text-halign": "center",
                 "border-width": 1,
