@@ -8,6 +8,10 @@ from src.dash_app.components.network_graph import (
     get_base_stylesheet,
     get_preset_layout_options,
 )
+from src.dash_app.components.group_network_graph import (
+    build_group_cytoscape_elements,
+    get_group_base_stylesheet,
+)
 from src.dash_app.components.pep_info import (
     parse_pep_number,
     create_status_badge,
@@ -38,4 +42,6 @@ __all__ = [
     "create_pep_table_description",
     "generate_status_styles",
     "convert_df_to_table_data",
+    "build_group_cytoscape_elements",
+    "get_group_base_stylesheet",
 ]
