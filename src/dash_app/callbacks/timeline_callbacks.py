@@ -1,6 +1,5 @@
 """Timelineタブのコールバック関数"""
 
-import pandas as pd
 import plotly.graph_objects as go  # type: ignore[import-untyped]
 from dash import Input, Output, State, clientside_callback, no_update
 
@@ -10,6 +9,7 @@ from src.dash_app.components import (
     parse_pep_number,
     create_pep_info_display,
     convert_df_to_table_data,
+    format_python_version,
 )
 from src.dash_app.components.timeline_figures import (
     _get_guideline_shapes,
@@ -394,14 +394,8 @@ def _create_timeline_figure(pep_number: int, pep_data) -> go.Figure:
     texts.append(str(pep_number))
     pep_numbers.append(pep_number)
 
-    # Python-Versionの表示文字列を決定（NaNの場合は「-」）
-    python_version = pep_data.get("python_version")
-    if pd.notna(python_version) and str(python_version).strip():
-        python_version_str = str(python_version)
-    else:
-        python_version_str = "-"
-
     # ツールチップのテキストを構築
+    python_version_str = format_python_version(pep_data.get("python_version"))
     hover_text = (
         f"PEP {pep_number}<br>"
         f"{pep_data['title']}<br>"
@@ -419,14 +413,8 @@ def _create_timeline_figure(pep_number: int, pep_data) -> go.Figure:
         texts.append(str(row["pep_number"]))
         pep_numbers.append(row["pep_number"])
 
-        # Python-Versionの表示文字列を決定（NaNの場合は「-」）
-        python_version = row.get("python_version")
-        if pd.notna(python_version) and str(python_version).strip():
-            python_version_str = str(python_version)
-        else:
-            python_version_str = "-"
-
         # ツールチップのテキストを構築
+        python_version_str = format_python_version(row.get("python_version"))
         hover_text = (
             f"PEP {row['pep_number']}<br>"
             f"{row['title']}<br>"
@@ -444,14 +432,8 @@ def _create_timeline_figure(pep_number: int, pep_data) -> go.Figure:
         texts.append(str(row["pep_number"]))
         pep_numbers.append(row["pep_number"])
 
-        # Python-Versionの表示文字列を決定（NaNの場合は「-」）
-        python_version = row.get("python_version")
-        if pd.notna(python_version) and str(python_version).strip():
-            python_version_str = str(python_version)
-        else:
-            python_version_str = "-"
-
         # ツールチップのテキストを構築
+        python_version_str = format_python_version(row.get("python_version"))
         hover_text = (
             f"PEP {row['pep_number']}<br>"
             f"{row['title']}<br>"

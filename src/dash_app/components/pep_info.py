@@ -26,6 +26,21 @@ def parse_pep_number(value):
         return None
 
 
+def format_python_version(value) -> str:
+    """
+    Python-Versionの表示文字列を返す（未設定の場合は'-'）
+
+    Args:
+        value: Python-Versionの値（文字列、数値、またはNaN）
+
+    Returns:
+        str: フォーマットされた表示文字列（未設定の場合は"-"）
+    """
+    if pd.notna(value) and str(value).strip():
+        return str(value)
+    return "-"
+
+
 def create_status_badge(status: str) -> html.Span:
     """
     Statusバッジ（色付き四角 + テキスト）を生成する
@@ -112,11 +127,8 @@ def create_pep_info_display(pep_data) -> html.Div:
     # PEPページへのURL
     pep_url = generate_pep_url(pep_number)
 
-    # Python-Versionの表示文字列を決定（NaNの場合は「-」）
-    if pd.notna(python_version) and str(python_version).strip():
-        python_version_str = str(python_version)
-    else:
-        python_version_str = "-"
+    # Python-Versionの表示文字列を決定
+    python_version_str = format_python_version(python_version)
 
     # 2行目の情報要素を構築
     info_elements = [
