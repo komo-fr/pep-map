@@ -1,7 +1,6 @@
 """Groupタブのコールバック関数"""
 
-from dash import Input, Output, State, no_update, callback_context
-from src.dash_app.components.group_network_graph import _deep_copy_element
+from dash import Input, Output, State, callback_context
 from src.dash_app.components.pep_info import (
     create_group_initial_info_message,
     create_pep_info_display,
@@ -66,66 +65,72 @@ def register_group_callbacks(app):
 
         return create_pep_info_display(pep_data)
 
-    # ===== グループ選択 → グラフハイライト更新（サーバーサイド） =====
-    @app.callback(
+    # ===== グループ選択 → グラフハイライト更新（クライアントサイド） =====
+    app.clientside_callback(
+        """
+        function(selectedGroup, currentElements) {
+            // currentElementsがない場合は更新しない
+            if (!currentElements || currentElements.length === 0) {
+                return window.dash_clientside.no_update;
+            }
+
+            // "all"または未選択の場合は全ノードを通常表示
+            if (selectedGroup === null || selectedGroup === undefined || selectedGroup === 'all') {
+                return currentElements.map(function(el) {
+                    var newEl = JSON.parse(JSON.stringify(el));
+                    newEl.classes = '';
+                    newEl.selected = false;
+                    return newEl;
+                });
+            }
+
+            // 選択されたグループIDを数値に変換
+            var selectedGroupId = parseInt(selectedGroup, 10);
+
+            // 選択グループに所属するノードIDのセットを作成
+            var selectedNodeIds = new Set();
+            for (var i = 0; i < currentElements.length; i++) {
+                var el = currentElements[i];
+                var data = el.data || {};
+                if (!data.source && data.group_id === selectedGroupId) {
+                    selectedNodeIds.add(data.id);
+                }
+            }
+
+            // elementsを更新
+            return currentElements.map(function(el) {
+                var newEl = JSON.parse(JSON.stringify(el));
+                newEl.selected = false;
+                var data = newEl.data || {};
+
+                // ノードの場合
+                if (!data.source) {
+                    if (data.group_id === selectedGroupId) {
+                        newEl.classes = 'group-selected';
+                    } else {
+                        newEl.classes = 'group-faded';
+                    }
+                }
+                // エッジの場合
+                else {
+                    var source = data.source;
+                    var target = data.target;
+                    if (selectedNodeIds.has(source) && selectedNodeIds.has(target)) {
+                        newEl.classes = 'group-selected-edge';
+                    } else {
+                        newEl.classes = 'group-faded';
+                    }
+                }
+
+                return newEl;
+            });
+        }
+        """,
         Output("group-network-graph", "elements"),
         Input("group-selector-dropdown", "value"),
         State("group-network-graph", "elements"),
         prevent_initial_call=True,
     )
-    def update_graph_highlight(selected_group, current_elements):
-        """
-        グループ選択時にグラフのハイライトを更新する
-        """
-        if current_elements is None:
-            return no_update
-
-        # "all"または未選択の場合は全ノードを通常表示
-        if selected_group is None or selected_group == "all":
-            new_elements = []
-            for el in current_elements:
-                new_el = _deep_copy_element(el)
-                new_el["classes"] = ""
-                new_el["selected"] = False  # ノードの選択状態をクリア
-                new_elements.append(new_el)
-            return new_elements
-
-        # 選択されたグループIDを数値に変換
-        selected_group_id = int(selected_group)
-
-        # 選択グループに所属するノードIDのセットを作成
-        selected_node_ids = set()
-        for el in current_elements:
-            data = el.get("data", {})
-            if "source" not in data and data.get("group_id") == selected_group_id:
-                selected_node_ids.add(data.get("id"))
-
-        # elementsを更新
-        new_elements = []
-        for el in current_elements:
-            new_el = _deep_copy_element(el)
-            new_el["selected"] = False  # ノードの選択状態をクリア
-            data = new_el.get("data", {})
-
-            # ノードの場合
-            if "source" not in data:
-                node_group_id = data.get("group_id")
-                if node_group_id == selected_group_id:
-                    new_el["classes"] = "group-selected"
-                else:
-                    new_el["classes"] = "group-faded"
-            # エッジの場合
-            else:
-                source = data.get("source")
-                target = data.get("target")
-                if source in selected_node_ids and target in selected_node_ids:
-                    new_el["classes"] = "group-selected-edge"
-                else:
-                    new_el["classes"] = "group-faded"
-
-            new_elements.append(new_el)
-
-        return new_elements
 
     # ===== グループ選択 → テーブルデータ更新（サーバーサイド） =====
     @app.callback(
@@ -197,69 +202,138 @@ def register_group_callbacks(app):
 
         return table_data, title
 
-    # ===== ノードクリック → グループ選択更新 + 選択ソース更新（サーバーサイド） =====
-    @app.callback(
+    # ===== ノードクリック → グループ選択更新 + 選択ソース更新（クライアントサイド） =====
+    app.clientside_callback(
+        """
+        function(tapData) {
+            // tapDataがない場合は更新しない
+            if (!tapData) {
+                return [window.dash_clientside.no_update, window.dash_clientside.no_update];
+            }
+
+            var groupId = tapData.group_id;
+            if (groupId !== null && groupId !== undefined) {
+                return [groupId, 'node_tap'];
+            }
+
+            return [window.dash_clientside.no_update, window.dash_clientside.no_update];
+        }
+        """,
         Output("group-selector-dropdown", "value"),
         Output("group-selection-source", "data"),
         Input("group-network-graph", "tapNodeData"),
         prevent_initial_call=True,
     )
-    def update_group_from_node_tap(tap_data):
+
+    # ===== グループ選択 → スタイルシート切り替え（クライアントサイド） =====
+    app.clientside_callback(
         """
-        ノードクリック時にそのグループを選択する
+        function(selectedGroup, selectionSource) {
+            // 基本スタイルシート
+            var baseStylesheet = [
+                // ノード基本スタイル
+                {
+                    selector: 'node',
+                    style: {
+                        'label': 'data(label)',
+                        'background-color': 'data(group_color)',
+                        'width': 'data(size_pagerank)',
+                        'height': 'data(size_pagerank)',
+                        'font-size': 'data(font_size_pagerank)',
+                        'text-valign': 'center',
+                        'text-halign': 'center',
+                        'border-width': 1,
+                        'border-color': '#999',
+                        'opacity': 0.8
+                    }
+                },
+                // エッジ基本スタイル
+                {
+                    selector: 'edge',
+                    style: {
+                        'width': 2,
+                        'line-color': '#999',
+                        'target-arrow-color': '#999',
+                        'target-arrow-shape': 'triangle',
+                        'arrow-scale': 1,
+                        'curve-style': 'bezier',
+                        'opacity': 0.3
+                    }
+                },
+                // グループ選択時のハイライト
+                {
+                    selector: '.group-selected',
+                    style: {
+                        'opacity': 1,
+                        'border-width': 2,
+                        'border-color': '#333'
+                    }
+                },
+                // グループ選択時の非選択ノード（減衰）
+                {
+                    selector: '.group-faded',
+                    style: {
+                        'opacity': 0.15
+                    }
+                },
+                // グループ選択時のエッジ（グループ内のエッジ）
+                {
+                    selector: '.group-selected-edge',
+                    style: {
+                        'opacity': 1,
+                        'line-color': '#666',
+                        'target-arrow-color': '#666',
+                        'width': 2
+                    }
+                },
+                // ノードタップ時の選択スタイル
+                {
+                    selector: ':selected',
+                    style: {
+                        'border-width': 4,
+                        'border-color': '#FF0000',
+                        'z-index': 9999,
+                        'opacity': 1
+                    }
+                }
+            ];
 
-        Args:
-            tap_data: クリックされたノードのデータ
+            // "all"または未選択の場合は基本スタイルシート
+            if (selectedGroup === null || selectedGroup === undefined || selectedGroup === 'all') {
+                return [baseStylesheet, 'dropdown'];
+            }
 
-        Returns:
-            tuple: (グループID, 選択ソース)
-        """
-        if tap_data is None:
-            return no_update, no_update
+            // ノードタップからの選択: 赤枠を表示（基本スタイルシート）
+            if (selectionSource === 'node_tap') {
+                return [baseStylesheet, 'dropdown'];
+            }
 
-        group_id = tap_data.get("group_id")
-        if group_id is not None:
-            return group_id, "node_tap"
+            // ドロップダウンからの選択: 赤枠を非表示（オーバーライドスタイル追加）
+            var overrideStyles = [
+                {
+                    selector: '.group-selected:selected',
+                    style: {
+                        'border-width': 2,
+                        'border-color': '#333',
+                        'opacity': 1
+                    }
+                },
+                {
+                    selector: '.group-faded:selected',
+                    style: {
+                        'border-width': 1,
+                        'border-color': '#999',
+                        'opacity': 0.15
+                    }
+                }
+            ];
 
-        return no_update, no_update
-
-    # ===== グループ選択 → スタイルシート切り替え（サーバーサイド） =====
-    @app.callback(
+            return [baseStylesheet.concat(overrideStyles), 'dropdown'];
+        }
+        """,
         Output("group-network-graph", "stylesheet"),
         Output("group-selection-source", "data", allow_duplicate=True),
         Input("group-selector-dropdown", "value"),
         State("group-selection-source", "data"),
         prevent_initial_call=True,
     )
-    def update_stylesheet(selected_group, selection_source):
-        """
-        グループ選択時にスタイルシートを切り替える
-
-        選択ソースに基づいてスタイルシートを選択し、使用後はソースをリセットする。
-        - "node_tap": ノードタップからの選択 → 赤枠を表示
-        - "dropdown": ドロップダウンからの選択 → 赤枠を非表示
-
-        Args:
-            selected_group: 選択されたグループ（"all" または グループID）
-            selection_source: 選択ソース（"node_tap" または "dropdown"）
-
-        Returns:
-            tuple: (スタイルシート, リセットされた選択ソース)
-        """
-        from src.dash_app.components.group_network_graph import (
-            get_group_base_stylesheet,
-            get_group_selected_stylesheet,
-        )
-
-        if selected_group is None or selected_group == "all":
-            return get_group_base_stylesheet(), "dropdown"
-
-        # ノードタップからの選択: 赤枠を表示（基本スタイルシート）
-        if selection_source == "node_tap":
-            stylesheet = get_group_base_stylesheet()
-        # ドロップダウンからの選択: 赤枠を非表示（選択スタイルシート）
-        else:
-            stylesheet = get_group_selected_stylesheet()
-
-        # 使用後は "dropdown" にリセット（次の操作に備える）
-        return stylesheet, "dropdown"
