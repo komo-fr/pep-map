@@ -272,7 +272,7 @@ def register_group_callbacks(app):
     # これにより、コールバック間の競合状態を回避する
     app.clientside_callback(
         """
-        function(selectedGroup, selectionSource) {
+        function(selectedGroup, selectionSource, elements, pepInput) {
             // 基本スタイルシート
             var baseStylesheet = [
                 // ノード基本スタイル
@@ -352,41 +352,16 @@ def register_group_callbacks(app):
                 }
             ];
 
-            // "all"または未選択の場合は基本スタイルシート
-            if (selectedGroup === null || selectedGroup === undefined || selectedGroup === 'all') {
-                return baseStylesheet;
-            }
-
-            // ノードタップからの選択: 赤枠を表示（基本スタイルシート）
-            if (selectionSource === 'node_tap') {
-                return baseStylesheet;
-            }
-
-            // PEP番号入力からの選択: :selectedの赤枠を非表示、pep-highlightedクラスで赤枠表示
-            if (selectionSource === 'pep_input') {
-                var pepInputOverrideStyles = [
-                    {
-                        selector: '.group-selected:selected',
-                        style: {
-                            'border-width': 2,
-                            'border-color': '#333',
-                            'opacity': 1
-                        }
-                    },
-                    {
-                        selector: '.group-faded:selected',
-                        style: {
-                            'border-width': 1,
-                            'border-color': '#999',
-                            'opacity': 0.15
-                        }
-                    }
-                ];
-                return baseStylesheet.concat(pepInputOverrideStyles);
-            }
-
-            // ドロップダウンからの選択: 赤枠を非表示
+            // 赤枠を非表示にするオーバーライドスタイル
             var overrideStyles = [
+                {
+                    selector: ':selected',
+                    style: {
+                        'border-width': 1,
+                        'border-color': '#999',
+                        'opacity': 0.8
+                    }
+                },
                 {
                     selector: '.group-selected:selected',
                     style: {
@@ -402,15 +377,96 @@ def register_group_callbacks(app):
                         'border-color': '#999',
                         'opacity': 0.15
                     }
+                },
+                // pep-highlightedクラスの赤枠も非表示にする
+                {
+                    selector: '.group-selected.pep-highlighted',
+                    style: {
+                        'border-width': 2,
+                        'border-color': '#333',
+                        'opacity': 1
+                    }
+                },
+                {
+                    selector: '.group-faded.pep-highlighted',
+                    style: {
+                        'border-width': 1,
+                        'border-color': '#999',
+                        'opacity': 0.15
+                    }
                 }
             ];
 
+            // "all"または未選択の場合は基本スタイルシート + 選択状態の赤枠を非表示
+            if (selectedGroup === null || selectedGroup === undefined || selectedGroup === 'all') {
+                return baseStylesheet.concat(overrideStyles);
+            }
+
+            // ノードタップからの選択: 赤枠を表示（基本スタイルシート）
+            if (selectionSource === 'node_tap') {
+                return baseStylesheet;
+            }
+
+            // PEP番号入力からの選択の場合、PEP入力値のグループIDと選択グループIDを比較
+            if (selectionSource === 'pep_input') {
+                // PEP入力値が有効かチェック
+                if (pepInput && pepInput !== '') {
+                    var pepNumber = parseInt(pepInput, 10);
+                    if (!isNaN(pepNumber)) {
+                        var pepNodeId = 'pep_' + pepNumber;
+                        var selectedGroupId = parseInt(selectedGroup, 10);
+
+                        // elementsからPEP入力値に対応するノードのグループIDを取得
+                        var pepGroupId = null;
+                        if (elements) {
+                            for (var i = 0; i < elements.length; i++) {
+                                var el = elements[i];
+                                var data = el.data || {};
+                                if (data.id === pepNodeId && data.group_id !== undefined) {
+                                    pepGroupId = data.group_id;
+                                    break;
+                                }
+                            }
+                        }
+
+                        // PEP入力値のグループIDと選択グループIDが一致する場合のみ赤枠を維持
+                        if (pepGroupId !== null && pepGroupId === selectedGroupId) {
+                            // :selectedの赤枠を非表示、pep-highlightedクラスで赤枠表示
+                            var pepInputOverrideStyles = [
+                                {
+                                    selector: '.group-selected:selected',
+                                    style: {
+                                        'border-width': 2,
+                                        'border-color': '#333',
+                                        'opacity': 1
+                                    }
+                                },
+                                {
+                                    selector: '.group-faded:selected',
+                                    style: {
+                                        'border-width': 1,
+                                        'border-color': '#999',
+                                        'opacity': 0.15
+                                    }
+                                }
+                            ];
+                            return baseStylesheet.concat(pepInputOverrideStyles);
+                        }
+                    }
+                }
+                // グループIDが一致しない場合は赤枠を非表示
+                return baseStylesheet.concat(overrideStyles);
+            }
+
+            // ドロップダウンからの選択: 赤枠を非表示
             return baseStylesheet.concat(overrideStyles);
         }
         """,
         Output("group-network-graph", "stylesheet"),
         Input("group-selector-dropdown", "value"),
         State("group-selection-source", "data"),
+        State("group-network-graph", "elements"),
+        State("group-pep-input", "value"),
         prevent_initial_call=True,
     )
 
@@ -500,3 +556,53 @@ def register_group_callbacks(app):
             return create_group_initial_info_message()
 
         return create_pep_info_display(pep_data)
+
+    # ===== ドロップダウン変更 → selection_source・PEP入力欄リセット（サーバーサイド） =====
+    @app.callback(
+        Output("group-selection-source", "data", allow_duplicate=True),
+        Output("group-pep-input", "value", allow_duplicate=True),
+        Input("group-selector-dropdown", "value"),
+        State("group-selection-source", "data"),
+        State("group-pep-input", "value"),
+        prevent_initial_call=True,
+    )
+    def reset_on_dropdown_change(selected_group, selection_source, pep_input):
+        """
+        ドロップダウンが変更された時に selection_source と PEP入力欄をリセットする
+
+        ノードタップ/PEP入力からドロップダウンが更新された場合は何もしない（入力値を維持）
+        ユーザーがドロップダウンを直接操作した場合はリセット（入力値をクリア）
+
+        Args:
+            selected_group: 選択されたグループ
+            selection_source: 現在の選択ソース
+            pep_input: PEP入力欄の値
+
+        Returns:
+            tuple: (selection_source, pep_input) or no_update
+        """
+        # PEP入力欄が空の場合は何もしない
+        pep_number = parse_pep_number(pep_input)
+        if pep_number is None:
+            # selection_source が "pep_input" の場合のみリセット
+            if selection_source == "pep_input":
+                return "dropdown", no_update
+            return no_update, no_update
+
+        # PEP入力欄の値に対応するグループIDを取得
+        target_group_id = get_group_id_by_pep(pep_number)
+        if target_group_id is None:
+            # 無効なPEP番号の場合はリセット
+            if selection_source == "pep_input":
+                return "dropdown", ""
+            return no_update, ""
+
+        # 現在のドロップダウンの値と対象グループIDが一致する場合は何もしない
+        # （ノードタップ/PEP入力からの変更なので入力値を維持）
+        if str(selected_group) == str(target_group_id):
+            return no_update, no_update
+
+        # 異なる場合はリセット（ユーザーがドロップダウンを操作した）
+        if selection_source == "pep_input":
+            return "dropdown", ""
+        return no_update, ""
