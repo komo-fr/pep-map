@@ -15,11 +15,6 @@ from src.dash_app.utils.data_loader import (
 )
 
 
-def _is_pep_input_source(selection_source: str) -> bool:
-    """選択ソースがPEP番号入力かどうかを判定する"""
-    return selection_source == "pep_input"
-
-
 def register_group_callbacks(app):
     """
     Groupタブのコールバックを登録する
@@ -60,10 +55,7 @@ def register_group_callbacks(app):
             if "group-selector-dropdown" in triggered_id:
                 # PEP番号入力またはノードタップからのトリガーの場合は、
                 # それぞれのコールバックに任せる
-                if (
-                    _is_pep_input_source(selection_source)
-                    or selection_source == "node_tap"
-                ):
+                if selection_source == "pep_input" or selection_source == "node_tap":
                     return no_update
                 # それ以外（ドロップダウン直接操作）は初期メッセージを表示
                 return create_group_initial_info_message()
