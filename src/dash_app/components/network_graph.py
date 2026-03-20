@@ -3,7 +3,11 @@
 import networkx as nx
 import pandas as pd
 
-from src.dash_app.utils.constants import DEFAULT_STATUS_COLOR, STATUS_COLOR_MAP
+from src.dash_app.utils.constants import (
+    BASE_FONT_COLOR,
+    DEFAULT_STATUS_COLOR,
+    STATUS_COLOR_MAP,
+)
 from src.dash_app.utils.data_loader import (
     load_citations,
     load_peps_metadata,
@@ -480,7 +484,6 @@ def get_base_stylesheet(size_type: str = "in_degree") -> list[dict]:
     }
     size_field = size_field_map.get(size_type, "size_in_degree")
     font_size_field = font_size_field_map.get(size_type, "font_size_in_degree")
-    dark_status_text_color = "#CCCCCC"
 
     return [
         # ノード基本スタイル
@@ -497,6 +500,9 @@ def get_base_stylesheet(size_type: str = "in_degree") -> list[dict]:
                 "border-width": 1,
                 "border-color": "#999",
                 "opacity": 0.5,
+                "color": BASE_FONT_COLOR,
+                "text-outline-width": 1,
+                "text-outline-color": "#ffffff",
             },
         },
         # エッジ基本スタイル
@@ -521,6 +527,8 @@ def get_base_stylesheet(size_type: str = "in_degree") -> list[dict]:
                 "border-color": "#FF0000",
                 "z-index": 9999,
                 "opacity": 1,
+                "text-outline-width": 1,
+                "text-outline-color": "#ffffff",
             },
         },
         # 選択中ノード（赤い太枠）
@@ -531,67 +539,19 @@ def get_base_stylesheet(size_type: str = "in_degree") -> list[dict]:
                 "border-color": "#FF0000",
                 "z-index": 9999,
                 "opacity": 1,
-                "color": "#000000",
-            },
-        },
-        # 選択中ノード - 暗い背景色のStatusはグレー文字
-        {
-            "selector": '.selected[status = "Rejected"]',
-            "style": {
-                "color": dark_status_text_color,
-            },
-        },
-        {
-            "selector": '.selected[status = "Superseded"]',
-            "style": {
-                "color": dark_status_text_color,
-            },
-        },
-        {
-            "selector": '.selected[status = "Withdrawn"]',
-            "style": {
-                "color": dark_status_text_color,
-            },
-        },
-        {
-            "selector": '.selected[status = "Deferred"]',
-            "style": {
-                "color": dark_status_text_color,
+                "text-outline-width": 1,
+                "text-outline-color": "#ffffff",
             },
         },
         # 接続ノード（太枠）
         {
             "selector": ".connected",
             "style": {
-                "color": "#000000",
                 "border-width": 1,
                 "border-color": "#888",
                 "opacity": 1,
-            },
-        },
-        # 接続ノード - 暗い背景色のStatusはグレー文字
-        {
-            "selector": '.connected[status = "Rejected"]',
-            "style": {
-                "color": dark_status_text_color,
-            },
-        },
-        {
-            "selector": '.connected[status = "Superseded"]',
-            "style": {
-                "color": dark_status_text_color,
-            },
-        },
-        {
-            "selector": '.connected[status = "Withdrawn"]',
-            "style": {
-                "color": dark_status_text_color,
-            },
-        },
-        {
-            "selector": '.connected[status = "Deferred"]',
-            "style": {
-                "color": dark_status_text_color,
+                "text-outline-width": 1,
+                "text-outline-color": "#ffffff",
             },
         },
         # 入ってくるエッジ（橙色）
@@ -621,6 +581,8 @@ def get_base_stylesheet(size_type: str = "in_degree") -> list[dict]:
             "selector": ".faded",
             "style": {
                 "opacity": 0.15,
+                "text-outline-width": 1,
+                "text-outline-color": "#ffffff",
             },
         },
     ]
