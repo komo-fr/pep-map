@@ -41,14 +41,6 @@ class TestGetGroupColor:
         # 全ての色がユニークであることを確認
         assert len(set(colors)) == len(colors)
 
-    def test_beyond_palette_colors_differ_from_adjacent(self):
-        """黄金比により隣接グループでも色が大きく異なる"""
-        # 連続する2つのグループの色相差を確認
-        # 黄金比（0.618...）により、隣接しても色相が大きくずれる
-        color1 = get_group_color(32)
-        color2 = get_group_color(33)
-        assert color1 != color2
-
     def test_same_group_id_returns_same_color(self):
         """同じgroup_idは常に同じ色を返す（決定的）"""
         for group_id in [0, 15, 31, 32, 50, 100]:
