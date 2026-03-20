@@ -58,8 +58,12 @@ def register_group_callbacks(app):
             triggered_id = ctx.triggered[0]["prop_id"]
             # ドロップダウンが変更された場合
             if "group-selector-dropdown" in triggered_id:
-                # PEP番号入力からのトリガーの場合は、update_pep_info_from_inputに任せる
-                if _is_pep_input_source(selection_source):
+                # PEP番号入力またはノードタップからのトリガーの場合は、
+                # それぞれのコールバックに任せる
+                if (
+                    _is_pep_input_source(selection_source)
+                    or selection_source == "node_tap"
+                ):
                     return no_update
                 # それ以外（ドロップダウン直接操作）は初期メッセージを表示
                 return create_group_initial_info_message()
@@ -271,6 +275,9 @@ def register_group_callbacks(app):
         return no_update, no_update, no_update
 
     # ===== グループ選択 → スタイルシート切り替え（クライアントサイド） =====
+    # NOTE: このコールバックでは selection_source を変更しない
+    # selection_source の管理は update_group_from_pep_input で行う
+    # これにより、コールバック間の競合状態を回避する
     app.clientside_callback(
         """
         function(selectedGroup, selectionSource) {
@@ -355,16 +362,15 @@ def register_group_callbacks(app):
 
             // "all"または未選択の場合は基本スタイルシート
             if (selectedGroup === null || selectedGroup === undefined || selectedGroup === 'all') {
-                return [baseStylesheet, 'dropdown'];
+                return baseStylesheet;
             }
 
-            // ノードタップからの選択: 赤枠を表示（基本スタイルシート）、次回のドロップダウン操作用にリセット
+            // ノードタップからの選択: 赤枠を表示（基本スタイルシート）
             if (selectionSource === 'node_tap') {
-                return [baseStylesheet, 'dropdown'];
+                return baseStylesheet;
             }
 
             // PEP番号入力からの選択: :selectedの赤枠を非表示、pep-highlightedクラスで赤枠表示
-            // selectionSourceは'pep_input'のまま維持（グラフハイライト更新で使用するため）
             if (selectionSource === 'pep_input') {
                 var pepInputOverrideStyles = [
                     {
@@ -384,7 +390,7 @@ def register_group_callbacks(app):
                         }
                     }
                 ];
-                return [baseStylesheet.concat(pepInputOverrideStyles), 'pep_input'];
+                return baseStylesheet.concat(pepInputOverrideStyles);
             }
 
             // ドロップダウンからの選択: 赤枠を非表示
@@ -407,11 +413,10 @@ def register_group_callbacks(app):
                 }
             ];
 
-            return [baseStylesheet.concat(overrideStyles), 'dropdown'];
+            return baseStylesheet.concat(overrideStyles);
         }
         """,
         Output("group-network-graph", "stylesheet"),
-        Output("group-selection-source", "data", allow_duplicate=True),
         Input("group-selector-dropdown", "value"),
         State("group-selection-source", "data"),
         prevent_initial_call=True,
@@ -438,9 +443,12 @@ def register_group_callbacks(app):
         Returns:
             tuple: (グループID or no_update, 選択ソース or no_update, エラーメッセージ)
         """
-        # ノードタップからの更新の場合は何もしない（既にノードタップ側で処理済み）
+        # ノードタップからの更新の場合は selection_source をリセットして終了
+        # （グループ選択は既にノードタップ側で処理済み）
+        # NOTE: スタイルシートコールバックでは selection_source を変更しないため、
+        # ここでリセットすることで次のドロップダウン操作が正しく動作する
         if selection_source == "node_tap":
-            return no_update, no_update, ""
+            return no_update, "dropdown", ""
 
         # 入力値を整数に変換
         pep_number = parse_pep_number(pep_input)
