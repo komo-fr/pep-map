@@ -140,6 +140,18 @@ def _create_group_selector_section() -> html.Div:
                             "marginTop": "4px",
                         },
                     ),
+                    # How to Useリンク
+                    html.A(
+                        "How to Use",
+                        href="https://github.com/komo-fr/pep-map/blob/production/README.md#groups-tab",
+                        target="_blank",
+                        rel="noopener noreferrer",
+                        style={
+                            "fontSize": "12px",
+                            "marginTop": "4px",
+                            "display": "block",
+                        },
+                    ),
                 ],
                 style={
                     "marginTop": "12px",
