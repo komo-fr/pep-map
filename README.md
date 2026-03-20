@@ -12,6 +12,10 @@
 - **[Network tab](#network-tab):**
     - Explore citation relationships between PEPs **as a network graph**.
     - It helps you understand the relationships between PEPs and identify influential ones.
+- **[Groups tab (beta)](#groups-tab):**
+    - Explore groups of PEPs detected from the citation network using a community detection algorithm.
+    - It helps you identify groups of related topics based on citation relationships.
+    - **This feature is currently in beta. Automatic generation of group descriptions is planned.**
 - **PEP Metrics tab:**
     - View structural metrics such as in-degree, out-degree, degree, and PageRank in a table format.
     - It helps you compare PEPs using quantitative network measures.
@@ -20,6 +24,7 @@
     - It helps you track newly added, changed, or removed citation relationships.
 
 ![](images/pepmap_overview.png)
+![](images/pepmap_overview_group.png)
 
 **Note:**
 This project is a redesigned and reimplemented version of [pep_map_site](https://github.com/komo-fr/pep_map_site), originally built with Bokeh and PyScript.
@@ -99,6 +104,30 @@ If the selected metric is 0, the node is displayed with a default minimum size.
 Drag a node to reposition it manually.
 
 ![](images/network/move_node.gif)
+
+## Groups tab
+### Viewing Topic Groups from Citations
+The Groups tab shows how PEPs are organized into groups based on citation relationships.
+
+Groups are detected automatically from the citation network using a community detection algorithm.
+PEPs within the same group are more closely related to each other through citations.
+
+This view helps you identify groups of related topics and understand how different areas of discussion are structured within the PEP ecosystem.
+
+For example, enter `484` (PEP 484: Type Hints) in the PEP input field.
+You will see that PEPs related to annotations and typing are grouped together.
+
+![](images/groups/example_484.png)
+
+You can select a group, enter a PEP number, or click a node in the network graph.
+
+- Selecting a group highlights the corresponding PEPs in the network graph.
+- Entering a PEP number or clicking a node automatically selects its group and highlights it.
+
+![](images/groups/groups.gif)
+
+**NOTE:**
+This feature is currently in beta. Automatic generation of group descriptions is planned.
 
 ## Local environment setup
 

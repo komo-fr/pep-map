@@ -75,12 +75,10 @@ class TestBuildCytoscapeElements:
     @pytest.fixture(autouse=True)
     def setup(self, mock_data_files, monkeypatch):
         """各テストの前にキャッシュをクリアし、モックデータを使用"""
-        from src.dash_app.components import network_graph
         from src.dash_app.utils import data_loader
 
-        # キャッシュをクリア
+        # キャッシュをクリア（全モジュールのキャッシュをクリア）
         data_loader.clear_cache()
-        network_graph._cytoscape_elements_cache = None
 
         # DATA_DIRをモックデータディレクトリに変更
         monkeypatch.setattr("src.dash_app.utils.data_loader.DATA_DIR", mock_data_files)

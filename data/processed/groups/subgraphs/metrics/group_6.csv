@@ -1,0 +1,22 @@
+pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
+266,Optimizing Global Variable/Attribute Access,Withdrawn,13-Aug-2001,6,5,0,0.12145995863326134
+218,Adding a Built-In Set Object Type,Final,31-Jul-2000,6,4,0,0.09233155889266942
+267,Optimized Access to Module Namespaces,Deferred,23-May-2001,6,3,2,0.06619292054960856
+280,Optimizing access to globals,Deferred,10-Feb-2002,6,3,2,0.06619292054960856
+263,Defining Python Source Code Encodings,Final,06-Jun-2001,6,2,0,0.061319872634873755
+282,A Logging System,Final,04-Feb-2002,6,2,0,0.061319872634873755
+311,Simplified Global Interpreter Lock Acquisition for Extensions,Final,05-Feb-2003,6,2,0,0.061319872634873755
+269,Pgen Module for Python,Deferred,24-Aug-2001,6,2,0,0.038061107941527
+286,Enhanced Argument Tuples,Deferred,03-Mar-2002,6,2,0,0.038061107941527
+322,Reverse Iteration,Final,24-Sep-2003,6,1,0,0.03579983915189606
+278,Universal Newline Support,Final,14-Jan-2002,6,1,0,0.034184647159302535
+285,Adding a bool type,Final,08-Mar-2002,6,1,0,0.034184647159302535
+307,Extensions to the pickle protocol,Final,31-Jan-2003,6,1,0,0.034184647159302535
+270,uniq method for list objects,Rejected,21-Aug-2001,6,0,1,0.0319233783696716
+283,Python 2.3 Release Schedule,Final,27-Feb-2002,6,0,12,0.0319233783696716
+320,Python 2.4 Release Schedule,Final,29-Jul-2003,6,0,7,0.0319233783696716
+329,Treating Builtins as Constants in the Standard Library,Rejected,18-Apr-2004,6,0,1,0.0319233783696716
+337,Logging Usage in the Standard Library,Deferred,02-Oct-2004,6,0,1,0.0319233783696716
+788,Protecting the C API from Interpreter Finalization,Draft,23-Apr-2025,6,0,1,0.0319233783696716
+802,Display Syntax for the Empty Set,Draft,08-Aug-2025,6,0,1,0.0319233783696716
+3120,Using UTF-8 as the default source encoding,Final,15-Apr-2007,6,0,1,0.0319233783696716
