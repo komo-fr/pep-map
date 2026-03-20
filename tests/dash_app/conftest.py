@@ -114,6 +114,63 @@ def sample_python_releases():
 
 
 @pytest.fixture
+def sample_group_data():
+    """テスト用グループデータのDataFrame"""
+    return pd.DataFrame(
+        [
+            {
+                "PEP": 8,
+                "title": "Style Guide for Python Code",
+                "status": "Active",
+                "created": "2001-07-05",
+                "group_id": 0,
+                "in-degree_group": 1,
+                "out-degree_group": 0,
+                "degree_group": 1,
+                "pagerank_group": 0.5,
+                "pagerank_cumsum": 0.5,
+            },
+            {
+                "PEP": 484,
+                "title": "Type Hints",
+                "status": "Final",
+                "created": "2014-09-29",
+                "group_id": 0,
+                "in-degree_group": 0,
+                "out-degree_group": 1,
+                "degree_group": 1,
+                "pagerank_group": 0.5,
+                "pagerank_cumsum": 1.0,
+            },
+            {
+                "PEP": 3107,
+                "title": "Function Annotations",
+                "status": "Final",
+                "created": "2000-01-01",
+                "group_id": 1,
+                "in-degree_group": 0,
+                "out-degree_group": 0,
+                "degree_group": 0,
+                "pagerank_group": 1.0,
+                "pagerank_cumsum": 1.0,
+            },
+            {
+                "PEP": 9999,
+                "title": "Isolated PEP",
+                "status": "Draft",
+                "created": "2025-01-01",
+                "group_id": -1,
+                "in-degree_group": 0,
+                "out-degree_group": 0,
+                "degree_group": 0,
+                "pagerank_group": 1.0,
+                "pagerank_cumsum": 1.0,
+            },
+        ]
+    )
+
+
+@pytest.fixture
 def sample_citation_changes():
     """テスト用引用変更履歴のDataFrame"""
     return pd.DataFrame(
@@ -154,6 +211,7 @@ def mock_data_files(
     sample_metadata,
     sample_node_metrics,
     sample_citation_changes,
+    sample_group_data,
 ):
     """テスト用データファイルを一時ディレクトリに作成"""
     data_dir = tmp_path / "data"
@@ -171,6 +229,12 @@ def mock_data_files(
 
     citation_changes_csv = data_dir / "citation_changes.csv"
     sample_citation_changes.to_csv(citation_changes_csv, index=False)
+
+    # グループデータディレクトリとファイル作成
+    group_dir = data_dir / "groups"
+    group_dir.mkdir()
+    group_csv = group_dir / "peps_group.csv"
+    sample_group_data.to_csv(group_csv, index=False)
 
     # JSONファイル作成
     metadata_json = data_dir / "metadata.json"

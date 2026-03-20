@@ -1,0 +1,18 @@
+pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
+409,Suppressing exception context,Final,26-Jan-2012,17,3,1,0.23766039622321414
+415,Implement context suppression with exception attributes,Final,26-Feb-2012,17,3,1,0.23766039622321414
+399,Pure Python/C Accelerator Module Compatibility Requirements,Final,04-Apr-2011,17,4,0,0.0645009168329232
+3003,Python Language Moratorium,Final,21-Oct-2009,17,2,0,0.059621376717403134
+3155,Qualified name for classes and functions,Final,29-Oct-2011,17,3,0,0.05778607724216384
+421,Adding sys.implementation,Final,26-Apr-2012,17,2,2,0.045263630437141246
+3139,"Cleaning out sys and the ""interpreter"" module",Rejected,04-Apr-2008,17,1,0,0.041853070830713886
+398,Python 3.3 Release Schedule,Final,23-Mar-2011,17,1,8,0.03222759615061216
+407,New release cycle and introducing long-term support versions,Deferred,12-Jan-2012,17,1,1,0.03222759615061216
+362,Function Signature Object,Final,21-Aug-2006,17,1,0,0.02604000700578081
+417,Including mock in the Standard Library,Final,12-Mar-2012,17,1,0,0.02604000700578081
+3154,Pickle protocol version 4,Final,11-Aug-2011,17,1,1,0.02604000700578081
+392,Python 3.2 Release Schedule,Final,30-Dec-2009,17,0,2,0.022615784434931938
+413,Faster evolution of the Python Standard Library,Withdrawn,24-Feb-2012,17,0,2,0.022615784434931938
+490,Chain exceptions at C level,Rejected,25-Mar-2015,17,0,2,0.022615784434931938
+737,C API to format a type fully qualified name,Final,29-Nov-2023,17,0,2,0.022615784434931938
+739,``build-details.json`` 1.0 — a static description file for Python build details,Accepted,19-Dec-2023,17,0,1,0.022615784434931938

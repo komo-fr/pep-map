@@ -32,10 +32,10 @@ def create_network_layout() -> html.Div:
         [
             # === 上部セクション: 入力欄 + PEP情報(プレースホルダー) ===
             _create_top_section(),
-            # === Status凡例セクション ===
-            create_status_legend(),
-            # === データ取得日付セクション ===
-            _create_toolbar_section(fetched_at, checked_at),
+            # === Status凡例 + データ取得日付セクション ===
+            _create_status_legend_and_data_info_section(fetched_at, checked_at),
+            # === ツールバーセクション ===
+            _create_toolbar_section(),
             # === 操作説明セクション ===
             _create_operation_description_section(),
             # === メインコンテンツ: グラフ + テーブル ===
@@ -118,31 +118,61 @@ def _create_top_section() -> html.Div:
     )
 
 
-def _create_toolbar_section(fetched_at: str, checked_at: str) -> html.Div:
-    """データ取得日付・チェック日付 + Reset selectionボタン + ノードサイズ切り替えセクション"""
+def _create_status_legend_and_data_info_section(
+    fetched_at: str, checked_at: str
+) -> html.Div:
+    """Status凡例 + データ取得日付セクション"""
     return html.Div(
         [
-            # 1行目: データ取得日付・チェック日付
+            # 左側: Status凡例
+            create_status_legend(),
+            # 右側: Data updated と Last checked（右寄せ、2行）
             html.Div(
-                html.P(
-                    [
-                        html.Strong("Data updated:"),
-                        f" {fetched_at}",
-                        html.Span(" | ", style={"margin": "0 8px", "color": "#999"}),
-                        html.Strong("Last checked:"),
-                        f" {checked_at}",
-                    ],
-                    style={
-                        "fontSize": "12px",
-                        "color": "#666",
-                        "margin": "0",
-                    },
-                ),
+                [
+                    html.P(
+                        [
+                            html.Strong("Data updated:"),
+                            f" {fetched_at}",
+                        ],
+                        style={
+                            "fontSize": "12px",
+                            "color": "#666",
+                            "margin": "0",
+                            "textAlign": "right",
+                        },
+                    ),
+                    html.P(
+                        [
+                            html.Strong("Last checked:"),
+                            f" {checked_at}",
+                        ],
+                        style={
+                            "fontSize": "12px",
+                            "color": "#666",
+                            "margin": "0",
+                            "textAlign": "right",
+                        },
+                    ),
+                ],
                 style={
-                    "marginBottom": "8px",
+                    "marginLeft": "auto",
                 },
             ),
-            # 2行目: Reset selectionボタン + ノードサイズ切り替えラジオボタン
+        ],
+        style={
+            "display": "flex",
+            "justifyContent": "space-between",
+            "alignItems": "flex-start",
+            "marginBottom": "8px",
+        },
+    )
+
+
+def _create_toolbar_section() -> html.Div:
+    """Reset selectionボタン + ノードサイズ切り替えセクション"""
+    return html.Div(
+        [
+            # Reset selectionボタン + ノードサイズ切り替えラジオボタン
             html.Div(
                 [
                     # 左側: Reset selectionボタン

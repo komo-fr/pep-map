@@ -70,6 +70,11 @@ jobs:
         if: steps.fetch.outputs.exit_code == '2'
         run: PYTHONPATH=. python scripts/calculate_metrics.py
 
+      - name: Detect communities
+        # 終了コード2（変更あり）の時だけ実行
+        if: steps.fetch.outputs.exit_code == '2'
+        run: PYTHONPATH=. python scripts/detect_communities.py
+
       - name: Check for changes
         id: check_changes
         run: |

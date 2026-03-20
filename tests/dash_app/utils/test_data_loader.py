@@ -545,3 +545,159 @@ class TestClearCache:
         assert citations1 is not citations2
         assert metadata1 is not metadata2
         assert releases1 is not releases2
+
+
+class TestLoadGroupData:
+    """load_group_data関数のテスト"""
+
+    def test_load_group_data(self, mock_data_files, monkeypatch):
+        """グループデータを正常に読み込める"""
+        data_loader.clear_cache()
+        monkeypatch.setattr("src.dash_app.utils.data_loader.DATA_DIR", mock_data_files)
+
+        df = data_loader.load_group_data()
+
+        assert isinstance(df, pd.DataFrame)
+        assert len(df) == 4
+        assert "PEP" in df.columns
+        assert "group_id" in df.columns
+        assert "pagerank_group" in df.columns
+
+    def test_load_group_data_cache(self, mock_data_files, monkeypatch):
+        """キャッシュが機能する"""
+        data_loader.clear_cache()
+        monkeypatch.setattr("src.dash_app.utils.data_loader.DATA_DIR", mock_data_files)
+
+        # 1回目の読み込み
+        df1 = data_loader.load_group_data()
+        # 2回目の読み込み（キャッシュから）
+        df2 = data_loader.load_group_data()
+
+        # 同じオブジェクトであることを確認
+        assert df1 is df2
+
+    def test_load_group_data_file_not_found(self, tmp_path, monkeypatch):
+        """ファイルが存在しない場合はFileNotFoundErrorを発生"""
+        data_loader.clear_cache()
+
+        # 空のディレクトリを使用
+        empty_dir = tmp_path / "empty"
+        empty_dir.mkdir()
+        monkeypatch.setattr("src.dash_app.utils.data_loader.DATA_DIR", empty_dir)
+
+        with pytest.raises(FileNotFoundError) as exc_info:
+            data_loader.load_group_data()
+
+        assert "Group data file not found" in str(exc_info.value)
+
+
+class TestGetPepsByGroup:
+    """get_peps_by_group関数のテスト"""
+
+    def test_get_peps_by_group(self, mock_data_files, monkeypatch):
+        """指定グループのPEPを取得できる"""
+        data_loader.clear_cache()
+        monkeypatch.setattr("src.dash_app.utils.data_loader.DATA_DIR", mock_data_files)
+
+        # グループ0のPEPを取得
+        df = data_loader.get_peps_by_group(0)
+
+        assert len(df) == 2
+        assert set(df["PEP"].tolist()) == {8, 484}
+
+    def test_get_peps_by_group_isolated(self, mock_data_files, monkeypatch):
+        """孤立ノード（group_id=-1）を取得できる"""
+        data_loader.clear_cache()
+        monkeypatch.setattr("src.dash_app.utils.data_loader.DATA_DIR", mock_data_files)
+
+        df = data_loader.get_peps_by_group(-1)
+
+        assert len(df) == 1
+        assert df.iloc[0]["PEP"] == 9999
+
+    def test_get_peps_by_group_not_exists(self, mock_data_files, monkeypatch):
+        """存在しないグループIDは空のDataFrameを返す"""
+        data_loader.clear_cache()
+        monkeypatch.setattr("src.dash_app.utils.data_loader.DATA_DIR", mock_data_files)
+
+        df = data_loader.get_peps_by_group(999)
+
+        assert len(df) == 0
+
+    def test_get_peps_by_group_returns_copy(self, mock_data_files, monkeypatch):
+        """返り値がコピーである（元のデータを変更しない）"""
+        data_loader.clear_cache()
+        monkeypatch.setattr("src.dash_app.utils.data_loader.DATA_DIR", mock_data_files)
+
+        df1 = data_loader.get_peps_by_group(0)
+        df2 = data_loader.get_peps_by_group(0)
+
+        # 異なるオブジェクトであることを確認
+        assert df1 is not df2
+        # しかしデータは同じであることを確認
+        assert df1.equals(df2)
+
+
+class TestGetGroupList:
+    """get_group_list関数のテスト"""
+
+    def test_get_group_list_returns_list(self, mock_data_files, monkeypatch):
+        """リストを返す"""
+        data_loader.clear_cache()
+        monkeypatch.setattr("src.dash_app.utils.data_loader.DATA_DIR", mock_data_files)
+
+        result = data_loader.get_group_list()
+
+        assert isinstance(result, list)
+
+    def test_get_group_list_first_is_all_groups(self, mock_data_files, monkeypatch):
+        """最初の要素が'All Groups'"""
+        data_loader.clear_cache()
+        monkeypatch.setattr("src.dash_app.utils.data_loader.DATA_DIR", mock_data_files)
+
+        result = data_loader.get_group_list()
+
+        assert result[0] == {"label": "All Groups", "value": "all"}
+
+    def test_get_group_list_isolated_label(self, mock_data_files, monkeypatch):
+        """孤立ノード（group_id=-1）が'Isolated'ラベルで表示される"""
+        data_loader.clear_cache()
+        monkeypatch.setattr("src.dash_app.utils.data_loader.DATA_DIR", mock_data_files)
+
+        result = data_loader.get_group_list()
+
+        # group_id=-1の要素を探す
+        isolated = [item for item in result if item["value"] == -1]
+        assert len(isolated) == 1
+        assert "Isolated" in isolated[0]["label"]
+        assert "1 PEPs" in isolated[0]["label"]
+
+    def test_get_group_list_group_labels(self, mock_data_files, monkeypatch):
+        """通常グループが'Group N'ラベルで表示される"""
+        data_loader.clear_cache()
+        monkeypatch.setattr("src.dash_app.utils.data_loader.DATA_DIR", mock_data_files)
+
+        result = data_loader.get_group_list()
+
+        # group_id=0の要素を探す
+        group0 = [item for item in result if item["value"] == 0]
+        assert len(group0) == 1
+        assert group0[0]["label"] == "Group 0 (2 PEPs)"
+
+        # group_id=1の要素を探す
+        group1 = [item for item in result if item["value"] == 1]
+        assert len(group1) == 1
+        assert group1[0]["label"] == "Group 1 (1 PEPs)"
+
+    def test_get_group_list_sorted_by_group_id(self, mock_data_files, monkeypatch):
+        """グループIDでソートされている"""
+        data_loader.clear_cache()
+        monkeypatch.setattr("src.dash_app.utils.data_loader.DATA_DIR", mock_data_files)
+
+        result = data_loader.get_group_list()
+
+        # "all"を除いたグループIDのリストを取得
+        group_ids = [item["value"] for item in result if item["value"] != "all"]
+
+        # ソートされていることを確認
+        assert group_ids == sorted(group_ids)
