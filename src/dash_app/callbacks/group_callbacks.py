@@ -7,6 +7,7 @@ from src.dash_app.components.pep_info import (
     create_pep_info_display,
 )
 from src.dash_app.components import parse_pep_number
+from src.dash_app.utils.constants import TEXT_OUTLINE_COLOR, TEXT_OUTLINE_WIDTH
 from src.dash_app.utils.data_loader import (
     get_peps_by_group,
     get_pep_by_number,
@@ -271,14 +272,14 @@ def register_group_callbacks(app):
     # selection_source の管理は update_group_from_pep_input で行う
     # これにより、コールバック間の競合状態を回避する
     app.clientside_callback(
-        """
-        function(selectedGroup, selectionSource, elements, pepInput) {
+        f"""
+        function(selectedGroup, selectionSource, elements, pepInput) {{
             // 基本スタイルシート
             var baseStylesheet = [
                 // ノード基本スタイル
-                {
+                {{
                     selector: 'node',
-                    style: {
+                    style: {{
                         'label': 'data(label)',
                         'background-color': 'data(group_color)',
                         'width': 'data(size_pagerank)',
@@ -288,13 +289,15 @@ def register_group_callbacks(app):
                         'text-halign': 'center',
                         'border-width': 1,
                         'border-color': '#999',
-                        'opacity': 0.8
-                    }
-                },
+                        'opacity': 0.8,
+                        'text-outline-width': {TEXT_OUTLINE_WIDTH},
+                        'text-outline-color': '{TEXT_OUTLINE_COLOR}'
+                    }}
+                }},
                 // エッジ基本スタイル
-                {
+                {{
                     selector: 'edge',
-                    style: {
+                    style: {{
                         'width': 2,
                         'line-color': '#999',
                         'target-arrow-color': '#999',
@@ -302,165 +305,185 @@ def register_group_callbacks(app):
                         'arrow-scale': 1,
                         'curve-style': 'bezier',
                         'opacity': 0.3
-                    }
-                },
+                    }}
+                }},
                 // グループ選択時のハイライト
-                {
+                {{
                     selector: '.group-selected',
-                    style: {
+                    style: {{
                         'opacity': 1,
                         'border-width': 2,
-                        'border-color': '#333'
-                    }
-                },
+                        'border-color': '#333',
+                        'text-outline-width': {TEXT_OUTLINE_WIDTH},
+                        'text-outline-color': '{TEXT_OUTLINE_COLOR}'
+                    }}
+                }},
                 // グループ選択時の非選択ノード（減衰）
-                {
+                {{
                     selector: '.group-faded',
-                    style: {
+                    style: {{
                         'opacity': 0.15
-                    }
-                },
+                    }}
+                }},
                 // グループ選択時のエッジ（グループ内のエッジ）
-                {
+                {{
                     selector: '.group-selected-edge',
-                    style: {
+                    style: {{
                         'opacity': 1,
                         'line-color': '#666',
                         'target-arrow-color': '#666',
                         'width': 2
-                    }
-                },
+                    }}
+                }},
                 // ノードタップ時の選択スタイル
-                {
+                {{
                     selector: ':selected',
-                    style: {
+                    style: {{
                         'border-width': 4,
                         'border-color': '#FF0000',
                         'z-index': 9999,
-                        'opacity': 1
-                    }
-                },
+                        'opacity': 1,
+                        'text-outline-width': {TEXT_OUTLINE_WIDTH},
+                        'text-outline-color': '{TEXT_OUTLINE_COLOR}'
+                    }}
+                }},
                 // PEP番号入力からの選択スタイル（pep-highlightedクラス）
-                {
+                {{
                     selector: '.pep-highlighted',
-                    style: {
+                    style: {{
                         'border-width': 4,
                         'border-color': '#FF0000',
                         'z-index': 9999,
-                        'opacity': 1
-                    }
-                }
+                        'opacity': 1,
+                        'text-outline-width': {TEXT_OUTLINE_WIDTH},
+                        'text-outline-color': '{TEXT_OUTLINE_COLOR}'
+                    }}
+                }}
             ];
 
             // 赤枠を非表示にするオーバーライドスタイル
             var overrideStyles = [
-                {
+                {{
                     selector: ':selected',
-                    style: {
+                    style: {{
                         'border-width': 1,
                         'border-color': '#999',
-                        'opacity': 0.8
-                    }
-                },
-                {
+                        'opacity': 0.8,
+                        'text-outline-width': {TEXT_OUTLINE_WIDTH},
+                        'text-outline-color': '{TEXT_OUTLINE_COLOR}'
+                    }}
+                }},
+                {{
                     selector: '.group-selected:selected',
-                    style: {
+                    style: {{
                         'border-width': 2,
                         'border-color': '#333',
-                        'opacity': 1
-                    }
-                },
-                {
+                        'opacity': 1,
+                        'text-outline-width': {TEXT_OUTLINE_WIDTH},
+                        'text-outline-color': '{TEXT_OUTLINE_COLOR}'
+                    }}
+                }},
+                {{
                     selector: '.group-faded:selected',
-                    style: {
+                    style: {{
                         'border-width': 1,
                         'border-color': '#999',
-                        'opacity': 0.15
-                    }
-                },
+                        'opacity': 0.15,
+                        'text-outline-width': {TEXT_OUTLINE_WIDTH},
+                        'text-outline-color': '{TEXT_OUTLINE_COLOR}'
+                    }}
+                }},
                 // pep-highlightedクラスの赤枠も非表示にする
-                {
+                {{
                     selector: '.group-selected.pep-highlighted',
-                    style: {
+                    style: {{
                         'border-width': 2,
                         'border-color': '#333',
-                        'opacity': 1
-                    }
-                },
-                {
+                        'opacity': 1,
+                        'text-outline-width': {TEXT_OUTLINE_WIDTH},
+                        'text-outline-color': '{TEXT_OUTLINE_COLOR}'
+                    }}
+                }},
+                {{
                     selector: '.group-faded.pep-highlighted',
-                    style: {
+                    style: {{
                         'border-width': 1,
                         'border-color': '#999',
-                        'opacity': 0.15
-                    }
-                }
+                        'opacity': 0.15,
+                        'text-outline-width': {TEXT_OUTLINE_WIDTH},
+                        'text-outline-color': '{TEXT_OUTLINE_COLOR}'
+                    }}
+                }}
             ];
 
             // "all"または未選択の場合は基本スタイルシート + 選択状態の赤枠を非表示
-            if (selectedGroup === null || selectedGroup === undefined || selectedGroup === 'all') {
+            if (selectedGroup === null || selectedGroup === undefined || selectedGroup === 'all') {{
                 return baseStylesheet.concat(overrideStyles);
-            }
+            }}
 
             // ノードタップからの選択: 赤枠を表示（基本スタイルシート）
-            if (selectionSource === 'node_tap') {
+            if (selectionSource === 'node_tap') {{
                 return baseStylesheet;
-            }
+            }}
 
             // PEP番号入力からの選択の場合、PEP入力値のグループIDと選択グループIDを比較
-            if (selectionSource === 'pep_input') {
+            if (selectionSource === 'pep_input') {{
                 // PEP入力値が有効かチェック
-                if (pepInput && pepInput !== '') {
+                if (pepInput && pepInput !== '') {{
                     var pepNumber = parseInt(pepInput, 10);
-                    if (!isNaN(pepNumber)) {
+                    if (!isNaN(pepNumber)) {{
                         var pepNodeId = 'pep_' + pepNumber;
                         var selectedGroupId = parseInt(selectedGroup, 10);
 
                         // elementsからPEP入力値に対応するノードのグループIDを取得
                         var pepGroupId = null;
-                        if (elements) {
-                            for (var i = 0; i < elements.length; i++) {
+                        if (elements) {{
+                            for (var i = 0; i < elements.length; i++) {{
                                 var el = elements[i];
-                                var data = el.data || {};
-                                if (data.id === pepNodeId && data.group_id !== undefined) {
+                                var data = el.data || {{}};
+                                if (data.id === pepNodeId && data.group_id !== undefined) {{
                                     pepGroupId = data.group_id;
                                     break;
-                                }
-                            }
-                        }
+                                }}
+                            }}
+                        }}
 
                         // PEP入力値のグループIDと選択グループIDが一致する場合のみ赤枠を維持
-                        if (pepGroupId !== null && pepGroupId === selectedGroupId) {
+                        if (pepGroupId !== null && pepGroupId === selectedGroupId) {{
                             // :selectedの赤枠を非表示、pep-highlightedクラスで赤枠表示
                             var pepInputOverrideStyles = [
-                                {
+                                {{
                                     selector: '.group-selected:selected',
-                                    style: {
+                                    style: {{
                                         'border-width': 2,
                                         'border-color': '#333',
-                                        'opacity': 1
-                                    }
-                                },
-                                {
+                                        'opacity': 1,
+                                        'text-outline-width': {TEXT_OUTLINE_WIDTH},
+                                        'text-outline-color': '{TEXT_OUTLINE_COLOR}'
+                                    }}
+                                }},
+                                {{
                                     selector: '.group-faded:selected',
-                                    style: {
+                                    style: {{
                                         'border-width': 1,
                                         'border-color': '#999',
-                                        'opacity': 0.15
-                                    }
-                                }
+                                        'opacity': 0.15,
+                                        'text-outline-width': {TEXT_OUTLINE_WIDTH},
+                                        'text-outline-color': '{TEXT_OUTLINE_COLOR}'
+                                    }}
+                                }}
                             ];
                             return baseStylesheet.concat(pepInputOverrideStyles);
-                        }
-                    }
-                }
+                        }}
+                    }}
+                }}
                 // グループIDが一致しない場合は赤枠を非表示
                 return baseStylesheet.concat(overrideStyles);
-            }
+            }}
 
             // ドロップダウンからの選択: 赤枠を非表示
             return baseStylesheet.concat(overrideStyles);
-        }
+        }}
         """,
         Output("group-network-graph", "stylesheet"),
         Input("group-selector-dropdown", "value"),
