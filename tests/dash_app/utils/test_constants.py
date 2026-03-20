@@ -2,7 +2,6 @@
 
 import re
 
-
 from src.dash_app.utils.constants import (
     GROUP_COLOR_PALETTE,
     ISOLATED_NODE_COLOR,
