@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.6.0] - 2026-03-20
+
+### Added
+
+- Add a `Group` tab to display community detection results of the citation network.
+
+### Changed
+
+- Improve readability of node labels in the `Network` tab by adding a white outline to the text.
+
 ## [0.5.1] - 2026-03-15
 
 ### Changed
