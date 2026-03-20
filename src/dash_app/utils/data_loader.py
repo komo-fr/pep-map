@@ -546,6 +546,25 @@ def get_peps_by_group(group_id: int) -> pd.DataFrame:
     return df[df["group_id"] == group_id].copy()
 
 
+def get_group_id_by_pep(pep_number: int) -> int | None:
+    """
+    指定されたPEP番号からグループIDを取得する
+
+    Args:
+        pep_number: PEP番号
+
+    Returns:
+        int | None: グループID。PEPが見つからない場合はNone
+    """
+    df = load_group_data()
+    result = df[df["PEP"] == pep_number]
+
+    if result.empty:
+        return None
+
+    return int(result.iloc[0]["group_id"])
+
+
 def get_group_list() -> list[dict[str, str | int]]:
     """
     グループ一覧を取得する（ドロップダウン用）

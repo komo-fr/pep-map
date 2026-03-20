@@ -32,10 +32,8 @@ def create_group_tab_layout() -> html.Div:
             dcc.Store(id="group-selection-source", data="dropdown"),
             # === 上部セクション: グループ選択 + PEP情報 ===
             _create_top_section(),
-            # === 注意書きセクション ===
-            _create_note_section(),
-            # === データ取得日付セクション ===
-            _create_data_info_section(fetched_at, checked_at),
+            # === 注意書き + データ取得日付セクション ===
+            _create_note_and_data_info_section(fetched_at, checked_at),
             # === 操作説明セクション ===
             _create_operation_description_section(),
             # === メインコンテンツ: グラフ + テーブル ===
@@ -82,85 +80,143 @@ def _create_top_section() -> html.Div:
 
 
 def _create_group_selector_section() -> html.Div:
-    """グループ選択ドロップダウンセクション"""
+    """グループ選択ドロップダウンセクション + PEP番号入力欄"""
     group_options = get_group_list()
 
     return html.Div(
         [
-            html.Label(
-                "Group:",
+            # グループ選択ドロップダウン
+            html.Div(
+                [
+                    html.Label(
+                        "Group:",
+                        style={
+                            "fontWeight": "bold",
+                            "marginRight": "8px",
+                        },
+                    ),
+                    dcc.Dropdown(
+                        id="group-selector-dropdown",
+                        options=group_options,
+                        value="all",
+                        clearable=False,
+                        maxHeight=500,
+                        style={
+                            "width": "250px",
+                        },
+                    ),
+                ],
                 style={
-                    "fontWeight": "bold",
-                    "marginRight": "8px",
+                    "display": "flex",
+                    "alignItems": "center",
                 },
             ),
-            dcc.Dropdown(
-                id="group-selector-dropdown",
-                options=group_options,
-                value="all",
-                clearable=False,
-                maxHeight=500,
+            # PEP番号入力欄（グループ選択のショートカット）
+            html.Div(
+                [
+                    html.Label(
+                        "PEP:",
+                        style={
+                            "fontWeight": "bold",
+                            "marginRight": "8px",
+                        },
+                    ),
+                    dcc.Input(
+                        id="group-pep-input",
+                        type="text",
+                        placeholder="Enter PEP number",
+                        inputMode="numeric",
+                        pattern="[0-9]*",
+                        style={
+                            "width": "180px",
+                        },
+                    ),
+                    # エラーメッセージ表示エリア
+                    html.Div(
+                        id="group-pep-error-message",
+                        style={
+                            "color": "red",
+                            "fontSize": "14px",
+                            "marginTop": "4px",
+                        },
+                    ),
+                ],
                 style={
-                    "width": "250px",
+                    "marginTop": "12px",
                 },
             ),
         ],
     )
 
 
-def _create_note_section() -> html.Div:
-    """注意書きセクション"""
+def _create_note_and_data_info_section(fetched_at: str, checked_at: str) -> html.Div:
+    """注意書き + データ取得日付セクション"""
     return html.Div(
         [
-            html.P(
+            # 左側: Color と Node sizes の説明
+            html.Div(
                 [
-                    html.Strong("Color"),
-                    " indicates the group of each PEP.",
+                    html.P(
+                        [
+                            html.Strong("Color"),
+                            " indicates the group of each PEP.",
+                        ],
+                        style={
+                            "fontSize": "12px",
+                            "color": "#666",
+                            "margin": "0",
+                        },
+                    ),
+                    html.P(
+                        [
+                            html.Strong("Node sizes"),
+                            " in the network graph are based on PageRank computed from the full citation network.",
+                        ],
+                        style={
+                            "fontSize": "12px",
+                            "color": "#666",
+                            "margin": "0",
+                        },
+                    ),
                 ],
-                style={
-                    "fontSize": "12px",
-                    "color": "#666",
-                    "margin": "0",
-                },
             ),
-            html.P(
+            # 右側: Data updated と Last checked（右寄せ）
+            html.Div(
                 [
-                    html.Strong("Node sizes"),
-                    " in the network graph are based on PageRank computed from the full citation network.",
+                    html.P(
+                        [
+                            html.Strong("Data updated:"),
+                            f" {fetched_at}",
+                        ],
+                        style={
+                            "fontSize": "12px",
+                            "color": "#666",
+                            "margin": "0",
+                            "textAlign": "right",
+                        },
+                    ),
+                    html.P(
+                        [
+                            html.Strong("Last checked:"),
+                            f" {checked_at}",
+                        ],
+                        style={
+                            "fontSize": "12px",
+                            "color": "#666",
+                            "margin": "0",
+                            "textAlign": "right",
+                        },
+                    ),
                 ],
                 style={
-                    "fontSize": "12px",
-                    "color": "#666",
-                    "margin": "0",
+                    "marginLeft": "auto",
                 },
             ),
         ],
         style={
-            "marginBottom": "8px",
-        },
-    )
-
-
-def _create_data_info_section(fetched_at: str, checked_at: str) -> html.Div:
-    """データ取得日付セクション"""
-    return html.Div(
-        [
-            html.P(
-                [
-                    html.Strong("Data updated:"),
-                    f" {fetched_at}",
-                    html.Span(" | ", style={"margin": "0 8px", "color": "#999"}),
-                    html.Strong("Last checked:"),
-                    f" {checked_at}",
-                ],
-                style={
-                    "fontSize": "12px",
-                    "color": "#666",
-                    "margin": "0",
-                },
-            ),
-        ],
-        style={
+            "display": "flex",
+            "justifyContent": "space-between",
+            "alignItems": "flex-start",
             "marginBottom": "8px",
         },
     )

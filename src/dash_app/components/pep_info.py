@@ -114,12 +114,19 @@ def create_group_initial_info_message() -> html.Div:
     return html.Div(
         [
             html.P(
-                "Select a group from the dropdown on the left.",
+                "Select a group, enter a PEP number, or tap a node.",
                 style={"marginBottom": "4px"},
             ),
-            html.P(
-                "PEPs belonging to the selected group will be highlighted in the network graph.",
-                style={"marginBottom": "8px"},
+            html.Ul(
+                [
+                    html.Li(
+                        "Selecting a group highlights PEPs in that group in the network graph."
+                    ),
+                    html.Li(
+                        "Entering a PEP number or tapping a node automatically selects its group and highlights it."
+                    ),
+                ],
+                style={"marginBottom": "8px", "marginTop": "0", "paddingLeft": "20px"},
             ),
             html.P(
                 "Groups are detected automatically from the citation network using a community detection algorithm.",
