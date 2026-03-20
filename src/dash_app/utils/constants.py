@@ -186,3 +186,9 @@ def get_group_color(group_id: int) -> str:
     lightness = 0.5
     r, g, b = colorsys.hls_to_rgb(hue, lightness, saturation)
     return f"#{int(r * 255):02x}{int(g * 255):02x}{int(b * 255):02x}"
+
+
+# === テキスト視認性向上のための縁取りスタイル ===
+# 暗い背景色でも文字が見えるように白い縁取りを適用
+TEXT_OUTLINE_WIDTH = 1
+TEXT_OUTLINE_COLOR = "#ffffff"
