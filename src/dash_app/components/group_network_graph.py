@@ -94,6 +94,9 @@ def get_group_base_stylesheet() -> list[dict]:
                 "border-width": 1,
                 "border-color": "#999",
                 "opacity": 0.8,
+                # テキストの視認性向上（暗い背景色でも文字が見えるように）
+                "text-outline-width": 1,
+                "text-outline-color": "#ffffff",
             },
         },
         # エッジ基本スタイル
@@ -117,6 +120,8 @@ def get_group_base_stylesheet() -> list[dict]:
                 "opacity": 1,
                 "border-width": 2,
                 "border-color": "#333",
+                "text-outline-width": 1,
+                "text-outline-color": "#ffffff",
             },
         },
         # グループ選択時の非選択ノード（減衰）
@@ -144,6 +149,8 @@ def get_group_base_stylesheet() -> list[dict]:
                 "border-color": "#FF0000",
                 "z-index": 9999,
                 "opacity": 1,
+                "text-outline-width": 1,
+                "text-outline-color": "#ffffff",
             },
         },
     ]
@@ -168,6 +175,8 @@ def get_group_selected_stylesheet() -> list[dict]:
                 "border-width": 2,
                 "border-color": "#333",
                 "opacity": 1,
+                "text-outline-width": 1,
+                "text-outline-color": "#ffffff",
             },
         },
         {
@@ -176,6 +185,8 @@ def get_group_selected_stylesheet() -> list[dict]:
                 "border-width": 1,
                 "border-color": "#999",
                 "opacity": 0.15,
+                "text-outline-width": 1,
+                "text-outline-color": "#ffffff",
             },
         },
     ]

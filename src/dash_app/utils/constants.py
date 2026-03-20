@@ -1,5 +1,6 @@
 """定数定義モジュール"""
 
+import colorsys
 from pathlib import Path
 
 # プロジェクトルートディレクトリ
@@ -162,12 +163,26 @@ def get_group_color(group_id: int) -> str:
     """
     グループIDに対応する色を取得する
 
+    パレット内（0〜31）は事前定義された色を使用し、
+    パレットを超えた場合は黄金比を使って動的に色を生成する。
+
     Args:
-        group_id: グループID（-1は孤立ノード、0〜31はコミュニティ）
+        group_id: グループID（-1は孤立ノード、0以上はコミュニティ）
 
     Returns:
         str: 色コード（例: "#1f77b4"）
     """
     if group_id < 0:
         return ISOLATED_NODE_COLOR
-    return GROUP_COLOR_PALETTE[group_id % len(GROUP_COLOR_PALETTE)]
+
+    if group_id < len(GROUP_COLOR_PALETTE):
+        return GROUP_COLOR_PALETTE[group_id]
+
+    # パレットを超えた場合は黄金比で色相を分散させて動的生成
+    # 黄金比（φ - 1 ≈ 0.618）を使うと隣接グループでも色が離れる
+    golden_ratio_conjugate = 0.618033988749895
+    hue = (group_id * golden_ratio_conjugate) % 1.0
+    saturation = 0.6
+    lightness = 0.5
+    r, g, b = colorsys.hls_to_rgb(hue, lightness, saturation)
+    return f"#{int(r * 255):02x}{int(g * 255):02x}{int(b * 255):02x}"

@@ -288,7 +288,9 @@ def register_group_callbacks(app):
                         'text-halign': 'center',
                         'border-width': 1,
                         'border-color': '#999',
-                        'opacity': 0.8
+                        'opacity': 0.8,
+                        'text-outline-width': 1,
+                        'text-outline-color': '#ffffff'
                     }
                 },
                 // エッジ基本スタイル
@@ -310,7 +312,9 @@ def register_group_callbacks(app):
                     style: {
                         'opacity': 1,
                         'border-width': 2,
-                        'border-color': '#333'
+                        'border-color': '#333',
+                        'text-outline-width': 1,
+                        'text-outline-color': '#ffffff'
                     }
                 },
                 // グループ選択時の非選択ノード（減衰）
@@ -337,7 +341,9 @@ def register_group_callbacks(app):
                         'border-width': 4,
                         'border-color': '#FF0000',
                         'z-index': 9999,
-                        'opacity': 1
+                        'opacity': 1,
+                        'text-outline-width': 1,
+                        'text-outline-color': '#ffffff'
                     }
                 },
                 // PEP番号入力からの選択スタイル（pep-highlightedクラス）
@@ -347,7 +353,9 @@ def register_group_callbacks(app):
                         'border-width': 4,
                         'border-color': '#FF0000',
                         'z-index': 9999,
-                        'opacity': 1
+                        'opacity': 1,
+                        'text-outline-width': 1,
+                        'text-outline-color': '#ffffff'
                     }
                 }
             ];
@@ -359,7 +367,9 @@ def register_group_callbacks(app):
                     style: {
                         'border-width': 1,
                         'border-color': '#999',
-                        'opacity': 0.8
+                        'opacity': 0.8,
+                        'text-outline-width': 1,
+                        'text-outline-color': '#ffffff'
                     }
                 },
                 {
@@ -367,7 +377,9 @@ def register_group_callbacks(app):
                     style: {
                         'border-width': 2,
                         'border-color': '#333',
-                        'opacity': 1
+                        'opacity': 1,
+                        'text-outline-width': 1,
+                        'text-outline-color': '#ffffff'
                     }
                 },
                 {
@@ -375,7 +387,9 @@ def register_group_callbacks(app):
                     style: {
                         'border-width': 1,
                         'border-color': '#999',
-                        'opacity': 0.15
+                        'opacity': 0.15,
+                        'text-outline-width': 1,
+                        'text-outline-color': '#ffffff'
                     }
                 },
                 // pep-highlightedクラスの赤枠も非表示にする
@@ -384,7 +398,9 @@ def register_group_callbacks(app):
                     style: {
                         'border-width': 2,
                         'border-color': '#333',
-                        'opacity': 1
+                        'opacity': 1,
+                        'text-outline-width': 1,
+                        'text-outline-color': '#ffffff'
                     }
                 },
                 {
@@ -392,7 +408,9 @@ def register_group_callbacks(app):
                     style: {
                         'border-width': 1,
                         'border-color': '#999',
-                        'opacity': 0.15
+                        'opacity': 0.15,
+                        'text-outline-width': 1,
+                        'text-outline-color': '#ffffff'
                     }
                 }
             ];
@@ -438,7 +456,9 @@ def register_group_callbacks(app):
                                     style: {
                                         'border-width': 2,
                                         'border-color': '#333',
-                                        'opacity': 1
+                                        'opacity': 1,
+                                        'text-outline-width': 1,
+                                        'text-outline-color': '#ffffff'
                                     }
                                 },
                                 {
@@ -446,7 +466,9 @@ def register_group_callbacks(app):
                                     style: {
                                         'border-width': 1,
                                         'border-color': '#999',
-                                        'opacity': 0.15
+                                        'opacity': 0.15,
+                                        'text-outline-width': 1,
+                                        'text-outline-color': '#ffffff'
                                     }
                                 }
                             ];
