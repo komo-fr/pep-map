@@ -1,7 +1,7 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
 380,Syntax for Delegating to a Subgenerator,Final,13-Feb-2009,18,7,0,0.20426621901121986
 523,Adding a frame evaluation API to CPython,Final,16-May-2016,18,3,0,0.09391147850217582
-492,Coroutines with async and await syntax,Final,09-Apr-2015,18,3,4,0.09197192927378281
+492,Coroutines with async and await syntax,Final,09-Apr-2015,18,3,4,0.09197192927378278
 3156,"Asynchronous IO Support Rebooted: the ""asyncio"" Module",Final,12-Dec-2012,18,2,3,0.0736672551016396
 525,Asynchronous Generators,Final,28-Jul-2016,18,3,2,0.06298227962430307
 468,Preserving the order of \*\*kwargs in a function.,Final,05-Apr-2014,18,2,0,0.06034005251838846

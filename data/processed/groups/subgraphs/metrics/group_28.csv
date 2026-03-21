@@ -1,5 +1,5 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-384,Defining a Stable ABI,Final,17-May-2009,28,6,1,0.36699338888279326
+384,Defining a Stable ABI,Final,17-May-2009,28,6,1,0.36699338888279315
 3149,ABI version tagged .so files,Final,09-Jul-2010,28,2,1,0.3297522231184222
 580,The C call protocol,Rejected,14-Jun-2018,28,4,5,0.06642975005233898
 393,Flexible String Representation,Final,24-Jan-2010,28,3,1,0.04809374999999999

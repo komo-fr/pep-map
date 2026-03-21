@@ -2,7 +2,7 @@ pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagera
 508,Dependency specification for Python Software Packages,Final,11-Nov-2015,0,17,0,0.1938913883239763
 517,A build-system independent format for source trees,Final,30-Sep-2015,0,13,3,0.15553970581218993
 518,Specifying Minimum Build System Requirements for Python Projects,Final,10-May-2016,0,8,2,0.08771380973088876
-621,Storing project metadata in pyproject.toml,Final,22-Jun-2020,0,10,5,0.06084596586614384
+621,Storing project metadata in pyproject.toml,Final,22-Jun-2020,0,10,5,0.06084596586614385
 516,Build system abstraction for pip/conda etc,Rejected,26-Oct-2015,0,1,2,0.05518660583893932
 725,Specifying external dependencies in pyproject.toml,Draft,17-Aug-2023,0,3,5,0.03842478884682346
 610,Recording the Direct URL Origin of installed distributions,Final,21-Apr-2019,0,4,1,0.03378888373170648

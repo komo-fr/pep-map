@@ -76,7 +76,7 @@ pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagera
 508,Dependency specification for Python Software Packages,Final,11-Nov-2015,0,17,0,0.1938913883239763
 517,A build-system independent format for source trees,Final,30-Sep-2015,0,13,3,0.15553970581218993
 518,Specifying Minimum Build System Requirements for Python Projects,Final,10-May-2016,0,8,2,0.08771380973088876
-621,Storing project metadata in pyproject.toml,Final,22-Jun-2020,0,10,5,0.06084596586614384
+621,Storing project metadata in pyproject.toml,Final,22-Jun-2020,0,10,5,0.06084596586614385
 516,Build system abstraction for pip/conda etc,Rejected,26-Oct-2015,0,1,2,0.05518660583893932
 725,Specifying external dependencies in pyproject.toml,Draft,17-Aug-2023,0,3,5,0.03842478884682346
 610,Recording the Direct URL Origin of installed distributions,Final,21-Apr-2019,0,4,1,0.03378888373170648
@@ -106,7 +106,7 @@ pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagera
 381,Mirroring infrastructure for PyPI,Withdrawn,21-Mar-2009,1,4,1,0.1081949803282084
 305,CSV File API,Final,26-Jan-2003,1,1,0,0.10697911733602743
 458,Secure PyPI downloads with signed repository metadata,Accepted,27-Sep-2013,1,4,4,0.0870160953770843
-592,"Adding ""Yank"" Support to the Simple API",Final,07-May-2019,1,5,0,0.06172691632045818
+592,"Adding ""Yank"" Support to the Simple API",Final,07-May-2019,1,5,0,0.061726916320458174
 480,Surviving a Compromise of PyPI: End-to-end signing of packages,Draft,08-Oct-2014,1,3,1,0.05103671850712043
 691,JSON-based Simple API for Python Package Indexes,Accepted,04-May-2022,1,4,4,0.04807974261478185
 438,Transitioning to release-file hosting on PyPI,Superseded,15-Mar-2013,1,2,1,0.046863505243488715
@@ -119,7 +119,7 @@ pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagera
 694,Upload 2.0 API for Python Package Indexes,Draft,11-Jun-2022,1,3,3,0.032307200333377036
 541,Package Index Name Retention,Final,12-Jan-2017,1,3,0,0.02872537417327854
 766,Explicit Priority Choices Among Multiple Indexes,Draft,18-Nov-2024,1,2,2,0.025926951580834797
-629,Versioning PyPI's Simple API,Final,16-Jul-2020,1,1,0,0.02522933178303863
+629,Versioning PyPI's Simple API,Final,16-Jul-2020,1,1,0,0.025229331783038628
 817,Wheel Variants: Beyond Platform Tags,Draft,10-Dec-2025,1,1,2,0.021392507057433088
 464,Removal of the PyPI Mirror Authenticity API,Final,02-Mar-2014,1,0,2,0.015012258304890846
 714,Rename dist-info-metadata in the Simple API,Accepted,06-Jun-2023,1,0,2,0.015012258304890846
@@ -131,13 +131,13 @@ pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagera
 807,Index support for Trusted Publishing,Draft,19-Sep-2025,1,0,1,0.015012258304890846
 825,Wheel Variants: Package Format,Draft,17-Feb-2026,1,0,2,0.015012258304890846
 484,Type Hints,Final,29-Sep-2014,2,13,6,0.241690346272143
-526,Syntax for Variable Annotations,Final,09-Aug-2016,2,8,1,0.11833457755611236
-3107,Function Annotations,Final,02-Dec-2006,2,7,0,0.11137324164962283
-563,Postponed Evaluation of Annotations,Superseded,08-Sep-2017,2,7,8,0.07512230799767072
-483,The Theory of Type Hints,Final,19-Dec-2014,2,3,2,0.05468947411313664
+526,Syntax for Variable Annotations,Final,09-Aug-2016,2,8,1,0.11833457755611239
+3107,Function Annotations,Final,02-Dec-2006,2,7,0,0.11137324164962281
+563,Postponed Evaluation of Annotations,Superseded,08-Sep-2017,2,7,8,0.07512230799767071
+483,The Theory of Type Hints,Final,19-Dec-2014,2,3,2,0.05468947411313663
 649,Deferred Evaluation Of Annotations Using Descriptors,Final,11-Jan-2021,2,8,4,0.049097654006611154
-482,Literature Overview for Type Hints,Final,08-Jan-2015,2,1,1,0.04364869733305996
-561,Distributing and Packaging Type Information,Final,09-Sep-2017,2,1,3,0.04364869733305996
+482,Literature Overview for Type Hints,Final,08-Jan-2015,2,1,1,0.04364869733305995
+561,Distributing and Packaging Type Information,Final,09-Sep-2017,2,1,3,0.04364869733305995
 557,Data Classes,Final,02-Jun-2017,2,4,1,0.0320183870803766
 695,Type Parameter Syntax,Final,15-Jun-2022,2,3,5,0.029293839711658592
 544,Protocols: Structural subtyping (static duck typing),Final,05-Mar-2017,2,2,3,0.02139158939486003
@@ -158,42 +158,42 @@ pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagera
 810,Explicit lazy imports,Accepted,02-Oct-2025,2,0,3,0.009410248106116036
 3119,Introducing Abstract Base Classes,Final,18-Apr-2007,3,3,3,0.1323255145297599
 358,"The ""bytes"" Object",Final,15-Feb-2006,3,3,2,0.12245438833645585
-236,Back to the __future__,Final,26-Feb-2001,3,7,4,0.09390848967271227
+236,Back to the __future__,Final,26-Feb-2001,3,7,4,0.0939084896727123
 3112,Bytes literals in Python 3000,Final,23-Feb-2007,3,1,1,0.06334485208976677
 3137,Immutable Bytes and Mutable Buffer,Final,26-Sep-2007,3,1,1,0.06334485208976677
 245,Python Interface Syntax,Rejected,11-Jan-2001,3,3,5,0.06322673316212586
 3141,A Type Hierarchy for Numbers,Final,23-Apr-2007,3,2,1,0.061703574822466106
 3124,"Overloading, Generic Functions, Interfaces, and Adaptation",Deferred,28-Apr-2007,3,2,3,0.05199750738058287
 230,Warning Framework,Final,28-Nov-2000,3,3,0,0.04521068169224175
-5,Guidelines for Language Evolution,Superseded,26-Oct-2000,3,4,0,0.04006692944595194
+5,Guidelines for Language Evolution,Superseded,26-Oct-2000,3,4,0,0.04006692944595196
 246,Object Adaptation,Rejected,21-Mar-2001,3,3,1,0.03998652036139452
 264,Future statements in simulated shells,Final,30-Jul-2001,3,2,1,0.03514288093344897
-227,Statically Nested Scopes,Final,01-Nov-2000,3,2,1,0.03446230984858561
+227,Statically Nested Scopes,Final,01-Nov-2000,3,2,1,0.034462309848585615
 296,Adding a bytes Object Type,Withdrawn,12-Jul-2002,3,2,1,0.02331319235001209
-232,Function Attributes,Final,02-Dec-2000,3,1,0,0.022051665056454638
-233,Python Online Help,Deferred,11-Dec-2000,3,1,0,0.022051665056454638
+232,Function Attributes,Final,02-Dec-2000,3,1,0,0.02205166505645464
+233,Python Online Help,Deferred,11-Dec-2000,3,1,0,0.02205166505645464
 228,Reworking Python's Numeric Model,Withdrawn,04-Nov-2000,3,1,1,0.01518650406758549
 238,Changing the Division Operator,Final,11-Mar-2001,3,1,3,0.01370527304024122
-244,The ``directive`` statement,Rejected,20-Mar-2001,3,0,3,0.011303293212798502
-298,The Locked Buffer Interface,Withdrawn,26-Jul-2002,3,0,1,0.011303293212798502
-317,Eliminate Implicit Exception Instantiation,Rejected,06-May-2003,3,0,3,0.011303293212798502
-443,Single-dispatch generic functions,Final,22-May-2013,3,0,3,0.011303293212798502
-497,A standard mechanism for backward compatibility,Rejected,04-Aug-2015,3,0,4,0.011303293212798502
-3000,Python 3000,Final,05-Apr-2006,4,4,3,0.11604603793556884
+244,The ``directive`` statement,Rejected,20-Mar-2001,3,0,3,0.011303293212798503
+298,The Locked Buffer Interface,Withdrawn,26-Jul-2002,3,0,1,0.011303293212798503
+317,Eliminate Implicit Exception Instantiation,Rejected,06-May-2003,3,0,3,0.011303293212798503
+443,Single-dispatch generic functions,Final,22-May-2013,3,0,3,0.011303293212798503
+497,A standard mechanism for backward compatibility,Rejected,04-Aug-2015,3,0,4,0.011303293212798503
+3000,Python 3000,Final,05-Apr-2006,4,4,3,0.11604603793556881
 344,Exception Chaining and Embedded Tracebacks,Superseded,12-May-2005,4,4,2,0.09938307544591368
 3134,Exception Chaining and Embedded Tracebacks,Final,12-May-2005,4,3,2,0.09508965321516755
 4,Deprecation of Standard Modules,Active,01-Oct-2000,4,4,0,0.08515867579669173
-3100,Miscellaneous Python 3.0 Plans,Final,20-Aug-2004,4,4,7,0.07737567221305594
-3099,Things that will Not Change in Python 3000,Final,04-Apr-2006,4,3,0,0.07138610997571987
+3100,Miscellaneous Python 3.0 Plans,Final,20-Aug-2004,4,4,7,0.07737567221305593
+3099,Things that will Not Change in Python 3000,Final,04-Apr-2006,4,3,0,0.07138610997571986
 348,Exception Reorganization for Python 3.0,Rejected,28-Jul-2005,4,2,2,0.06923593940821804
-361,Python 2.6 and 3.0 Release Schedule,Final,29-Jun-2006,4,1,5,0.0486150000758915
-352,Required Superclass for Exceptions,Final,27-Oct-2005,4,4,1,0.04720443841966313
+361,Python 2.6 and 3.0 Release Schedule,Final,29-Jun-2006,4,1,5,0.04861500007589149
+352,Required Superclass for Exceptions,Final,27-Oct-2005,4,4,1,0.04720443841966312
 290,Code Migration and Modernization,Active,06-Jun-2002,4,1,1,0.04516176148564879
 654,Exception Groups and except*,Final,22-Feb-2021,4,2,1,0.0357988132892201
-3001,Procedure for reviewing and improving standard library modules,Withdrawn,05-Apr-2006,4,1,0,0.025131459100256996
-3105,Make print a function,Final,19-Nov-2006,4,1,0,0.025131459100256996
-3110,Catching Exceptions in Python 3000,Final,16-Jan-2006,4,1,3,0.025131459100256996
-371,Addition of the multiprocessing package to the standard library,Final,06-May-2008,4,1,0,0.024000301586853484
+3001,Procedure for reviewing and improving standard library modules,Withdrawn,05-Apr-2006,4,1,0,0.025131459100256992
+3105,Make print a function,Final,19-Nov-2006,4,1,0,0.025131459100256992
+3110,Catching Exceptions in Python 3000,Final,16-Jan-2006,4,1,3,0.025131459100256992
+371,Addition of the multiprocessing package to the standard library,Final,06-May-2008,4,1,0,0.02400030158685348
 294,Type Names in the types Module,Rejected,19-Jun-2002,4,0,1,0.01573573483594522
 678,Enriching Exceptions with Notes,Final,20-Dec-2021,4,0,2,0.01573573483594522
 785,New methods for easier handling of ``ExceptionGroup``\ s,Draft,08-Apr-2025,4,0,1,0.01573573483594522
@@ -202,26 +202,26 @@ pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagera
 3111,Simple input built-in in Python 3000,Final,13-Sep-2006,4,0,1,0.01573573483594522
 3151,Reworking the OS and IO exception hierarchy,Final,21-Jul-2010,4,0,1,0.01573573483594522
 13,Python Language Governance,Active,16-Dec-2018,5,16,12,0.29390491847142053
-8001,Python Governance Voting Process,Final,24-Aug-2018,5,9,9,0.11724494046389913
+8001,Python Governance Voting Process,Final,24-Aug-2018,5,9,9,0.1172449404638991
 8016,The Steering Council Model,Accepted,01-Nov-2018,5,10,2,0.09187260585083983
-8000,Python Language Governance Proposal Overview,Final,24-Aug-2018,5,2,10,0.04107023830931952
-8002,Open Source Governance Survey,Final,24-Aug-2018,5,3,0,0.038533567729974426
-8010,The Technical Leader Governance Model,Rejected,24-Aug-2018,5,4,3,0.033683207594102836
-8100,January 2019 Steering Council election,Final,03-Jan-2019,5,1,1,0.02999705878422576
-8101,2020 Term Steering Council election,Final,16-Nov-2019,5,1,1,0.02999705878422576
-8102,2021 Term Steering Council election,Final,29-Oct-2020,5,1,1,0.02999705878422576
-8103,2022 Term Steering Council election,Final,04-Oct-2021,5,1,1,0.02999705878422576
-8104,2023 Term Steering Council election,Final,08-Nov-2022,5,1,1,0.02999705878422576
-8105,2024 Term Steering Council election,Final,23-Oct-2023,5,1,1,0.02999705878422576
-8106,2025 Term Steering Council election,Final,21-Oct-2024,5,1,1,0.02999705878422576
-8107,2026 Term Steering Council election,Final,21-Oct-2025,5,1,1,0.02999705878422576
+8000,Python Language Governance Proposal Overview,Final,24-Aug-2018,5,2,10,0.04107023830931951
+8002,Open Source Governance Survey,Final,24-Aug-2018,5,3,0,0.03853356772997441
+8010,The Technical Leader Governance Model,Rejected,24-Aug-2018,5,4,3,0.03368320759410283
+8100,January 2019 Steering Council election,Final,03-Jan-2019,5,1,1,0.029997058784225754
+8101,2020 Term Steering Council election,Final,16-Nov-2019,5,1,1,0.029997058784225754
+8102,2021 Term Steering Council election,Final,29-Oct-2020,5,1,1,0.029997058784225754
+8103,2022 Term Steering Council election,Final,04-Oct-2021,5,1,1,0.029997058784225754
+8104,2023 Term Steering Council election,Final,08-Nov-2022,5,1,1,0.029997058784225754
+8105,2024 Term Steering Council election,Final,23-Oct-2023,5,1,1,0.029997058784225754
+8106,2025 Term Steering Council election,Final,21-Oct-2024,5,1,1,0.029997058784225754
+8107,2026 Term Steering Council election,Final,21-Oct-2025,5,1,1,0.029997058784225754
 8011,Python Governance Model Lead by Trio of Pythonistas,Rejected,24-Aug-2018,5,3,4,0.027779991590802237
-8012,The Community Governance Model,Rejected,03-Oct-2018,5,2,4,0.023743611593486237
-8013,The External Council Governance Model,Rejected,14-Sep-2018,5,2,5,0.023743611593486237
-8014,The Commons Governance Model,Rejected,16-Sep-2018,5,2,2,0.023743611593486237
-8015,Organization of the Python community,Rejected,04-Oct-2018,5,2,2,0.023743611593486237
-609,Python Packaging Authority (PyPA) Governance,Active,05-Nov-2019,5,1,0,0.011780215222601408
-772,Packaging Council governance process,Draft,21-Jan-2025,5,0,3,0.009179398119288817
+8012,The Community Governance Model,Rejected,03-Oct-2018,5,2,4,0.02374361159348623
+8013,The External Council Governance Model,Rejected,14-Sep-2018,5,2,5,0.02374361159348623
+8014,The Commons Governance Model,Rejected,16-Sep-2018,5,2,2,0.02374361159348623
+8015,Organization of the Python community,Rejected,04-Oct-2018,5,2,2,0.02374361159348623
+609,Python Packaging Authority (PyPA) Governance,Active,05-Nov-2019,5,1,0,0.011780215222601406
+772,Packaging Council governance process,Draft,21-Jan-2025,5,0,3,0.009179398119288815
 266,Optimizing Global Variable/Attribute Access,Withdrawn,13-Aug-2001,6,5,0,0.12145995863326134
 218,Adding a Built-In Set Object Type,Final,31-Jul-2000,6,4,0,0.09233155889266942
 267,Optimized Access to Module Namespaces,Deferred,23-May-2001,6,3,2,0.06619292054960856
@@ -270,7 +270,7 @@ pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagera
 549,Instance Descriptors,Rejected,04-Sep-2017,8,1,0,0.06709902694314093
 453,Explicit bootstrapping of pip in Python installations,Final,10-Aug-2013,8,4,1,0.06605787074489548
 562,Module __getattr__ and __dir__,Final,09-Sep-2017,8,3,1,0.059167601086656085
-615,Support for the IANA Time Zone Database in the Standard Library,Final,22-Feb-2020,8,1,3,0.048670285878448585
+615,Support for the IANA Time Zone Database in the Standard Library,Final,22-Feb-2020,8,1,3,0.04867028587844858
 445,Add new APIs to customize Python memory allocators,Final,15-Jun-2013,8,2,0,0.04383911485754021
 431,Time zone support improvements,Superseded,11-Dec-2012,8,2,1,0.03748673584529303
 433,Easier suppression of file descriptor inheritance,Superseded,10-Jan-2013,8,1,0,0.03694884519930081
@@ -284,11 +284,11 @@ pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagera
 711,PyBI: a standard format for distributing Python Binaries,Draft,06-Apr-2023,8,0,1,0.016806544837388655
 713,Callable Modules,Rejected,20-Apr-2023,8,0,1,0.016806544837388655
 726,Module ``__setattr__`` and ``__delattr__``,Rejected,24-Aug-2023,8,0,1,0.016806544837388655
-275,Switching on Multiple Values,Rejected,10-Nov-2001,9,2,1,0.17850283839617842
-3103,A Switch/Case Statement,Rejected,25-Jun-2006,9,2,1,0.17850283839617842
+275,Switching on Multiple Values,Rejected,10-Nov-2001,9,2,1,0.17850283839617845
+3103,A Switch/Case Statement,Rejected,25-Jun-2006,9,2,1,0.17850283839617845
 448,Additional Unpacking Generalizations,Final,29-Jun-2013,9,2,0,0.06429133264751709
-634,Structural Pattern Matching: Specification,Final,12-Sep-2020,9,6,4,0.05961744845188033
-635,Structural Pattern Matching: Motivation and Rationale,Final,12-Sep-2020,9,5,7,0.05951920384729299
+634,Structural Pattern Matching: Specification,Final,12-Sep-2020,9,6,4,0.059617448451880314
+635,Structural Pattern Matching: Motivation and Rationale,Final,12-Sep-2020,9,5,7,0.05951920384729298
 572,Assignment Expressions,Final,28-Feb-2018,9,4,0,0.058983479334557234
 622,Structural Pattern Matching,Superseded,23-Jun-2020,9,4,3,0.05674935611406769
 636,Structural Pattern Matching: Tutorial,Final,12-Sep-2020,9,6,3,0.05632684027490002
@@ -303,29 +303,29 @@ pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagera
 642,Explicit Pattern Syntax for Structural Pattern Matching,Rejected,26-Sep-2020,9,0,7,0.019551668301653835
 653,Precise Semantics for Pattern Matching,Draft,09-Feb-2021,9,0,3,0.019551668301653835
 798,Unpacking in Comprehensions,Accepted,19-Jul-2025,9,0,2,0.019551668301653835
-343,"The ""with"" Statement",Final,13-May-2005,10,7,5,0.15656401145926735
+343,"The ""with"" Statement",Final,13-May-2005,10,7,5,0.15656401145926732
 310,Reliable Acquisition/Release Pairs,Rejected,18-Dec-2002,10,4,2,0.08868946303877766
 342,Coroutines via Enhanced Generators,Final,10-May-2005,10,5,4,0.08184249774036995
-319,Python Synchronize/Asynchronize Block,Rejected,24-Feb-2003,10,2,2,0.07831200218238685
+319,Python Synchronize/Asynchronize Block,Rejected,24-Feb-2003,10,2,2,0.07831200218238683
 255,Simple Generators,Final,18-May-2001,10,4,2,0.07501993519556137
 234,Iterators,Final,30-Jan-2001,10,4,0,0.06707983769154917
-325,Resource-Release Support for Generators,Rejected,25-Aug-2003,10,6,3,0.06539141574434258
+325,Resource-Release Support for Generators,Rejected,25-Aug-2003,10,6,3,0.06539141574434257
 288,Generators Attributes and Exceptions,Withdrawn,21-Mar-2002,10,4,2,0.06471144880691389
-340,Anonymous Block Statements,Rejected,27-Apr-2005,10,3,6,0.06376577524390792
+340,Anonymous Block Statements,Rejected,27-Apr-2005,10,3,6,0.0637657752439079
 220,"Coroutines, Generators, Continuations",Rejected,14-Aug-2000,10,1,0,0.05300988173127835
 219,Stackless Python,Deferred,14-Aug-2000,10,1,1,0.04588813516340681
-346,"User Defined (""``with``"") Statements",Withdrawn,06-May-2005,10,1,6,0.040619845932876694
+346,"User Defined (""``with``"") Statements",Withdrawn,06-May-2005,10,1,6,0.04061984593287668
 3333,Python Web Server Gateway Interface v1.0.1,Final,26-Sep-2010,10,3,4,0.03720889024843403
 333,Python Web Server Gateway Interface v1.0,Final,07-Dec-2003,10,2,3,0.025879407288789562
-334,Simple Coroutines via SuspendIteration,Withdrawn,26-Aug-2004,10,0,2,0.01400436313303444
-377,Allow __enter__() methods to skip the statement body,Rejected,08-Mar-2009,10,0,1,0.01400436313303444
-414,Explicit Unicode Literal for Python 3.3,Final,15-Feb-2012,10,0,1,0.01400436313303444
-444,Python Web3 Interface,Deferred,19-Jul-2010,10,0,3,0.01400436313303444
+334,Simple Coroutines via SuspendIteration,Withdrawn,26-Aug-2004,10,0,2,0.014004363133034438
+377,Allow __enter__() methods to skip the statement body,Rejected,08-Mar-2009,10,0,1,0.014004363133034438
+414,Explicit Unicode Literal for Python 3.3,Final,15-Feb-2012,10,0,1,0.014004363133034438
+444,Python Web3 Interface,Deferred,19-Jul-2010,10,0,3,0.014004363133034438
 602,Annual Release Cycle for Python,Active,04-Jun-2019,11,11,3,0.2543231915454472
 596,Python 3.9 Release Schedule,Final,04-Jun-2019,11,3,3,0.13388698442554087
 598,Introducing incremental feature releases,Withdrawn,15-Jun-2019,11,3,3,0.10657639480559053
 719,Python 3.13 Release Schedule,Active,26-May-2023,11,1,1,0.08947281540606879
-605,A rolling feature release stream for CPython,Rejected,20-Sep-2019,11,4,4,0.06690432479246812
+605,A rolling feature release stream for CPython,Rejected,20-Sep-2019,11,4,4,0.06690432479246813
 614,Relaxing Grammar Restrictions On Decorators,Final,10-Feb-2020,11,1,0,0.05535068221352091
 616,String methods to remove prefixes and suffixes,Final,19-Mar-2020,11,1,0,0.05535068221352091
 20,The Zen of Python,Active,19-Aug-2004,11,3,0,0.03806641959585356
@@ -340,12 +340,12 @@ pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagera
 826,Python 3.16 Release Schedule,Active,23-Feb-2026,11,0,1,0.017415691008724036
 3117,Postfix type declarations,Rejected,01-Apr-2007,11,0,1,0.017415691008724036
 241,Metadata for Python Software Packages,Superseded,12-Mar-2001,12,9,0,0.1817336892021092
-345,Metadata for Python Software Packages 1.2,Superseded,28-Apr-2005,12,9,4,0.11219427328401677
+345,Metadata for Python Software Packages 1.2,Superseded,28-Apr-2005,12,9,4,0.11219427328401678
 301,Package Index and Metadata for Distutils,Final,24-Oct-2002,12,3,2,0.09080147757905999
-440,Version Identification and Dependency Specification,Final,18-Mar-2013,12,6,5,0.08449250903542596
-314,Metadata for Python Software Packages 1.1,Superseded,12-Apr-2003,12,6,2,0.08002268623835172
+440,Version Identification and Dependency Specification,Final,18-Mar-2013,12,6,5,0.08449250903542598
+314,Metadata for Python Software Packages 1.1,Superseded,12-Apr-2003,12,6,2,0.08002268623835171
 262,A Database of Installed Python Packages,Rejected,08-Jul-2001,12,2,3,0.06396944731162989
-426,Metadata for Python Software Packages 2.0,Withdrawn,30-Aug-2012,12,5,8,0.06071646863135699
+426,Metadata for Python Software Packages 2.0,Withdrawn,30-Aug-2012,12,5,8,0.060716468631357004
 243,Module Repository Upload Mechanism,Withdrawn,18-Mar-2001,12,1,1,0.055504960009031754
 386,Changing the version comparison module in Distutils,Superseded,04-Jun-2009,12,4,2,0.04731537447737039
 376,Database of Installed Python Distributions,Final,22-Feb-2009,12,2,4,0.039832920681282746
@@ -357,13 +357,13 @@ pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagera
 496,Environment Markers,Rejected,03-Jul-2015,12,0,3,0.016915152091293746
 700,Additional Fields for the Simple API for Package Indexes,Final,21-Oct-2022,12,0,2,0.016915152091293746
 819,JSON Package Metadata,Draft,18-Dec-2025,12,0,2,0.016915152091293746
-3121,Extension Module Initialization and Finalization,Final,27-Apr-2007,13,4,0,0.18363815045988147
+3121,Extension Module Initialization and Finalization,Final,27-Apr-2007,13,4,0,0.18363815045988144
 489,Multi-phase extension module initialization,Final,11-Aug-2013,13,8,1,0.13836213184480659
 684,A Per-Interpreter GIL,Final,08-Mar-2022,13,3,6,0.06769093874414153
 573,Module State Access from C Extension Methods,Final,02-Jun-2016,13,4,2,0.062271246237634914
 652,Maintaining the Stable ABI,Final,09-Feb-2021,13,3,0,0.05948506344780255
 703,Making the Global Interpreter Lock Optional in CPython,Accepted,09-Jan-2023,13,3,3,0.05948506344780255
-683,"Immortal Objects, Using a Fixed Refcount",Final,10-Feb-2022,13,3,0,0.05642059677588211
+683,"Immortal Objects, Using a Fixed Refcount",Final,10-Feb-2022,13,3,0,0.0564205967758821
 554,Multiple Interpreters in the Stdlib,Superseded,05-Sep-2017,13,2,6,0.05292844912974419
 734,Multiple Interpreters in the Stdlib,Final,06-Nov-2023,13,2,2,0.04908372274666756
 803,"""abi3t"": Stable ABI for Free-Threaded Builds",Draft,19-Aug-2025,13,2,6,0.04013406883198328
@@ -383,7 +383,7 @@ pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagera
 42,Feature Requests,Withdrawn,12-Sep-2000,14,1,0,0.0708987713896285
 102,Doing Python Micro Releases,Superseded,09-Jan-2002,14,1,1,0.0630555830343103
 761,Deprecating PGP signatures for CPython artifacts,Active,08-Oct-2024,14,1,0,0.0630555830343103
-481,"Migrate CPython to Git, Github, and Phabricator",Withdrawn,29-Nov-2014,14,2,3,0.06099269111186916
+481,"Migrate CPython to Git, Github, and Phabricator",Withdrawn,29-Nov-2014,14,2,3,0.06099269111186917
 3,Guidelines for Handling Bug Reports,Withdrawn,25-Sep-2000,14,2,1,0.059074066748855514
 495,Local Time Disambiguation,Final,02-Aug-2015,14,1,1,0.038267815124528974
 512,Migrating from hg.python.org to GitHub,Final,17-Jan-2015,14,1,3,0.037966262804426394
@@ -418,7 +418,7 @@ pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagera
 402,Simplified Package Layout and Partitioning,Rejected,12-Jul-2011,16,4,2,0.051561214802082145
 382,Namespace Packages,Rejected,02-Apr-2009,16,3,2,0.04824385553857657
 3147,PYC Repository Directories,Final,16-Dec-2009,16,2,2,0.0352608927604189
-3122,Delineation of the main module,Rejected,27-Apr-2007,16,1,3,0.034152904324834865
+3122,Delineation of the main module,Rejected,27-Apr-2007,16,1,3,0.03415290432483486
 451,A ModuleSpec Type for the Import System,Final,08-Aug-2013,16,3,4,0.031101928635147193
 420,Implicit Namespace Packages,Final,19-Apr-2012,16,3,4,0.031065401335348644
 304,Controlling Generation of Bytecode Files,Withdrawn,22-Jan-2003,16,1,2,0.030622884255078628
@@ -445,7 +445,7 @@ pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagera
 739,``build-details.json`` 1.0 — a static description file for Python build details,Accepted,19-Dec-2023,17,0,1,0.022615784434931938
 380,Syntax for Delegating to a Subgenerator,Final,13-Feb-2009,18,7,0,0.20426621901121986
 523,Adding a frame evaluation API to CPython,Final,16-May-2016,18,3,0,0.09391147850217582
-492,Coroutines with async and await syntax,Final,09-Apr-2015,18,3,4,0.09197192927378281
+492,Coroutines with async and await syntax,Final,09-Apr-2015,18,3,4,0.09197192927378278
 3156,"Asynchronous IO Support Rebooted: the ""asyncio"" Module",Final,12-Dec-2012,18,2,3,0.0736672551016396
 525,Asynchronous Generators,Final,28-Jul-2016,18,3,2,0.06298227962430307
 468,Preserving the order of \*\*kwargs in a function.,Final,05-Apr-2014,18,2,0,0.06034005251838846
@@ -528,11 +528,11 @@ pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagera
 3101,Advanced String Formatting,Final,16-Apr-2006,23,6,0,0.1833091181731604
 215,String Interpolation,Superseded,24-Jul-2000,23,4,0,0.1344901148832121
 498,Literal String Interpolation,Final,01-Aug-2015,23,5,2,0.12214506727920041
-701,Syntactic formalization of f-strings,Accepted,15-Nov-2022,23,3,2,0.08208132759463091
-536,Final Grammar for Literal String Interpolation,Withdrawn,11-Dec-2016,23,1,2,0.06535322023497639
+701,Syntactic formalization of f-strings,Accepted,15-Nov-2022,23,3,2,0.08208132759463094
+536,Final Grammar for Literal String Interpolation,Withdrawn,11-Dec-2016,23,1,2,0.06535322023497642
 501,General purpose template literal strings,Withdrawn,08-Aug-2015,23,3,6,0.0634464082487283
 378,Format Specifier for Thousands Separator,Final,12-Mar-2009,23,1,1,0.056367322306368706
-750,Template Strings,Final,08-Jul-2024,23,2,3,0.0524065279643296
+750,Template Strings,Final,08-Jul-2024,23,2,3,0.052406527964329604
 292,Simpler String Substitutions,Final,18-Jun-2002,23,2,1,0.04463706752533915
 306,How to Change Python's Grammar,Withdrawn,29-Jan-2003,23,1,0,0.04341822157471796
 502,String Interpolation - Extended Discussion,Rejected,10-Aug-2015,23,0,5,0.030469120843067212
@@ -547,10 +547,10 @@ pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagera
 287,reStructuredText Docstring Format,Active,25-Mar-2002,24,3,4,0.0730563190713462
 224,Attribute Docstrings,Rejected,23-Aug-2000,24,2,0,0.058475391950673916
 256,Docstring Processing System Framework,Rejected,01-Jun-2001,24,3,3,0.05614110648396806
-258,Docutils Design Specification,Rejected,31-May-2001,24,2,6,0.04950925757912685
+258,Docutils Design Specification,Rejected,31-May-2001,24,2,6,0.049509257579126845
 718,Subscriptable functions,Draft,23-Jun-2023,24,1,0,0.040844261467585775
 727,Documentation in Annotated Metadata,Withdrawn,28-Aug-2023,24,1,1,0.040844261467585775
-257,Docstring Conventions,Active,29-May-2001,24,2,2,0.03966519882345423
+257,Docstring Conventions,Active,29-May-2001,24,2,2,0.03966519882345421
 216,Docstring Format,Withdrawn,31-Jul-2000,24,2,1,0.03928311471196284
 9,Sample Plaintext PEP Template,Withdrawn,14-Aug-2001,24,1,2,0.03226918169563024
 226,Python 2.1 Release Schedule,Final,16-Oct-2000,24,0,1,0.01674435096938387
@@ -593,7 +593,7 @@ pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagera
 284,Integer for-loops,Rejected,01-Mar-2002,27,0,4,0.03032744324635928
 323,Copyable Iterators,Deferred,25-Oct-2003,27,0,1,0.03032744324635928
 3142,"Add a ""while"" clause to generator expressions",Rejected,12-Jan-2009,27,0,2,0.03032744324635928
-384,Defining a Stable ABI,Final,17-May-2009,28,6,1,0.36699338888279326
+384,Defining a Stable ABI,Final,17-May-2009,28,6,1,0.36699338888279315
 3149,ABI version tagged .so files,Final,09-Jul-2010,28,2,1,0.3297522231184222
 580,The C call protocol,Rejected,14-Jun-2018,28,4,5,0.06642975005233898
 393,Flexible String Representation,Final,24-Jan-2010,28,3,1,0.04809374999999999

@@ -1,11 +1,11 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-3121,Extension Module Initialization and Finalization,Final,27-Apr-2007,13,4,0,0.18363815045988147
+3121,Extension Module Initialization and Finalization,Final,27-Apr-2007,13,4,0,0.18363815045988144
 489,Multi-phase extension module initialization,Final,11-Aug-2013,13,8,1,0.13836213184480659
 684,A Per-Interpreter GIL,Final,08-Mar-2022,13,3,6,0.06769093874414153
 573,Module State Access from C Extension Methods,Final,02-Jun-2016,13,4,2,0.062271246237634914
 652,Maintaining the Stable ABI,Final,09-Feb-2021,13,3,0,0.05948506344780255
 703,Making the Global Interpreter Lock Optional in CPython,Accepted,09-Jan-2023,13,3,3,0.05948506344780255
-683,"Immortal Objects, Using a Fixed Refcount",Final,10-Feb-2022,13,3,0,0.05642059677588211
+683,"Immortal Objects, Using a Fixed Refcount",Final,10-Feb-2022,13,3,0,0.0564205967758821
 554,Multiple Interpreters in the Stdlib,Superseded,05-Sep-2017,13,2,6,0.05292844912974419
 734,Multiple Interpreters in the Stdlib,Final,06-Nov-2023,13,2,2,0.04908372274666756
 803,"""abi3t"": Stable ABI for Free-Threaded Builds",Draft,19-Aug-2025,13,2,6,0.04013406883198328

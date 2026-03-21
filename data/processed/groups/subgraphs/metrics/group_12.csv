@@ -1,11 +1,11 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
 241,Metadata for Python Software Packages,Superseded,12-Mar-2001,12,9,0,0.1817336892021092
-345,Metadata for Python Software Packages 1.2,Superseded,28-Apr-2005,12,9,4,0.11219427328401677
+345,Metadata for Python Software Packages 1.2,Superseded,28-Apr-2005,12,9,4,0.11219427328401678
 301,Package Index and Metadata for Distutils,Final,24-Oct-2002,12,3,2,0.09080147757905999
-440,Version Identification and Dependency Specification,Final,18-Mar-2013,12,6,5,0.08449250903542596
-314,Metadata for Python Software Packages 1.1,Superseded,12-Apr-2003,12,6,2,0.08002268623835172
+440,Version Identification and Dependency Specification,Final,18-Mar-2013,12,6,5,0.08449250903542598
+314,Metadata for Python Software Packages 1.1,Superseded,12-Apr-2003,12,6,2,0.08002268623835171
 262,A Database of Installed Python Packages,Rejected,08-Jul-2001,12,2,3,0.06396944731162989
-426,Metadata for Python Software Packages 2.0,Withdrawn,30-Aug-2012,12,5,8,0.06071646863135699
+426,Metadata for Python Software Packages 2.0,Withdrawn,30-Aug-2012,12,5,8,0.060716468631357004
 243,Module Repository Upload Mechanism,Withdrawn,18-Mar-2001,12,1,1,0.055504960009031754
 386,Changing the version comparison module in Distutils,Superseded,04-Jun-2009,12,4,2,0.04731537447737039
 376,Database of Installed Python Distributions,Final,22-Feb-2009,12,2,4,0.039832920681282746

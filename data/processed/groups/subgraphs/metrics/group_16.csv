@@ -8,7 +8,7 @@ pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagera
 402,Simplified Package Layout and Partitioning,Rejected,12-Jul-2011,16,4,2,0.051561214802082145
 382,Namespace Packages,Rejected,02-Apr-2009,16,3,2,0.04824385553857657
 3147,PYC Repository Directories,Final,16-Dec-2009,16,2,2,0.0352608927604189
-3122,Delineation of the main module,Rejected,27-Apr-2007,16,1,3,0.034152904324834865
+3122,Delineation of the main module,Rejected,27-Apr-2007,16,1,3,0.03415290432483486
 451,A ModuleSpec Type for the Import System,Final,08-Aug-2013,16,3,4,0.031101928635147193
 420,Implicit Namespace Packages,Final,19-Apr-2012,16,3,4,0.031065401335348644
 304,Controlling Generation of Bytecode Files,Withdrawn,22-Jan-2003,16,1,2,0.030622884255078628

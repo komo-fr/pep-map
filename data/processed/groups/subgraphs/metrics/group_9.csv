@@ -1,9 +1,9 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-275,Switching on Multiple Values,Rejected,10-Nov-2001,9,2,1,0.17850283839617842
-3103,A Switch/Case Statement,Rejected,25-Jun-2006,9,2,1,0.17850283839617842
+275,Switching on Multiple Values,Rejected,10-Nov-2001,9,2,1,0.17850283839617845
+3103,A Switch/Case Statement,Rejected,25-Jun-2006,9,2,1,0.17850283839617845
 448,Additional Unpacking Generalizations,Final,29-Jun-2013,9,2,0,0.06429133264751709
-634,Structural Pattern Matching: Specification,Final,12-Sep-2020,9,6,4,0.05961744845188033
-635,Structural Pattern Matching: Motivation and Rationale,Final,12-Sep-2020,9,5,7,0.05951920384729299
+634,Structural Pattern Matching: Specification,Final,12-Sep-2020,9,6,4,0.059617448451880314
+635,Structural Pattern Matching: Motivation and Rationale,Final,12-Sep-2020,9,5,7,0.05951920384729298
 572,Assignment Expressions,Final,28-Feb-2018,9,4,0,0.058983479334557234
 622,Structural Pattern Matching,Superseded,23-Jun-2020,9,4,3,0.05674935611406769
 636,Structural Pattern Matching: Tutorial,Final,12-Sep-2020,9,6,3,0.05632684027490002
