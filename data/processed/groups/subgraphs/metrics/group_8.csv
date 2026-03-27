@@ -1,21 +1,21 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-435,Adding an Enum type to the Python standard library,Final,23-Feb-2013,8,3,1,0.18835647671110625
-354,Enumerations in Python,Superseded,20-Dec-2005,8,1,1,0.17690148621328333
-429,Python 3.4 Release Schedule,Final,17-Oct-2012,8,1,9,0.07295575985525188
-549,Instance Descriptors,Rejected,04-Sep-2017,8,1,0,0.06709902694314093
-453,Explicit bootstrapping of pip in Python installations,Final,10-Aug-2013,8,4,1,0.06605787074489548
-562,Module __getattr__ and __dir__,Final,09-Sep-2017,8,3,1,0.059167601086656085
-615,Support for the IANA Time Zone Database in the Standard Library,Final,22-Feb-2020,8,1,3,0.04867028587844858
-445,Add new APIs to customize Python memory allocators,Final,15-Jun-2013,8,2,0,0.04383911485754021
-431,Time zone support improvements,Superseded,11-Dec-2012,8,2,1,0.03748673584529303
-433,Easier suppression of file descriptor inheritance,Superseded,10-Jan-2013,8,1,0,0.03694884519930081
-446,Make newly created file descriptors non-inheritable,Final,05-Aug-2013,8,1,1,0.023696814495628056
-447,Add __getdescriptor__ method to metaclass,Deferred,12-Jun-2013,8,1,0,0.023696814495628056
-450,Adding A Statistics Module To The Standard Library,Final,01-Aug-2013,8,1,0,0.023696814495628056
-454,Add a new tracemalloc module to trace Python memory allocations,Final,03-Sep-2013,8,1,1,0.023696814495628056
-455,Adding a key-transforming dictionary to collections,Rejected,13-Sep-2013,8,1,0,0.023696814495628056
-477,Backport ensurepip (PEP 453) to Python 2.7,Final,26-Aug-2014,8,0,1,0.016806544837388655
-661,Sentinel Values,Deferred,06-Jun-2021,8,0,1,0.016806544837388655
-711,PyBI: a standard format for distributing Python Binaries,Draft,06-Apr-2023,8,0,1,0.016806544837388655
-713,Callable Modules,Rejected,20-Apr-2023,8,0,1,0.016806544837388655
-726,Module ``__setattr__`` and ``__delattr__``,Rejected,24-Aug-2023,8,0,1,0.016806544837388655
+409,Suppressing exception context,Final,26-Jan-2012,8,3,1,0.2172795335404454
+415,Implement context suppression with exception attributes,Final,26-Feb-2012,8,3,1,0.2172795335404454
+399,Pure Python/C Accelerator Module Compatibility Requirements,Final,04-Apr-2011,8,4,0,0.05910610347762081
+3003,Python Language Moratorium,Final,21-Oct-2009,8,2,0,0.05509781198718669
+3155,Qualified name for classes and functions,Final,29-Oct-2011,8,3,0,0.05275128376302941
+421,Adding sys.implementation,Final,26-Apr-2012,8,2,2,0.04147779196085841
+3139,"Cleaning out sys and the ""interpreter"" module",Rejected,04-Apr-2008,8,1,0,0.03852817846198944
+418,"Add monotonic time, performance counter, and process time functions",Final,26-Mar-2012,8,2,0,0.03259524019034531
+398,Python 3.3 Release Schedule,Final,23-Mar-2011,8,1,9,0.02978241871574014
+407,New release cycle and introducing long-term support versions,Deferred,12-Jan-2012,8,1,1,0.02978241871574014
+410,Use decimal.Decimal type for timestamps,Rejected,01-Feb-2012,8,1,0,0.02978241871574014
+362,Function Signature Object,Final,21-Aug-2006,8,1,0,0.023712688419832213
+417,Including mock in the Standard Library,Final,12-Mar-2012,8,1,0,0.023712688419832213
+3154,Pickle protocol version 4,Final,11-Aug-2011,8,1,1,0.023712688419832213
+392,Python 3.2 Release Schedule,Final,30-Dec-2009,8,0,2,0.02089986694522704
+413,Faster evolution of the Python Standard Library,Withdrawn,24-Feb-2012,8,0,2,0.02089986694522704
+490,Chain exceptions at C level,Rejected,25-Mar-2015,8,0,2,0.02089986694522704
+564,Add new time functions with nanosecond resolution,Final,16-Oct-2017,8,0,2,0.02089986694522704
+737,C API to format a type fully qualified name,Final,29-Nov-2023,8,0,2,0.02089986694522704
+739,``build-details.json`` 1.0 — a static description file for Python build details,Accepted,19-Dec-2023,8,0,1,0.02089986694522704

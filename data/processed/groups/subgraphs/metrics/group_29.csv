@@ -1,13 +1,13 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-11,CPython platform support,Active,07-Jul-2002,29,7,0,0.39031393338999104
-776,Emscripten Support,Draft,18-Mar-2025,29,2,1,0.10583806662203558
-744,JIT Compilation,Draft,11-Apr-2024,29,1,1,0.07427221870775712
-775,Make zlib required to build CPython,Withdrawn,24-Feb-2025,29,1,1,0.07427221870775712
-730,Adding iOS as a supported platform,Final,09-Oct-2023,29,1,1,0.05720977677278584
-783,Emscripten Packaging,Draft,28-Mar-2025,29,1,1,0.05720977677278584
-539,A New C-API for Thread-Local Storage in CPython,Final,20-Dec-2016,29,0,1,0.04014733483781457
-738,Adding Android as a supported platform,Final,12-Dec-2023,29,0,2,0.04014733483781457
-774,Removing the LLVM requirement for JIT builds,Deferred,27-Jan-2025,29,0,1,0.04014733483781457
-784,Adding Zstandard to the standard library,Final,06-Apr-2025,29,0,1,0.04014733483781457
-816,WASI Support,Active,05-Nov-2025,29,0,1,0.04014733483781457
-818,Adding the Core of the Pyodide Foreign Function Interface to Python,Draft,10-Dec-2025,29,0,2,0.04014733483781457
+202,List Comprehensions,Final,13-Jul-2000,29,5,0,0.25168025767777835
+212,Loop Counter Iteration,Rejected,22-Aug-2000,29,4,2,0.14870758312586083
+279,The enumerate() built-in function,Final,30-Jan-2002,29,2,2,0.1332178391346061
+201,Lockstep Iteration,Final,13-Jul-2000,29,1,1,0.09352776132462697
+281,Loop Counter Iteration with range and xrange,Rejected,11-Feb-2002,29,2,2,0.09338927585163741
+289,Generator Expressions,Final,30-Jan-2002,29,2,1,0.06899515626890751
+204,Range Literals,Rejected,14-Jul-2000,29,2,1,0.052400291547694974
+276,Simple Iterator for ints,Rejected,12-Nov-2001,29,1,2,0.03677206208345066
+274,Dict Comprehensions,Final,25-Oct-2001,29,0,1,0.03032744324635928
+284,Integer for-loops,Rejected,01-Mar-2002,29,0,4,0.03032744324635928
+323,Copyable Iterators,Deferred,25-Oct-2003,29,0,1,0.03032744324635928
+3142,"Add a ""while"" clause to generator expressions",Rejected,12-Jan-2009,29,0,2,0.03032744324635928

@@ -1,17 +1,16 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-387,Backwards Compatibility Policy,Active,18-Jun-2009,21,6,2,0.18933203776023888
-291,Backward Compatibility for the Python 2 Standard Library,Superseded,06-Jun-2002,21,1,0,0.10686155311926102
-702,Marking deprecations using the type system,Final,30-Dec-2022,21,1,2,0.10686155311926102
-206,Python Advanced Library,Withdrawn,14-Jul-2000,21,1,0,0.08743387366709371
-558,Defined semantics for locals(),Withdrawn,08-Sep-2017,21,2,2,0.07328517546637561
-594,Removing dead batteries from the standard library,Final,20-May-2019,21,1,1,0.07180993230461896
-667,Consistent views of namespaces,Final,30-Jul-2021,21,1,2,0.05753999407822602
-709,Inlined comprehensions,Final,24-Feb-2023,21,1,0,0.05084964361819593
-706,Filter for tarfile.extractall,Final,09-Feb-2023,21,1,1,0.04882992849447586
-597,Add optional EncodingWarning,Final,05-Jun-2019,21,1,0,0.03761216257038602
-731,C API Working Group Charter,Active,11-Oct-2023,21,1,0,0.03761216257038602
-577,Augmented Assignment Expressions,Withdrawn,14-May-2018,21,0,1,0.026394396646296177
-674,Disallow using macros as l-values,Deferred,30-Nov-2021,21,0,1,0.026394396646296177
-686,Make UTF-8 mode default,Final,18-Mar-2022,21,0,2,0.026394396646296177
-721,Using tarfile.data_filter for source distribution extraction,Final,12-Jul-2023,21,0,1,0.026394396646296177
-743,Add Py_OMIT_LEGACY_API to the Python C API,Rejected,11-Mar-2024,21,0,2,0.026394396646296177
+236,Back to the __future__,Final,26-Feb-2001,21,7,4,0.2205137791117967
+245,Python Interface Syntax,Rejected,11-Jan-2001,21,3,5,0.10179195538292443
+230,Warning Framework,Final,28-Nov-2000,21,3,0,0.09719614756034184
+5,Guidelines for Language Evolution,Superseded,26-Oct-2000,21,4,0,0.09447740171311136
+264,Future statements in simulated shells,Final,30-Jul-2001,21,2,1,0.08663752350423443
+227,Statically Nested Scopes,Final,01-Nov-2000,21,2,1,0.07989150760622524
+246,Object Adaptation,Rejected,21-Mar-2001,21,3,1,0.06437654564203801
+232,Function Attributes,Final,02-Dec-2000,21,1,0,0.043044635637142704
+233,Python Online Help,Deferred,11-Dec-2000,21,1,0,0.043044635637142704
+238,Changing the Division Operator,Final,11-Mar-2001,21,1,2,0.03303294273646915
+3124,"Overloading, Generic Functions, Interfaces, and Adaptation",Deferred,28-Apr-2007,21,1,2,0.03303294273646915
+244,The ``directive`` statement,Rejected,20-Mar-2001,21,0,3,0.025739995683026092
+317,Eliminate Implicit Exception Instantiation,Rejected,06-May-2003,21,0,3,0.025739995683026092
+443,Single-dispatch generic functions,Final,22-May-2013,21,0,3,0.025739995683026092
+497,A standard mechanism for backward compatibility,Rejected,04-Aug-2015,21,0,3,0.025739995683026092

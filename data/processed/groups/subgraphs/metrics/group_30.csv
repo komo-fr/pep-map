@@ -1,12 +1,13 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-308,Conditional Expressions,Final,07-Feb-2003,30,4,0,0.21973514969953753
-318,Decorators for Functions and Methods,Final,05-Jun-2003,30,1,2,0.1931551104214719
-3129,Class Decorators,Final,01-May-2007,30,2,1,0.17081600010991568
-309,Partial Function Application,Final,08-Feb-2003,30,1,0,0.05611331327026955
-341,Unifying try-except and try-finally,Final,04-May-2005,30,1,0,0.05611331327026955
-353,Using ssize_t as the index type,Final,18-Dec-2005,30,1,0,0.05611331327026955
-357,Allowing Any Object to be Used for Slicing,Final,09-Feb-2006,30,1,0,0.05611331327026955
-312,Simple Implicit Lambda,Deferred,11-Feb-2003,30,0,1,0.04796012167199924
-356,Python 2.5 Release Schedule,Final,07-Feb-2006,30,0,5,0.04796012167199924
-463,Exception-catching expressions,Rejected,15-Feb-2014,30,0,1,0.04796012167199924
-3133,Introducing Roles,Rejected,01-May-2007,30,0,1,0.04796012167199924
+384,Defining a Stable ABI,Final,17-May-2009,30,6,1,0.36699338888279315
+3149,ABI version tagged .so files,Final,09-Jul-2010,30,2,1,0.3297522231184222
+580,The C call protocol,Rejected,14-Jun-2018,30,4,5,0.06642975005233898
+393,Flexible String Representation,Final,24-Jan-2010,30,3,1,0.04809374999999999
+576,Rationalize Built-in function classes,Withdrawn,10-May-2018,30,3,1,0.03753312122922922
+579,Refactoring C functions and methods,Final,04-Jun-2018,30,2,5,0.03207959078914727
+575,Unifying function/method classes,Withdrawn,27-Mar-2018,30,2,3,0.029246587964034478
+590,Vectorcall: a fast calling protocol for CPython,Final,29-Mar-2019,30,2,3,0.029246587964034478
+623,Remove wstr from Unicode,Final,25-Jun-2020,30,1,1,0.023125
+624,Remove Py_UNICODE encoder APIs,Final,06-Jul-2020,30,0,1,0.0125
+720,Cross-compiling Python packages,Draft,01-Jul-2023,30,0,2,0.0125
+756,Add PyUnicode_Export() and PyUnicode_Import() C functions,Withdrawn,13-Sep-2024,30,0,1,0.0125

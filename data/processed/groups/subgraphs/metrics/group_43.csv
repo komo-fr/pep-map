@@ -1,4 +1,3 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-647,User-Defined Type Guards,Final,07-Oct-2020,43,2,0,0.5208692975273159
-724,Stricter Type Guards,Withdrawn,28-Jul-2023,43,1,1,0.28155110874039785
-742,Narrowing types with TypeIs,Final,07-Feb-2024,43,0,2,0.19757959373228617
+3106,"Revamping dict.keys(), .values() and .items()",Final,19-Dec-2006,43,1,0,0.649122638064138
+469,Migration of dict iteration code to Python 3,Withdrawn,18-Apr-2014,43,0,1,0.3508773619358619

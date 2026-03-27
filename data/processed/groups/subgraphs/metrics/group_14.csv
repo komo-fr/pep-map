@@ -1,18 +1,18 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-462,Core development workflow automation for CPython,Withdrawn,23-Jan-2014,14,3,3,0.10938140141609341
-507,Migrate CPython to Git and GitLab,Rejected,30-Sep-2015,14,3,3,0.10429774479003716
-101,Doing Python Releases 101,Active,22-Aug-2001,14,4,2,0.09969314094759467
-474,Creating forge.python.org,Withdrawn,19-Jul-2014,14,3,2,0.09850737635225783
-347,Migrating the Python CVS to Subversion,Final,14-Jul-2004,14,2,0,0.07673122547661976
-42,Feature Requests,Withdrawn,12-Sep-2000,14,1,0,0.0708987713896285
-102,Doing Python Micro Releases,Superseded,09-Jan-2002,14,1,1,0.0630555830343103
-761,Deprecating PGP signatures for CPython artifacts,Active,08-Oct-2024,14,1,0,0.0630555830343103
-481,"Migrate CPython to Git, Github, and Phabricator",Withdrawn,29-Nov-2014,14,2,3,0.06099269111186917
-3,Guidelines for Handling Bug Reports,Withdrawn,25-Sep-2000,14,2,1,0.059074066748855514
-495,Local Time Disambiguation,Final,02-Aug-2015,14,1,1,0.038267815124528974
-512,Migrating from hg.python.org to GitHub,Final,17-Jan-2015,14,1,3,0.037966262804426394
-385,Migrating from Subversion to Mercurial,Final,25-May-2009,14,1,1,0.029476526582147722
-235,Import on Case-Insensitive Platforms,Final,21-Feb-2001,14,1,0,0.026546097068020635
-6,Bug Fix Releases,Superseded,15-Mar-2001,14,0,3,0.02068523803976647
-374,Choosing a distributed VCS for the Python project,Final,07-Nov-2008,14,0,2,0.02068523803976647
-500,A protocol for delegating datetime methods to their tzinfo implementations,Rejected,08-Aug-2015,14,0,1,0.02068523803976647
+1,PEP Purpose and Guidelines,Active,13-Jun-2000,14,6,3,0.2159784993260178
+12,Sample reStructuredText PEP Template,Active,05-Aug-2002,14,4,1,0.12935402305371088
+676,PEP Infrastructure Process,Active,01-Nov-2021,14,1,2,0.07702330618247834
+729,Typing governance process,Active,19-Sep-2023,14,1,4,0.07702330618247834
+287,reStructuredText Docstring Format,Active,25-Mar-2002,14,3,4,0.06906599588864878
+647,User-Defined Type Guards,Final,07-Oct-2020,14,3,0,0.058097167723188424
+256,Docstring Processing System Framework,Rejected,01-Jun-2001,14,3,3,0.05307437739731011
+224,Attribute Docstrings,Rejected,23-Aug-2000,14,2,0,0.04982720126346109
+258,Docutils Design Specification,Rejected,31-May-2001,14,2,6,0.04680485347687822
+257,Docstring Conventions,Active,29-May-2001,14,2,2,0.03749852918046958
+216,Docstring Format,Withdrawn,31-Jul-2000,14,2,1,0.0371372107594334
+718,Subscriptable functions,Draft,23-Jun-2023,14,1,0,0.03219665648719486
+727,Documentation in Annotated Metadata,Withdrawn,28-Aug-2023,14,1,1,0.03219665648719486
+9,Sample Plaintext PEP Template,Withdrawn,14-Aug-2001,14,1,2,0.030506368417965328
+724,Stricter Type Guards,Withdrawn,28-Jul-2023,14,1,1,0.022556907050251176
+226,Python 2.1 Release Schedule,Final,16-Oct-2000,14,0,1,0.01582947056165932
+742,Narrowing types with TypeIs,Final,07-Feb-2024,14,0,2,0.01582947056165932
