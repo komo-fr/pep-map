@@ -1,19 +1,19 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-549,Instance Descriptors,Rejected,04-Sep-2017,12,1,0,0.08937502138500361
-315,Enhanced While Loop,Rejected,25-Apr-2003,12,1,0,0.08599698105241198
-540,Add a new UTF-8 Mode,Final,05-Jan-2016,12,4,3,0.08242813840184698
-562,Module __getattr__ and __dir__,Final,09-Sep-2017,12,3,1,0.0745776895005828
-548,More Flexible Loop Control,Rejected,05-Sep-2017,12,1,1,0.07060127548873486
-528,Change Windows console encoding to UTF-8,Final,27-Aug-2016,12,2,0,0.06806359368214461
-529,Change Windows filesystem encoding to UTF-8,Final,27-Aug-2016,12,2,0,0.06806359368214461
-538,Coercing the legacy C locale to a UTF-8 based locale,Final,28-Dec-2016,12,3,3,0.06608338608650217
-456,Secure and interchangeable hash algorithm,Final,27-Sep-2013,12,1,0,0.06230469204557719
-587,Python Initialization Configuration,Final,27-Mar-2019,12,2,4,0.05800479811383508
-553,Built-in breakpoint(),Final,05-Sep-2017,12,2,1,0.05249026526110742
-432,Restructuring the CPython startup sequence,Withdrawn,28-Dec-2012,12,2,2,0.049355005851633146
-552,Deterministic pycs,Final,04-Sep-2017,12,2,1,0.042728778579790544
-537,Python 3.7 Release Schedule,Final,23-Dec-2016,12,0,5,0.02598535617373696
-559,Built-in noop(),Rejected,08-Sep-2017,12,0,1,0.02598535617373696
-713,Callable Modules,Rejected,20-Apr-2023,12,0,1,0.02598535617373696
-726,Module ``__setattr__`` and ``__delattr__``,Rejected,24-Aug-2023,12,0,1,0.02598535617373696
-741,Python Configuration C API,Final,18-Jan-2024,12,0,2,0.02598535617373696
+602,Annual Release Cycle for Python,Active,04-Jun-2019,12,11,3,0.2543231915454472
+596,Python 3.9 Release Schedule,Final,04-Jun-2019,12,3,3,0.13388698442554087
+598,Introducing incremental feature releases,Withdrawn,15-Jun-2019,12,3,3,0.10657639480559053
+719,Python 3.13 Release Schedule,Active,26-May-2023,12,1,1,0.08947281540606879
+605,A rolling feature release stream for CPython,Rejected,20-Sep-2019,12,4,4,0.06690432479246813
+614,Relaxing Grammar Restrictions On Decorators,Final,10-Feb-2020,12,1,0,0.05535068221352091
+616,String methods to remove prefixes and suffixes,Final,19-Mar-2020,12,1,0,0.05535068221352091
+20,The Zen of Python,Active,19-Aug-2004,12,3,0,0.03806641959585356
+607,Reducing CPython's Feature Delivery Latency,Final,11-Oct-2019,12,1,2,0.031632611428970295
+565,Show DeprecationWarning in __main__,Final,12-Nov-2017,12,2,0,0.023263028255975204
+606,Python Compatibility Version,Rejected,18-Oct-2019,12,1,6,0.02037636927669971
+3002,Procedure for Backwards-Incompatible Changes,Final,27-Mar-2006,12,1,0,0.020302349987999534
+608,Coordinated Python release,Rejected,25-Oct-2019,12,0,5,0.017415691008724036
+693,Python 3.12 Release Schedule,Active,24-May-2022,12,0,1,0.017415691008724036
+745,Python 3.14 Release Schedule,Active,24-Apr-2024,12,0,1,0.017415691008724036
+790,Python 3.15 Release Schedule,Active,26-Apr-2025,12,0,1,0.017415691008724036
+826,Python 3.16 Release Schedule,Active,23-Feb-2026,12,0,1,0.017415691008724036
+3117,Postfix type declarations,Rejected,01-Apr-2007,12,0,1,0.017415691008724036

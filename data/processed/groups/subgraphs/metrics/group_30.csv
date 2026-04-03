@@ -1,13 +1,13 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-384,Defining a Stable ABI,Final,17-May-2009,30,6,1,0.36699338888279315
-3149,ABI version tagged .so files,Final,09-Jul-2010,30,2,1,0.3297522231184222
-580,The C call protocol,Rejected,14-Jun-2018,30,4,5,0.06642975005233898
-393,Flexible String Representation,Final,24-Jan-2010,30,3,1,0.04809374999999999
-576,Rationalize Built-in function classes,Withdrawn,10-May-2018,30,3,1,0.03753312122922922
-579,Refactoring C functions and methods,Final,04-Jun-2018,30,2,5,0.03207959078914727
-575,Unifying function/method classes,Withdrawn,27-Mar-2018,30,2,3,0.029246587964034478
-590,Vectorcall: a fast calling protocol for CPython,Final,29-Mar-2019,30,2,3,0.029246587964034478
-623,Remove wstr from Unicode,Final,25-Jun-2020,30,1,1,0.023125
-624,Remove Py_UNICODE encoder APIs,Final,06-Jul-2020,30,0,1,0.0125
-720,Cross-compiling Python packages,Draft,01-Jul-2023,30,0,2,0.0125
-756,Add PyUnicode_Export() and PyUnicode_Import() C functions,Withdrawn,13-Sep-2024,30,0,1,0.0125
+425,Compatibility Tags for Built Distributions,Final,27-Jul-2012,30,7,1,0.39450786942080385
+427,The Wheel Binary Package Format 1.0,Final,20-Sep-2012,30,6,1,0.39363930362065547
+491,The Wheel Binary Package Format 1.9,Deferred,16-Apr-2015,30,2,2,0.03400345526541923
+513,A Platform Tag for Portable Linux Built Distributions,Superseded,19-Jan-2016,30,3,3,0.03235961577453366
+777,How to Re-invent the Wheel,Draft,09-Oct-2024,30,1,2,0.025721237400069517
+571,The manylinux2010 Platform Tag,Superseded,05-Feb-2018,30,2,2,0.022708502297918355
+527,Removing Un(der)used file types/extensions on PyPI,Final,23-Aug-2016,30,1,0,0.01981230448383733
+600,Future 'manylinux' Platform Tags for Portable Linux Built Distributions,Final,03-May-2019,30,1,4,0.017842660178426603
+599,The manylinux2014 Platform Tag,Superseded,29-Apr-2019,30,1,3,0.017694936855520798
+656,Platform Tag for Linux Distributions Using Musl,Final,17-Mar-2021,30,0,3,0.013903371567605145
+715,Disabling bdist_egg distribution uploads on PyPI,Final,06-Jun-2023,30,0,2,0.013903371567605145
+778,Supporting Symlinks in Wheels,Deferred,18-May-2024,30,0,1,0.013903371567605145

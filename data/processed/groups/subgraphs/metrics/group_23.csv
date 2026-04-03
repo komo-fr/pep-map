@@ -1,16 +1,16 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-3101,Advanced String Formatting,Final,16-Apr-2006,23,6,0,0.1833091181731604
-215,String Interpolation,Superseded,24-Jul-2000,23,4,0,0.1344901148832121
-498,Literal String Interpolation,Final,01-Aug-2015,23,5,2,0.12214506727920041
-701,Syntactic formalization of f-strings,Accepted,15-Nov-2022,23,3,2,0.08208132759463094
-536,Final Grammar for Literal String Interpolation,Withdrawn,11-Dec-2016,23,1,2,0.06535322023497642
-501,General purpose template literal strings,Withdrawn,08-Aug-2015,23,3,6,0.0634464082487283
-378,Format Specifier for Thousands Separator,Final,12-Mar-2009,23,1,1,0.056367322306368706
-750,Template Strings,Final,08-Jul-2024,23,2,3,0.052406527964329604
-292,Simpler String Substitutions,Final,18-Jun-2002,23,2,1,0.04463706752533915
-306,How to Change Python's Grammar,Withdrawn,29-Jan-2003,23,1,0,0.04341822157471796
-502,String Interpolation - Extended Discussion,Rejected,10-Aug-2015,23,0,5,0.030469120843067212
-682,Format Specifier for Signed Zero,Final,29-Jan-2022,23,0,1,0.030469120843067212
-787,Safer subprocess usage using t-strings,Deferred,13-Apr-2025,23,0,2,0.030469120843067212
-3126,Remove Implicit String Concatenation,Rejected,29-Apr-2007,23,0,1,0.030469120843067212
-3127,Integer Literal Support and Syntax,Final,14-Mar-2007,23,0,2,0.030469120843067212
+236,Back to the __future__,Final,26-Feb-2001,23,7,4,0.2205137791117967
+245,Python Interface Syntax,Rejected,11-Jan-2001,23,3,5,0.10179195538292443
+230,Warning Framework,Final,28-Nov-2000,23,3,0,0.09719614756034184
+5,Guidelines for Language Evolution,Superseded,26-Oct-2000,23,4,0,0.09447740171311136
+264,Future statements in simulated shells,Final,30-Jul-2001,23,2,1,0.08663752350423443
+227,Statically Nested Scopes,Final,01-Nov-2000,23,2,1,0.07989150760622524
+246,Object Adaptation,Rejected,21-Mar-2001,23,3,1,0.06437654564203801
+232,Function Attributes,Final,02-Dec-2000,23,1,0,0.043044635637142704
+233,Python Online Help,Deferred,11-Dec-2000,23,1,0,0.043044635637142704
+238,Changing the Division Operator,Final,11-Mar-2001,23,1,2,0.03303294273646915
+3124,"Overloading, Generic Functions, Interfaces, and Adaptation",Deferred,28-Apr-2007,23,1,2,0.03303294273646915
+244,The ``directive`` statement,Rejected,20-Mar-2001,23,0,3,0.025739995683026092
+317,Eliminate Implicit Exception Instantiation,Rejected,06-May-2003,23,0,3,0.025739995683026092
+443,Single-dispatch generic functions,Final,22-May-2013,23,0,3,0.025739995683026092
+497,A standard mechanism for backward compatibility,Rejected,04-Aug-2015,23,0,3,0.025739995683026092

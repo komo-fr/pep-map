@@ -1,13 +1,13 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-202,List Comprehensions,Final,13-Jul-2000,29,5,0,0.25168025767777835
-212,Loop Counter Iteration,Rejected,22-Aug-2000,29,4,2,0.14870758312586083
-279,The enumerate() built-in function,Final,30-Jan-2002,29,2,2,0.1332178391346061
-201,Lockstep Iteration,Final,13-Jul-2000,29,1,1,0.09352776132462697
-281,Loop Counter Iteration with range and xrange,Rejected,11-Feb-2002,29,2,2,0.09338927585163741
-289,Generator Expressions,Final,30-Jan-2002,29,2,1,0.06899515626890751
-204,Range Literals,Rejected,14-Jul-2000,29,2,1,0.052400291547694974
-276,Simple Iterator for ints,Rejected,12-Nov-2001,29,1,2,0.03677206208345066
-274,Dict Comprehensions,Final,25-Oct-2001,29,0,1,0.03032744324635928
-284,Integer for-loops,Rejected,01-Mar-2002,29,0,4,0.03032744324635928
-323,Copyable Iterators,Deferred,25-Oct-2003,29,0,1,0.03032744324635928
-3142,"Add a ""while"" clause to generator expressions",Rejected,12-Jan-2009,29,0,2,0.03032744324635928
+591,Adding a final qualifier to typing,Final,15-Mar-2019,29,3,1,0.20954686389449256
+586,Literal Types,Final,14-Mar-2019,29,2,1,0.20090718131028426
+578,Python Runtime Audit Hooks,Final,16-Jun-2018,29,3,1,0.19731056702576052
+551,Security transparency in the Python runtime,Withdrawn,23-Aug-2017,29,1,1,0.18651096379550017
+3118,Revising the buffer protocol,Final,28-Aug-2006,29,3,0,0.062143839076948384
+436,The Argument Clinic DSL,Final,22-Feb-2013,29,1,0,0.026789176232830843
+574,Pickle protocol 5 with out-of-band data,Final,23-Mar-2018,29,1,1,0.022794299075303434
+437,"A DSL for specifying signatures, annotations and argument converters",Rejected,11-Mar-2013,29,0,2,0.01879942191777603
+569,Python 3.8 Release Schedule,Final,27-Jan-2018,29,0,4,0.01879942191777603
+688,Making the buffer protocol accessible in Python,Final,23-Apr-2022,29,0,1,0.01879942191777603
+698,Override Decorator for Static Typing,Final,05-Sep-2022,29,0,1,0.01879942191777603
+829,Structured Startup Configuration via .site.toml Files,Draft,31-Mar-2026,29,0,1,0.01879942191777603

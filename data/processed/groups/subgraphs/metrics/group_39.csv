@@ -1,4 +1,4 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-100,Python Unicode Integration,Final,10-Mar-2000,39,1,0,0.37012974744707666
-3116,New I/O,Final,26-Feb-2007,39,1,0,0.37012974744707666
-400,Deprecate codecs.StreamReader and codecs.StreamWriter,Deferred,28-May-2011,39,0,2,0.25974050510584634
+214,Extended Print Statement,Final,24-Jul-2000,39,1,0,0.37012974744707666
+223,Change the Meaning of ``\x`` Escapes,Final,20-Aug-2000,39,1,0,0.37012974744707666
+200,Python 2.0 Release Schedule,Final,12-Jul-2000,39,0,2,0.25974050510584634

@@ -1,18 +1,18 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-8,Style Guide for Python Code,Active,05-Jul-2001,18,11,2,0.2933984505322349
-3131,Supporting Non-ASCII Identifiers,Final,01-May-2007,18,2,0,0.16553463316698774
-7,Style Guide for C Code,Active,05-Jul-2001,18,1,1,0.14677053867255258
-3108,Standard Library Reorganization,Final,01-Jan-2007,18,2,3,0.040839325986551885
-3150,"Statement local namespaces (aka ""given"" clause)",Deferred,09-Jul-2010,18,1,3,0.03576383767014914
-324,subprocess - New process module,Final,19-Nov-2003,18,1,0,0.03364633026568818
-360,Externally Maintained Packages,Final,30-May-2006,18,1,0,0.03364633026568818
-359,"The ""make"" Statement",Withdrawn,05-Apr-2006,18,1,0,0.032208327127998065
-403,"General purpose decorator clause (aka ""@in"" clause)",Deferred,13-Oct-2011,18,1,2,0.032208327127998065
-601,Forbid return/break/continue breaking out of finally,Rejected,26-Aug-2019,18,1,1,0.0314572787393343
-364,Transitioning to the Py3K Standard Library,Withdrawn,01-Mar-2007,18,0,2,0.022075231492116716
-391,Dictionary-Based Configuration For Logging,Final,15-Oct-2009,18,0,1,0.022075231492116716
-423,Naming conventions and recipes related to packaging,Deferred,24-May-2012,18,0,2,0.022075231492116716
-672,Unicode-related Security Considerations for Python,Active,01-Nov-2021,18,0,1,0.022075231492116716
-760,No More Bare Excepts,Withdrawn,02-Oct-2024,18,0,1,0.022075231492116716
-762,REPL-acing the default REPL,Final,11-Oct-2024,18,0,1,0.022075231492116716
-765,Disallow return/break/continue that exit a finally block,Final,15-Nov-2024,18,0,2,0.022075231492116716
+462,Core development workflow automation for CPython,Withdrawn,23-Jan-2014,18,3,3,0.10938140141609341
+507,Migrate CPython to Git and GitLab,Rejected,30-Sep-2015,18,3,3,0.10429774479003716
+101,Doing Python Releases 101,Active,22-Aug-2001,18,4,2,0.09969314094759467
+474,Creating forge.python.org,Withdrawn,19-Jul-2014,18,3,2,0.09850737635225783
+347,Migrating the Python CVS to Subversion,Final,14-Jul-2004,18,2,0,0.07673122547661976
+42,Feature Requests,Withdrawn,12-Sep-2000,18,1,0,0.0708987713896285
+102,Doing Python Micro Releases,Superseded,09-Jan-2002,18,1,1,0.0630555830343103
+761,Deprecating PGP signatures for CPython artifacts,Active,08-Oct-2024,18,1,0,0.0630555830343103
+481,"Migrate CPython to Git, Github, and Phabricator",Withdrawn,29-Nov-2014,18,2,3,0.06099269111186917
+3,Guidelines for Handling Bug Reports,Withdrawn,25-Sep-2000,18,2,1,0.059074066748855514
+495,Local Time Disambiguation,Final,02-Aug-2015,18,1,1,0.038267815124528974
+512,Migrating from hg.python.org to GitHub,Final,17-Jan-2015,18,1,3,0.037966262804426394
+385,Migrating from Subversion to Mercurial,Final,25-May-2009,18,1,1,0.029476526582147722
+235,Import on Case-Insensitive Platforms,Final,21-Feb-2001,18,1,0,0.026546097068020635
+6,Bug Fix Releases,Superseded,15-Mar-2001,18,0,3,0.02068523803976647
+374,Choosing a distributed VCS for the Python project,Final,07-Nov-2008,18,0,2,0.02068523803976647
+500,A protocol for delegating datetime methods to their tzinfo implementations,Rejected,08-Aug-2015,18,0,1,0.02068523803976647

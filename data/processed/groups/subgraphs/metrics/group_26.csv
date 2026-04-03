@@ -1,15 +1,15 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-211,Adding A New Outer Product Operator,Rejected,15-Jul-2000,26,4,3,0.2254598934798107
-465,A dedicated infix operator for matrix multiplication,Final,20-Feb-2014,26,5,2,0.20669307027141157
-225,Elementwise/Objectwise Operators,Rejected,19-Sep-2000,26,3,2,0.19059838832091563
-209,Multi-dimensional Arrays,Withdrawn,03-Jan-2001,26,1,4,0.08474639748827559
-207,Rich Comparisons,Final,25-Jul-2000,26,2,0,0.07191821284685336
-208,Reworking the Coercion Model,Final,04-Dec-2000,26,1,1,0.03887475566410203
-441,Improving Python ZIP Application Support,Final,30-Mar-2013,26,1,0,0.023822174157131927
-471,os.scandir() function -- a better and faster directory iterator,Final,30-May-2014,26,1,0,0.023822174157131927
-475,Retry system calls failing with EINTR,Final,29-Jul-2014,26,1,0,0.023822174157131927
-485,A Function for testing approximate equality,Final,20-Jan-2015,26,1,0,0.023822174157131927
-488,Elimination of PYO files,Final,20-Feb-2015,26,1,1,0.023822174157131927
-203,Augmented Assignments,Final,13-Jul-2000,26,0,1,0.020866137047657073
-478,Python 3.5 Release Schedule,Final,22-Sep-2014,26,0,6,0.020866137047657073
-820,PySlot: Unified slot system for the C API,Draft,19-Dec-2025,26,0,1,0.020866137047657073
+1,PEP Purpose and Guidelines,Active,13-Jun-2000,26,6,3,0.24111230529281918
+12,Sample reStructuredText PEP Template,Active,05-Aug-2002,26,4,1,0.1419373195167632
+676,PEP Infrastructure Process,Active,01-Nov-2021,26,1,2,0.08505896548484981
+729,Typing governance process,Active,19-Sep-2023,26,1,3,0.08505896548484981
+287,reStructuredText Docstring Format,Active,25-Mar-2002,26,3,4,0.0730563190713462
+224,Attribute Docstrings,Rejected,23-Aug-2000,26,2,0,0.058475391950673916
+256,Docstring Processing System Framework,Rejected,01-Jun-2001,26,3,3,0.05614110648396806
+258,Docutils Design Specification,Rejected,31-May-2001,26,2,6,0.049509257579126845
+718,Subscriptable functions,Draft,23-Jun-2023,26,1,0,0.040844261467585775
+727,Documentation in Annotated Metadata,Withdrawn,28-Aug-2023,26,1,1,0.040844261467585775
+257,Docstring Conventions,Active,29-May-2001,26,2,2,0.03966519882345421
+216,Docstring Format,Withdrawn,31-Jul-2000,26,2,1,0.03928311471196284
+9,Sample Plaintext PEP Template,Withdrawn,14-Aug-2001,26,1,2,0.03226918169563024
+226,Python 2.1 Release Schedule,Final,16-Oct-2000,26,0,1,0.01674435096938387

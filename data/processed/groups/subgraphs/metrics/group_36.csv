@@ -1,11 +1,7 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-11,CPython platform support,Active,07-Jul-2002,36,6,0,0.3978156654506442
-776,Emscripten Support,Draft,18-Mar-2025,36,2,1,0.12868674718546785
-775,Make zlib required to build CPython,Withdrawn,24-Feb-2025,36,1,1,0.09030602975642964
-730,Adding iOS as a supported platform,Final,09-Oct-2023,36,1,1,0.06956014219913388
-783,Emscripten Packaging,Draft,28-Mar-2025,36,1,1,0.06956014219913388
-539,A New C-API for Thread-Local Storage in CPython,Final,20-Dec-2016,36,0,1,0.04881425464183814
-738,Adding Android as a supported platform,Final,12-Dec-2023,36,0,2,0.04881425464183814
-784,Adding Zstandard to the standard library,Final,06-Apr-2025,36,0,1,0.04881425464183814
-816,WASI Support,Active,05-Nov-2025,36,0,1,0.04881425464183814
-818,Adding the Core of the Pyodide Foreign Function Interface to Python,Draft,10-Dec-2025,36,0,2,0.04881425464183814
+355,Path - Object oriented filesystem paths,Rejected,24-Jan-2006,36,1,0,0.2384737584719806
+277,Unicode file name support for Windows NT,Final,11-Jan-2002,36,1,0,0.17315997769576022
+293,Codec Error Handling Callbacks,Final,18-Jun-2002,36,1,0,0.17315997769576022
+383,Non-decodable Bytes in System Character Interfaces,Final,22-Apr-2009,36,1,2,0.1536800446084793
+428,The pathlib module -- object-oriented filesystem paths,Final,30-Jul-2012,36,1,1,0.1536800446084793
+519,Adding a file system path protocol,Final,11-May-2016,36,0,2,0.10784619691953984

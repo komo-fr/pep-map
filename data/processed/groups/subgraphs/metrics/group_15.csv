@@ -1,18 +1,18 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-380,Syntax for Delegating to a Subgenerator,Final,13-Feb-2009,15,7,0,0.20426621901121986
-523,Adding a frame evaluation API to CPython,Final,16-May-2016,15,3,0,0.09391147850217582
-492,Coroutines with async and await syntax,Final,09-Apr-2015,15,3,4,0.09197192927378278
-3156,"Asynchronous IO Support Rebooted: the ""asyncio"" Module",Final,12-Dec-2012,15,2,3,0.0736672551016396
-525,Asynchronous Generators,Final,28-Jul-2016,15,3,2,0.06298227962430307
-468,Preserving the order of \*\*kwargs in a function.,Final,05-Apr-2014,15,2,0,0.06034005251838846
-689,Unstable C API tier,Final,22-Apr-2022,15,1,1,0.054123247950153254
-3148,futures - execute computations asynchronously,Final,16-Oct-2009,15,1,0,0.050128452052217234
-479,Change StopIteration handling inside generators,Final,15-Nov-2014,15,1,1,0.04880003682869879
-3152,Cofunctions,Rejected,13-Feb-2009,15,1,1,0.04880003682869879
-530,Asynchronous Comprehensions,Final,03-Sep-2016,15,1,2,0.035472834245447636
-472,Support for indexing with keyword arguments,Rejected,24-Jun-2014,15,0,1,0.029256029677212435
-494,Python 3.6 Release Schedule,Final,30-May-2015,15,0,4,0.029256029677212435
-669,Low Impact Monitoring for CPython,Final,18-Aug-2021,15,0,2,0.029256029677212435
-733,An Evaluation of Python's Public C API,Final,16-Oct-2023,15,0,1,0.029256029677212435
-828,Supporting 'yield from' in asynchronous generators,Draft,07-Mar-2026,15,0,2,0.029256029677212435
-3145,Asynchronous I/O For subprocess.Popen,Withdrawn,04-Aug-2009,15,0,1,0.029256029677212435
+387,Backwards Compatibility Policy,Active,18-Jun-2009,15,6,2,0.17190411692093419
+291,Backward Compatibility for the Python 2 Standard Library,Superseded,06-Jun-2002,15,1,0,0.10133864878395243
+702,Marking deprecations using the type system,Final,30-Dec-2022,15,1,2,0.10133864878395243
+206,Python Advanced Library,Withdrawn,14-Jul-2000,15,1,0,0.08892582325679775
+594,Removing dead batteries from the standard library,Final,20-May-2019,15,1,1,0.07134752154436472
+515,Underscores in Numeric Literals,Final,10-Feb-2016,15,1,0,0.05912715604498101
+657,Include Fine Grained Error Locations in Tracebacks,Final,08-May-2021,15,1,0,0.05912715604498101
+706,Filter for tarfile.extractall,Final,09-Feb-2023,15,1,1,0.05231653192694543
+597,Add optional EncodingWarning,Final,05-Jun-2019,15,1,0,0.04029782347357602
+731,C API Working Group Charter,Active,11-Oct-2023,15,1,0,0.04029782347357602
+641,Using an underscore in the version portion of Python 3.10 compatibility tags,Rejected,20-Oct-2020,15,1,1,0.03629158732245289
+664,Python 3.11 Release Schedule,Active,12-Jul-2021,15,1,1,0.03629158732245289
+674,Disallow using macros as l-values,Deferred,30-Nov-2021,15,0,1,0.02827911502020662
+686,Make UTF-8 mode default,Final,18-Mar-2022,15,0,2,0.02827911502020662
+721,Using tarfile.data_filter for source distribution extraction,Final,12-Jul-2023,15,0,1,0.02827911502020662
+743,Add Py_OMIT_LEGACY_API to the Python C API,Rejected,11-Mar-2024,15,0,2,0.02827911502020662
+2026,Calendar versioning for Python,Rejected,11-Jun-2024,15,0,3,0.02827911502020662

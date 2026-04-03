@@ -1,26 +1,25 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-591,Adding a final qualifier to typing,Final,15-Mar-2019,3,5,1,0.22876606156482096
-586,Literal Types,Final,14-Mar-2019,3,4,1,0.22752640965141574
-646,Variadic Generics,Final,16-Sep-2020,3,6,1,0.09247219025646215
-637,Support for indexing with keyword arguments,Rejected,24-Aug-2020,3,1,1,0.08630166264393621
-578,Python Runtime Audit Hooks,Final,16-Jun-2018,3,2,1,0.05717831876830143
-551,Security transparency in the Python runtime,Withdrawn,23-Aug-2017,3,1,1,0.05629649657884395
-589,TypedDict: Type Hints for Dictionaries with a Fixed Set of Keys,Final,20-Mar-2019,3,7,2,0.037216619865327476
-585,Type Hinting Generics In Standard Collections,Final,03-Mar-2019,3,3,0,0.027923631916717748
-604,Allow writing union types as ``X | Y``,Final,28-Aug-2019,3,3,1,0.019218232029269377
-655,Marking individual TypedDict items as required or potentially-missing,Final,30-Jan-2021,3,3,2,0.01795317020571934
-692,Using TypedDict for more precise \*\*kwargs typing,Final,29-May-2022,3,4,3,0.017433458285289572
-705,TypedDict: Read-only items,Final,07-Nov-2022,3,2,4,0.017344357064913475
-612,Parameter Specification Variables,Final,18-Dec-2019,3,3,0,0.01254858360563487
-728,TypedDict with Typed Extra Items,Accepted,12-Sep-2023,3,2,3,0.010983256226979632
-657,Include Fine Grained Error Locations in Tracebacks,Final,08-May-2021,3,1,0,0.009328014481926439
-675,Arbitrary Literal String Type,Final,30-Nov-2021,3,1,1,0.009328014481926439
-764,Inline typed dictionaries,Draft,25-Oct-2024,3,1,4,0.009328014481926439
-677,Callable Type Syntax,Rejected,13-Dec-2021,3,1,4,0.009001053149570252
-569,Python 3.8 Release Schedule,Final,27-Jan-2018,3,0,4,0.007693207820145509
-664,Python 3.11 Release Schedule,Active,12-Jul-2021,3,0,4,0.007693207820145509
-698,Override Decorator for Static Typing,Final,05-Sep-2022,3,0,1,0.007693207820145509
-747,Annotating Type Forms,Final,27-May-2024,3,0,1,0.007693207820145509
-767,Annotating Read-Only Attributes,Draft,18-Nov-2024,3,0,1,0.007693207820145509
-821,Support for unpacking TypedDicts in Callable type hints,Draft,12-Jan-2026,3,0,5,0.007693207820145509
-827,Type Manipulation,Draft,27-Feb-2026,3,0,4,0.007693207820145509
+484,Type Hints,Final,29-Sep-2014,3,12,6,0.23774088795839698
+526,Syntax for Variable Annotations,Final,09-Aug-2016,3,8,1,0.12159198394252409
+3107,Function Annotations,Final,02-Dec-2006,3,7,0,0.11365623172993072
+563,Postponed Evaluation of Annotations,Superseded,08-Sep-2017,3,7,8,0.07786291317831383
+483,The Theory of Type Hints,Final,19-Dec-2014,3,3,2,0.05720942081028267
+649,Deferred Evaluation Of Annotations Using Descriptors,Final,11-Jan-2021,3,7,4,0.0456624718968705
+482,Literature Overview for Type Hints,Final,08-Jan-2015,3,1,1,0.0439564869980616
+561,Distributing and Packaging Type Information,Final,09-Sep-2017,3,1,3,0.0439564869980616
+557,Data Classes,Final,02-Jun-2017,3,4,1,0.034393435566538566
+695,Type Parameter Syntax,Final,15-Jun-2022,3,3,4,0.031812616071432535
+544,Protocols: Structural subtyping (static duck typing),Final,05-Mar-2017,3,2,3,0.022915052894883832
+749,Implementing PEP 649,Final,28-May-2024,3,2,4,0.021459386428245752
+560,Core support for typing module and generic types,Final,03-Sep-2017,3,1,3,0.018548053494969588
+696,Type Defaults for Type Parameters,Final,14-Jul-2022,3,1,1,0.014835571646666875
+593,Flexible function and variable annotations,Final,26-Apr-2019,3,1,2,0.014642366265085858
+681,Data Class Transforms,Final,02-Dec-2021,3,1,2,0.014642366265085858
+690,Lazy Imports,Rejected,29-Apr-2022,3,1,2,0.013186699798447776
+638,Syntactic Macros,Draft,24-Sep-2020,3,0,1,0.010275366865171612
+671,Syntax for late-bound function argument defaults,Draft,24-Oct-2021,3,0,2,0.010275366865171612
+673,Self Type,Final,10-Nov-2021,3,0,2,0.010275366865171612
+712,"Adding a ""converter"" parameter to dataclasses.field",Rejected,01-Jan-2023,3,0,2,0.010275366865171612
+746,Type checking Annotated metadata,Draft,20-May-2024,3,0,2,0.010275366865171612
+781,Make ``TYPE_CHECKING`` a built-in constant,Draft,24-Mar-2025,3,0,3,0.010275366865171612
+810,Explicit lazy imports,Accepted,02-Oct-2025,3,0,3,0.010275366865171612

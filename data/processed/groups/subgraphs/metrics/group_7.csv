@@ -1,21 +1,21 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-266,Optimizing Global Variable/Attribute Access,Withdrawn,13-Aug-2001,7,5,0,0.129082108015116
-218,Adding a Built-In Set Object Type,Final,31-Jul-2000,7,4,0,0.09812610827580742
-267,Optimized Access to Module Namespaces,Deferred,23-May-2001,7,3,2,0.07034716954313583
-280,Optimizing access to globals,Deferred,10-Feb-2002,7,3,2,0.07034716954313583
-263,Defining Python Source Code Encodings,Final,06-Jun-2001,7,2,0,0.06516844076927342
-282,A Logging System,Final,04-Feb-2002,7,2,0,0.06516844076927342
-269,Pgen Module for Python,Deferred,24-Aug-2001,7,2,0,0.04045019013937291
-286,Enhanced Argument Tuples,Deferred,03-Mar-2002,7,2,0,0.04045019013937291
-322,Reverse Iteration,Final,24-Sep-2003,7,1,0,0.03804702688368814
-278,Universal Newline Support,Final,14-Jan-2002,7,1,0,0.03633048170105616
-285,Adding a bool type,Final,08-Mar-2002,7,1,0,0.03633048170105616
-307,Extensions to the pickle protocol,Final,31-Jan-2003,7,1,0,0.03633048170105616
-311,Simplified Global Interpreter Lock Acquisition for Extensions,Final,05-Feb-2003,7,1,0,0.03633048170105616
-270,uniq method for list objects,Rejected,21-Aug-2001,7,0,1,0.03392731844537139
-283,Python 2.3 Release Schedule,Final,27-Feb-2002,7,0,12,0.03392731844537139
-320,Python 2.4 Release Schedule,Final,29-Jul-2003,7,0,7,0.03392731844537139
-329,Treating Builtins as Constants in the Standard Library,Rejected,18-Apr-2004,7,0,1,0.03392731844537139
-337,Logging Usage in the Standard Library,Deferred,02-Oct-2004,7,0,1,0.03392731844537139
-802,Display Syntax for the Empty Set,Draft,08-Aug-2025,7,0,1,0.03392731844537139
-3120,Using UTF-8 as the default source encoding,Final,15-Apr-2007,7,0,1,0.03392731844537139
+275,Switching on Multiple Values,Rejected,10-Nov-2001,7,2,1,0.1750595405234572
+3103,A Switch/Case Statement,Rejected,25-Jun-2006,7,2,1,0.1750595405234572
+448,Additional Unpacking Generalizations,Final,29-Jun-2013,7,2,0,0.06310693206962355
+634,Structural Pattern Matching: Specification,Final,12-Sep-2020,7,6,4,0.05798713380042329
+635,Structural Pattern Matching: Motivation and Rationale,Final,12-Sep-2020,7,5,7,0.05783528337569612
+572,Assignment Expressions,Final,28-Feb-2018,7,4,0,0.057800507210539476
+622,Structural Pattern Matching,Superseded,23-Jun-2020,7,4,3,0.05549899632080185
+636,Structural Pattern Matching: Tutorial,Final,12-Sep-2020,7,6,3,0.054786510112672895
+584,Add Union Operators To dict,Final,01-Mar-2019,7,2,1,0.04198772942682251
+617,New PEG parser for CPython,Final,24-Mar-2020,7,2,0,0.04198772942682251
+640,Unused variable syntax,Rejected,04-Oct-2020,7,2,4,0.028599058174798152
+626,Precise line numbers for debugging and other tools.,Final,15-Jul-2020,7,2,0,0.027027430993980216
+534,Improved Errors for Missing Standard Library Modules,Withdrawn,05-Sep-2016,7,1,0,0.02157609453256027
+613,Explicit Type Aliases,Final,21-Jan-2020,7,1,0,0.02157609453256027
+618,Add Optional Length-Checking To zip,Final,01-May-2020,7,1,0,0.02157609453256027
+644,Require OpenSSL 1.1.1 or newer,Final,27-Oct-2020,7,1,0,0.02157609453256027
+619,Python 3.10 Release Schedule,Active,25-May-2020,7,0,7,0.019239807477666005
+642,Explicit Pattern Syntax for Structural Pattern Matching,Rejected,26-Sep-2020,7,0,7,0.019239807477666005
+653,Precise Semantics for Pattern Matching,Draft,09-Feb-2021,7,0,3,0.019239807477666005
+798,Unpacking in Comprehensions,Accepted,19-Jul-2025,7,0,2,0.019239807477666005

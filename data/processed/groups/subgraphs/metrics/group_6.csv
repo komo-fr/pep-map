@@ -1,22 +1,21 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-387,Backwards Compatibility Policy,Active,18-Jun-2009,6,8,2,0.17646537992530095
-291,Backward Compatibility for the Python 2 Standard Library,Superseded,06-Jun-2002,6,1,0,0.0953933212610144
-702,Marking deprecations using the type system,Final,30-Dec-2022,6,1,2,0.0953933212610144
-206,Python Advanced Library,Withdrawn,14-Jul-2000,6,1,0,0.07219502415795039
-659,Specializing Adaptive Interpreter,Final,13-Apr-2021,6,3,0,0.062440743945588066
-594,Removing dead batteries from the standard library,Final,20-May-2019,6,1,1,0.06094014036595974
-558,Defined semantics for locals(),Withdrawn,08-Sep-2017,6,2,2,0.056632035627655425
-667,Consistent views of namespaces,Final,30-Jul-2021,6,1,2,0.04446674677315392
-709,Inlined comprehensions,Final,24-Feb-2023,6,1,0,0.03929454410339957
-706,Filter for tarfile.extractall,Final,09-Feb-2023,6,1,1,0.037734680524772156
-744,JIT Compilation,Draft,11-Apr-2024,6,1,2,0.037734680524772156
-597,Add optional EncodingWarning,Final,05-Jun-2019,6,1,0,0.029065934762644227
-731,C API Working Group Charter,Active,11-Oct-2023,6,1,0,0.029065934762644227
-577,Augmented Assignment Expressions,Withdrawn,14-May-2018,6,0,1,0.020397189000516295
-674,Disallow using macros as l-values,Deferred,30-Nov-2021,6,0,1,0.020397189000516295
-686,Make UTF-8 mode default,Final,18-Mar-2022,6,0,2,0.020397189000516295
-707,A simplified signature for __exit__ and __aexit__,Rejected,18-Feb-2023,6,0,1,0.020397189000516295
-721,Using tarfile.data_filter for source distribution extraction,Final,12-Jul-2023,6,0,1,0.020397189000516295
-743,Add Py_OMIT_LEGACY_API to the Python C API,Rejected,11-Mar-2024,6,0,2,0.020397189000516295
-774,Removing the LLVM requirement for JIT builds,Deferred,27-Jan-2025,6,0,1,0.020397189000516295
-799,A dedicated ``profiling`` package for organizing Python profiling tools,Accepted,21-Jul-2025,6,0,2,0.020397189000516295
+266,Optimizing Global Variable/Attribute Access,Withdrawn,13-Aug-2001,6,5,0,0.129082108015116
+218,Adding a Built-In Set Object Type,Final,31-Jul-2000,6,4,0,0.09812610827580742
+267,Optimized Access to Module Namespaces,Deferred,23-May-2001,6,3,2,0.07034716954313583
+280,Optimizing access to globals,Deferred,10-Feb-2002,6,3,2,0.07034716954313583
+263,Defining Python Source Code Encodings,Final,06-Jun-2001,6,2,0,0.06516844076927342
+282,A Logging System,Final,04-Feb-2002,6,2,0,0.06516844076927342
+269,Pgen Module for Python,Deferred,24-Aug-2001,6,2,0,0.04045019013937291
+286,Enhanced Argument Tuples,Deferred,03-Mar-2002,6,2,0,0.04045019013937291
+322,Reverse Iteration,Final,24-Sep-2003,6,1,0,0.03804702688368814
+278,Universal Newline Support,Final,14-Jan-2002,6,1,0,0.03633048170105616
+285,Adding a bool type,Final,08-Mar-2002,6,1,0,0.03633048170105616
+307,Extensions to the pickle protocol,Final,31-Jan-2003,6,1,0,0.03633048170105616
+311,Simplified Global Interpreter Lock Acquisition for Extensions,Final,05-Feb-2003,6,1,0,0.03633048170105616
+270,uniq method for list objects,Rejected,21-Aug-2001,6,0,1,0.03392731844537139
+283,Python 2.3 Release Schedule,Final,27-Feb-2002,6,0,12,0.03392731844537139
+320,Python 2.4 Release Schedule,Final,29-Jul-2003,6,0,7,0.03392731844537139
+329,Treating Builtins as Constants in the Standard Library,Rejected,18-Apr-2004,6,0,1,0.03392731844537139
+337,Logging Usage in the Standard Library,Deferred,02-Oct-2004,6,0,1,0.03392731844537139
+802,Display Syntax for the Empty Set,Draft,08-Aug-2025,6,0,1,0.03392731844537139
+3120,Using UTF-8 as the default source encoding,Final,15-Apr-2007,6,0,1,0.03392731844537139

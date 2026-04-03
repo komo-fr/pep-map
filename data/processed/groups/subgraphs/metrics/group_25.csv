@@ -1,16 +1,16 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-3102,Keyword-Only Arguments,Final,22-Apr-2006,25,4,0,0.2139153680615829
-3115,Metaclasses in Python 3000,Final,07-Mar-2007,25,3,1,0.10450869384159739
-3130,Access to Current Module/Class/Function,Rejected,22-Apr-2007,25,2,0,0.07927734933368769
-3135,New Super,Final,28-Apr-2007,25,2,2,0.06828009934396939
-3113,Removal of Tuple Parameter Unpacking,Final,02-Mar-2007,25,2,1,0.06761177208668175
-570,Python Positional-Only Parameters,Final,20-Jan-2018,25,1,3,0.06485668051612961
-422,Simpler customisation of class creation,Withdrawn,05-Jun-2012,25,2,3,0.06360630482182107
-487,Simpler customisation of class creation,Final,27-Feb-2015,25,2,3,0.06360630482182107
-367,New Super,Superseded,28-Apr-2007,25,1,2,0.05563318840882948
-372,Adding an ordered dictionary to collections,Final,15-Jun-2008,25,1,1,0.0492363816245521
-457,Notation For Positional-Only Parameters,Final,08-Oct-2013,25,1,1,0.04498952252665134
-520,Preserving Class Attribute Definition Order,Final,07-Jun-2016,25,1,2,0.04463593841911119
-375,Python 3.1 Release Schedule,Final,08-Feb-2009,25,0,1,0.0266141320645217
-736,Shorthand syntax for keyword arguments at invocation,Rejected,28-Nov-2023,25,0,1,0.0266141320645217
-3114,Renaming iterator.next() to iterator.__next__(),Final,04-Mar-2007,25,0,1,0.0266141320645217
+3119,Introducing Abstract Base Classes,Final,18-Apr-2007,25,2,2,0.18182917684026897
+358,"The ""bytes"" Object",Final,15-Feb-2006,25,3,2,0.17456344372142812
+3141,A Type Hierarchy for Numbers,Final,23-Apr-2007,25,3,1,0.113712509551364
+3137,Immutable Bytes and Mutable Buffer,Final,26-Sep-2007,25,2,1,0.08843946339259476
+3112,Bytes literals in Python 3000,Final,23-Feb-2007,25,1,1,0.08418946339259475
+461,Adding % formatting to bytes and bytearray,Final,13-Jan-2014,25,2,1,0.08197870925271888
+460,Add binary interpolation and formatting,Withdrawn,06-Jan-2014,25,1,1,0.0796879574139478
+239,Adding a Rational Type to Python,Rejected,11-Mar-2001,25,3,3,0.06330038585359654
+327,Decimal Data Type,Final,17-Oct-2003,25,2,1,0.04161378110151245
+240,Adding a Rational Literal to Python,Rejected,11-Mar-2001,25,2,2,0.032185109479973883
+296,Adding a bytes Object Type,Withdrawn,12-Jul-2002,25,1,1,0.018500000000000003
+228,Reworking Python's Numeric Model,Withdrawn,04-Nov-2000,25,0,1,0.010000000000000002
+298,The Locked Buffer Interface,Withdrawn,26-Jul-2002,25,0,1,0.010000000000000002
+313,Adding Roman Numeral Literals to Python,Rejected,01-Apr-2003,25,0,2,0.010000000000000002
+467,Minor API improvements for binary sequences,Draft,30-Mar-2014,25,0,2,0.010000000000000002

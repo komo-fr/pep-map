@@ -1,17 +1,18 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-435,Adding an Enum type to the Python standard library,Final,23-Feb-2013,19,3,1,0.21323593002450789
-354,Enumerations in Python,Superseded,20-Dec-2005,19,1,1,0.1999302032032277
-429,Python 3.4 Release Schedule,Final,17-Oct-2012,19,1,9,0.09271793654597993
-453,Explicit bootstrapping of pip in Python installations,Final,10-Aug-2013,19,4,1,0.08711156383924495
-615,Support for the IANA Time Zone Database in the Standard Library,Final,22-Feb-2020,19,1,2,0.06573531100996358
-431,Time zone support improvements,Superseded,11-Dec-2012,19,2,1,0.05536730264833343
-445,Add new APIs to customize Python memory allocators,Final,15-Jun-2013,19,2,0,0.05074511297160384
-433,Easier suppression of file descriptor inheritance,Superseded,10-Jan-2013,19,1,0,0.04198841706161796
-446,Make newly created file descriptors non-inheritable,Final,05-Aug-2013,19,1,1,0.027429788803184786
-447,Add __getdescriptor__ method to metaclass,Deferred,12-Jun-2013,19,1,0,0.027429788803184786
-450,Adding A Statistics Module To The Standard Library,Final,01-Aug-2013,19,1,0,0.027429788803184786
-454,Add a new tracemalloc module to trace Python memory allocations,Final,03-Sep-2013,19,1,1,0.027429788803184786
-455,Adding a key-transforming dictionary to collections,Rejected,13-Sep-2013,19,1,0,0.027429788803184786
-477,Backport ensurepip (PEP 453) to Python 2.7,Final,26-Aug-2014,19,0,1,0.0186730928931989
-661,Sentinel Values,Deferred,06-Jun-2021,19,0,1,0.0186730928931989
-711,PyBI: a standard format for distributing Python Binaries,Draft,06-Apr-2023,19,0,1,0.0186730928931989
+646,Variadic Generics,Final,16-Sep-2020,19,5,1,0.21918975096484195
+637,Support for indexing with keyword arguments,Rejected,24-Aug-2020,19,1,1,0.20550141086573365
+589,TypedDict: Type Hints for Dictionaries with a Fixed Set of Keys,Final,20-Mar-2019,19,6,0,0.09266032430205497
+585,Type Hinting Generics In Standard Collections,Final,03-Mar-2019,19,3,0,0.0834955885102546
+604,Allow writing union types as ``X | Y``,Final,28-Aug-2019,19,4,1,0.06421124617166296
+692,Using TypedDict for more precise \*\*kwargs typing,Final,29-May-2022,19,4,3,0.046567571845527
+655,Marking individual TypedDict items as required or potentially-missing,Final,30-Jan-2021,19,2,2,0.04465366037377793
+705,TypedDict: Read-only items,Final,07-Nov-2022,19,2,3,0.04327959696865296
+612,Parameter Specification Variables,Final,18-Dec-2019,19,3,0,0.03131264104063461
+728,TypedDict with Typed Extra Items,Accepted,12-Sep-2023,19,2,3,0.027406659384989665
+764,Inline typed dictionaries,Draft,25-Oct-2024,19,1,4,0.023276313086584247
+677,Callable Type Syntax,Rejected,13-Dec-2021,19,1,4,0.02246044223911424
+645,Allow writing optional types as ``x?``,Withdrawn,25-Aug-2020,19,0,1,0.019196958849234218
+747,Annotating Type Forms,Final,27-May-2024,19,0,1,0.019196958849234218
+767,Annotating Read-Only Attributes,Draft,18-Nov-2024,19,0,1,0.019196958849234218
+821,Support for unpacking TypedDicts in Callable type hints,Draft,12-Jan-2026,19,0,5,0.019196958849234218
+827,Type Manipulation,Draft,27-Feb-2026,19,0,4,0.019196958849234218

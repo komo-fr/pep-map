@@ -1,21 +1,20 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-409,Suppressing exception context,Final,26-Jan-2012,8,3,1,0.2172795335404454
-415,Implement context suppression with exception attributes,Final,26-Feb-2012,8,3,1,0.2172795335404454
-399,Pure Python/C Accelerator Module Compatibility Requirements,Final,04-Apr-2011,8,4,0,0.05910610347762081
-3003,Python Language Moratorium,Final,21-Oct-2009,8,2,0,0.05509781198718669
-3155,Qualified name for classes and functions,Final,29-Oct-2011,8,3,0,0.05275128376302941
-421,Adding sys.implementation,Final,26-Apr-2012,8,2,2,0.04147779196085841
-3139,"Cleaning out sys and the ""interpreter"" module",Rejected,04-Apr-2008,8,1,0,0.03852817846198944
-418,"Add monotonic time, performance counter, and process time functions",Final,26-Mar-2012,8,2,0,0.03259524019034531
-398,Python 3.3 Release Schedule,Final,23-Mar-2011,8,1,9,0.02978241871574014
-407,New release cycle and introducing long-term support versions,Deferred,12-Jan-2012,8,1,1,0.02978241871574014
-410,Use decimal.Decimal type for timestamps,Rejected,01-Feb-2012,8,1,0,0.02978241871574014
-362,Function Signature Object,Final,21-Aug-2006,8,1,0,0.023712688419832213
-417,Including mock in the Standard Library,Final,12-Mar-2012,8,1,0,0.023712688419832213
-3154,Pickle protocol version 4,Final,11-Aug-2011,8,1,1,0.023712688419832213
-392,Python 3.2 Release Schedule,Final,30-Dec-2009,8,0,2,0.02089986694522704
-413,Faster evolution of the Python Standard Library,Withdrawn,24-Feb-2012,8,0,2,0.02089986694522704
-490,Chain exceptions at C level,Rejected,25-Mar-2015,8,0,2,0.02089986694522704
-564,Add new time functions with nanosecond resolution,Final,16-Oct-2017,8,0,2,0.02089986694522704
-737,C API to format a type fully qualified name,Final,29-Nov-2023,8,0,2,0.02089986694522704
-739,``build-details.json`` 1.0 — a static description file for Python build details,Accepted,19-Dec-2023,8,0,1,0.02089986694522704
+241,Metadata for Python Software Packages,Superseded,12-Mar-2001,8,9,0,0.18048618640921146
+345,Metadata for Python Software Packages 1.2,Superseded,28-Apr-2005,8,8,4,0.10072635783299112
+301,Package Index and Metadata for Distutils,Final,24-Oct-2002,8,3,2,0.08556694742405525
+314,Metadata for Python Software Packages 1.1,Superseded,12-Apr-2003,8,6,2,0.08020490664052708
+376,Database of Installed Python Distributions,Final,22-Feb-2009,8,4,4,0.07674440092821766
+440,Version Identification and Dependency Specification,Final,18-Mar-2013,8,5,5,0.0699565840031972
+262,A Database of Installed Python Packages,Rejected,08-Jul-2001,8,2,3,0.06864383935531948
+243,Module Repository Upload Mechanism,Withdrawn,18-Mar-2001,8,1,1,0.05233522704869022
+426,Metadata for Python Software Packages 2.0,Withdrawn,30-Aug-2012,8,4,7,0.04389991589799083
+386,Changing the version comparison module in Distutils,Superseded,04-Jun-2009,8,4,2,0.04224168373311106
+459,Standard Metadata Extensions for Python Software Packages,Withdrawn,11-Nov-2013,8,2,2,0.03319254876019548
+668,Marking Python base environments as “externally managed”,Accepted,18-May-2021,8,1,2,0.029542967751648726
+627,Recording installed projects,Final,15-Jul-2020,8,1,1,0.028525237045919742
+566,Metadata for Python Software Packages 2.1,Final,01-Dec-2017,8,2,5,0.028086870707547618
+390,Static metadata for Distutils,Rejected,10-Oct-2009,8,0,3,0.015969265292275353
+396,Module Version Numbers,Withdrawn,16-Mar-2011,8,0,3,0.015969265292275353
+496,Environment Markers,Rejected,03-Jul-2015,8,0,3,0.015969265292275353
+704,Require virtual environments by default for package installers,Withdrawn,16-Jan-2023,8,0,1,0.015969265292275353
+819,JSON Package Metadata,Draft,18-Dec-2025,8,0,2,0.015969265292275353

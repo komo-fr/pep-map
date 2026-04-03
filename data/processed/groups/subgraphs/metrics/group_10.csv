@@ -1,19 +1,19 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-343,"The ""with"" Statement",Final,13-May-2005,10,7,5,0.15656401145926732
-310,Reliable Acquisition/Release Pairs,Rejected,18-Dec-2002,10,4,2,0.08868946303877766
-342,Coroutines via Enhanced Generators,Final,10-May-2005,10,5,4,0.08184249774036995
-319,Python Synchronize/Asynchronize Block,Rejected,24-Feb-2003,10,2,2,0.07831200218238683
-255,Simple Generators,Final,18-May-2001,10,4,2,0.07501993519556137
-234,Iterators,Final,30-Jan-2001,10,4,0,0.06707983769154917
-325,Resource-Release Support for Generators,Rejected,25-Aug-2003,10,6,3,0.06539141574434258
-288,Generators Attributes and Exceptions,Withdrawn,21-Mar-2002,10,4,2,0.06471144880691389
-340,Anonymous Block Statements,Rejected,27-Apr-2005,10,3,6,0.0637657752439079
-220,"Coroutines, Generators, Continuations",Rejected,14-Aug-2000,10,1,0,0.05300988173127835
-219,Stackless Python,Deferred,14-Aug-2000,10,1,1,0.04588813516340681
-346,"User Defined (""``with``"") Statements",Withdrawn,06-May-2005,10,1,6,0.04061984593287668
-3333,Python Web Server Gateway Interface v1.0.1,Final,26-Sep-2010,10,3,4,0.03720889024843403
-333,Python Web Server Gateway Interface v1.0,Final,07-Dec-2003,10,2,3,0.025879407288789562
-334,Simple Coroutines via SuspendIteration,Withdrawn,26-Aug-2004,10,0,2,0.01400436313303444
-377,Allow __enter__() methods to skip the statement body,Rejected,08-Mar-2009,10,0,1,0.01400436313303444
-414,Explicit Unicode Literal for Python 3.3,Final,15-Feb-2012,10,0,1,0.01400436313303444
-444,Python Web3 Interface,Deferred,19-Jul-2010,10,0,3,0.01400436313303444
+549,Instance Descriptors,Rejected,04-Sep-2017,10,1,0,0.08937502138500361
+315,Enhanced While Loop,Rejected,25-Apr-2003,10,1,0,0.08599698105241198
+540,Add a new UTF-8 Mode,Final,05-Jan-2016,10,4,3,0.08242813840184698
+562,Module __getattr__ and __dir__,Final,09-Sep-2017,10,3,1,0.0745776895005828
+548,More Flexible Loop Control,Rejected,05-Sep-2017,10,1,1,0.07060127548873486
+528,Change Windows console encoding to UTF-8,Final,27-Aug-2016,10,2,0,0.06806359368214461
+529,Change Windows filesystem encoding to UTF-8,Final,27-Aug-2016,10,2,0,0.06806359368214461
+538,Coercing the legacy C locale to a UTF-8 based locale,Final,28-Dec-2016,10,3,3,0.06608338608650217
+456,Secure and interchangeable hash algorithm,Final,27-Sep-2013,10,1,0,0.06230469204557719
+587,Python Initialization Configuration,Final,27-Mar-2019,10,2,4,0.05800479811383508
+553,Built-in breakpoint(),Final,05-Sep-2017,10,2,1,0.05249026526110742
+432,Restructuring the CPython startup sequence,Withdrawn,28-Dec-2012,10,2,2,0.049355005851633146
+552,Deterministic pycs,Final,04-Sep-2017,10,2,1,0.042728778579790544
+537,Python 3.7 Release Schedule,Final,23-Dec-2016,10,0,5,0.02598535617373696
+559,Built-in noop(),Rejected,08-Sep-2017,10,0,1,0.02598535617373696
+713,Callable Modules,Rejected,20-Apr-2023,10,0,1,0.02598535617373696
+726,Module ``__setattr__`` and ``__delattr__``,Rejected,24-Aug-2023,10,0,1,0.02598535617373696
+741,Python Configuration C API,Final,18-Jan-2024,10,0,2,0.02598535617373696

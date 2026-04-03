@@ -1,11 +1,11 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-703,Making the Global Interpreter Lock Optional in CPython,Accepted,09-Jan-2023,34,4,0,0.17041679946029445
-652,Maintaining the Stable ABI,Final,09-Feb-2021,34,3,0,0.14838378433991153
-803,"""abi3t"": Stable ABI for Free-Threaded Builds",Draft,19-Aug-2025,34,2,6,0.12997141345728389
-515,Underscores in Numeric Literals,Final,10-Feb-2016,34,1,0,0.11463550271350935
-697,Limited C API for Extending Opaque Types,Final,23-Aug-2022,34,2,1,0.08020713253761268
-779,Criteria for supported status for free-threaded Python,Final,13-Mar-2025,34,2,1,0.08020713253761268
-793,PyModExport: A new entry point for C extension modules,Accepted,23-May-2025,34,2,1,0.08020713253761268
-641,Using an underscore in the version portion of Python 3.10 compatibility tags,Rejected,20-Oct-2020,34,1,1,0.07387492059143369
-809,Stable ABI for the Future,Draft,19-Sep-2025,34,1,6,0.07025427635367844
-2026,Calendar versioning for Python,Rejected,11-Jun-2024,34,0,2,0.05184190547105079
+505,None-aware operators,Deferred,18-Sep-2015,34,2,2,0.20447215743587988
+531,Existence checking operators,Withdrawn,25-Oct-2016,34,2,1,0.15749887152629738
+532,A circuit breaking protocol and binary operators,Deferred,30-Oct-2016,34,2,4,0.15464201722149573
+335,Overloadable Boolean Operators,Rejected,29-Aug-2004,34,3,0,0.11664188545081114
+510,Specialize functions with guards,Rejected,04-Jan-2016,34,2,0,0.08344755386290215
+535,Rich comparison chaining,Deferred,12-Nov-2016,34,1,2,0.07059885140500792
+509,Add a private version to dict,Superseded,04-Jan-2016,34,1,2,0.0698146281080241
+412,Key-Sharing Dictionary,Final,08-Feb-2012,34,1,0,0.06740899884502848
+511,API for code transformers,Rejected,04-Jan-2016,34,0,2,0.03773751807227674
+699,Remove private dict version field added in PEP 509,Accepted,03-Oct-2022,34,0,1,0.03773751807227674

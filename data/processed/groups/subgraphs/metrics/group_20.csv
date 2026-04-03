@@ -1,17 +1,18 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-3121,Extension Module Initialization and Finalization,Final,27-Apr-2007,20,4,0,0.19170599451025197
-489,Multi-phase extension module initialization,Final,11-Aug-2013,20,6,1,0.13197993485268178
-3118,Revising the buffer protocol,Final,28-Aug-2006,20,4,0,0.08744082011477544
-554,Multiple Interpreters in the Stdlib,Superseded,05-Sep-2017,20,3,7,0.07713071619530346
-573,Module State Access from C Extension Methods,Final,02-Jun-2016,20,4,2,0.07536872051102508
-684,A Per-Interpreter GIL,Final,08-Mar-2022,20,2,6,0.06499888173549928
-734,Multiple Interpreters in the Stdlib,Final,06-Nov-2023,20,2,2,0.0628615906305857
-683,"Immortal Objects, Using a Fixed Refcount",Final,10-Feb-2022,20,2,0,0.047490420787426865
-630,Isolating Extension Modules,Final,25-Aug-2020,20,2,2,0.04631765735883516
-436,The Argument Clinic DSL,Final,22-Feb-2013,20,1,0,0.041206135965169206
-437,"A DSL for specifying signatures, annotations and argument converters",Rejected,11-Mar-2013,20,0,2,0.028916521223074323
-547,Running extension modules using the -m option,Deferred,25-May-2017,20,0,1,0.028916521223074323
-574,Pickle protocol 5 with out-of-band data,Final,23-Mar-2018,20,0,2,0.028916521223074323
-687,Isolating modules in the standard library,Accepted,04-Apr-2022,20,0,3,0.028916521223074323
-688,Making the buffer protocol accessible in Python,Final,23-Apr-2022,20,0,1,0.028916521223074323
-797,Shared Object Proxies,Draft,08-Aug-2025,20,0,1,0.028916521223074323
+384,Defining a Stable ABI,Final,17-May-2009,20,7,1,0.3414875054195584
+3149,ABI version tagged .so files,Final,09-Jul-2010,20,2,1,0.3048978875754193
+580,The C call protocol,Rejected,14-Jun-2018,20,4,5,0.0651509649150155
+393,Flexible String Representation,Final,24-Jan-2010,20,3,1,0.039492254659607054
+590,Vectorcall: a fast calling protocol for CPython,Final,29-Mar-2019,20,3,3,0.03866409098562586
+576,Rationalize Built-in function classes,Withdrawn,10-May-2018,20,3,1,0.0371861700037964
+579,Refactoring C functions and methods,Final,04-Jun-2018,20,2,5,0.02877227209239417
+575,Unifying function/method classes,Withdrawn,27-Mar-2018,20,2,3,0.026231344148342155
+623,Remove wstr from Unicode,Final,25-Jun-2020,20,1,1,0.018989128296367265
+620,Hide implementation details from the C API,Withdrawn,19-Jun-2020,20,1,3,0.01462676098503965
+689,Unstable C API tier,Final,22-Apr-2022,20,1,1,0.01462676098503965
+442,Safe object finalization,Final,18-May-2013,20,1,0,0.014408642619473267
+670,Convert macros to functions in the Python C API,Final,19-Oct-2021,20,1,0,0.014408642619473267
+624,Remove Py_UNICODE encoder APIs,Final,06-Jul-2020,20,0,1,0.010264393673712034
+720,Cross-compiling Python packages,Draft,01-Jul-2023,20,0,2,0.010264393673712034
+733,An Evaluation of Python's Public C API,Final,16-Oct-2023,20,0,2,0.010264393673712034
+756,Add PyUnicode_Export() and PyUnicode_Import() C functions,Withdrawn,13-Sep-2024,20,0,1,0.010264393673712034

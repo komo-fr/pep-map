@@ -1,4 +1,5 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-214,Extended Print Statement,Final,24-Jul-2000,38,1,0,0.37012974744707666
-223,Change the Meaning of ``\x`` Escapes,Final,20-Aug-2000,38,1,0,0.37012974744707666
-200,Python 2.0 Release Schedule,Final,12-Jul-2000,38,0,2,0.25974050510584634
+667,Consistent views of namespaces,Final,30-Jul-2021,38,1,2,0.35638476019586784
+558,Defined semantics for locals(),Withdrawn,08-Sep-2017,38,2,1,0.3151709355790946
+709,Inlined comprehensions,Final,24-Feb-2023,38,1,0,0.23995416475261291
+577,Augmented Assignment Expressions,Withdrawn,14-May-2018,38,0,1,0.08849013947242475
