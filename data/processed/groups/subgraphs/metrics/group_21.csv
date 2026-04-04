@@ -1,17 +1,17 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-387,Backwards Compatibility Policy,Active,18-Jun-2009,21,6,2,0.18933203776023888
-291,Backward Compatibility for the Python 2 Standard Library,Superseded,06-Jun-2002,21,1,0,0.10686155311926102
-702,Marking deprecations using the type system,Final,30-Dec-2022,21,1,2,0.10686155311926102
-206,Python Advanced Library,Withdrawn,14-Jul-2000,21,1,0,0.08743387366709371
-558,Defined semantics for locals(),Withdrawn,08-Sep-2017,21,2,2,0.07328517546637561
-594,Removing dead batteries from the standard library,Final,20-May-2019,21,1,1,0.07180993230461896
-667,Consistent views of namespaces,Final,30-Jul-2021,21,1,2,0.05753999407822602
-709,Inlined comprehensions,Final,24-Feb-2023,21,1,0,0.05084964361819593
-706,Filter for tarfile.extractall,Final,09-Feb-2023,21,1,1,0.04882992849447586
-597,Add optional EncodingWarning,Final,05-Jun-2019,21,1,0,0.03761216257038602
-731,C API Working Group Charter,Active,11-Oct-2023,21,1,0,0.03761216257038602
-577,Augmented Assignment Expressions,Withdrawn,14-May-2018,21,0,1,0.026394396646296177
-674,Disallow using macros as l-values,Deferred,30-Nov-2021,21,0,1,0.026394396646296177
-686,Make UTF-8 mode default,Final,18-Mar-2022,21,0,2,0.026394396646296177
-721,Using tarfile.data_filter for source distribution extraction,Final,12-Jul-2023,21,0,1,0.026394396646296177
-743,Add Py_OMIT_LEGACY_API to the Python C API,Rejected,11-Mar-2024,21,0,2,0.026394396646296177
+409,Suppressing exception context,Final,26-Jan-2012,21,3,1,0.2528922069717724
+415,Implement context suppression with exception attributes,Final,26-Feb-2012,21,3,1,0.2528922069717724
+3155,Qualified name for classes and functions,Final,29-Oct-2011,21,3,0,0.06116426321392579
+399,Pure Python/C Accelerator Module Compatibility Requirements,Final,04-Apr-2011,21,3,0,0.05857051916034029
+421,Adding sys.implementation,Final,26-Apr-2012,21,2,2,0.048548469823240153
+3139,"Cleaning out sys and the ""interpreter"" module",Rejected,04-Apr-2008,21,1,0,0.04560105040968232
+418,"Add monotonic time, performance counter, and process time functions",Final,26-Mar-2012,21,2,0,0.03793708629997455
+410,Use decimal.Decimal type for timestamps,Rejected,01-Feb-2012,21,1,0,0.03557900107258219
+362,Function Signature Object,Final,21-Aug-2006,21,1,0,0.027325702776708937
+417,Including mock in the Standard Library,Final,12-Mar-2012,21,1,0,0.027325702776708937
+3154,Pickle protocol version 4,Final,11-Aug-2011,21,1,1,0.027325702776708937
+398,Python 3.3 Release Schedule,Final,23-Mar-2011,21,0,9,0.024967617549316576
+490,Chain exceptions at C level,Rejected,25-Mar-2015,21,0,2,0.024967617549316576
+564,Add new time functions with nanosecond resolution,Final,16-Oct-2017,21,0,2,0.024967617549316576
+737,C API to format a type fully qualified name,Final,29-Nov-2023,21,0,2,0.024967617549316576
+739,``build-details.json`` 1.0 — a static description file for Python build details,Accepted,19-Dec-2023,21,0,1,0.024967617549316576

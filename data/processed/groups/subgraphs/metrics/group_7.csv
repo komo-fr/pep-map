@@ -1,22 +1,21 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-591,Adding a final qualifier to typing,Final,15-Mar-2019,7,5,1,0.21618164185738073
-586,Literal Types,Final,14-Mar-2019,7,3,1,0.20969182539329906
-646,Variadic Generics,Final,16-Sep-2020,7,5,1,0.10173661552967482
-637,Support for indexing with keyword arguments,Rejected,24-Aug-2020,7,1,1,0.09551915706481576
-578,Python Runtime Audit Hooks,Final,16-Jun-2018,7,2,1,0.06718587312420565
-551,Security transparency in the Python runtime,Withdrawn,23-Aug-2017,7,1,1,0.06614871190369964
-589,TypedDict: Type Hints for Dictionaries with a Fixed Set of Keys,Final,20-Mar-2019,7,6,2,0.03522999855449058
-585,Type Hinting Generics In Standard Collections,Final,03-Mar-2019,7,3,0,0.03211674710531749
-604,Allow writing union types as ``X | Y``,Final,28-Aug-2019,7,3,1,0.021765314807526834
-692,Using TypedDict for more precise \*\*kwargs typing,Final,29-May-2022,7,4,3,0.020484571126723007
-705,TypedDict: Read-only items,Final,07-Nov-2022,7,2,4,0.02037987587599288
-655,Marking individual TypedDict items as required or potentially-missing,Final,30-Jan-2021,7,2,2,0.019174318326134514
-612,Parameter Specification Variables,Final,18-Dec-2019,7,3,0,0.014744771186687622
-728,TypedDict with Typed Extra Items,Accepted,12-Sep-2023,7,2,3,0.01290548838347429
-764,Inline typed dictionaries,Draft,25-Oct-2024,7,1,4,0.010960554870937996
-677,Callable Type Syntax,Rejected,13-Dec-2021,7,1,4,0.010576370473399963
-569,Python 3.8 Release Schedule,Final,27-Jan-2018,7,0,4,0.009039632883247831
-698,Override Decorator for Static Typing,Final,05-Sep-2022,7,0,1,0.009039632883247831
-767,Annotating Read-Only Attributes,Draft,18-Nov-2024,7,0,1,0.009039632883247831
-821,Support for unpacking TypedDicts in Callable type hints,Draft,12-Jan-2026,7,0,5,0.009039632883247831
-827,Type Manipulation,Draft,27-Feb-2026,7,0,4,0.009039632883247831
+275,Switching on Multiple Values,Rejected,10-Nov-2001,7,2,1,0.1750595405234572
+3103,A Switch/Case Statement,Rejected,25-Jun-2006,7,2,1,0.1750595405234572
+448,Additional Unpacking Generalizations,Final,29-Jun-2013,7,2,0,0.06310693206962355
+634,Structural Pattern Matching: Specification,Final,12-Sep-2020,7,6,4,0.05798713380042329
+635,Structural Pattern Matching: Motivation and Rationale,Final,12-Sep-2020,7,5,7,0.05783528337569612
+572,Assignment Expressions,Final,28-Feb-2018,7,4,0,0.057800507210539476
+622,Structural Pattern Matching,Superseded,23-Jun-2020,7,4,3,0.05549899632080185
+636,Structural Pattern Matching: Tutorial,Final,12-Sep-2020,7,6,3,0.054786510112672895
+584,Add Union Operators To dict,Final,01-Mar-2019,7,2,1,0.04198772942682251
+617,New PEG parser for CPython,Final,24-Mar-2020,7,2,0,0.04198772942682251
+640,Unused variable syntax,Rejected,04-Oct-2020,7,2,4,0.028599058174798152
+626,Precise line numbers for debugging and other tools.,Final,15-Jul-2020,7,2,0,0.027027430993980216
+534,Improved Errors for Missing Standard Library Modules,Withdrawn,05-Sep-2016,7,1,0,0.02157609453256027
+613,Explicit Type Aliases,Final,21-Jan-2020,7,1,0,0.02157609453256027
+618,Add Optional Length-Checking To zip,Final,01-May-2020,7,1,0,0.02157609453256027
+644,Require OpenSSL 1.1.1 or newer,Final,27-Oct-2020,7,1,0,0.02157609453256027
+619,Python 3.10 Release Schedule,Active,25-May-2020,7,0,7,0.019239807477666005
+642,Explicit Pattern Syntax for Structural Pattern Matching,Rejected,26-Sep-2020,7,0,7,0.019239807477666005
+653,Precise Semantics for Pattern Matching,Draft,09-Feb-2021,7,0,3,0.019239807477666005
+798,Unpacking in Comprehensions,Accepted,19-Jul-2025,7,0,2,0.019239807477666005

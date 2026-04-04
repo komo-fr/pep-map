@@ -1,9 +1,8 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-505,None-aware operators,Deferred,18-Sep-2015,35,3,2,0.27761211955203147
-531,Existence checking operators,Withdrawn,25-Oct-2016,35,2,1,0.1963295417231678
-532,A circuit breaking protocol and binary operators,Deferred,30-Oct-2016,35,2,4,0.1893817935689624
-335,Overloadable Boolean Operators,Rejected,29-Aug-2004,35,3,0,0.12783470831764548
-535,Rich comparison chaining,Deferred,12-Nov-2016,35,1,2,0.07834530582229651
-510,Specialize functions with guards,Rejected,04-Jan-2016,35,1,0,0.05429418792157705
-511,API for code transformers,Rejected,04-Jan-2016,35,0,2,0.0381011715471596
-645,Allow writing optional types as ``x?``,Withdrawn,25-Aug-2020,35,0,1,0.0381011715471596
+253,Subtyping Built-in Types,Final,14-May-2001,35,2,2,0.2943477695230242
+252,Making Types Look More Like Classes,Final,19-Apr-2001,35,3,1,0.26979545214028494
+254,Making Classes Look More Like Types,Rejected,18-Jun-2001,35,1,0,0.17576575762464916
+213,Attribute Access Handlers,Deferred,21-Jul-2000,35,1,1,0.0937342263620547
+237,Unifying Long Integers and Integers,Final,11-Mar-2001,35,1,0,0.06502275517801034
+231,__findattr__(),Rejected,30-Nov-2000,35,0,1,0.05066701958598817
+251,Python 2.2 Release Schedule,Final,17-Apr-2001,35,0,3,0.05066701958598817

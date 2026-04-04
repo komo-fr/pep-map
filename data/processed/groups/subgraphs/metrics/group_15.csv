@@ -1,18 +1,18 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-211,Adding A New Outer Product Operator,Rejected,15-Jul-2000,15,4,3,0.15707468085636564
-461,Adding % formatting to bytes and bytearray,Final,13-Jan-2014,15,3,1,0.14860331488917985
-465,A dedicated infix operator for matrix multiplication,Final,20-Feb-2014,15,5,2,0.14366505695572906
-460,Add binary interpolation and formatting,Withdrawn,06-Jan-2014,15,1,1,0.1409219447529601
-225,Elementwise/Objectwise Operators,Rejected,19-Sep-2000,15,3,2,0.13274095376523737
-209,Multi-dimensional Arrays,Withdrawn,03-Jan-2001,15,1,4,0.05912018633505975
-207,Rich Comparisons,Final,25-Jul-2000,15,2,0,0.05028060327394605
-208,Reworking the Coercion Model,Final,04-Dec-2000,15,1,1,0.02717869543672069
-441,Improving Python ZIP Application Support,Final,30-Mar-2013,15,1,0,0.016390399054413037
-471,os.scandir() function -- a better and faster directory iterator,Final,30-May-2014,15,1,0,0.016390399054413037
-475,Retry system calls failing with EINTR,Final,29-Jul-2014,15,1,0,0.016390399054413037
-485,A Function for testing approximate equality,Final,20-Jan-2015,15,1,0,0.016390399054413037
-488,Elimination of PYO files,Final,20-Feb-2015,15,1,1,0.016390399054413037
-203,Augmented Assignments,Final,13-Jul-2000,15,0,1,0.014615642115684026
-467,Minor API improvements for binary sequences,Draft,30-Mar-2014,15,0,1,0.014615642115684026
-478,Python 3.5 Release Schedule,Final,22-Sep-2014,15,0,7,0.014615642115684026
-820,PySlot: Unified slot system for the C API,Draft,19-Dec-2025,15,0,1,0.014615642115684026
+387,Backwards Compatibility Policy,Active,18-Jun-2009,15,6,2,0.17190411692093419
+291,Backward Compatibility for the Python 2 Standard Library,Superseded,06-Jun-2002,15,1,0,0.10133864878395243
+702,Marking deprecations using the type system,Final,30-Dec-2022,15,1,2,0.10133864878395243
+206,Python Advanced Library,Withdrawn,14-Jul-2000,15,1,0,0.08892582325679775
+594,Removing dead batteries from the standard library,Final,20-May-2019,15,1,1,0.07134752154436472
+515,Underscores in Numeric Literals,Final,10-Feb-2016,15,1,0,0.05912715604498101
+657,Include Fine Grained Error Locations in Tracebacks,Final,08-May-2021,15,1,0,0.05912715604498101
+706,Filter for tarfile.extractall,Final,09-Feb-2023,15,1,1,0.05231653192694543
+597,Add optional EncodingWarning,Final,05-Jun-2019,15,1,0,0.04029782347357602
+731,C API Working Group Charter,Active,11-Oct-2023,15,1,0,0.04029782347357602
+641,Using an underscore in the version portion of Python 3.10 compatibility tags,Rejected,20-Oct-2020,15,1,1,0.03629158732245289
+664,Python 3.11 Release Schedule,Active,12-Jul-2021,15,1,1,0.03629158732245289
+674,Disallow using macros as l-values,Deferred,30-Nov-2021,15,0,1,0.02827911502020662
+686,Make UTF-8 mode default,Final,18-Mar-2022,15,0,2,0.02827911502020662
+721,Using tarfile.data_filter for source distribution extraction,Final,12-Jul-2023,15,0,1,0.02827911502020662
+743,Add Py_OMIT_LEGACY_API to the Python C API,Rejected,11-Mar-2024,15,0,2,0.02827911502020662
+2026,Calendar versioning for Python,Rejected,11-Jun-2024,15,0,3,0.02827911502020662

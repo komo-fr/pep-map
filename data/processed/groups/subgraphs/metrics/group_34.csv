@@ -1,11 +1,11 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-659,Specializing Adaptive Interpreter,Final,13-Apr-2021,34,3,0,0.19901774575738038
-412,Key-Sharing Dictionary,Final,08-Feb-2012,34,2,0,0.17556069562499496
-351,The freeze protocol,Rejected,14-Apr-2005,34,2,0,0.11646543410014565
-509,Add a private version to dict,Superseded,04-Jan-2016,34,1,1,0.09075226464094974
-416,Add a frozendict builtin type,Rejected,29-Feb-2012,34,1,2,0.08173014121458051
-603,Adding a frozenmap type to collections,Draft,12-Sep-2019,34,1,0,0.08173014121458051
-699,Remove private dict version field added in PEP 509,Accepted,03-Oct-2022,34,0,2,0.06368589436184209
-707,A simplified signature for __exit__ and __aexit__,Rejected,18-Feb-2023,34,0,1,0.06368589436184209
-799,A dedicated ``profiling`` package for organizing Python profiling tools,Accepted,21-Jul-2025,34,0,1,0.06368589436184209
-814,Add frozendict built-in type,Final,12-Nov-2025,34,0,3,0.06368589436184209
+505,None-aware operators,Deferred,18-Sep-2015,34,2,2,0.20447215743587988
+531,Existence checking operators,Withdrawn,25-Oct-2016,34,2,1,0.15749887152629738
+532,A circuit breaking protocol and binary operators,Deferred,30-Oct-2016,34,2,4,0.15464201722149573
+335,Overloadable Boolean Operators,Rejected,29-Aug-2004,34,3,0,0.11664188545081114
+510,Specialize functions with guards,Rejected,04-Jan-2016,34,2,0,0.08344755386290215
+535,Rich comparison chaining,Deferred,12-Nov-2016,34,1,2,0.07059885140500792
+509,Add a private version to dict,Superseded,04-Jan-2016,34,1,2,0.0698146281080241
+412,Key-Sharing Dictionary,Final,08-Feb-2012,34,1,0,0.06740899884502848
+511,API for code transformers,Rejected,04-Jan-2016,34,0,2,0.03773751807227674
+699,Remove private dict version field added in PEP 509,Accepted,03-Oct-2022,34,0,1,0.03773751807227674

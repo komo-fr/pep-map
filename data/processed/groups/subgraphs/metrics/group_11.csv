@@ -1,19 +1,19 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-602,Annual Release Cycle for Python,Active,04-Jun-2019,11,11,3,0.2543231915454472
-596,Python 3.9 Release Schedule,Final,04-Jun-2019,11,3,3,0.13388698442554087
-598,Introducing incremental feature releases,Withdrawn,15-Jun-2019,11,3,3,0.10657639480559053
-719,Python 3.13 Release Schedule,Active,26-May-2023,11,1,1,0.08947281540606879
-605,A rolling feature release stream for CPython,Rejected,20-Sep-2019,11,4,4,0.06690432479246812
-614,Relaxing Grammar Restrictions On Decorators,Final,10-Feb-2020,11,1,0,0.05535068221352091
-616,String methods to remove prefixes and suffixes,Final,19-Mar-2020,11,1,0,0.05535068221352091
-20,The Zen of Python,Active,19-Aug-2004,11,3,0,0.03806641959585356
-607,Reducing CPython's Feature Delivery Latency,Final,11-Oct-2019,11,1,2,0.031632611428970295
-565,Show DeprecationWarning in __main__,Final,12-Nov-2017,11,2,0,0.023263028255975204
-606,Python Compatibility Version,Rejected,18-Oct-2019,11,1,6,0.02037636927669971
-3002,Procedure for Backwards-Incompatible Changes,Final,27-Mar-2006,11,1,0,0.020302349987999534
-608,Coordinated Python release,Rejected,25-Oct-2019,11,0,5,0.017415691008724036
-693,Python 3.12 Release Schedule,Active,24-May-2022,11,0,1,0.017415691008724036
-745,Python 3.14 Release Schedule,Active,24-Apr-2024,11,0,1,0.017415691008724036
-790,Python 3.15 Release Schedule,Active,26-Apr-2025,11,0,1,0.017415691008724036
-826,Python 3.16 Release Schedule,Active,23-Feb-2026,11,0,1,0.017415691008724036
-3117,Postfix type declarations,Rejected,01-Apr-2007,11,0,1,0.017415691008724036
+3121,Extension Module Initialization and Finalization,Final,27-Apr-2007,11,4,0,0.18363815045988144
+489,Multi-phase extension module initialization,Final,11-Aug-2013,11,8,1,0.13836213184480659
+684,A Per-Interpreter GIL,Final,08-Mar-2022,11,3,6,0.06769093874414153
+573,Module State Access from C Extension Methods,Final,02-Jun-2016,11,4,2,0.062271246237634914
+652,Maintaining the Stable ABI,Final,09-Feb-2021,11,3,0,0.05948506344780255
+703,Making the Global Interpreter Lock Optional in CPython,Accepted,09-Jan-2023,11,3,3,0.05948506344780255
+683,"Immortal Objects, Using a Fixed Refcount",Final,10-Feb-2022,11,3,0,0.0564205967758821
+554,Multiple Interpreters in the Stdlib,Superseded,05-Sep-2017,11,2,6,0.05292844912974419
+734,Multiple Interpreters in the Stdlib,Final,06-Nov-2023,11,2,2,0.04908372274666756
+803,"""abi3t"": Stable ABI for Free-Threaded Builds",Accepted,19-Aug-2025,11,2,6,0.04013406883198328
+630,Isolating Extension Modules,Final,25-Aug-2020,11,2,2,0.038437327476601876
+697,Limited C API for Extending Opaque Types,Final,23-Aug-2022,11,2,1,0.03215423562623622
+779,Criteria for supported status for free-threaded Python,Final,13-Mar-2025,11,2,1,0.03215423562623622
+793,PyModExport: A new entry point for C extension modules,Accepted,23-May-2025,11,2,2,0.03215423562623622
+809,Stable ABI for the Future,Draft,19-Sep-2025,11,1,6,0.02816431902336269
+547,Running extension modules using the -m option,Deferred,25-May-2017,11,0,1,0.022478738318326592
+687,Isolating modules in the standard library,Accepted,04-Apr-2022,11,0,3,0.022478738318326592
+797,Shared Object Proxies,Draft,08-Aug-2025,11,0,1,0.022478738318326592

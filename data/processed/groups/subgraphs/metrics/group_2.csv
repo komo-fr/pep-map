@@ -1,27 +1,29 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-484,Type Hints,Final,29-Sep-2014,2,13,6,0.241690346272143
-526,Syntax for Variable Annotations,Final,09-Aug-2016,2,8,1,0.11833457755611236
-3107,Function Annotations,Final,02-Dec-2006,2,7,0,0.11137324164962283
-563,Postponed Evaluation of Annotations,Superseded,08-Sep-2017,2,7,8,0.07512230799767072
-483,The Theory of Type Hints,Final,19-Dec-2014,2,3,2,0.05468947411313664
-649,Deferred Evaluation Of Annotations Using Descriptors,Final,11-Jan-2021,2,8,4,0.049097654006611154
-482,Literature Overview for Type Hints,Final,08-Jan-2015,2,1,1,0.04364869733305996
-561,Distributing and Packaging Type Information,Final,09-Sep-2017,2,1,3,0.04364869733305996
-557,Data Classes,Final,02-Jun-2017,2,4,1,0.0320183870803766
-695,Type Parameter Syntax,Final,15-Jun-2022,2,3,5,0.029293839711658592
-544,Protocols: Structural subtyping (static duck typing),Final,05-Mar-2017,2,2,3,0.02139158939486003
-749,Implementing PEP 649,Final,28-May-2024,2,2,4,0.02005846323700067
-560,Core support for typing module and generic types,Final,03-Sep-2017,2,1,3,0.017392210921281955
-613,Explicit Type Aliases,Final,21-Jan-2020,2,1,1,0.014390178578532743
-696,Type Defaults for Type Parameters,Final,14-Jul-2022,2,1,1,0.013672596384721753
-593,Flexible function and variable annotations,Final,26-Apr-2019,2,1,2,0.01340962657969411
-681,Data Class Transforms,Final,02-Dec-2021,2,1,2,0.01340962657969411
-690,Lazy Imports,Rejected,29-Apr-2022,2,1,2,0.012076500421834752
-638,Syntactic Macros,Draft,24-Sep-2020,2,0,1,0.009410248106116036
-671,Syntax for late-bound function argument defaults,Draft,24-Oct-2021,2,0,2,0.009410248106116036
-673,Self Type,Final,10-Nov-2021,2,0,2,0.009410248106116036
-712,"Adding a ""converter"" parameter to dataclasses.field",Rejected,01-Jan-2023,2,0,2,0.009410248106116036
-746,Type checking Annotated metadata,Draft,20-May-2024,2,0,2,0.009410248106116036
-747,Annotating Type Forms,Final,27-May-2024,2,0,1,0.009410248106116036
-781,Make ``TYPE_CHECKING`` a built-in constant,Draft,24-Mar-2025,2,0,3,0.009410248106116036
-810,Explicit lazy imports,Accepted,02-Oct-2025,2,0,3,0.009410248106116036
+508,Dependency specification for Python Software Packages,Final,11-Nov-2015,2,16,0,0.19040047138836766
+517,A build-system independent format for source trees,Final,30-Sep-2015,2,13,3,0.15924010678080433
+518,Specifying Minimum Build System Requirements for Python Projects,Final,10-May-2016,2,8,2,0.09125852472661249
+621,Storing project metadata in pyproject.toml,Final,22-Jun-2020,2,10,5,0.06485255982082884
+516,Build system abstraction for pip/conda etc,Rejected,26-Oct-2015,2,1,2,0.056966907849240585
+725,Specifying external dependencies in pyproject.toml,Draft,17-Aug-2023,2,3,5,0.040955079035416696
+610,Recording the Direct URL Origin of installed distributions,Final,21-Apr-2019,2,4,1,0.033416051640974886
+631,Dependency specification in pyproject.toml based on PEP 508,Superseded,20-Aug-2020,2,2,2,0.027733747082193574
+735,Dependency Groups in pyproject.toml,Final,20-Nov-2023,2,2,5,0.023847142350186448
+639,Improving License Clarity with Better Package Metadata,Final,15-Aug-2019,2,2,0,0.023430560879174528
+633,Dependency specification in pyproject.toml using an exploded TOML table,Rejected,02-Sep-2020,2,1,4,0.02287308573291965
+770,Improving measurability of Python packages with Software Bill-of-Materials,Accepted,02-Jan-2025,2,2,2,0.02132934261516937
+643,Metadata for Package Source Distributions,Final,24-Oct-2020,2,2,2,0.019554279637766268
+804,An external dependency registry and name mapping mechanism,Draft,03-Sep-2025,2,1,1,0.018811542880152292
+660,Editable installs for pyproject.toml based builds (wheel based),Final,30-Mar-2021,2,2,4,0.018587884369389827
+625,Filename of a Source Distribution,Final,08-Jul-2020,2,1,3,0.018310764379133187
+665,A file format to list Python dependencies for reproducibility of an application,Rejected,29-Jul-2021,2,1,5,0.018310764379133187
+722,Dependency specification for single-file scripts,Rejected,19-Jul-2023,2,1,3,0.016532695300256518
+723,Inline script metadata,Final,04-Aug-2023,2,1,3,0.016532695300256518
+662,Editable installs via virtual wheels,Rejected,28-May-2021,2,1,5,0.01579848865358547
+751,A file format to record Python dependencies for installation reproducibility,Final,24-Jul-2024,2,1,2,0.015205492116522602
+650,Specifying Installer Requirements for Python Projects,Withdrawn,16-Jul-2020,2,1,3,0.014961258262916118
+632,Deprecate distutils module,Final,03-Sep-2020,2,0,1,0.011848425803166501
+680,tomllib: Support for Parsing TOML in the Standard Library,Final,01-Jan-2022,2,0,3,0.011848425803166501
+710,Recording the provenance of installed packages,Draft,27-Mar-2023,2,0,1,0.011848425803166501
+771,Default Extras for Python Software Packages,Draft,13-Jan-2025,2,0,3,0.011848425803166501
+780,ABI features as environment markers,Draft,21-Mar-2025,2,0,2,0.011848425803166501
+808,Including static values in dynamic metadata,Draft,19-Sep-2025,2,0,4,0.011848425803166501

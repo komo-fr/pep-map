@@ -1,18 +1,18 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-315,Enhanced While Loop,Rejected,25-Apr-2003,19,1,0,0.09637665940976217
-540,Add a new UTF-8 Mode,Final,05-Jan-2016,19,4,3,0.09237816397219165
-548,More Flexible Loop Control,Rejected,05-Sep-2017,19,1,1,0.07912428626661779
-528,Change Windows console encoding to UTF-8,Final,27-Aug-2016,19,2,0,0.07627933999634992
-529,Change Windows filesystem encoding to UTF-8,Final,27-Aug-2016,19,2,0,0.07627933999634992
-538,Coercing the legacy C locale to a UTF-8 based locale,Final,28-Dec-2016,19,3,3,0.074060279933394
-456,Secure and interchangeable hash algorithm,Final,27-Sep-2013,19,1,0,0.06982550289424427
-587,Python Initialization Configuration,Final,27-Mar-2019,19,2,4,0.06500671565605731
-553,Built-in breakpoint(),Final,05-Sep-2017,19,2,1,0.05882660355270214
-432,Restructuring the CPython startup sequence,Withdrawn,28-Dec-2012,19,2,2,0.05531271582161164
-552,Deterministic pycs,Final,04-Sep-2017,19,2,1,0.04788652419499024
-410,Use decimal.Decimal type for timestamps,Rejected,01-Feb-2012,19,1,0,0.043602862851557476
-418,"Add monotonic time, performance counter, and process time functions",Final,26-Mar-2012,19,1,0,0.043602862851557476
-564,Add new time functions with nanosecond resolution,Final,16-Oct-2017,19,1,2,0.03407263146396413
-537,Python 3.7 Release Schedule,Final,23-Dec-2016,19,0,5,0.029121837046216528
-559,Built-in noop(),Rejected,08-Sep-2017,19,0,1,0.029121837046216528
-741,Python Configuration C API,Final,18-Jan-2024,19,0,2,0.029121837046216528
+646,Variadic Generics,Final,16-Sep-2020,19,5,1,0.21918975096484195
+637,Support for indexing with keyword arguments,Rejected,24-Aug-2020,19,1,1,0.20550141086573365
+589,TypedDict: Type Hints for Dictionaries with a Fixed Set of Keys,Final,20-Mar-2019,19,6,0,0.09266032430205497
+585,Type Hinting Generics In Standard Collections,Final,03-Mar-2019,19,3,0,0.0834955885102546
+604,Allow writing union types as ``X | Y``,Final,28-Aug-2019,19,4,1,0.06421124617166296
+692,Using TypedDict for more precise \*\*kwargs typing,Final,29-May-2022,19,4,3,0.046567571845527
+655,Marking individual TypedDict items as required or potentially-missing,Final,30-Jan-2021,19,2,2,0.04465366037377793
+705,TypedDict: Read-only items,Final,07-Nov-2022,19,2,3,0.04327959696865296
+612,Parameter Specification Variables,Final,18-Dec-2019,19,3,0,0.03131264104063461
+728,TypedDict with Typed Extra Items,Accepted,12-Sep-2023,19,2,3,0.027406659384989665
+764,Inline typed dictionaries,Draft,25-Oct-2024,19,1,4,0.023276313086584247
+677,Callable Type Syntax,Rejected,13-Dec-2021,19,1,4,0.02246044223911424
+645,Allow writing optional types as ``x?``,Withdrawn,25-Aug-2020,19,0,1,0.019196958849234218
+747,Annotating Type Forms,Final,27-May-2024,19,0,1,0.019196958849234218
+767,Annotating Read-Only Attributes,Draft,18-Nov-2024,19,0,1,0.019196958849234218
+821,Support for unpacking TypedDicts in Callable type hints,Draft,12-Jan-2026,19,0,5,0.019196958849234218
+827,Type Manipulation,Draft,27-Feb-2026,19,0,4,0.019196958849234218

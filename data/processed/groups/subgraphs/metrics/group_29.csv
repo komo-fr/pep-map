@@ -1,13 +1,13 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-11,CPython platform support,Active,07-Jul-2002,29,7,0,0.39031393338999104
-776,Emscripten Support,Draft,18-Mar-2025,29,2,1,0.10583806662203558
-744,JIT Compilation,Draft,11-Apr-2024,29,1,1,0.07427221870775712
-775,Make zlib required to build CPython,Withdrawn,24-Feb-2025,29,1,1,0.07427221870775712
-730,Adding iOS as a supported platform,Final,09-Oct-2023,29,1,1,0.05720977677278584
-783,Emscripten Packaging,Draft,28-Mar-2025,29,1,1,0.05720977677278584
-539,A New C-API for Thread-Local Storage in CPython,Final,20-Dec-2016,29,0,1,0.04014733483781457
-738,Adding Android as a supported platform,Final,12-Dec-2023,29,0,2,0.04014733483781457
-774,Removing the LLVM requirement for JIT builds,Deferred,27-Jan-2025,29,0,1,0.04014733483781457
-784,Adding Zstandard to the standard library,Final,06-Apr-2025,29,0,1,0.04014733483781457
-816,WASI Support,Active,05-Nov-2025,29,0,1,0.04014733483781457
-818,Adding the Core of the Pyodide Foreign Function Interface to Python,Draft,10-Dec-2025,29,0,2,0.04014733483781457
+591,Adding a final qualifier to typing,Final,15-Mar-2019,29,3,1,0.20954686389449256
+586,Literal Types,Final,14-Mar-2019,29,2,1,0.20090718131028426
+578,Python Runtime Audit Hooks,Final,16-Jun-2018,29,3,1,0.19731056702576052
+551,Security transparency in the Python runtime,Withdrawn,23-Aug-2017,29,1,1,0.18651096379550017
+3118,Revising the buffer protocol,Final,28-Aug-2006,29,3,0,0.062143839076948384
+436,The Argument Clinic DSL,Final,22-Feb-2013,29,1,0,0.026789176232830843
+574,Pickle protocol 5 with out-of-band data,Final,23-Mar-2018,29,1,1,0.022794299075303434
+437,"A DSL for specifying signatures, annotations and argument converters",Rejected,11-Mar-2013,29,0,2,0.01879942191777603
+569,Python 3.8 Release Schedule,Final,27-Jan-2018,29,0,4,0.01879942191777603
+688,Making the buffer protocol accessible in Python,Final,23-Apr-2022,29,0,1,0.01879942191777603
+698,Override Decorator for Static Typing,Final,05-Sep-2022,29,0,1,0.01879942191777603
+829,Structured Startup Configuration via .site.toml Files,Draft,31-Mar-2026,29,0,1,0.01879942191777603

@@ -1,12 +1,12 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-394,"The ""python"" Command on Unix-Like Systems",Active,02-Mar-2011,31,3,4,0.16993887071820565
-404,Python 2.8 Un-release Schedule,Final,09-Nov-2011,31,2,0,0.16007716232197325
-397,Python launcher for Windows,Final,15-Mar-2011,31,4,1,0.13612381704831872
-370,Per user site-packages directory,Final,11-Jan-2008,31,2,0,0.13265508189421682
-373,Python 2.7 Release Schedule,Final,03-Nov-2008,31,2,1,0.10318710740301243
-405,Python Virtual Environments,Final,13-Jun-2011,31,3,1,0.10132518149873904
-486,Make the Python Launcher aware of virtual environments,Final,12-Feb-2015,31,1,2,0.043961254306082
-514,Python registration in the Windows registry,Active,02-Feb-2016,31,1,1,0.043961254306082
-439,Inclusion of implicit pip bootstrap in Python installation,Rejected,18-Mar-2013,31,0,3,0.0362567568344567
-773,A Python Installation Manager for Windows,Accepted,21-Jan-2025,31,0,4,0.0362567568344567
-3146,Merging Unladen Swallow into CPython,Withdrawn,01-Jan-2010,31,0,1,0.0362567568344567
+308,Conditional Expressions,Final,07-Feb-2003,31,4,0,0.21973514969953753
+318,Decorators for Functions and Methods,Final,05-Jun-2003,31,1,2,0.1931551104214719
+3129,Class Decorators,Final,01-May-2007,31,2,1,0.17081600010991568
+309,Partial Function Application,Final,08-Feb-2003,31,1,0,0.05611331327026955
+341,Unifying try-except and try-finally,Final,04-May-2005,31,1,0,0.05611331327026955
+353,Using ssize_t as the index type,Final,18-Dec-2005,31,1,0,0.05611331327026955
+357,Allowing Any Object to be Used for Slicing,Final,09-Feb-2006,31,1,0,0.05611331327026955
+312,Simple Implicit Lambda,Deferred,11-Feb-2003,31,0,1,0.04796012167199924
+356,Python 2.5 Release Schedule,Final,07-Feb-2006,31,0,5,0.04796012167199924
+463,Exception-catching expressions,Rejected,15-Feb-2014,31,0,1,0.04796012167199924
+3133,Introducing Roles,Rejected,01-May-2007,31,0,1,0.04796012167199924

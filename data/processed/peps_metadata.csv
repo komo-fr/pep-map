@@ -615,11 +615,11 @@ pep_number,title,status,type,created,authors,topic,requires,replaces,python_vers
 800,Disjoint bases in the type system,Draft,Standards Track,21-Jul-2025,Jelle Zijlstra,Typing,,,3.15
 801,Reserved,Active,Informational,21-Jun-2018,Barry Warsaw,,,,
 802,Display Syntax for the Empty Set,Draft,Standards Track,08-Aug-2025,Adam Turner,,,,3.15
-803,"""abi3t"": Stable ABI for Free-Threaded Builds",Draft,Standards Track,19-Aug-2025,Petr Viktorin; Nathan Goldbaum,,703; 793; 697,,3.15
+803,"""abi3t"": Stable ABI for Free-Threaded Builds",Accepted,Standards Track,19-Aug-2025,Petr Viktorin; Nathan Goldbaum,,703; 793; 697,,3.15
 804,An external dependency registry and name mapping mechanism,Draft,Standards Track,03-Sep-2025,Pradyun Gedam; Ralf Gommers; Michał Górny; Jaime Rodríguez-Guerra; Michael Sarahan,Packaging,725,,
 806,Mixed sync/async context managers with precise async marking,Draft,Standards Track,05-Sep-2025,Zac Hatfield-Dodds,,,,3.15
 807,Index support for Trusted Publishing,Draft,Standards Track,19-Sep-2025,William Woodruff,Packaging,,,
-808,Including static values in dynamic project metadata,Draft,Standards Track,19-Sep-2025,Henry Schreiner; Cristian Le,Packaging,,,
+808,Including static values in dynamic metadata,Draft,Standards Track,19-Sep-2025,Henry Schreiner; Cristian Le,Packaging,,,
 809,Stable ABI for the Future,Draft,Standards Track,19-Sep-2025,Steve Dower,,703; 793; 697,,3.15
 810,Explicit lazy imports,Accepted,Standards Track,02-Oct-2025,Pablo Galindo Salgado; Germán Méndez Bravo; Thomas Wouters; Dino Viehland; Brittany Reynoso; Noah Kim; Tim Stumbaugh,,,,3.15
 811,Defining Python Security Response Team membership and responsibilities,Accepted,Process,22-Oct-2025,Seth Michael Larson,Governance,,,
@@ -637,6 +637,7 @@ pep_number,title,status,type,created,authors,topic,requires,replaces,python_vers
 826,Python 3.16 Release Schedule,Active,Informational,23-Feb-2026,Savannah Ostrowski,Release,,,3.16
 827,Type Manipulation,Draft,Standards Track,27-Feb-2026,Michael J. Sullivan; Daniel W. Park; Yury Selivanov,Typing,,,3.15
 828,Supporting 'yield from' in asynchronous generators,Draft,Standards Track,07-Mar-2026,Peter Bierma,,,,3.15
+829,Structured Startup Configuration via .site.toml Files,Draft,Standards Track,31-Mar-2026,Barry Warsaw,Packaging,,,3.15
 2026,Calendar versioning for Python,Rejected,Process,11-Jun-2024,Hugo van Kemenade,,,,3.26
 3000,Python 3000,Final,Process,05-Apr-2006,Guido van Rossum,,,,
 3001,Procedure for reviewing and improving standard library modules,Withdrawn,Process,05-Apr-2006,Georg Brandl,,,,

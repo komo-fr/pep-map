@@ -1,14 +1,15 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-277,Unicode file name support for Windows NT,Final,11-Jan-2002,26,1,0,0.0859512302925086
-293,Codec Error Handling Callbacks,Final,18-Jun-2002,26,1,0,0.0859512302925086
-355,Path - Object oriented filesystem paths,Rejected,24-Jan-2006,26,1,0,0.0859512302925086
-411,Provisional packages in the Python standard library,Superseded,10-Feb-2012,26,1,6,0.0859512302925086
-2,Procedure for Adding New Modules,Active,07-Jul-2001,26,2,0,0.07687819889694732
-368,Standard image protocol and class,Deferred,28-Jun-2007,26,2,0,0.07687819889694732
-3143,Standard daemon process library,Deferred,26-Jan-2009,26,2,0,0.07687819889694732
-3144,IP Address Manipulation Library for the Python Standard Library,Final,06-Feb-2012,26,2,0,0.07687819889694732
-3153,Asynchronous IO support,Superseded,29-May-2011,26,2,0,0.07687819889694732
-383,Non-decodable Bytes in System Character Interfaces,Final,22-Apr-2009,26,1,2,0.07628240353151383
-428,The pathlib module -- object-oriented filesystem paths,Final,30-Jul-2012,26,1,2,0.07628240353151383
-408,Standard library __preview__ package,Rejected,07-Jan-2012,26,1,5,0.065707808476892
-519,Adding a file system path protocol,Final,11-May-2016,26,0,2,0.05353146880530931
+1,PEP Purpose and Guidelines,Active,13-Jun-2000,26,6,3,0.24111230529281918
+12,Sample reStructuredText PEP Template,Active,05-Aug-2002,26,4,1,0.1419373195167632
+676,PEP Infrastructure Process,Active,01-Nov-2021,26,1,2,0.08505896548484981
+729,Typing governance process,Active,19-Sep-2023,26,1,3,0.08505896548484981
+287,reStructuredText Docstring Format,Active,25-Mar-2002,26,3,4,0.0730563190713462
+224,Attribute Docstrings,Rejected,23-Aug-2000,26,2,0,0.058475391950673916
+256,Docstring Processing System Framework,Rejected,01-Jun-2001,26,3,3,0.05614110648396806
+258,Docutils Design Specification,Rejected,31-May-2001,26,2,6,0.049509257579126845
+718,Subscriptable functions,Draft,23-Jun-2023,26,1,0,0.040844261467585775
+727,Documentation in Annotated Metadata,Withdrawn,28-Aug-2023,26,1,1,0.040844261467585775
+257,Docstring Conventions,Active,29-May-2001,26,2,2,0.03966519882345421
+216,Docstring Format,Withdrawn,31-Jul-2000,26,2,1,0.03928311471196284
+9,Sample Plaintext PEP Template,Withdrawn,14-Aug-2001,26,1,2,0.03226918169563024
+226,Python 2.1 Release Schedule,Final,16-Oct-2000,26,0,1,0.01674435096938387
