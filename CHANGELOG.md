@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.6.1] - 2026-04-04
+
+### Changed
+
+- Sort by `Detected` date (newest first) by default in the `Citation Changes` tab.
+
 ## [0.6.0] - 2026-03-21
 
 ### Added
