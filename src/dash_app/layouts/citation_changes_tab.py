@@ -142,6 +142,7 @@ def create_citation_changes_tab_layout() -> html.Div:
                 ],
                 data=df.to_dict("records"),
                 sort_action="native",
+                sort_by=[{"column_id": "detected", "direction": "desc"}],
                 filter_action="native",
                 merge_duplicate_headers=True,
                 style_table={"overflowX": "auto"},
