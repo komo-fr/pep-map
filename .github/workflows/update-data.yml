@@ -43,6 +43,9 @@ jobs:
           python-version: '3.14'
           cache: 'pip'
 
+      - name: Set up Takumi Guard for PyPI
+        uses: flatt-security/setup-takumi-guard-pypi@v1
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
