@@ -191,11 +191,8 @@ def register_group_callbacks(app):
 
         # 説明文がある時のスタイル（背景色付き）
         filled_style = {
-            "fontSize": "13px",
-            "color": "#333",
             "marginBottom": "8px",
             "marginTop": "0",
-            "lineHeight": "1.5",
             "backgroundColor": "#EAEAEA",
             "padding": "8px",
             "borderRadius": "4px",
