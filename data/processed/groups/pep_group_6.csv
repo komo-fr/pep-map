@@ -1,0 +1,22 @@
+PEP,title,status,created,group_id,in-degree_group,out-degree_group,degree_group,pagerank_group,pagerank_cumsum
+266,Optimizing Global Variable/Attribute Access,Withdrawn,13-Aug-2001,6,5,0,5,0.1214599586332613,0.1214599586332613
+218,Adding a Built-In Set Object Type,Final,31-Jul-2000,6,4,0,4,0.0923315588926694,0.2137915175259307
+267,Optimized Access to Module Namespaces,Deferred,23-May-2001,6,3,2,5,0.0661929205496085,0.2799844380755393
+280,Optimizing access to globals,Deferred,10-Feb-2002,6,3,2,5,0.0661929205496085,0.3461773586251478
+263,Defining Python Source Code Encodings,Final,06-Jun-2001,6,2,0,2,0.0613198726348737,0.4074972312600216
+282,A Logging System,Final,04-Feb-2002,6,2,0,2,0.0613198726348737,0.4688171038948954
+311,Simplified Global Interpreter Lock Acquisition for Extensions,Final,05-Feb-2003,6,2,0,2,0.0613198726348737,0.5301369765297691
+269,Pgen Module for Python,Deferred,24-Aug-2001,6,2,0,2,0.038061107941527,0.5681980844712962
+286,Enhanced Argument Tuples,Deferred,03-Mar-2002,6,2,0,2,0.038061107941527,0.6062591924128231
+322,Reverse Iteration,Final,24-Sep-2003,6,1,0,1,0.035799839151896,0.6420590315647192
+278,Universal Newline Support,Final,14-Jan-2002,6,1,0,1,0.0341846471593025,0.6762436787240217
+285,Adding a bool type,Final,08-Mar-2002,6,1,0,1,0.0341846471593025,0.7104283258833243
+307,Extensions to the pickle protocol,Final,31-Jan-2003,6,1,0,1,0.0341846471593025,0.7446129730426267
+270,uniq method for list objects,Rejected,21-Aug-2001,6,0,1,1,0.0319233783696716,0.7765363514122984
+283,Python 2.3 Release Schedule,Final,27-Feb-2002,6,0,12,12,0.0319233783696716,0.80845972978197
+320,Python 2.4 Release Schedule,Final,29-Jul-2003,6,0,7,7,0.0319233783696716,0.8403831081516416
+329,Treating Builtins as Constants in the Standard Library,Rejected,18-Apr-2004,6,0,1,1,0.0319233783696716,0.8723064865213132
+337,Logging Usage in the Standard Library,Deferred,02-Oct-2004,6,0,1,1,0.0319233783696716,0.9042298648909848
+788,Protecting the C API from Interpreter Finalization,Draft,23-Apr-2025,6,0,1,1,0.0319233783696716,0.9361532432606564
+802,Display Syntax for the Empty Set,Draft,08-Aug-2025,6,0,1,1,0.0319233783696716,0.968076621630328
+3120,Using UTF-8 as the default source encoding,Final,15-Apr-2007,6,0,1,1,0.0319233783696716,0.9999999999999996

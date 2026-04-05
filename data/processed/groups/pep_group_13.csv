@@ -1,0 +1,19 @@
+PEP,title,status,created,group_id,in-degree_group,out-degree_group,degree_group,pagerank_group,pagerank_cumsum
+3121,Extension Module Initialization and Finalization,Final,27-Apr-2007,13,4,0,4,0.1836381504598814,0.1836381504598814
+489,Multi-phase extension module initialization,Final,11-Aug-2013,13,8,1,9,0.1383621318448065,0.322000282304688
+684,A Per-Interpreter GIL,Final,08-Mar-2022,13,3,6,9,0.0676909387441415,0.3896912210488296
+573,Module State Access from C Extension Methods,Final,02-Jun-2016,13,4,2,6,0.0622712462376349,0.4519624672864645
+652,Maintaining the Stable ABI,Final,09-Feb-2021,13,3,0,3,0.0594850634478025,0.5114475307342671
+703,Making the Global Interpreter Lock Optional in CPython,Accepted,09-Jan-2023,13,3,3,6,0.0594850634478025,0.5709325941820695
+683,"Immortal Objects, Using a Fixed Refcount",Final,10-Feb-2022,13,3,0,3,0.0564205967758821,0.6273531909579517
+554,Multiple Interpreters in the Stdlib,Superseded,05-Sep-2017,13,2,6,8,0.0529284491297441,0.6802816400876959
+734,Multiple Interpreters in the Stdlib,Final,06-Nov-2023,13,2,2,4,0.0490837227466675,0.7293653628343635
+803,"""abi3t"": Stable ABI for Free-Threaded Builds",Draft,19-Aug-2025,13,2,6,8,0.0401340688319832,0.7694994316663467
+630,Isolating Extension Modules,Final,25-Aug-2020,13,2,2,4,0.0384373274766018,0.8079367591429486
+697,Limited C API for Extending Opaque Types,Final,23-Aug-2022,13,2,1,3,0.0321542356262362,0.8400909947691848
+779,Criteria for supported status for free-threaded Python,Final,13-Mar-2025,13,2,1,3,0.0321542356262362,0.872245230395421
+793,PyModExport: A new entry point for C extension modules,Accepted,23-May-2025,13,2,2,4,0.0321542356262362,0.9043994660216572
+809,Stable ABI for the Future,Draft,19-Sep-2025,13,1,6,7,0.0281643190233626,0.93256378504502
+547,Running extension modules using the -m option,Deferred,25-May-2017,13,0,1,1,0.0224787383183265,0.9550425233633466
+687,Isolating modules in the standard library,Accepted,04-Apr-2022,13,0,3,3,0.0224787383183265,0.9775212616816732
+797,Shared Object Proxies,Draft,08-Aug-2025,13,0,1,1,0.0224787383183265,0.9999999999999998

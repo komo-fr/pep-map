@@ -204,6 +204,25 @@ def sample_citation_changes():
 
 
 @pytest.fixture
+def sample_group_names():
+    """テスト用グループ名データのDataFrame"""
+    return pd.DataFrame(
+        [
+            {
+                "group_id": 0,
+                "group_name": "型ヒントと注釈",
+                "description": "このグループの主な技術テーマは、Pythonにおける型ヒントです。",
+            },
+            {
+                "group_id": 1,
+                "group_name": "Python言語モデル",
+                "description": "このグループの主な技術テーマは、Python本体の言語進化を支える仕組みです。",
+            },
+        ]
+    )
+
+
+@pytest.fixture
 def mock_data_files(
     tmp_path,
     sample_peps_metadata,
@@ -212,6 +231,7 @@ def mock_data_files(
     sample_node_metrics,
     sample_citation_changes,
     sample_group_data,
+    sample_group_names,
 ):
     """テスト用データファイルを一時ディレクトリに作成"""
     data_dir = tmp_path / "data"
@@ -235,6 +255,10 @@ def mock_data_files(
     group_dir.mkdir()
     group_csv = group_dir / "peps_group.csv"
     sample_group_data.to_csv(group_csv, index=False)
+
+    # group_names.csv を追加
+    group_names_csv = group_dir / "group_names.csv"
+    sample_group_names.to_csv(group_names_csv, index=False)
 
     # JSONファイル作成
     metadata_json = data_dir / "metadata.json"

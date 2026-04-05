@@ -1,0 +1,28 @@
+PEP,title,status,created,group_id,in-degree_group,out-degree_group,degree_group,pagerank_group,pagerank_cumsum
+381,Mirroring infrastructure for PyPI,Withdrawn,21-Mar-2009,1,4,1,5,0.1081949803282084,0.1081949803282084
+305,CSV File API,Final,26-Jan-2003,1,1,0,1,0.1069791173360274,0.2151740976642358
+458,Secure PyPI downloads with signed repository metadata,Accepted,27-Sep-2013,1,4,4,8,0.0870160953770843,0.3021901930413201
+592,"Adding ""Yank"" Support to the Simple API",Final,07-May-2019,1,5,0,5,0.0617269163204581,0.3639171093617783
+480,Surviving a Compromise of PyPI: End-to-end signing of packages,Draft,08-Oct-2014,1,3,1,4,0.0510367185071204,0.4149538278688987
+691,JSON-based Simple API for Python Package Indexes,Accepted,04-May-2022,1,4,4,8,0.0480797426147818,0.4630335704836806
+438,Transitioning to release-file hosting on PyPI,Superseded,15-Mar-2013,1,2,1,3,0.0468635052434887,0.5098970757271692
+658,Serve Distribution Metadata in the Simple Repository API,Accepted,10-May-2021,1,3,0,3,0.0443700780406653,0.5542671537678346
+740,Index support for digital attestations,Final,08-Jan-2024,1,3,3,6,0.0424363560230472,0.5967035097908819
+470,Removing External Hosting Support on PyPI,Final,12-May-2014,1,2,1,3,0.0353260724770222,0.6320295822679042
+449,Removal of the PyPI Mirror Auto Discovery and Naming Scheme,Final,04-Aug-2013,1,1,1,2,0.0335031442620101,0.6655327265299144
+708,Extending the Repository API to Mitigate Dependency Confusion Attacks,Provisional,20-Feb-2023,1,3,0,3,0.0333641010807044,0.6988968276106188
+752,Implicit namespaces for package repositories,Draft,13-Aug-2024,1,2,5,7,0.0324114827174012,0.73130831032802
+694,Upload 2.0 API for Python Package Indexes,Draft,11-Jun-2022,1,3,3,6,0.032307200333377,0.7636155106613971
+541,Package Index Name Retention,Final,12-Jan-2017,1,3,0,3,0.0287253741732785,0.7923408848346756
+766,Explicit Priority Choices Among Multiple Indexes,Draft,18-Nov-2024,1,2,2,4,0.0259269515808347,0.8182678364155104
+629,Versioning PyPI's Simple API,Final,16-Jul-2020,1,1,0,1,0.0252293317830386,0.843497168198549
+817,Wheel Variants: Beyond Platform Tags,Draft,10-Dec-2025,1,1,2,3,0.021392507057433,0.8648896752559821
+464,Removal of the PyPI Mirror Authenticity API,Final,02-Mar-2014,1,0,2,2,0.0150122583048908,0.879901933560873
+714,Rename dist-info-metadata in the Simple API,Accepted,06-Jun-2023,1,0,2,2,0.0150122583048908,0.8949141918657638
+753,Uniform project URLs in core metadata,Accepted,29-Aug-2024,1,0,1,1,0.0150122583048908,0.9099264501706548
+755,Implicit namespace policy for PyPI,Draft,05-Sep-2024,1,0,2,2,0.0150122583048908,0.9249387084755456
+759,External Wheel Hosting,Withdrawn,01-Oct-2024,1,0,7,7,0.0150122583048908,0.9399509667804364
+763,Limiting deletions on PyPI,Withdrawn,24-Oct-2024,1,0,1,1,0.0150122583048908,0.9549632250853272
+792,Project status markers in the simple index,Final,21-May-2025,1,0,1,1,0.0150122583048908,0.969975483390218
+807,Index support for Trusted Publishing,Draft,19-Sep-2025,1,0,1,1,0.0150122583048908,0.9849877416951088
+825,Wheel Variants: Package Format,Draft,17-Feb-2026,1,0,2,2,0.0150122583048908,0.9999999999999998

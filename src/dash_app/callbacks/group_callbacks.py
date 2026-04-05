@@ -1,7 +1,7 @@
 """Groupタブのコールバック関数"""
 
 import pandas as pd
-from dash import Input, Output, State, callback_context, no_update
+from dash import Input, Output, State, callback_context, no_update, html
 from src.dash_app.components.pep_info import (
     create_group_initial_info_message,
     create_pep_info_display,
@@ -13,6 +13,7 @@ from src.dash_app.utils.data_loader import (
     get_pep_by_number,
     get_group_id_by_pep,
     generate_pep_url,
+    get_group_name_info,
 )
 
 
@@ -170,30 +171,87 @@ def register_group_callbacks(app):
     @app.callback(
         Output("group-pep-table", "data"),
         Output("group-pep-table-title", "children"),
+        Output("group-name-display", "children"),
+        Output("group-description-display", "children"),
+        Output("group-description-display", "style"),
         Input("group-selector-dropdown", "value"),
     )
     def update_group_table(selected_group):
         """
-        グループ選択時にテーブルデータとタイトルを更新する
+        グループ選択時にテーブルデータ、タイトル、グループ名、説明を更新する
 
         Args:
             selected_group: 選択されたグループ（"all" または グループID）
 
         Returns:
-            tuple: (テーブルデータ, タイトル)
+            tuple: (テーブルデータ, タイトル, グループ名, グループ説明, 説明スタイル)
         """
+        # 説明文が空の時のスタイル（非表示）
+        empty_style = {"display": "none"}
+
+        # 説明文がある時のスタイル（背景色付き）
+        filled_style = {
+            "fontSize": "13px",
+            "color": "#333",
+            "marginBottom": "8px",
+            "marginTop": "0",
+            "lineHeight": "1.5",
+            "backgroundColor": "#EAEAEA",
+            "padding": "8px",
+            "borderRadius": "4px",
+        }
+
         if selected_group is None or selected_group == "all":
-            return [], "Select a group to view PEPs"
+            return [], "Select a group to view PEPs", "", "", empty_style
 
         group_id = int(selected_group)
         df = get_peps_by_group(group_id)
+
+        # グループ名と説明を取得
+        group_info = get_group_name_info(group_id)
+        group_name = group_info["group_name"]
+        group_description = group_info["description"]
+
+        # 説明文が空かどうかでスタイルと内容を切り替え
+        if not group_description:
+            description_children = ""
+            description_style = empty_style
+        else:
+            # 説明文とNoteを含むコンテンツを生成
+            description_children = [
+                html.P(
+                    group_description,
+                    style={
+                        "margin": "0 0 8px 0",
+                        "fontSize": "13px",
+                        "color": "#333",
+                        "whiteSpace": "pre-line",
+                    },
+                ),
+                html.Div(
+                    [
+                        html.P(
+                            "🤖 グループ名と説明はAIが自動生成したものです。内容の正確性・完全性は保証されません。",
+                            style={"margin": "0", "fontSize": "12px"},
+                        ),
+                    ],
+                    style={
+                        "backgroundColor": "#fffacd",
+                        "border": "1px solid black",
+                        "padding": "8px",
+                        "marginTop": "8px",
+                        "borderRadius": "4px",
+                    },
+                ),
+            ]
+            description_style = filled_style
 
         if df.empty:
             if group_id == -1:
                 title = "Isolated PEPs (no data)"
             else:
                 title = f"Group {group_id} (no data)"
-            return [], title
+            return [], title, group_name, description_children, description_style
 
         # ソート: PageRank降順 > In-degree降順 > Out-degree降順 > Degree降順 > PEP番号昇順
         df = df.sort_values(
@@ -234,7 +292,7 @@ def register_group_callbacks(app):
         else:
             title = f"Group {group_id} ({count} PEPs)"
 
-        return table_data, title
+        return table_data, title, group_name, description_children, description_style
 
     # ===== ノードクリック → グループ選択更新 + 選択ソース更新 + PEP入力欄更新（サーバーサイド） =====
     @app.callback(

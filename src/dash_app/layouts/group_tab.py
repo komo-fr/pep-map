@@ -30,6 +30,18 @@ def create_group_tab_layout() -> html.Div:
             # "dropdown": ドロップダウンから選択（赤枠非表示）
             # "node_tap": ノードタップから選択（赤枠表示）
             dcc.Store(id="group-selection-source", data="dropdown"),
+            # === Beta注意書き ===
+            html.Div(
+                "🤖 Beta: Group names and descriptions are AI-generated. They are currently available only in Japanese.",
+                style={
+                    "backgroundColor": "#fffacd",
+                    "border": "1px solid black",
+                    "padding": "8px",
+                    "borderRadius": "4px",
+                    "marginBottom": "16px",
+                    "fontSize": "13px",
+                },
+            ),
             # === 上部セクション: グループ選択 + PEP情報 ===
             _create_top_section(),
             # === 注意書き + データ取得日付セクション ===
@@ -299,7 +311,7 @@ def _create_group_graph() -> cyto.Cytoscape:
         layout=get_preset_layout_options(),
         style={
             "width": "100%",
-            "height": "600px",
+            "height": "800px",
             "border": "1px solid #ddd",
             "backgroundColor": "#fafafa",
         },
@@ -315,6 +327,25 @@ def _create_group_pep_table_section() -> html.Div:
                 id="group-pep-table-title",
                 children="Select a group to view PEPs",
                 style={"marginBottom": "8px", "marginTop": "8px"},
+            ),
+            # グループ名表示エリア（初期状態は空）
+            html.P(
+                id="group-name-display",
+                children="",
+                style={
+                    "fontWeight": "bold",
+                    "fontSize": "14px",
+                    "marginBottom": "4px",
+                    "marginTop": "0",
+                },
+            ),
+            # グループ説明表示エリア（初期状態は空、非表示）
+            html.Div(
+                id="group-description-display",
+                children="",
+                style={
+                    "display": "none",  # 初期状態は非表示
+                },
             ),
             html.P(
                 "Scroll the table to view all rows.",

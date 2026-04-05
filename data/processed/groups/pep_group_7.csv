@@ -1,0 +1,22 @@
+PEP,title,status,created,group_id,in-degree_group,out-degree_group,degree_group,pagerank_group,pagerank_cumsum
+591,Adding a final qualifier to typing,Final,15-Mar-2019,7,5,1,6,0.2161816418573807,0.2161816418573807
+586,Literal Types,Final,14-Mar-2019,7,3,1,4,0.209691825393299,0.4258734672506797
+646,Variadic Generics,Final,16-Sep-2020,7,5,1,6,0.1017366155296748,0.5276100827803546
+637,Support for indexing with keyword arguments,Rejected,24-Aug-2020,7,1,1,2,0.0955191570648157,0.6231292398451703
+578,Python Runtime Audit Hooks,Final,16-Jun-2018,7,2,1,3,0.0671858731242056,0.690315112969376
+551,Security transparency in the Python runtime,Withdrawn,23-Aug-2017,7,1,1,2,0.0661487119036996,0.7564638248730756
+589,TypedDict: Type Hints for Dictionaries with a Fixed Set of Keys,Final,20-Mar-2019,7,6,2,8,0.0352299985544905,0.7916938234275662
+585,Type Hinting Generics In Standard Collections,Final,03-Mar-2019,7,3,0,3,0.0321167471053174,0.8238105705328838
+604,Allow writing union types as ``X | Y``,Final,28-Aug-2019,7,3,1,4,0.0217653148075268,0.8455758853404106
+692,Using TypedDict for more precise \*\*kwargs typing,Final,29-May-2022,7,4,3,7,0.020484571126723,0.8660604564671336
+705,TypedDict: Read-only items,Final,07-Nov-2022,7,2,4,6,0.0203798758759928,0.8864403323431265
+655,Marking individual TypedDict items as required or potentially-missing,Final,30-Jan-2021,7,2,2,4,0.0191743183261345,0.905614650669261
+612,Parameter Specification Variables,Final,18-Dec-2019,7,3,0,3,0.0147447711866876,0.9203594218559484
+728,TypedDict with Typed Extra Items,Accepted,12-Sep-2023,7,2,3,5,0.0129054883834742,0.9332649102394228
+764,Inline typed dictionaries,Draft,25-Oct-2024,7,1,4,5,0.0109605548709379,0.9442254651103608
+677,Callable Type Syntax,Rejected,13-Dec-2021,7,1,4,5,0.0105763704733999,0.9548018355837607
+569,Python 3.8 Release Schedule,Final,27-Jan-2018,7,0,4,4,0.0090396328832478,0.9638414684670088
+698,Override Decorator for Static Typing,Final,05-Sep-2022,7,0,1,1,0.0090396328832478,0.9728811013502564
+767,Annotating Read-Only Attributes,Draft,18-Nov-2024,7,0,1,1,0.0090396328832478,0.9819207342335045
+821,Support for unpacking TypedDicts in Callable type hints,Draft,12-Jan-2026,7,0,5,5,0.0090396328832478,0.9909603671167522
+827,Type Manipulation,Draft,27-Feb-2026,7,0,4,4,0.0090396328832478,1.0

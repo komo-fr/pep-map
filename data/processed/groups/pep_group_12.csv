@@ -1,0 +1,19 @@
+PEP,title,status,created,group_id,in-degree_group,out-degree_group,degree_group,pagerank_group,pagerank_cumsum
+241,Metadata for Python Software Packages,Superseded,12-Mar-2001,12,9,0,9,0.1817336892021092,0.1817336892021092
+345,Metadata for Python Software Packages 1.2,Superseded,28-Apr-2005,12,9,4,13,0.1121942732840167,0.2939279624861259
+301,Package Index and Metadata for Distutils,Final,24-Oct-2002,12,3,2,5,0.0908014775790599,0.3847294400651859
+440,Version Identification and Dependency Specification,Final,18-Mar-2013,12,6,5,11,0.0844925090354259,0.4692219491006119
+314,Metadata for Python Software Packages 1.1,Superseded,12-Apr-2003,12,6,2,8,0.0800226862383517,0.5492446353389636
+262,A Database of Installed Python Packages,Rejected,08-Jul-2001,12,2,3,5,0.0639694473116298,0.6132140826505935
+426,Metadata for Python Software Packages 2.0,Withdrawn,30-Aug-2012,12,5,8,13,0.0607164686313569,0.6739305512819505
+243,Module Repository Upload Mechanism,Withdrawn,18-Mar-2001,12,1,1,2,0.0555049600090317,0.7294355112909823
+386,Changing the version comparison module in Distutils,Superseded,04-Jun-2009,12,4,2,6,0.0473153744773703,0.7767508857683526
+376,Database of Installed Python Distributions,Final,22-Feb-2009,12,2,4,6,0.0398329206812827,0.8165838064496354
+459,Standard Metadata Extensions for Python Software Packages,Withdrawn,11-Nov-2013,12,2,2,4,0.0377298561857788,0.8543136626354142
+503,Simple Repository API,Final,04-Sep-2015,12,2,2,4,0.0305552884540584,0.8848689510894727
+566,Metadata for Python Software Packages 2.1,Final,01-Dec-2017,12,2,5,7,0.0305552884540584,0.9154242395435312
+390,Static metadata for Distutils,Rejected,10-Oct-2009,12,0,3,3,0.0169151520912937,0.9323393916348248
+396,Module Version Numbers,Withdrawn,16-Mar-2011,12,0,3,3,0.0169151520912937,0.9492545437261186
+496,Environment Markers,Rejected,03-Jul-2015,12,0,3,3,0.0169151520912937,0.9661696958174124
+700,Additional Fields for the Simple API for Package Indexes,Final,21-Oct-2022,12,0,2,2,0.0169151520912937,0.9830848479087062
+819,JSON Package Metadata,Draft,18-Dec-2025,12,0,2,2,0.0169151520912937,1.0

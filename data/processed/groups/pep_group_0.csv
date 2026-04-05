@@ -1,0 +1,31 @@
+PEP,title,status,created,group_id,in-degree_group,out-degree_group,degree_group,pagerank_group,pagerank_cumsum
+508,Dependency specification for Python Software Packages,Final,11-Nov-2015,0,17,0,17,0.1938913883239763,0.1938913883239763
+517,A build-system independent format for source trees,Final,30-Sep-2015,0,13,3,16,0.1555397058121899,0.3494310941361662
+518,Specifying Minimum Build System Requirements for Python Projects,Final,10-May-2016,0,8,2,10,0.0877138097308887,0.4371449038670549
+621,Storing project metadata in pyproject.toml,Final,22-Jun-2020,0,10,5,15,0.0608459658661438,0.4979908697331988
+516,Build system abstraction for pip/conda etc,Rejected,26-Oct-2015,0,1,2,3,0.0551866058389393,0.5531774755721381
+725,Specifying external dependencies in pyproject.toml,Draft,17-Aug-2023,0,3,5,8,0.0384247888468234,0.5916022644189616
+610,Recording the Direct URL Origin of installed distributions,Final,21-Apr-2019,0,4,1,5,0.0337888837317064,0.6253911481506681
+660,Editable installs for pyproject.toml based builds (wheel based),Final,30-Mar-2021,0,3,4,7,0.0272426402314475,0.6526337883821156
+631,Dependency specification in pyproject.toml based on PEP 508,Superseded,20-Aug-2020,0,2,2,4,0.0260203546014461,0.6786541429835617
+735,Dependency Groups in pyproject.toml,Final,20-Nov-2023,0,2,5,7,0.0223738844756508,0.7010280274592127
+639,Improving License Clarity with Better Package Metadata,Final,15-Aug-2019,0,2,0,2,0.0219829936182298,0.7230110210774424
+633,Dependency specification in pyproject.toml using an exploded TOML table,Rejected,02-Sep-2020,0,1,4,5,0.0214599855272525,0.744471006604695
+770,Improving measurability of Python packages with Software Bill-of-Materials,Accepted,02-Jan-2025,0,2,2,4,0.0200116378766323,0.7644826444813274
+643,Metadata for Package Source Distributions,Final,24-Oct-2020,0,2,2,4,0.0183462119966577,0.7828288564779852
+804,An external dependency registry and name mapping mechanism,Draft,03-Sep-2025,0,1,1,2,0.0176493912776138,0.8004782477555991
+625,Filename of a Source Distribution,Final,08-Jul-2020,0,1,3,4,0.0171795215413407,0.8176577692969398
+665,A file format to list Python dependencies for reproducibility of an application,Rejected,29-Jul-2021,0,1,5,6,0.0171795215413407,0.8348372908382805
+662,Editable installs via virtual wheels,Rejected,28-May-2021,0,1,5,6,0.0169056109883737,0.8517429018266542
+722,Dependency specification for single-file scripts,Rejected,19-Jul-2023,0,1,3,4,0.0155113034591239,0.8672542052857781
+723,Inline script metadata,Final,04-Aug-2023,0,1,3,4,0.0155113034591239,0.8827655087449021
+751,A file format to record Python dependencies for installation reproducibility,Final,24-Jul-2024,0,1,2,3,0.0142660929708001,0.8970316017157023
+650,Specifying Installer Requirements for Python Projects,Withdrawn,16-Jul-2020,0,1,3,4,0.0140369515740937,0.911068553289796
+632,Deprecate distutils module,Final,03-Sep-2020,0,0,1,1,0.0111164308387755,0.9221849841285716
+680,tomllib: Support for Parsing TOML in the Standard Library,Final,01-Jan-2022,0,0,3,3,0.0111164308387755,0.933301414967347
+685,Comparison of extra names for optional distribution dependencies,Final,08-Mar-2022,0,0,1,1,0.0111164308387755,0.9444178458061224
+710,Recording the provenance of installed packages,Draft,27-Mar-2023,0,0,1,1,0.0111164308387755,0.955534276644898
+771,Default Extras for Python Software Packages,Draft,13-Jan-2025,0,0,3,3,0.0111164308387755,0.9666507074836737
+778,Supporting Symlinks in Wheels,Deferred,18-May-2024,0,0,1,1,0.0111164308387755,0.9777671383224492
+780,ABI features as environment markers,Draft,21-Mar-2025,0,0,2,2,0.0111164308387755,0.9888835691612246
+808,Including static values in dynamic project metadata,Draft,19-Sep-2025,0,0,4,4,0.0111164308387755,1.0
