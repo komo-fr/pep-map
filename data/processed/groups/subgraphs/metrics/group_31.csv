@@ -1,12 +1,12 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-308,Conditional Expressions,Final,07-Feb-2003,31,4,0,0.21973514969953753
-318,Decorators for Functions and Methods,Final,05-Jun-2003,31,1,2,0.1931551104214719
-3129,Class Decorators,Final,01-May-2007,31,2,1,0.17081600010991568
-309,Partial Function Application,Final,08-Feb-2003,31,1,0,0.05611331327026955
-341,Unifying try-except and try-finally,Final,04-May-2005,31,1,0,0.05611331327026955
-353,Using ssize_t as the index type,Final,18-Dec-2005,31,1,0,0.05611331327026955
-357,Allowing Any Object to be Used for Slicing,Final,09-Feb-2006,31,1,0,0.05611331327026955
-312,Simple Implicit Lambda,Deferred,11-Feb-2003,31,0,1,0.04796012167199924
-356,Python 2.5 Release Schedule,Final,07-Feb-2006,31,0,5,0.04796012167199924
-463,Exception-catching expressions,Rejected,15-Feb-2014,31,0,1,0.04796012167199924
-3133,Introducing Roles,Rejected,01-May-2007,31,0,1,0.04796012167199924
+3003,Python Language Moratorium,Final,21-Oct-2009,31,2,0,0.21933838487919047
+407,New release cycle and introducing long-term support versions,Deferred,12-Jan-2012,31,2,1,0.12394959965675972
+2,Procedure for Adding New Modules,Active,07-Jul-2001,31,2,0,0.08030646721612329
+368,Standard image protocol and class,Deferred,28-Jun-2007,31,2,0,0.08030646721612329
+3143,Standard daemon process library,Deferred,26-Jan-2009,31,2,0,0.08030646721612329
+3144,IP Address Manipulation Library for the Python Standard Library,Final,06-Feb-2012,31,2,0,0.08030646721612329
+3153,Asynchronous IO support,Superseded,29-May-2011,31,2,0,0.08030646721612329
+408,Standard library __preview__ package,Rejected,07-Jan-2012,31,1,6,0.07034138971195386
+392,Python 3.2 Release Schedule,Final,30-Dec-2009,31,0,1,0.061612763223826576
+411,Provisional packages in the Python standard library,Superseded,10-Feb-2012,31,0,6,0.061612763223826576
+413,Faster evolution of the Python Standard Library,Withdrawn,24-Feb-2012,31,0,1,0.061612763223826576

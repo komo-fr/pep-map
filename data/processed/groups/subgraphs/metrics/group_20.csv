@@ -1,18 +1,17 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-384,Defining a Stable ABI,Final,17-May-2009,20,7,1,0.3414875054195584
-3149,ABI version tagged .so files,Final,09-Jul-2010,20,2,1,0.3048978875754193
-580,The C call protocol,Rejected,14-Jun-2018,20,4,5,0.0651509649150155
-393,Flexible String Representation,Final,24-Jan-2010,20,3,1,0.039492254659607054
-590,Vectorcall: a fast calling protocol for CPython,Final,29-Mar-2019,20,3,3,0.03866409098562586
-576,Rationalize Built-in function classes,Withdrawn,10-May-2018,20,3,1,0.0371861700037964
-579,Refactoring C functions and methods,Final,04-Jun-2018,20,2,5,0.02877227209239417
-575,Unifying function/method classes,Withdrawn,27-Mar-2018,20,2,3,0.026231344148342155
-623,Remove wstr from Unicode,Final,25-Jun-2020,20,1,1,0.018989128296367265
-620,Hide implementation details from the C API,Withdrawn,19-Jun-2020,20,1,3,0.01462676098503965
-689,Unstable C API tier,Final,22-Apr-2022,20,1,1,0.01462676098503965
-442,Safe object finalization,Final,18-May-2013,20,1,0,0.014408642619473267
-670,Convert macros to functions in the Python C API,Final,19-Oct-2021,20,1,0,0.014408642619473267
-624,Remove Py_UNICODE encoder APIs,Final,06-Jul-2020,20,0,1,0.010264393673712034
-720,Cross-compiling Python packages,Draft,01-Jul-2023,20,0,2,0.010264393673712034
-733,An Evaluation of Python's Public C API,Final,16-Oct-2023,20,0,2,0.010264393673712034
-756,Add PyUnicode_Export() and PyUnicode_Import() C functions,Withdrawn,13-Sep-2024,20,0,1,0.010264393673712034
+409,Suppressing exception context,Final,26-Jan-2012,20,3,1,0.2528922069717724
+415,Implement context suppression with exception attributes,Final,26-Feb-2012,20,3,1,0.2528922069717724
+3155,Qualified name for classes and functions,Final,29-Oct-2011,20,3,0,0.0611642632139258
+399,Pure Python/C Accelerator Module Compatibility Requirements,Final,04-Apr-2011,20,3,0,0.0585705191603403
+421,Adding sys.implementation,Final,26-Apr-2012,20,2,2,0.04854846982324016
+3139,"Cleaning out sys and the ""interpreter"" module",Rejected,04-Apr-2008,20,1,0,0.04560105040968233
+418,"Add monotonic time, performance counter, and process time functions",Final,26-Mar-2012,20,2,0,0.037937086299974554
+410,Use decimal.Decimal type for timestamps,Rejected,01-Feb-2012,20,1,0,0.03557900107258219
+362,Function Signature Object,Final,21-Aug-2006,20,1,0,0.02732570277670894
+417,Including mock in the Standard Library,Final,12-Mar-2012,20,1,0,0.02732570277670894
+3154,Pickle protocol version 4,Final,11-Aug-2011,20,1,1,0.02732570277670894
+398,Python 3.3 Release Schedule,Final,23-Mar-2011,20,0,9,0.024967617549316583
+490,Chain exceptions at C level,Rejected,25-Mar-2015,20,0,2,0.024967617549316583
+564,Add new time functions with nanosecond resolution,Final,16-Oct-2017,20,0,2,0.024967617549316583
+737,C API to format a type fully qualified name,Final,29-Nov-2023,20,0,2,0.024967617549316583
+739,``build-details.json`` 1.0 — a static description file for Python build details,Accepted,19-Dec-2023,20,0,1,0.024967617549316583

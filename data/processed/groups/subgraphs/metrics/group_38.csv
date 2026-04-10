@@ -1,5 +1,7 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-667,Consistent views of namespaces,Final,30-Jul-2021,38,1,2,0.35638476019586784
-558,Defined semantics for locals(),Withdrawn,08-Sep-2017,38,2,1,0.3151709355790946
-709,Inlined comprehensions,Final,24-Feb-2023,38,1,0,0.23995416475261291
-577,Augmented Assignment Expressions,Withdrawn,14-May-2018,38,0,1,0.08849013947242475
+355,Path - Object oriented filesystem paths,Rejected,24-Jan-2006,38,1,0,0.2384737584719806
+277,Unicode file name support for Windows NT,Final,11-Jan-2002,38,1,0,0.17315997769576022
+293,Codec Error Handling Callbacks,Final,18-Jun-2002,38,1,0,0.17315997769576022
+383,Non-decodable Bytes in System Character Interfaces,Final,22-Apr-2009,38,1,2,0.1536800446084793
+428,The pathlib module -- object-oriented filesystem paths,Final,30-Jul-2012,38,1,1,0.1536800446084793
+519,Adding a file system path protocol,Final,11-May-2016,38,0,2,0.10784619691953984

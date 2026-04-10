@@ -1,4 +1,4 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-581,Using GitHub Issues for CPython,Final,20-Jun-2018,41,2,1,0.475
-588,GitHub Issues Migration Plan,Final,27-Mar-2019,41,2,1,0.475
-595,Improving bugs.python.org,Withdrawn,12-May-2019,41,0,2,0.05
+100,Python Unicode Integration,Final,10-Mar-2000,41,1,0,0.37012974744707666
+3116,New I/O,Final,26-Feb-2007,41,1,0,0.37012974744707666
+400,Deprecate codecs.StreamReader and codecs.StreamWriter,Deferred,28-May-2011,41,0,2,0.25974050510584634

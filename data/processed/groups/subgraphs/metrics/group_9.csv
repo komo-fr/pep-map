@@ -1,19 +1,20 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-3101,Advanced String Formatting,Final,16-Apr-2006,9,6,0,0.15037513613303505
-498,Literal String Interpolation,Final,01-Aug-2015,9,5,3,0.10922888855458059
-215,String Interpolation,Superseded,24-Jul-2000,9,4,0,0.10340303312523973
-701,Syntactic formalization of f-strings,Accepted,15-Nov-2022,9,3,2,0.07384926964188154
-536,Final Grammar for Literal String Interpolation,Withdrawn,11-Dec-2016,9,1,2,0.05957341676215955
-414,Explicit Unicode Literal for Python 3.3,Final,15-Feb-2012,9,1,0,0.05913508741816546
-501,General purpose template literal strings,Withdrawn,08-Aug-2015,9,3,7,0.05751937470287903
-378,Format Specifier for Thousands Separator,Final,12-Mar-2009,9,1,1,0.052146409690145765
-750,Template Strings,Final,08-Jul-2024,9,2,3,0.04715113914931979
-306,How to Change Python's Grammar,Withdrawn,29-Jan-2003,9,1,0,0.04016671890128065
-292,Simpler String Substitutions,Final,18-Jun-2002,9,2,1,0.03916467862340972
-675,Arbitrary Literal String Type,Final,30-Nov-2021,9,1,0,0.03517144836045468
-3105,Make print a function,Final,19-Nov-2006,9,1,0,0.03218025837537057
-502,String Interpolation - Extended Discussion,Rejected,10-Aug-2015,9,0,6,0.028187028112415535
-682,Format Specifier for Signed Zero,Final,29-Jan-2022,9,0,1,0.028187028112415535
-787,Safer subprocess usage using t-strings,Deferred,13-Apr-2025,9,0,2,0.028187028112415535
-3126,Remove Implicit String Concatenation,Rejected,29-Apr-2007,9,0,1,0.028187028112415535
-3127,Integer Literal Support and Syntax,Final,14-Mar-2007,9,0,2,0.028187028112415535
+275,Switching on Multiple Values,Rejected,10-Nov-2001,9,2,1,0.17850283839617845
+3103,A Switch/Case Statement,Rejected,25-Jun-2006,9,2,1,0.17850283839617845
+448,Additional Unpacking Generalizations,Final,29-Jun-2013,9,2,0,0.06429133264751709
+634,Structural Pattern Matching: Specification,Final,12-Sep-2020,9,6,4,0.059617448451880314
+635,Structural Pattern Matching: Motivation and Rationale,Final,12-Sep-2020,9,5,7,0.05951920384729298
+572,Assignment Expressions,Final,28-Feb-2018,9,4,0,0.058983479334557234
+622,Structural Pattern Matching,Superseded,23-Jun-2020,9,4,3,0.05674935611406769
+636,Structural Pattern Matching: Tutorial,Final,12-Sep-2020,9,6,3,0.05632684027490002
+584,Add Union Operators To dict,Final,01-Mar-2019,9,2,1,0.042858330073110656
+617,New PEG parser for CPython,Final,24-Mar-2020,9,2,0,0.042858330073110656
+640,Unused variable syntax,Rejected,04-Oct-2020,9,2,4,0.029153262111941625
+626,Precise line numbers for debugging and other tools.,Final,15-Jul-2020,9,2,0,0.027861211501329742
+618,Add Optional Length-Checking To zip,Final,01-May-2020,9,1,0,0.022321516034879137
+644,Require OpenSSL 1.1.1 or newer,Final,27-Oct-2020,9,1,0,0.022321516034879137
+534,Improved Errors for Missing Standard Library Modules,Withdrawn,05-Sep-2016,9,1,0,0.021925823501561234
+619,Python 3.10 Release Schedule,Active,25-May-2020,9,0,6,0.019551668301653835
+642,Explicit Pattern Syntax for Structural Pattern Matching,Rejected,26-Sep-2020,9,0,7,0.019551668301653835
+653,Precise Semantics for Pattern Matching,Draft,09-Feb-2021,9,0,3,0.019551668301653835
+798,Unpacking in Comprehensions,Accepted,19-Jul-2025,9,0,2,0.019551668301653835

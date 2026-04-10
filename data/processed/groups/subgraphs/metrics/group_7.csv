@@ -1,21 +1,21 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-275,Switching on Multiple Values,Rejected,10-Nov-2001,7,2,1,0.1750595405234572
-3103,A Switch/Case Statement,Rejected,25-Jun-2006,7,2,1,0.1750595405234572
-448,Additional Unpacking Generalizations,Final,29-Jun-2013,7,2,0,0.06310693206962355
-634,Structural Pattern Matching: Specification,Final,12-Sep-2020,7,6,4,0.05798713380042329
-635,Structural Pattern Matching: Motivation and Rationale,Final,12-Sep-2020,7,5,7,0.05783528337569612
-572,Assignment Expressions,Final,28-Feb-2018,7,4,0,0.057800507210539476
-622,Structural Pattern Matching,Superseded,23-Jun-2020,7,4,3,0.05549899632080185
-636,Structural Pattern Matching: Tutorial,Final,12-Sep-2020,7,6,3,0.054786510112672895
-584,Add Union Operators To dict,Final,01-Mar-2019,7,2,1,0.04198772942682251
-617,New PEG parser for CPython,Final,24-Mar-2020,7,2,0,0.04198772942682251
-640,Unused variable syntax,Rejected,04-Oct-2020,7,2,4,0.028599058174798152
-626,Precise line numbers for debugging and other tools.,Final,15-Jul-2020,7,2,0,0.027027430993980216
-534,Improved Errors for Missing Standard Library Modules,Withdrawn,05-Sep-2016,7,1,0,0.02157609453256027
-613,Explicit Type Aliases,Final,21-Jan-2020,7,1,0,0.02157609453256027
-618,Add Optional Length-Checking To zip,Final,01-May-2020,7,1,0,0.02157609453256027
-644,Require OpenSSL 1.1.1 or newer,Final,27-Oct-2020,7,1,0,0.02157609453256027
-619,Python 3.10 Release Schedule,Active,25-May-2020,7,0,7,0.019239807477666005
-642,Explicit Pattern Syntax for Structural Pattern Matching,Rejected,26-Sep-2020,7,0,7,0.019239807477666005
-653,Precise Semantics for Pattern Matching,Draft,09-Feb-2021,7,0,3,0.019239807477666005
-798,Unpacking in Comprehensions,Accepted,19-Jul-2025,7,0,2,0.019239807477666005
+540,Add a new UTF-8 Mode,Final,05-Jan-2016,7,5,3,0.08686479120154257
+549,Instance Descriptors,Rejected,04-Sep-2017,7,1,0,0.08221158433414869
+315,Enhanced While Loop,Rejected,25-Apr-2003,7,1,0,0.07910407451550666
+562,Module __getattr__ and __dir__,Final,09-Sep-2017,7,3,1,0.06859781481455261
+528,Change Windows console encoding to UTF-8,Final,27-Aug-2016,7,2,0,0.06662311719988018
+529,Change Windows filesystem encoding to UTF-8,Final,27-Aug-2016,7,2,0,0.06662311719988018
+548,More Flexible Loop Control,Rejected,05-Sep-2017,7,1,1,0.06494189433412532
+538,Coercing the legacy C locale to a UTF-8 based locale,Final,28-Dec-2016,7,3,3,0.0639150151293831
+456,Secure and interchangeable hash algorithm,Final,27-Sep-2013,7,1,0,0.05730956200199766
+587,Python Initialization Configuration,Final,27-Mar-2019,7,2,4,0.05335436766805099
+553,Built-in breakpoint(),Final,05-Sep-2017,7,2,1,0.048281524414173195
+432,Restructuring the CPython startup sequence,Withdrawn,28-Dec-2012,7,2,2,0.04539802378532897
+552,Deterministic pycs,Final,04-Sep-2017,7,2,1,0.03930313666521514
+597,Add optional EncodingWarning,Final,05-Jun-2019,7,1,0,0.034060121133907606
+537,Python 3.7 Release Schedule,Final,23-Dec-2016,7,0,5,0.023901975933717894
+559,Built-in noop(),Rejected,08-Sep-2017,7,0,1,0.023901975933717894
+686,Make UTF-8 mode default,Final,18-Mar-2022,7,0,2,0.023901975933717894
+713,Callable Modules,Rejected,20-Apr-2023,7,0,1,0.023901975933717894
+726,Module ``__setattr__`` and ``__delattr__``,Rejected,24-Aug-2023,7,0,1,0.023901975933717894
+741,Python Configuration C API,Final,18-Jan-2024,7,0,2,0.023901975933717894

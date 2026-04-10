@@ -1,19 +1,19 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-602,Annual Release Cycle for Python,Active,04-Jun-2019,12,11,3,0.2543231915454472
-596,Python 3.9 Release Schedule,Final,04-Jun-2019,12,3,3,0.13388698442554087
-598,Introducing incremental feature releases,Withdrawn,15-Jun-2019,12,3,3,0.10657639480559053
-719,Python 3.13 Release Schedule,Active,26-May-2023,12,1,1,0.08947281540606879
-605,A rolling feature release stream for CPython,Rejected,20-Sep-2019,12,4,4,0.06690432479246813
-614,Relaxing Grammar Restrictions On Decorators,Final,10-Feb-2020,12,1,0,0.05535068221352091
-616,String methods to remove prefixes and suffixes,Final,19-Mar-2020,12,1,0,0.05535068221352091
-20,The Zen of Python,Active,19-Aug-2004,12,3,0,0.03806641959585356
-607,Reducing CPython's Feature Delivery Latency,Final,11-Oct-2019,12,1,2,0.031632611428970295
-565,Show DeprecationWarning in __main__,Final,12-Nov-2017,12,2,0,0.023263028255975204
-606,Python Compatibility Version,Rejected,18-Oct-2019,12,1,6,0.02037636927669971
-3002,Procedure for Backwards-Incompatible Changes,Final,27-Mar-2006,12,1,0,0.020302349987999534
-608,Coordinated Python release,Rejected,25-Oct-2019,12,0,5,0.017415691008724036
-693,Python 3.12 Release Schedule,Active,24-May-2022,12,0,1,0.017415691008724036
-745,Python 3.14 Release Schedule,Active,24-Apr-2024,12,0,1,0.017415691008724036
-790,Python 3.15 Release Schedule,Active,26-Apr-2025,12,0,1,0.017415691008724036
-826,Python 3.16 Release Schedule,Active,23-Feb-2026,12,0,1,0.017415691008724036
-3117,Postfix type declarations,Rejected,01-Apr-2007,12,0,1,0.017415691008724036
+435,Adding an Enum type to the Python standard library,Final,23-Feb-2013,12,3,1,0.20141060728898605
+354,Enumerations in Python,Superseded,20-Dec-2005,12,1,1,0.18912827816977873
+429,Python 3.4 Release Schedule,Final,17-Oct-2012,12,1,10,0.08779707931510242
+453,Explicit bootstrapping of pip in Python installations,Final,10-Aug-2013,12,4,1,0.08218922729643614
+615,Support for the IANA Time Zone Database in the Standard Library,Final,22-Feb-2020,12,1,2,0.061879237961380534
+431,Time zone support improvements,Superseded,11-Dec-2012,12,2,1,0.05169765542423739
+445,Add new APIs to customize Python memory allocators,Final,15-Jun-2013,12,2,0,0.04698809958898084
+436,The Argument Clinic DSL,Final,22-Feb-2013,12,2,0,0.04064475595906475
+433,Easier suppression of file descriptor inheritance,Superseded,10-Jan-2013,12,1,0,0.039525345429053615
+446,Make newly created file descriptors non-inheritable,Final,05-Aug-2013,12,1,1,0.025398970022965376
+447,Add __getdescriptor__ method to metaclass,Deferred,12-Jun-2013,12,1,0,0.025398970022965376
+450,Adding A Statistics Module To The Standard Library,Final,01-Aug-2013,12,1,0,0.025398970022965376
+454,Add a new tracemalloc module to trace Python memory allocations,Final,03-Sep-2013,12,1,1,0.025398970022965376
+455,Adding a key-transforming dictionary to collections,Rejected,13-Sep-2013,12,1,0,0.025398970022965376
+437,"A DSL for specifying signatures, annotations and argument converters",Rejected,11-Mar-2013,12,0,1,0.017936215863038146
+477,Backport ensurepip (PEP 453) to Python 2.7,Final,26-Aug-2014,12,0,1,0.017936215863038146
+661,Sentinel Values,Deferred,06-Jun-2021,12,0,1,0.017936215863038146
+711,PyBI: a standard format for distributing Python Binaries,Draft,06-Apr-2023,12,0,1,0.017936215863038146

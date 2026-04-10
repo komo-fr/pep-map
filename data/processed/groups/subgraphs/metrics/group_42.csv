@@ -1,4 +1,4 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-647,User-Defined Type Guards,Final,07-Oct-2020,42,2,0,0.5208692975273159
-724,Stricter Type Guards,Withdrawn,28-Jul-2023,42,1,1,0.28155110874039785
-742,Narrowing types with TypeIs,Final,07-Feb-2024,42,0,2,0.19757959373228617
+578,Python Runtime Audit Hooks,Final,16-Jun-2018,42,2,1,0.48648582432442095
+551,Security transparency in the Python runtime,Withdrawn,23-Aug-2017,42,1,1,0.46351417567557884
+829,Structured Startup Configuration via .site.toml Files,Draft,31-Mar-2026,42,0,1,0.05

@@ -1,7 +1,8 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-355,Path - Object oriented filesystem paths,Rejected,24-Jan-2006,36,1,0,0.2384737584719806
-277,Unicode file name support for Windows NT,Final,11-Jan-2002,36,1,0,0.17315997769576022
-293,Codec Error Handling Callbacks,Final,18-Jun-2002,36,1,0,0.17315997769576022
-383,Non-decodable Bytes in System Character Interfaces,Final,22-Apr-2009,36,1,2,0.1536800446084793
-428,The pathlib module -- object-oriented filesystem paths,Final,30-Jul-2012,36,1,1,0.1536800446084793
-519,Adding a file system path protocol,Final,11-May-2016,36,0,2,0.10784619691953984
+253,Subtyping Built-in Types,Final,14-May-2001,36,2,2,0.2943477695230242
+252,Making Types Look More Like Classes,Final,19-Apr-2001,36,3,1,0.26979545214028494
+254,Making Classes Look More Like Types,Rejected,18-Jun-2001,36,1,0,0.17576575762464916
+213,Attribute Access Handlers,Deferred,21-Jul-2000,36,1,1,0.0937342263620547
+237,Unifying Long Integers and Integers,Final,11-Mar-2001,36,1,0,0.06502275517801034
+231,__findattr__(),Rejected,30-Nov-2000,36,0,1,0.05066701958598817
+251,Python 2.2 Release Schedule,Final,17-Apr-2001,36,0,3,0.05066701958598817

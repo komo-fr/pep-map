@@ -1,18 +1,18 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-302,New Import Hooks,Final,19-Dec-2002,16,11,3,0.2379016276633216
-338,Executing modules as scripts,Final,16-Oct-2004,16,3,3,0.1112366141088555
-366,Main module explicit relative imports,Final,01-May-2007,16,2,4,0.08713581958435225
-273,Import Modules from Zip Archives,Final,11-Oct-2001,16,1,1,0.08304390664329508
-328,Imports: Multi-Line and Absolute/Relative,Final,21-Dec-2003,16,4,0,0.07943817561898127
-299,Special __main__() function in modules,Rejected,12-Aug-2002,16,2,0,0.056830395789177146
-402,Simplified Package Layout and Partitioning,Rejected,12-Jul-2011,16,4,2,0.051561214802082145
-382,Namespace Packages,Rejected,02-Apr-2009,16,3,2,0.04824385553857657
-3147,PYC Repository Directories,Final,16-Dec-2009,16,2,2,0.0352608927604189
-3122,Delineation of the main module,Rejected,27-Apr-2007,16,1,3,0.03415290432483486
-451,A ModuleSpec Type for the Import System,Final,08-Aug-2013,16,3,4,0.031101928635147193
-420,Implicit Namespace Packages,Final,19-Apr-2012,16,3,4,0.031065401335348644
-304,Controlling Generation of Bytecode Files,Withdrawn,22-Jan-2003,16,1,2,0.030622884255078628
-395,Qualified Names for Modules,Withdrawn,04-Mar-2011,16,2,6,0.0288841060270418
-406,Improved Encapsulation of Import State,Withdrawn,04-Jul-2011,16,1,4,0.022246198041312233
-369,Post import hooks,Withdrawn,02-Jan-2008,16,0,1,0.01563703743608791
-499,``python -m foo`` should also bind ``'foo'`` in ``sys.modules``,Deferred,07-Aug-2015,16,0,2,0.01563703743608791
+3101,Advanced String Formatting,Final,16-Apr-2006,16,7,0,0.18009467359482417
+215,String Interpolation,Superseded,24-Jul-2000,16,4,0,0.12221787889041173
+498,Literal String Interpolation,Final,01-Aug-2015,16,5,2,0.11099940396269012
+701,Syntactic formalization of f-strings,Accepted,15-Nov-2022,16,3,2,0.07459163176361382
+536,Final Grammar for Literal String Interpolation,Withdrawn,11-Dec-2016,16,1,2,0.05938966027950007
+378,Format Specifier for Thousands Separator,Final,12-Mar-2009,16,1,1,0.05789256965740292
+501,General purpose template literal strings,Withdrawn,08-Aug-2015,16,3,6,0.057656984319792916
+750,Template Strings,Final,08-Jul-2024,16,2,3,0.04762453972733717
+292,Simpler String Substitutions,Final,18-Jun-2002,16,2,1,0.04056403809350885
+306,How to Change Python's Grammar,Withdrawn,29-Jan-2003,16,1,0,0.03945639189268986
+475,Retry system calls failing with EINTR,Final,29-Jul-2014,16,1,0,0.03553389098500746
+682,Format Specifier for Signed Zero,Final,29-Jan-2022,16,1,1,0.03553389098500746
+502,String Interpolation - Extended Discussion,Rejected,10-Aug-2015,16,0,5,0.02768888916964267
+786,Precision and modulo-precision flag format specifiers for integer fields,Draft,04-Apr-2025,16,0,3,0.02768888916964267
+787,Safer subprocess usage using t-strings,Deferred,13-Apr-2025,16,0,2,0.02768888916964267
+3126,Remove Implicit String Concatenation,Rejected,29-Apr-2007,16,0,1,0.02768888916964267
+3127,Integer Literal Support and Syntax,Final,14-Mar-2007,16,0,2,0.02768888916964267

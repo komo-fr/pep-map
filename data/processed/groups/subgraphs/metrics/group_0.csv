@@ -1,31 +1,30 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-381,Mirroring infrastructure for PyPI,Withdrawn,21-Mar-2009,0,4,1,0.09494972696032729
-305,CSV File API,Final,26-Jan-2003,0,1,0,0.09447618306281552
-503,Simple Repository API,Final,04-Sep-2015,0,5,0,0.08108008405519043
-458,Secure PyPI downloads with signed repository metadata,Accepted,27-Sep-2013,0,4,4,0.07195211903015016
-592,"Adding ""Yank"" Support to the Simple API",Final,07-May-2019,0,5,0,0.05527763744774196
-691,JSON-based Simple API for Python Package Indexes,Accepted,04-May-2022,0,5,5,0.04720234148025493
-480,Surviving a Compromise of PyPI: End-to-end signing of packages,Draft,08-Oct-2014,0,3,1,0.04238934963857019
-438,Transitioning to release-file hosting on PyPI,Superseded,15-Mar-2013,0,2,1,0.04156728935171766
-658,Serve Distribution Metadata in the Simple Repository API,Accepted,10-May-2021,0,3,1,0.03935507708525707
-740,Index support for digital attestations,Final,08-Jan-2024,0,3,4,0.038929680465636315
-470,Removing External Hosting Support on PyPI,Final,12-May-2014,0,2,1,0.03073426103769759
-708,Extending the Repository API to Mitigate Dependency Confusion Attacks,Provisional,20-Feb-2023,0,3,0,0.03060717218414107
-752,Implicit namespaces for package repositories,Draft,13-Aug-2024,0,2,5,0.029733146253161844
-694,Upload 2.0 API for Python Package Indexes,Draft,11-Jun-2022,0,3,3,0.02963747684144821
-449,Removal of the PyPI Mirror Auto Discovery and Naming Scheme,Final,04-Aug-2013,0,1,1,0.029061993267514415
-541,Package Index Name Retention,Final,12-Jan-2017,0,3,0,0.026351655643517772
-766,Explicit Priority Choices Among Multiple Indexes,Draft,18-Nov-2024,0,2,2,0.02378453964580709
-629,Versioning PyPI's Simple API,Final,16-Jul-2020,0,1,0,0.021796265498333706
-817,Wheel Variants: Beyond Platform Tags,Draft,10-Dec-2025,0,1,2,0.01962469251689743
-464,Removal of the PyPI Mirror Authenticity API,Final,02-Mar-2014,0,0,2,0.013771755321256312
-685,Comparison of extra names for optional distribution dependencies,Final,08-Mar-2022,0,0,1,0.013771755321256312
-700,Additional Fields for the Simple API for Package Indexes,Final,21-Oct-2022,0,0,2,0.013771755321256312
-714,Rename dist-info-metadata in the Simple API,Accepted,06-Jun-2023,0,0,2,0.013771755321256312
-753,Uniform project URLs in core metadata,Accepted,29-Aug-2024,0,0,1,0.013771755321256312
-755,Implicit namespace policy for PyPI,Draft,05-Sep-2024,0,0,2,0.013771755321256312
-759,External Wheel Hosting,Withdrawn,01-Oct-2024,0,0,7,0.013771755321256312
-763,Limiting deletions on PyPI,Withdrawn,24-Oct-2024,0,0,1,0.013771755321256312
-792,Project status markers in the simple index,Final,21-May-2025,0,0,1,0.013771755321256312
-807,Index support for Trusted Publishing,Draft,19-Sep-2025,0,0,1,0.013771755321256312
-825,Wheel Variants: Package Format,Draft,17-Feb-2026,0,0,2,0.013771755321256312
+508,Dependency specification for Python Software Packages,Final,11-Nov-2015,0,16,0,0.18831511615613677
+517,A build-system independent format for source trees,Final,30-Sep-2015,0,13,3,0.15880563270432793
+518,Specifying Minimum Build System Requirements for Python Projects,Final,10-May-2016,0,8,2,0.08955556035403717
+621,Storing project metadata in pyproject.toml,Final,22-Jun-2020,0,10,5,0.06212350440990499
+516,Build system abstraction for pip/conda etc,Rejected,26-Oct-2015,0,1,2,0.056345364012234236
+725,Specifying external dependencies in pyproject.toml,Draft,17-Aug-2023,0,3,5,0.03923175735562277
+610,Recording the Direct URL Origin of installed distributions,Final,21-Apr-2019,0,4,1,0.03449834174625613
+660,Editable installs for pyproject.toml based builds (wheel based),Final,30-Mar-2021,0,3,4,0.027814681479633382
+631,Dependency specification in pyproject.toml based on PEP 508,Superseded,20-Aug-2020,0,2,2,0.026566721306386418
+735,Dependency Groups in pyproject.toml,Final,20-Nov-2023,0,2,5,0.022843621267891422
+639,Improving License Clarity with Better Package Metadata,Final,15-Aug-2019,0,2,0,0.022444622548451736
+633,Dependency specification in pyproject.toml using an exploded TOML table,Rejected,02-Sep-2020,0,1,4,0.02191060423409578
+770,Improving measurability of Python packages with Software Bill-of-Materials,Accepted,02-Jan-2025,0,2,2,0.020431774516424157
+643,Metadata for Package Source Distributions,Final,24-Oct-2020,0,2,2,0.018731432447870098
+804,An external dependency registry and name mapping mechanism,Draft,03-Sep-2025,0,1,1,0.018019927764956888
+625,Filename of a Source Distribution,Final,08-Jul-2020,0,1,3,0.01754024543802629
+665,A file format to list Python dependencies for reproducibility of an application,Rejected,29-Jul-2021,0,1,5,0.01754024543802629
+662,Editable installs via virtual wheels,Rejected,28-May-2021,0,1,5,0.01726057360165701
+722,Dependency specification for single-file scripts,Rejected,19-Jul-2023,0,1,3,0.015836999953747762
+723,Inline script metadata,Final,04-Aug-2023,0,1,3,0.015836999953747762
+751,A file format to record Python dependencies for installation reproducibility,Final,24-Jul-2024,0,1,2,0.014565644028634975
+650,Specifying Installer Requirements for Python Projects,Withdrawn,16-Jul-2020,0,1,3,0.01433169076184648
+632,Deprecate distutils module,Final,03-Sep-2020,0,0,1,0.011349848360011952
+680,tomllib: Support for Parsing TOML in the Standard Library,Final,01-Jan-2022,0,0,3,0.011349848360011952
+710,Recording the provenance of installed packages,Draft,27-Mar-2023,0,0,1,0.011349848360011952
+771,Default Extras for Python Software Packages,Draft,13-Jan-2025,0,0,3,0.011349848360011952
+778,Supporting Symlinks in Wheels,Deferred,18-May-2024,0,0,1,0.011349848360011952
+780,ABI features as environment markers,Draft,21-Mar-2025,0,0,2,0.011349848360011952
+808,Including static values in dynamic metadata,Draft,19-Sep-2025,0,0,4,0.011349848360011952

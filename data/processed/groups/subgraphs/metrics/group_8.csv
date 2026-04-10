@@ -1,20 +1,21 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-241,Metadata for Python Software Packages,Superseded,12-Mar-2001,8,9,0,0.18048618640921146
-345,Metadata for Python Software Packages 1.2,Superseded,28-Apr-2005,8,8,4,0.10072635783299112
-301,Package Index and Metadata for Distutils,Final,24-Oct-2002,8,3,2,0.08556694742405525
-314,Metadata for Python Software Packages 1.1,Superseded,12-Apr-2003,8,6,2,0.08020490664052708
-376,Database of Installed Python Distributions,Final,22-Feb-2009,8,4,4,0.07674440092821766
-440,Version Identification and Dependency Specification,Final,18-Mar-2013,8,5,5,0.0699565840031972
-262,A Database of Installed Python Packages,Rejected,08-Jul-2001,8,2,3,0.06864383935531948
-243,Module Repository Upload Mechanism,Withdrawn,18-Mar-2001,8,1,1,0.05233522704869022
-426,Metadata for Python Software Packages 2.0,Withdrawn,30-Aug-2012,8,4,7,0.04389991589799083
-386,Changing the version comparison module in Distutils,Superseded,04-Jun-2009,8,4,2,0.04224168373311106
-459,Standard Metadata Extensions for Python Software Packages,Withdrawn,11-Nov-2013,8,2,2,0.03319254876019548
-668,Marking Python base environments as “externally managed”,Accepted,18-May-2021,8,1,2,0.029542967751648726
-627,Recording installed projects,Final,15-Jul-2020,8,1,1,0.028525237045919742
-566,Metadata for Python Software Packages 2.1,Final,01-Dec-2017,8,2,5,0.028086870707547618
-390,Static metadata for Distutils,Rejected,10-Oct-2009,8,0,3,0.015969265292275353
-396,Module Version Numbers,Withdrawn,16-Mar-2011,8,0,3,0.015969265292275353
-496,Environment Markers,Rejected,03-Jul-2015,8,0,3,0.015969265292275353
-704,Require virtual environments by default for package installers,Withdrawn,16-Jan-2023,8,0,1,0.015969265292275353
-819,JSON Package Metadata,Draft,18-Dec-2025,8,0,2,0.015969265292275353
+591,Adding a final qualifier to typing,Final,15-Mar-2019,8,5,1,0.2596847426212884
+586,Literal Types,Final,14-Mar-2019,8,3,1,0.25277866969533014
+646,Variadic Generics,Final,16-Sep-2020,8,5,1,0.10826090203131941
+637,Support for indexing with keyword arguments,Rejected,24-Aug-2020,8,1,1,0.10164466571359605
+589,TypedDict: Type Hints for Dictionaries with a Fixed Set of Keys,Final,20-Mar-2019,8,7,2,0.04634706342500579
+585,Type Hinting Generics In Standard Collections,Final,03-Mar-2019,8,3,0,0.034176358676815004
+604,Allow writing union types as ``X | Y``,Final,28-Aug-2019,8,3,1,0.023161100441976896
+692,Using TypedDict for more precise \*\*kwargs typing,Final,29-May-2022,8,4,3,0.021798224081407705
+705,TypedDict: Read-only items,Final,07-Nov-2022,8,2,4,0.02168681483971275
+655,Marking individual TypedDict items as required or potentially-missing,Final,30-Jan-2021,8,2,2,0.02040394621374659
+612,Parameter Specification Variables,Final,18-Dec-2019,8,3,0,0.01569033710142984
+728,TypedDict with Typed Extra Items,Accepted,12-Sep-2023,8,2,3,0.01373310312052307
+764,Inline typed dictionaries,Draft,25-Oct-2024,8,1,4,0.011663443166822697
+677,Callable Type Syntax,Rejected,13-Dec-2021,8,1,4,0.01125462144757324
+569,Python 3.8 Release Schedule,Final,27-Jan-2018,8,0,3,0.009619334570575417
+698,Override Decorator for Static Typing,Final,05-Sep-2022,8,0,1,0.009619334570575417
+747,Annotating Type Forms,Final,27-May-2024,8,0,1,0.009619334570575417
+767,Annotating Read-Only Attributes,Draft,18-Nov-2024,8,0,1,0.009619334570575417
+821,Support for unpacking TypedDicts in Callable type hints,Draft,12-Jan-2026,8,0,5,0.009619334570575417
+827,Type Manipulation,Draft,27-Feb-2026,8,0,4,0.009619334570575417

@@ -1,16 +1,15 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-3119,Introducing Abstract Base Classes,Final,18-Apr-2007,25,2,2,0.18182917684026897
-358,"The ""bytes"" Object",Final,15-Feb-2006,25,3,2,0.17456344372142812
-3141,A Type Hierarchy for Numbers,Final,23-Apr-2007,25,3,1,0.113712509551364
-3137,Immutable Bytes and Mutable Buffer,Final,26-Sep-2007,25,2,1,0.08843946339259476
-3112,Bytes literals in Python 3000,Final,23-Feb-2007,25,1,1,0.08418946339259475
-461,Adding % formatting to bytes and bytearray,Final,13-Jan-2014,25,2,1,0.08197870925271888
-460,Add binary interpolation and formatting,Withdrawn,06-Jan-2014,25,1,1,0.0796879574139478
-239,Adding a Rational Type to Python,Rejected,11-Mar-2001,25,3,3,0.06330038585359654
-327,Decimal Data Type,Final,17-Oct-2003,25,2,1,0.04161378110151245
-240,Adding a Rational Literal to Python,Rejected,11-Mar-2001,25,2,2,0.032185109479973883
-296,Adding a bytes Object Type,Withdrawn,12-Jul-2002,25,1,1,0.018500000000000003
-228,Reworking Python's Numeric Model,Withdrawn,04-Nov-2000,25,0,1,0.010000000000000002
-298,The Locked Buffer Interface,Withdrawn,26-Jul-2002,25,0,1,0.010000000000000002
-313,Adding Roman Numeral Literals to Python,Rejected,01-Apr-2003,25,0,2,0.010000000000000002
-467,Minor API improvements for binary sequences,Draft,30-Mar-2014,25,0,2,0.010000000000000002
+427,The Wheel Binary Package Format 1.0,Final,20-Sep-2012,25,7,1,0.38357701230134755
+425,Compatibility Tags for Built Distributions,Final,27-Jul-2012,25,7,1,0.3813498428585386
+513,A Platform Tag for Portable Linux Built Distributions,Superseded,19-Jan-2016,25,3,3,0.030976597375878268
+491,The Wheel Binary Package Format 1.9,Deferred,16-Apr-2015,25,2,2,0.027742248514735272
+668,Marking Python base environments as “externally managed”,Accepted,18-May-2021,25,1,2,0.02462193681478647
+627,Recording installed projects,Final,15-Jul-2020,25,1,0,0.023773478181303966
+571,The manylinux2010 Platform Tag,Superseded,05-Feb-2018,25,2,2,0.021737963070791767
+527,Removing Un(der)used file types/extensions on PyPI,Final,23-Aug-2016,25,1,0,0.018965545924903095
+600,Future 'manylinux' Platform Tags for Portable Linux Built Distributions,Final,03-May-2019,25,1,4,0.01708008229494197
+599,The manylinux2014 Platform Tag,Superseded,29-Apr-2019,25,1,3,0.016938672522694882
+656,Platform Tag for Linux Distributions Using Musl,Final,17-Mar-2021,25,0,3,0.013309155035019716
+704,Require virtual environments by default for package installers,Withdrawn,16-Jan-2023,25,0,1,0.013309155035019716
+715,Disabling bdist_egg distribution uploads on PyPI,Final,06-Jun-2023,25,0,2,0.013309155035019716
+777,How to Re-invent the Wheel,Draft,09-Oct-2024,25,0,2,0.013309155035019716

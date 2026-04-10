@@ -1,17 +1,16 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-435,Adding an Enum type to the Python standard library,Final,23-Feb-2013,22,3,1,0.21323593002450789
-354,Enumerations in Python,Superseded,20-Dec-2005,22,1,1,0.1999302032032277
-429,Python 3.4 Release Schedule,Final,17-Oct-2012,22,1,9,0.09271793654597993
-453,Explicit bootstrapping of pip in Python installations,Final,10-Aug-2013,22,4,1,0.08711156383924495
-615,Support for the IANA Time Zone Database in the Standard Library,Final,22-Feb-2020,22,1,2,0.06573531100996358
-431,Time zone support improvements,Superseded,11-Dec-2012,22,2,1,0.05536730264833343
-445,Add new APIs to customize Python memory allocators,Final,15-Jun-2013,22,2,0,0.05074511297160384
-433,Easier suppression of file descriptor inheritance,Superseded,10-Jan-2013,22,1,0,0.04198841706161796
-446,Make newly created file descriptors non-inheritable,Final,05-Aug-2013,22,1,1,0.027429788803184786
-447,Add __getdescriptor__ method to metaclass,Deferred,12-Jun-2013,22,1,0,0.027429788803184786
-450,Adding A Statistics Module To The Standard Library,Final,01-Aug-2013,22,1,0,0.027429788803184786
-454,Add a new tracemalloc module to trace Python memory allocations,Final,03-Sep-2013,22,1,1,0.027429788803184786
-455,Adding a key-transforming dictionary to collections,Rejected,13-Sep-2013,22,1,0,0.027429788803184786
-477,Backport ensurepip (PEP 453) to Python 2.7,Final,26-Aug-2014,22,0,1,0.0186730928931989
-661,Sentinel Values,Deferred,06-Jun-2021,22,0,1,0.0186730928931989
-711,PyBI: a standard format for distributing Python Binaries,Draft,06-Apr-2023,22,0,1,0.0186730928931989
+236,Back to the __future__,Final,26-Feb-2001,22,6,4,0.22998924851466032
+227,Statically Nested Scopes,Final,01-Nov-2000,22,3,1,0.11262398210768462
+5,Guidelines for Language Evolution,Superseded,26-Oct-2000,22,4,0,0.09491809382414254
+264,Future statements in simulated shells,Final,30-Jul-2001,22,2,1,0.08808926075752255
+230,Warning Framework,Final,28-Nov-2000,22,2,0,0.08208559945708924
+558,Defined semantics for locals(),Withdrawn,08-Sep-2017,22,2,2,0.0718576466835176
+667,Consistent views of namespaces,Final,30-Jul-2021,22,1,2,0.05641848995499844
+296,Adding a bytes Object Type,Withdrawn,12-Jul-2002,22,2,0,0.05337830951951727
+709,Inlined comprehensions,Final,24-Feb-2023,22,1,0,0.04985908491142626
+238,Changing the Division Operator,Final,11-Mar-2001,22,1,2,0.03137974774742591
+244,The ``directive`` statement,Rejected,20-Mar-2001,22,0,3,0.025880107304403075
+298,The Locked Buffer Interface,Withdrawn,26-Jul-2002,22,0,1,0.025880107304403075
+317,Eliminate Implicit Exception Instantiation,Rejected,06-May-2003,22,0,3,0.025880107304403075
+497,A standard mechanism for backward compatibility,Rejected,04-Aug-2015,22,0,4,0.025880107304403075
+577,Augmented Assignment Expressions,Withdrawn,14-May-2018,22,0,1,0.025880107304403075

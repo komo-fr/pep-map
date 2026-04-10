@@ -1,29 +1,27 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-506,Adding A Secrets Module To The Standard Library,Final,19-Sep-2015,1,3,1,0.14884849242217757
-504,Using the System RNG by default,Withdrawn,15-Sep-2015,1,1,1,0.1392487528009577
-380,Syntax for Delegating to a Subgenerator,Final,13-Feb-2009,1,7,0,0.08706538920023645
-3115,Metaclasses in Python 3000,Final,07-Mar-2007,1,3,0,0.051203926200507954
-522,Allow BlockingIOError in security sensitive APIs,Rejected,16-Jun-2016,1,1,2,0.03864441088849757
-492,Coroutines with async and await syntax,Final,09-Apr-2015,1,3,4,0.03851066758967854
-3130,Access to Current Module/Class/Function,Rejected,22-Apr-2007,1,2,0,0.03824603888994278
-3135,New Super,Final,28-Apr-2007,1,2,2,0.033217902047541076
-487,Simpler customisation of class creation,Final,27-Feb-2015,1,3,3,0.03313388693769601
-422,Simpler customisation of class creation,Withdrawn,05-Jun-2012,1,2,3,0.03208063805921874
-3156,"Asynchronous IO Support Rebooted: the ""asyncio"" Module",Final,12-Dec-2012,1,2,3,0.031718487219932694
-524,Make os.urandom() blocking on Linux,Final,20-Jun-2016,1,2,1,0.030497234502376642
-367,New Super,Superseded,28-Apr-2007,1,1,2,0.026839264505716953
-525,Asynchronous Generators,Final,28-Jul-2016,1,3,2,0.025461050645492703
-468,Preserving the order of \*\*kwargs in a function.,Final,05-Apr-2014,1,2,0,0.024886586633614014
-372,Adding an ordered dictionary to collections,Final,15-Jun-2008,1,1,1,0.023534915400507922
-520,Preserving Class Attribute Definition Order,Final,07-Jun-2016,1,2,2,0.023461221251050164
-3148,futures - execute computations asynchronously,Final,16-Oct-2009,1,1,0,0.02170850841077677
-479,Change StopIteration handling inside generators,Final,15-Nov-2014,1,1,1,0.02090511735508395
-3152,Cofunctions,Rejected,13-Feb-2009,1,1,1,0.02090511735508395
-523,Adding a frame evaluation API to CPython,Final,16-May-2016,1,2,0,0.01947990170118964
-530,Asynchronous Comprehensions,Final,03-Sep-2016,1,1,2,0.01407321676876527
-375,Python 3.1 Release Schedule,Final,08-Feb-2009,1,0,1,0.012721545535659174
-472,Support for indexing with keyword arguments,Rejected,24-Jun-2014,1,0,1,0.012721545535659174
-494,Python 3.6 Release Schedule,Final,30-May-2015,1,0,8,0.012721545535659174
-669,Low Impact Monitoring for CPython,Final,18-Aug-2021,1,0,2,0.012721545535659174
-828,Supporting 'yield from' in asynchronous generators,Draft,07-Mar-2026,1,0,2,0.012721545535659174
-3145,Asynchronous I/O For subprocess.Popen,Withdrawn,04-Aug-2009,1,0,1,0.012721545535659174
+3000,Python 3000,Final,05-Apr-2006,1,4,3,0.09617382845002453
+344,Exception Chaining and Embedded Tracebacks,Superseded,12-May-2005,1,4,2,0.08441305724408989
+3134,Exception Chaining and Embedded Tracebacks,Final,12-May-2005,1,3,2,0.08199885876547611
+4,Deprecation of Standard Modules,Active,01-Oct-2000,1,4,0,0.06935885770001397
+3100,Miscellaneous Python 3.0 Plans,Final,20-Aug-2004,1,4,8,0.06343107751930309
+3099,Things that will Not Change in Python 3000,Final,04-Apr-2006,1,3,0,0.05939381223192336
+348,Exception Reorganization for Python 3.0,Rejected,28-Jul-2005,1,2,2,0.056927188745641545
+3137,Immutable Bytes and Mutable Buffer,Final,26-Sep-2007,1,3,0,0.055171514883551605
+358,"The ""bytes"" Object",Final,15-Feb-2006,1,2,2,0.05418011963697916
+3112,Bytes literals in Python 3000,Final,23-Feb-2007,1,2,1,0.04173584709979828
+361,Python 2.6 and 3.0 Release Schedule,Final,29-Jun-2006,1,1,7,0.040981722777893415
+290,Code Migration and Modernization,Active,06-Jun-2002,1,1,1,0.037926574112279975
+352,Required Superclass for Exceptions,Final,27-Oct-2005,1,4,1,0.03708491804451324
+654,Exception Groups and except*,Final,22-Feb-2021,1,2,1,0.03124093596877171
+3001,Procedure for reviewing and improving standard library modules,Withdrawn,05-Apr-2006,1,1,0,0.020471806989719916
+3105,Make print a function,Final,19-Nov-2006,1,1,0,0.020471806989719916
+3110,Catching Exceptions in Python 3000,Final,16-Jan-2006,1,1,3,0.020471806989719916
+371,Addition of the multiprocessing package to the standard library,Final,06-May-2008,1,1,0,0.018708626579199288
+294,Type Names in the types Module,Rejected,19-Jun-2002,1,0,1,0.013732204908922668
+467,Minor API improvements for binary sequences,Draft,30-Mar-2014,1,0,1,0.013732204908922668
+678,Enriching Exceptions with Notes,Final,20-Dec-2021,1,0,2,0.013732204908922668
+785,New methods for easier handling of ``ExceptionGroup``\ s,Draft,08-Apr-2025,1,0,1,0.013732204908922668
+3104,Access to Names in Outer Scopes,Final,12-Oct-2006,1,0,1,0.013732204908922668
+3109,Raising Exceptions in Python 3000,Final,19-Jan-2006,1,0,2,0.013732204908922668
+3111,Simple input built-in in Python 3000,Final,13-Sep-2006,1,0,1,0.013732204908922668
+3151,Reworking the OS and IO exception hierarchy,Final,21-Jul-2010,1,0,1,0.013732204908922668

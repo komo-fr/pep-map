@@ -591,16 +591,17 @@ pep_number,title,status,type,created,authors,topic,requires,replaces,python_vers
 773,A Python Installation Manager for Windows,Accepted,Standards Track,21-Jan-2025,Steve Dower,Release,,397; 486,
 774,Removing the LLVM requirement for JIT builds,Deferred,Standards Track,27-Jan-2025,Savannah Ostrowski,,,,3.14
 775,Make zlib required to build CPython,Withdrawn,Standards Track,24-Feb-2025,Gregory P. Smith; Stan Ulbrych; Petr Viktorin,,,,3.14
-776,Emscripten Support,Draft,Informational,18-Mar-2025,Hood Chatham,,,,3.14
+776,Emscripten Support,Active,Informational,18-Mar-2025,Hood Chatham,,,,3.14
 777,How to Re-invent the Wheel,Draft,Standards Track,09-Oct-2024,Emma Harper Smith,Packaging,,,
 778,Supporting Symlinks in Wheels,Deferred,Standards Track,18-May-2024,Emma Harper Smith,Packaging,777,,
 779,Criteria for supported status for free-threaded Python,Final,Standards Track,13-Mar-2025,Thomas Wouters; Matt Page; Sam Gross,,,,3.14
 780,ABI features as environment markers,Draft,Standards Track,21-Mar-2025,Klaus Zimmermann; Ralf Gommers,Packaging,,,3.14
 781,Make ``TYPE_CHECKING`` a built-in constant,Draft,Standards Track,24-Mar-2025,Inada Naoki,Typing,,,3.15
 782,Add PyBytesWriter C API,Final,Standards Track,27-Mar-2025,Victor Stinner,,,,3.15
-783,Emscripten Packaging,Draft,Standards Track,28-Mar-2025,Hood Chatham,Packaging,,,
+783,Emscripten Packaging,Accepted,Standards Track,28-Mar-2025,Hood Chatham,Packaging,,,
 784,Adding Zstandard to the standard library,Final,Standards Track,06-Apr-2025,Emma Harper Smith,,,,3.14
 785,New methods for easier handling of ``ExceptionGroup``\ s,Draft,Standards Track,08-Apr-2025,Zac Hatfield-Dodds,,,,3.14
+786,Precision and modulo-precision flag format specifiers for integer fields,Draft,Standards Track,04-Apr-2025,Jay Berry,,,,3.15
 787,Safer subprocess usage using t-strings,Deferred,Standards Track,13-Apr-2025,Nick Humrich; Alyssa Coghlan,,750,,3.15
 788,Protecting the C API from Interpreter Finalization,Draft,Standards Track,23-Apr-2025,Peter Bierma,,,,3.15
 789,Preventing task-cancellation bugs by limiting yield in async generators,Draft,Standards Track,14-May-2024,Zac Hatfield-Dodds; Nathaniel J. Smith,,,,3.14

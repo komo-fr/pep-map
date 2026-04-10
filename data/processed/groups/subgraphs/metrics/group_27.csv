@@ -1,15 +1,14 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-211,Adding A New Outer Product Operator,Rejected,15-Jul-2000,27,4,3,0.2254598934798107
-465,A dedicated infix operator for matrix multiplication,Final,20-Feb-2014,27,5,2,0.20669307027141157
-225,Elementwise/Objectwise Operators,Rejected,19-Sep-2000,27,3,2,0.19059838832091563
-209,Multi-dimensional Arrays,Withdrawn,03-Jan-2001,27,1,4,0.08474639748827559
-207,Rich Comparisons,Final,25-Jul-2000,27,2,0,0.07191821284685336
-208,Reworking the Coercion Model,Final,04-Dec-2000,27,1,1,0.03887475566410203
-441,Improving Python ZIP Application Support,Final,30-Mar-2013,27,1,0,0.023822174157131927
-471,os.scandir() function -- a better and faster directory iterator,Final,30-May-2014,27,1,0,0.023822174157131927
-475,Retry system calls failing with EINTR,Final,29-Jul-2014,27,1,0,0.023822174157131927
-485,A Function for testing approximate equality,Final,20-Jan-2015,27,1,0,0.023822174157131927
-488,Elimination of PYO files,Final,20-Feb-2015,27,1,1,0.023822174157131927
-203,Augmented Assignments,Final,13-Jul-2000,27,0,1,0.020866137047657073
-478,Python 3.5 Release Schedule,Final,22-Sep-2014,27,0,6,0.020866137047657073
-820,PySlot: Unified slot system for the C API,Draft,19-Dec-2025,27,0,1,0.020866137047657073
+3119,Introducing Abstract Base Classes,Final,18-Apr-2007,27,2,2,0.15837692408335582
+3141,A Type Hierarchy for Numbers,Final,23-Apr-2007,27,3,1,0.13436258002196863
+245,Python Interface Syntax,Rejected,11-Jan-2001,27,3,3,0.12033567235911563
+239,Adding a Rational Type to Python,Rejected,11-Mar-2001,27,3,3,0.11649561487252952
+3124,"Overloading, Generic Functions, Interfaces, and Adaptation",Deferred,28-Apr-2007,27,2,3,0.09092678782364426
+246,Object Adaptation,Rejected,21-Mar-2001,27,3,1,0.08347660838938283
+327,Decimal Data Type,Final,17-Oct-2003,27,2,1,0.07658440570630938
+240,Adding a Rational Literal to Python,Rejected,11-Mar-2001,27,2,2,0.05923230292193144
+232,Function Attributes,Final,02-Dec-2000,27,1,0,0.0524989889571471
+233,Python Online Help,Deferred,11-Dec-2000,27,1,0,0.0524989889571471
+228,Reworking Python's Numeric Model,Withdrawn,04-Nov-2000,27,0,1,0.018403708635822753
+313,Adding Roman Numeral Literals to Python,Rejected,01-Apr-2003,27,0,2,0.018403708635822753
+443,Single-dispatch generic functions,Final,22-May-2013,27,0,3,0.018403708635822753
