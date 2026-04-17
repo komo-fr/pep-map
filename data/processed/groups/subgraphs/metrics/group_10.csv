@@ -1,20 +1,21 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-387,Backwards Compatibility Policy,Active,18-Jun-2009,10,7,2,0.16877430392810017
-291,Backward Compatibility for the Python 2 Standard Library,Superseded,06-Jun-2002,10,1,0,0.09570858071976361
-702,Marking deprecations using the type system,Final,30-Dec-2022,10,1,2,0.09570858071976361
-659,Specializing Adaptive Interpreter,Final,13-Apr-2021,10,4,0,0.08020028267611658
-206,Python Advanced Library,Withdrawn,14-Jul-2000,10,1,0,0.07893711429904762
-594,Removing dead batteries from the standard library,Final,20-May-2019,10,1,1,0.06465435754718546
-731,C API Working Group Charter,Active,11-Oct-2023,10,2,0,0.054552412265350805
-412,Key-Sharing Dictionary,Final,08-Feb-2012,10,1,0,0.050136393879872565
-706,Filter for tarfile.extractall,Final,09-Feb-2023,10,1,1,0.04436128658461928
-744,JIT Compilation,Draft,11-Apr-2024,10,1,2,0.04436128658461928
-509,Add a private version to dict,Superseded,04-Jan-2016,10,1,1,0.030773119010310608
-674,Disallow using macros as l-values,Deferred,30-Nov-2021,10,0,1,0.023979035223156267
-699,Remove private dict version field added in PEP 509,Accepted,03-Oct-2022,10,0,3,0.023979035223156267
-707,A simplified signature for __exit__ and __aexit__,Rejected,18-Feb-2023,10,0,1,0.023979035223156267
-721,Using tarfile.data_filter for source distribution extraction,Final,12-Jul-2023,10,0,1,0.023979035223156267
-743,Add Py_OMIT_LEGACY_API to the Python C API,Rejected,11-Mar-2024,10,0,2,0.023979035223156267
-774,Removing the LLVM requirement for JIT builds,Deferred,27-Jan-2025,10,0,1,0.023979035223156267
-788,Protecting the C API from Interpreter Finalization,Draft,23-Apr-2025,10,0,1,0.023979035223156267
-799,A dedicated ``profiling`` package for organizing Python profiling tools,Accepted,21-Jul-2025,10,0,2,0.023979035223156267
+591,Adding a final qualifier to typing,Final,15-Mar-2019,10,5,1,0.2596847426212884
+586,Literal Types,Final,14-Mar-2019,10,3,1,0.25277866969533014
+646,Variadic Generics,Final,16-Sep-2020,10,5,1,0.10826090203131941
+637,Support for indexing with keyword arguments,Rejected,24-Aug-2020,10,1,1,0.10164466571359605
+589,TypedDict: Type Hints for Dictionaries with a Fixed Set of Keys,Final,20-Mar-2019,10,7,2,0.04634706342500579
+585,Type Hinting Generics In Standard Collections,Final,03-Mar-2019,10,3,0,0.034176358676815004
+604,Allow writing union types as ``X | Y``,Final,28-Aug-2019,10,3,1,0.023161100441976896
+692,Using TypedDict for more precise \*\*kwargs typing,Final,29-May-2022,10,4,3,0.021798224081407705
+705,TypedDict: Read-only items,Final,07-Nov-2022,10,2,4,0.02168681483971275
+655,Marking individual TypedDict items as required or potentially-missing,Final,30-Jan-2021,10,2,2,0.02040394621374659
+612,Parameter Specification Variables,Final,18-Dec-2019,10,3,0,0.01569033710142984
+728,TypedDict with Typed Extra Items,Accepted,12-Sep-2023,10,2,3,0.01373310312052307
+764,Inline typed dictionaries,Draft,25-Oct-2024,10,1,4,0.011663443166822697
+677,Callable Type Syntax,Rejected,13-Dec-2021,10,1,4,0.01125462144757324
+569,Python 3.8 Release Schedule,Final,27-Jan-2018,10,0,3,0.009619334570575417
+698,Override Decorator for Static Typing,Final,05-Sep-2022,10,0,1,0.009619334570575417
+747,Annotating Type Forms,Final,27-May-2024,10,0,1,0.009619334570575417
+767,Annotating Read-Only Attributes,Draft,18-Nov-2024,10,0,1,0.009619334570575417
+821,Support for unpacking TypedDicts in Callable type hints,Draft,12-Jan-2026,10,0,5,0.009619334570575417
+827,Type Manipulation,Draft,27-Feb-2026,10,0,4,0.009619334570575417

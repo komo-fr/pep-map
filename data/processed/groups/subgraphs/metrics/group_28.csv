@@ -1,13 +1,15 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-202,List Comprehensions,Final,13-Jul-2000,28,5,0,0.25168025767777835
-212,Loop Counter Iteration,Rejected,22-Aug-2000,28,4,2,0.14870758312586083
-279,The enumerate() built-in function,Final,30-Jan-2002,28,2,2,0.1332178391346061
-201,Lockstep Iteration,Final,13-Jul-2000,28,1,1,0.09352776132462697
-281,Loop Counter Iteration with range and xrange,Rejected,11-Feb-2002,28,2,2,0.09338927585163741
-289,Generator Expressions,Final,30-Jan-2002,28,2,1,0.06899515626890751
-204,Range Literals,Rejected,14-Jul-2000,28,2,1,0.052400291547694974
-276,Simple Iterator for ints,Rejected,12-Nov-2001,28,1,2,0.03677206208345066
-274,Dict Comprehensions,Final,25-Oct-2001,28,0,1,0.03032744324635928
-284,Integer for-loops,Rejected,01-Mar-2002,28,0,4,0.03032744324635928
-323,Copyable Iterators,Deferred,25-Oct-2003,28,0,1,0.03032744324635928
-3142,"Add a ""while"" clause to generator expressions",Rejected,12-Jan-2009,28,0,2,0.03032744324635928
+3134,Exception Chaining and Embedded Tracebacks,Final,12-May-2005,28,5,1,0.36596148121434974
+344,Exception Chaining and Embedded Tracebacks,Superseded,12-May-2005,28,1,1,0.3250192479821802
+409,Suppressing exception context,Final,26-Jan-2012,28,2,2,0.05183637647271738
+654,Exception Groups and except*,Final,22-Feb-2021,28,4,1,0.048619766924961
+415,Implement context suppression with exception attributes,Final,26-Feb-2012,28,2,1,0.0399280197153615
+515,Underscores in Numeric Literals,Final,10-Feb-2016,28,1,0,0.03083842513096307
+657,Include Fine Grained Error Locations in Tracebacks,Final,08-May-2021,28,1,0,0.02239228777881406
+641,Using an underscore in the version portion of Python 3.10 compatibility tags,Rejected,20-Oct-2020,28,1,1,0.01987326435799768
+664,Python 3.11 Release Schedule,Active,12-Jul-2021,28,1,2,0.01987326435799768
+678,Enriching Exceptions with Notes,Final,20-Dec-2021,28,1,2,0.01987326435799768
+490,Chain exceptions at C level,Rejected,25-Mar-2015,28,0,3,0.013946150426665041
+785,New methods for easier handling of ``ExceptionGroup``\ s,Draft,08-Apr-2025,28,0,1,0.013946150426665041
+830,Add timestamps to exceptions and tracebacks,Draft,15-Mar-2026,28,0,2,0.013946150426665041
+2026,Calendar versioning for Python,Rejected,11-Jun-2024,28,0,2,0.013946150426665041

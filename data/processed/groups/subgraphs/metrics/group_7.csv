@@ -1,21 +1,21 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-540,Add a new UTF-8 Mode,Final,05-Jan-2016,7,5,3,0.08686479120154257
-549,Instance Descriptors,Rejected,04-Sep-2017,7,1,0,0.08221158433414869
-315,Enhanced While Loop,Rejected,25-Apr-2003,7,1,0,0.07910407451550666
-562,Module __getattr__ and __dir__,Final,09-Sep-2017,7,3,1,0.06859781481455261
-528,Change Windows console encoding to UTF-8,Final,27-Aug-2016,7,2,0,0.06662311719988018
-529,Change Windows filesystem encoding to UTF-8,Final,27-Aug-2016,7,2,0,0.06662311719988018
-548,More Flexible Loop Control,Rejected,05-Sep-2017,7,1,1,0.06494189433412532
-538,Coercing the legacy C locale to a UTF-8 based locale,Final,28-Dec-2016,7,3,3,0.0639150151293831
-456,Secure and interchangeable hash algorithm,Final,27-Sep-2013,7,1,0,0.05730956200199766
-587,Python Initialization Configuration,Final,27-Mar-2019,7,2,4,0.05335436766805099
-553,Built-in breakpoint(),Final,05-Sep-2017,7,2,1,0.048281524414173195
-432,Restructuring the CPython startup sequence,Withdrawn,28-Dec-2012,7,2,2,0.04539802378532897
-552,Deterministic pycs,Final,04-Sep-2017,7,2,1,0.03930313666521514
-597,Add optional EncodingWarning,Final,05-Jun-2019,7,1,0,0.034060121133907606
-537,Python 3.7 Release Schedule,Final,23-Dec-2016,7,0,5,0.023901975933717894
-559,Built-in noop(),Rejected,08-Sep-2017,7,0,1,0.023901975933717894
-686,Make UTF-8 mode default,Final,18-Mar-2022,7,0,2,0.023901975933717894
-713,Callable Modules,Rejected,20-Apr-2023,7,0,1,0.023901975933717894
-726,Module ``__setattr__`` and ``__delattr__``,Rejected,24-Aug-2023,7,0,1,0.023901975933717894
-741,Python Configuration C API,Final,18-Jan-2024,7,0,2,0.023901975933717894
+3101,Advanced String Formatting,Final,16-Apr-2006,7,7,0,0.15018246673021118
+498,Literal String Interpolation,Final,01-Aug-2015,7,5,3,0.09994469627985744
+215,String Interpolation,Superseded,24-Jul-2000,7,4,0,0.09461421511757385
+701,Syntactic formalization of f-strings,Accepted,15-Nov-2022,7,3,2,0.06757217865735836
+536,Final Grammar for Literal String Interpolation,Withdrawn,11-Dec-2016,7,1,2,0.054509885533860276
+414,Explicit Unicode Literal for Python 3.3,Final,15-Feb-2012,7,1,0,0.05410864556391549
+378,Format Specifier for Thousands Separator,Final,12-Mar-2009,7,1,1,0.053925287094379354
+501,General purpose template literal strings,Withdrawn,08-Aug-2015,7,3,7,0.05263043331928887
+750,Template Strings,Final,08-Jul-2024,7,2,3,0.04314343579123125
+306,How to Change Python's Grammar,Withdrawn,29-Jan-2003,7,1,0,0.03675255895389813
+292,Simpler String Substitutions,Final,18-Jun-2002,7,2,1,0.03583584026996279
+475,Retry system calls failing with EINTR,Final,29-Jul-2014,7,1,0,0.033098761193263895
+682,Format Specifier for Signed Zero,Final,29-Jan-2022,7,1,1,0.033098761193263895
+675,Arbitrary Literal String Type,Final,30-Nov-2021,7,1,0,0.03218204250932856
+3105,Make print a function,Final,19-Nov-2006,7,1,0,0.029444963432629666
+502,String Interpolation - Extended Discussion,Rejected,10-Aug-2015,7,0,6,0.025791165671995436
+786,Precision and modulo-precision flag format specifiers for integer fields,Draft,04-Apr-2025,7,0,3,0.025791165671995436
+787,Safer subprocess usage using t-strings,Deferred,13-Apr-2025,7,0,2,0.025791165671995436
+3126,Remove Implicit String Concatenation,Rejected,29-Apr-2007,7,0,1,0.025791165671995436
+3127,Integer Literal Support and Syntax,Final,14-Mar-2007,7,0,2,0.025791165671995436

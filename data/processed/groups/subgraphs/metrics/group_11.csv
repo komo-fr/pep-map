@@ -1,19 +1,20 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-343,"The ""with"" Statement",Final,13-May-2005,11,7,5,0.15656401145926732
-310,Reliable Acquisition/Release Pairs,Rejected,18-Dec-2002,11,4,2,0.08868946303877766
-342,Coroutines via Enhanced Generators,Final,10-May-2005,11,5,4,0.08184249774036995
-319,Python Synchronize/Asynchronize Block,Rejected,24-Feb-2003,11,2,2,0.07831200218238683
-255,Simple Generators,Final,18-May-2001,11,4,2,0.07501993519556137
-234,Iterators,Final,30-Jan-2001,11,4,0,0.06707983769154917
-325,Resource-Release Support for Generators,Rejected,25-Aug-2003,11,6,3,0.06539141574434257
-288,Generators Attributes and Exceptions,Withdrawn,21-Mar-2002,11,4,2,0.06471144880691389
-340,Anonymous Block Statements,Rejected,27-Apr-2005,11,3,6,0.0637657752439079
-220,"Coroutines, Generators, Continuations",Rejected,14-Aug-2000,11,1,0,0.05300988173127835
-219,Stackless Python,Deferred,14-Aug-2000,11,1,1,0.04588813516340681
-346,"User Defined (""``with``"") Statements",Withdrawn,06-May-2005,11,1,6,0.04061984593287668
-3333,Python Web Server Gateway Interface v1.0.1,Final,26-Sep-2010,11,3,4,0.03720889024843403
-333,Python Web Server Gateway Interface v1.0,Final,07-Dec-2003,11,2,3,0.025879407288789562
-334,Simple Coroutines via SuspendIteration,Withdrawn,26-Aug-2004,11,0,2,0.014004363133034438
-377,Allow __enter__() methods to skip the statement body,Rejected,08-Mar-2009,11,0,1,0.014004363133034438
-414,Explicit Unicode Literal for Python 3.3,Final,15-Feb-2012,11,0,1,0.014004363133034438
-444,Python Web3 Interface,Deferred,19-Jul-2010,11,0,3,0.014004363133034438
+4,Deprecation of Standard Modules,Active,01-Oct-2000,11,4,0,0.14266201248726557
+290,Code Migration and Modernization,Active,06-Jun-2002,11,1,1,0.10513556468831343
+348,Exception Reorganization for Python 3.0,Rejected,28-Jul-2005,11,2,1,0.09749940142806508
+358,"The ""bytes"" Object",Final,15-Feb-2006,11,2,2,0.07572666346783416
+3100,Miscellaneous Python 3.0 Plans,Final,20-Aug-2004,11,4,7,0.06776575639489248
+352,Required Superclass for Exceptions,Final,27-Oct-2005,11,4,1,0.06625487234573489
+3137,Immutable Bytes and Mutable Buffer,Final,26-Sep-2007,11,2,0,0.06267149299113076
+3099,Things that will Not Change in Python 3000,Final,04-Apr-2006,11,3,0,0.05915074737127006
+3112,Bytes literals in Python 3000,Final,23-Feb-2007,11,2,1,0.05832848523161109
+3000,Python 3000,Final,05-Apr-2006,11,2,3,0.034375290590735186
+361,Python 2.6 and 3.0 Release Schedule,Final,29-Jun-2006,11,1,7,0.03200040751092782
+3001,Procedure for reviewing and improving standard library modules,Withdrawn,05-Apr-2006,11,1,0,0.030489523461770238
+3110,Catching Exceptions in Python 3000,Final,16-Jan-2006,11,1,2,0.030489523461770238
+371,Addition of the multiprocessing package to the standard library,Final,06-May-2008,11,1,0,0.026146515702250565
+294,Type Names in the types Module,Rejected,19-Jun-2002,11,0,1,0.022260748573285617
+3104,Access to Names in Outer Scopes,Final,12-Oct-2006,11,0,1,0.022260748573285617
+3109,Raising Exceptions in Python 3000,Final,19-Jan-2006,11,0,1,0.022260748573285617
+3111,Simple input built-in in Python 3000,Final,13-Sep-2006,11,0,1,0.022260748573285617
+3151,Reworking the OS and IO exception hierarchy,Final,21-Jul-2010,11,0,1,0.022260748573285617

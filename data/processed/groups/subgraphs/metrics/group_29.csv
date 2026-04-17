@@ -1,13 +1,14 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-384,Defining a Stable ABI,Final,17-May-2009,29,6,1,0.36699338888279315
-3149,ABI version tagged .so files,Final,09-Jul-2010,29,2,1,0.3297522231184222
-580,The C call protocol,Rejected,14-Jun-2018,29,4,5,0.06642975005233898
-393,Flexible String Representation,Final,24-Jan-2010,29,3,1,0.04809374999999999
-576,Rationalize Built-in function classes,Withdrawn,10-May-2018,29,3,1,0.03753312122922922
-579,Refactoring C functions and methods,Final,04-Jun-2018,29,2,5,0.03207959078914727
-575,Unifying function/method classes,Withdrawn,27-Mar-2018,29,2,3,0.029246587964034478
-590,Vectorcall: a fast calling protocol for CPython,Final,29-Mar-2019,29,2,3,0.029246587964034478
-623,Remove wstr from Unicode,Final,25-Jun-2020,29,1,1,0.023125
-624,Remove Py_UNICODE encoder APIs,Final,06-Jul-2020,29,0,1,0.0125
-720,Cross-compiling Python packages,Draft,01-Jul-2023,29,0,2,0.0125
-756,Add PyUnicode_Export() and PyUnicode_Import() C functions,Withdrawn,13-Sep-2024,29,0,1,0.0125
+277,Unicode file name support for Windows NT,Final,11-Jan-2002,29,1,0,0.0859512302925086
+293,Codec Error Handling Callbacks,Final,18-Jun-2002,29,1,0,0.0859512302925086
+355,Path - Object oriented filesystem paths,Rejected,24-Jan-2006,29,1,0,0.0859512302925086
+411,Provisional packages in the Python standard library,Superseded,10-Feb-2012,29,1,6,0.0859512302925086
+2,Procedure for Adding New Modules,Active,07-Jul-2001,29,2,0,0.07687819889694732
+368,Standard image protocol and class,Deferred,28-Jun-2007,29,2,0,0.07687819889694732
+3143,Standard daemon process library,Deferred,26-Jan-2009,29,2,0,0.07687819889694732
+3144,IP Address Manipulation Library for the Python Standard Library,Final,06-Feb-2012,29,2,0,0.07687819889694732
+3153,Asynchronous IO support,Superseded,29-May-2011,29,2,0,0.07687819889694732
+383,Non-decodable Bytes in System Character Interfaces,Final,22-Apr-2009,29,1,2,0.07628240353151383
+428,The pathlib module -- object-oriented filesystem paths,Final,30-Jul-2012,29,1,2,0.07628240353151383
+408,Standard library __preview__ package,Rejected,07-Jan-2012,29,1,5,0.065707808476892
+519,Adding a file system path protocol,Final,11-May-2016,29,0,2,0.05353146880530931

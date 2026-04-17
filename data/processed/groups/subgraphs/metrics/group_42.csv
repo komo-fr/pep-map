@@ -1,4 +1,3 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-578,Python Runtime Audit Hooks,Final,16-Jun-2018,42,2,1,0.48648582432442095
-551,Security transparency in the Python runtime,Withdrawn,23-Aug-2017,42,1,1,0.46351417567557884
-829,Structured Startup Configuration via .site.toml Files,Draft,31-Mar-2026,42,0,1,0.05
+248,Python Database API Specification v1.0,Final,08-May-1996,42,1,0,0.649122638064138
+249,Python Database API Specification v2.0,Final,12-Apr-1999,42,0,1,0.3508773619358619

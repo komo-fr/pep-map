@@ -1,18 +1,18 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-3101,Advanced String Formatting,Final,16-Apr-2006,16,7,0,0.18009467359482417
-215,String Interpolation,Superseded,24-Jul-2000,16,4,0,0.12221787889041173
-498,Literal String Interpolation,Final,01-Aug-2015,16,5,2,0.11099940396269012
-701,Syntactic formalization of f-strings,Accepted,15-Nov-2022,16,3,2,0.07459163176361382
-536,Final Grammar for Literal String Interpolation,Withdrawn,11-Dec-2016,16,1,2,0.05938966027950007
-378,Format Specifier for Thousands Separator,Final,12-Mar-2009,16,1,1,0.05789256965740292
-501,General purpose template literal strings,Withdrawn,08-Aug-2015,16,3,6,0.057656984319792916
-750,Template Strings,Final,08-Jul-2024,16,2,3,0.04762453972733717
-292,Simpler String Substitutions,Final,18-Jun-2002,16,2,1,0.04056403809350885
-306,How to Change Python's Grammar,Withdrawn,29-Jan-2003,16,1,0,0.03945639189268986
-475,Retry system calls failing with EINTR,Final,29-Jul-2014,16,1,0,0.03553389098500746
-682,Format Specifier for Signed Zero,Final,29-Jan-2022,16,1,1,0.03553389098500746
-502,String Interpolation - Extended Discussion,Rejected,10-Aug-2015,16,0,5,0.02768888916964267
-786,Precision and modulo-precision flag format specifiers for integer fields,Draft,04-Apr-2025,16,0,3,0.02768888916964267
-787,Safer subprocess usage using t-strings,Deferred,13-Apr-2025,16,0,2,0.02768888916964267
-3126,Remove Implicit String Concatenation,Rejected,29-Apr-2007,16,0,1,0.02768888916964267
-3127,Integer Literal Support and Syntax,Final,14-Mar-2007,16,0,2,0.02768888916964267
+1,PEP Purpose and Guidelines,Active,13-Jun-2000,16,6,3,0.2159784993260178
+12,Sample reStructuredText PEP Template,Active,05-Aug-2002,16,4,1,0.12935402305371088
+676,PEP Infrastructure Process,Active,01-Nov-2021,16,1,2,0.07702330618247834
+729,Typing governance process,Active,19-Sep-2023,16,1,4,0.07702330618247834
+287,reStructuredText Docstring Format,Active,25-Mar-2002,16,3,4,0.06906599588864878
+647,User-Defined Type Guards,Final,07-Oct-2020,16,3,0,0.058097167723188424
+256,Docstring Processing System Framework,Rejected,01-Jun-2001,16,3,3,0.05307437739731011
+224,Attribute Docstrings,Rejected,23-Aug-2000,16,2,0,0.04982720126346109
+258,Docutils Design Specification,Rejected,31-May-2001,16,2,6,0.04680485347687822
+257,Docstring Conventions,Active,29-May-2001,16,2,2,0.03749852918046958
+216,Docstring Format,Withdrawn,31-Jul-2000,16,2,1,0.0371372107594334
+718,Subscriptable functions,Draft,23-Jun-2023,16,1,0,0.03219665648719486
+727,Documentation in Annotated Metadata,Withdrawn,28-Aug-2023,16,1,1,0.03219665648719486
+9,Sample Plaintext PEP Template,Withdrawn,14-Aug-2001,16,1,2,0.030506368417965328
+724,Stricter Type Guards,Withdrawn,28-Jul-2023,16,1,1,0.022556907050251176
+226,Python 2.1 Release Schedule,Final,16-Oct-2000,16,0,1,0.01582947056165932
+742,Narrowing types with TypeIs,Final,07-Feb-2024,16,0,2,0.01582947056165932

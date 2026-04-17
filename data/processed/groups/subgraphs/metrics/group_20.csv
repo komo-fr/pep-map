@@ -1,17 +1,18 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-409,Suppressing exception context,Final,26-Jan-2012,20,3,1,0.2528922069717724
-415,Implement context suppression with exception attributes,Final,26-Feb-2012,20,3,1,0.2528922069717724
-3155,Qualified name for classes and functions,Final,29-Oct-2011,20,3,0,0.0611642632139258
-399,Pure Python/C Accelerator Module Compatibility Requirements,Final,04-Apr-2011,20,3,0,0.0585705191603403
-421,Adding sys.implementation,Final,26-Apr-2012,20,2,2,0.04854846982324016
-3139,"Cleaning out sys and the ""interpreter"" module",Rejected,04-Apr-2008,20,1,0,0.04560105040968233
-418,"Add monotonic time, performance counter, and process time functions",Final,26-Mar-2012,20,2,0,0.037937086299974554
-410,Use decimal.Decimal type for timestamps,Rejected,01-Feb-2012,20,1,0,0.03557900107258219
-362,Function Signature Object,Final,21-Aug-2006,20,1,0,0.02732570277670894
-417,Including mock in the Standard Library,Final,12-Mar-2012,20,1,0,0.02732570277670894
-3154,Pickle protocol version 4,Final,11-Aug-2011,20,1,1,0.02732570277670894
-398,Python 3.3 Release Schedule,Final,23-Mar-2011,20,0,9,0.024967617549316583
-490,Chain exceptions at C level,Rejected,25-Mar-2015,20,0,2,0.024967617549316583
-564,Add new time functions with nanosecond resolution,Final,16-Oct-2017,20,0,2,0.024967617549316583
-737,C API to format a type fully qualified name,Final,29-Nov-2023,20,0,2,0.024967617549316583
-739,``build-details.json`` 1.0 — a static description file for Python build details,Accepted,19-Dec-2023,20,0,1,0.024967617549316583
+399,Pure Python/C Accelerator Module Compatibility Requirements,Final,04-Apr-2011,20,4,0,0.10924296047183697
+3003,Python Language Moratorium,Final,21-Oct-2009,20,2,0,0.09989920703068808
+3155,Qualified name for classes and functions,Final,29-Oct-2011,20,3,0,0.09834048911112586
+421,Adding sys.implementation,Final,26-Apr-2012,20,2,2,0.07666189430304582
+3139,"Cleaning out sys and the ""interpreter"" module",Rejected,04-Apr-2008,20,1,0,0.07047528380349188
+418,"Add monotonic time, performance counter, and process time functions",Final,26-Mar-2012,20,2,0,0.06055660605055134
+398,Python 3.3 Release Schedule,Final,23-Mar-2011,20,1,7,0.05399950588719522
+407,New release cycle and introducing long-term support versions,Deferred,12-Jan-2012,20,1,1,0.05399950588719522
+410,Use decimal.Decimal type for timestamps,Rejected,01-Feb-2012,20,1,0,0.05399950588719522
+362,Function Signature Object,Final,21-Aug-2006,20,1,0,0.04445131779805686
+417,Including mock in the Standard Library,Final,12-Mar-2012,20,1,0,0.04445131779805686
+3154,Pickle protocol version 4,Final,11-Aug-2011,20,1,1,0.04445131779805686
+392,Python 3.2 Release Schedule,Final,30-Dec-2009,20,0,2,0.03789421763470074
+413,Faster evolution of the Python Standard Library,Withdrawn,24-Feb-2012,20,0,2,0.03789421763470074
+564,Add new time functions with nanosecond resolution,Final,16-Oct-2017,20,0,2,0.03789421763470074
+737,C API to format a type fully qualified name,Final,29-Nov-2023,20,0,2,0.03789421763470074
+739,``build-details.json`` 1.0 — a static description file for Python build details,Accepted,19-Dec-2023,20,0,1,0.03789421763470074

@@ -1,11 +1,12 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-506,Adding A Secrets Module To The Standard Library,Final,19-Sep-2015,33,2,1,0.27655530523336724
-504,Using the System RNG by default,Withdrawn,15-Sep-2015,33,1,1,0.265280293791338
-466,Network Security Enhancements for Python 2.7.x,Final,23-Mar-2014,33,3,0,0.11021095377172921
-522,Allow BlockingIOError in security sensitive APIs,Rejected,16-Jun-2016,33,1,3,0.07361884494677166
-543,A Unified TLS API for Python,Withdrawn,17-Oct-2016,33,2,0,0.068727846399215
-476,Enabling certificate verification by default for stdlib http clients,Final,28-Aug-2014,33,2,1,0.0639081254958999
-524,Make os.urandom() blocking on Linux,Final,20-Jun-2016,33,1,1,0.05106882206271331
-493,HTTPS verification migration tools for Python 2.7,Final,10-May-2015,33,0,2,0.030209936099655246
-546,Backport ssl.MemoryBIO and ssl.SSLObject to Python 2.7,Rejected,30-May-2017,33,0,2,0.030209936099655246
-748,A Unified TLS API for Python,Draft,27-Jun-2024,33,0,1,0.030209936099655246
+308,Conditional Expressions,Final,07-Feb-2003,33,4,0,0.21973514969953753
+318,Decorators for Functions and Methods,Final,05-Jun-2003,33,1,2,0.1931551104214719
+3129,Class Decorators,Final,01-May-2007,33,2,1,0.17081600010991568
+309,Partial Function Application,Final,08-Feb-2003,33,1,0,0.05611331327026955
+341,Unifying try-except and try-finally,Final,04-May-2005,33,1,0,0.05611331327026955
+353,Using ssize_t as the index type,Final,18-Dec-2005,33,1,0,0.05611331327026955
+357,Allowing Any Object to be Used for Slicing,Final,09-Feb-2006,33,1,0,0.05611331327026955
+312,Simple Implicit Lambda,Deferred,11-Feb-2003,33,0,1,0.04796012167199924
+356,Python 2.5 Release Schedule,Final,07-Feb-2006,33,0,5,0.04796012167199924
+463,Exception-catching expressions,Rejected,15-Feb-2014,33,0,1,0.04796012167199924
+3133,Introducing Roles,Rejected,01-May-2007,33,0,1,0.04796012167199924

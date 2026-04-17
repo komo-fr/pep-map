@@ -1,23 +1,22 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-381,Mirroring infrastructure for PyPI,Withdrawn,21-Mar-2009,4,4,1,0.12682931455632615
-305,CSV File API,Final,26-Jan-2003,4,1,0,0.12470187854160238
-458,Secure PyPI downloads with signed repository metadata,Accepted,27-Sep-2013,4,3,4,0.10720028746913156
-480,Surviving a Compromise of PyPI: End-to-end signing of packages,Draft,08-Oct-2014,4,3,1,0.07056810876568197
-592,"Adding ""Yank"" Support to the Simple API",Final,07-May-2019,4,4,0,0.06311708592170805
-740,Index support for digital attestations,Final,08-Jan-2024,4,3,2,0.054456271453013176
-438,Transitioning to release-file hosting on PyPI,Superseded,15-Mar-2013,4,2,1,0.05441294810380965
-470,Removing External Hosting Support on PyPI,Final,12-May-2014,4,2,1,0.041725552429789724
-449,Removal of the PyPI Mirror Auto Discovery and Naming Scheme,Final,04-Aug-2013,4,1,1,0.03967412310447059
-708,Extending the Repository API to Mitigate Dependency Confusion Attacks,Provisional,20-Feb-2023,4,3,0,0.03909629076564851
-752,Implicit namespaces for package repositories,Draft,13-Aug-2024,4,2,4,0.03647424394508814
-694,Upload 2.0 API for Python Package Indexes,Draft,11-Jun-2022,4,3,2,0.036357036080723854
-541,Package Index Name Retention,Final,12-Jan-2017,4,3,0,0.033876248840515204
-766,Explicit Priority Choices Among Multiple Indexes,Draft,18-Nov-2024,4,2,2,0.029177033442106887
-817,Wheel Variants: Beyond Platform Tags,Draft,10-Dec-2025,4,1,2,0.02407419938133788
-464,Removal of the PyPI Mirror Authenticity API,Final,02-Mar-2014,4,0,2,0.016894196742720913
-755,Implicit namespace policy for PyPI,Draft,05-Sep-2024,4,0,2,0.016894196742720913
-759,External Wheel Hosting,Withdrawn,01-Oct-2024,4,0,7,0.016894196742720913
-763,Limiting deletions on PyPI,Withdrawn,24-Oct-2024,4,0,1,0.016894196742720913
-792,Project status markers in the simple index,Final,21-May-2025,4,0,1,0.016894196742720913
-807,Index support for Trusted Publishing,Draft,19-Sep-2025,4,0,1,0.016894196742720913
-825,Wheel Variants: Package Format,Draft,17-Feb-2026,4,0,2,0.016894196742720913
+506,Adding A Secrets Module To The Standard Library,Final,19-Sep-2015,4,3,1,0.19134179467144966
+504,Using the System RNG by default,Withdrawn,15-Sep-2015,4,1,1,0.1787254915118358
+380,Syntax for Delegating to a Subgenerator,Final,13-Feb-2009,4,7,0,0.11077257647569565
+523,Adding a frame evaluation API to CPython,Final,16-May-2016,4,3,0,0.05046969629856406
+522,Allow BlockingIOError in security sensitive APIs,Rejected,16-Jun-2016,4,1,2,0.04959571798691576
+492,Coroutines with async and await syntax,Final,09-Apr-2015,4,3,4,0.049293726704799076
+3156,"Asynchronous IO Support Rebooted: the ""asyncio"" Module",Final,12-Dec-2012,4,2,3,0.04021814019909035
+524,Make os.urandom() blocking on Linux,Final,20-Jun-2016,4,2,1,0.039433252172882724
+525,Asynchronous Generators,Final,28-Jul-2016,4,3,2,0.03298884201098239
+468,Preserving the order of \*\*kwargs in a function.,Final,05-Apr-2014,4,2,0,0.03202084643729086
+689,Unstable C API tier,Final,22-Apr-2022,4,1,1,0.029743212111632576
+3148,futures - execute computations asynchronously,Final,16-Oct-2009,4,1,0,0.027472557499141542
+479,Change StopIteration handling inside generators,Final,15-Nov-2014,4,1,1,0.026552334245140627
+3152,Cofunctions,Rejected,13-Feb-2009,4,1,1,0.026552334245140627
+530,Asynchronous Comprehensions,Final,03-Sep-2016,4,1,2,0.01835504048334114
+472,Support for indexing with keyword arguments,Rejected,24-Jun-2014,4,0,1,0.016077406157682855
+494,Python 3.6 Release Schedule,Final,30-May-2015,4,0,6,0.016077406157682855
+669,Low Impact Monitoring for CPython,Final,18-Aug-2021,4,0,2,0.016077406157682855
+733,An Evaluation of Python's Public C API,Final,16-Oct-2023,4,0,1,0.016077406157682855
+828,Supporting 'yield from' in asynchronous generators,Draft,07-Mar-2026,4,0,2,0.016077406157682855
+3145,Asynchronous I/O For subprocess.Popen,Withdrawn,04-Aug-2009,4,0,1,0.016077406157682855

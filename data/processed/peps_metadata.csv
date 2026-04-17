@@ -525,7 +525,7 @@ pep_number,title,status,type,created,authors,topic,requires,replaces,python_vers
 705,TypedDict: Read-only items,Final,Standards Track,07-Nov-2022,Alice Purcell,Typing,,,3.13
 706,Filter for tarfile.extractall,Final,Standards Track,09-Feb-2023,Petr Viktorin,,,,3.12
 707,A simplified signature for __exit__ and __aexit__,Rejected,Standards Track,18-Feb-2023,Irit Katriel,,,,3.12
-708,Extending the Repository API to Mitigate Dependency Confusion Attacks,Provisional,Standards Track,20-Feb-2023,Donald Stufft,Packaging,,,
+708,Extending the Repository API to Mitigate Dependency Confusion Attacks,Rejected,Standards Track,20-Feb-2023,Donald Stufft,Packaging,,,
 709,Inlined comprehensions,Final,Standards Track,24-Feb-2023,Carl Meyer,,,,3.12
 710,Recording the provenance of installed packages,Draft,Standards Track,27-Mar-2023,Fridolín Pokorný,Packaging,,,
 711,PyBI: a standard format for distributing Python Binaries,Draft,Standards Track,06-Apr-2023,Nathaniel J. Smith,Packaging,,,
@@ -587,7 +587,7 @@ pep_number,title,status,type,created,authors,topic,requires,replaces,python_vers
 769,"Add a 'default' keyword argument to 'attrgetter', 'itemgetter' and 'getitem'",Rejected,Standards Track,22-Dec-2024,Facundo Batista,,,,3.14
 770,Improving measurability of Python packages with Software Bill-of-Materials,Accepted,Standards Track,02-Jan-2025,Seth Larson,Packaging,,,
 771,Default Extras for Python Software Packages,Draft,Standards Track,13-Jan-2025,Thomas Robitaille; Jonathan Dekhtiar,Packaging,,,
-772,Packaging Council governance process,Draft,Process,21-Jan-2025,Barry Warsaw; Deb Nicholson; Pradyun Gedam,Governance; Packaging,,609,
+772,Packaging Council governance process,Accepted,Process,21-Jan-2025,Barry Warsaw; Deb Nicholson; Pradyun Gedam,Governance; Packaging,,609,
 773,A Python Installation Manager for Windows,Accepted,Standards Track,21-Jan-2025,Steve Dower,Release,,397; 486,
 774,Removing the LLVM requirement for JIT builds,Deferred,Standards Track,27-Jan-2025,Savannah Ostrowski,,,,3.14
 775,Make zlib required to build CPython,Withdrawn,Standards Track,24-Feb-2025,Gregory P. Smith; Stan Ulbrych; Petr Viktorin,,,,3.14
@@ -613,7 +613,7 @@ pep_number,title,status,type,created,authors,topic,requires,replaces,python_vers
 797,Shared Object Proxies,Draft,Standards Track,08-Aug-2025,Peter Bierma,,,,3.15
 798,Unpacking in Comprehensions,Accepted,Standards Track,19-Jul-2025,Adam Hartz; Erik Demaine,,,,3.15
 799,A dedicated ``profiling`` package for organizing Python profiling tools,Accepted,Standards Track,21-Jul-2025,Pablo Galindo Salgado; László Kiss Kollár,,,,3.15
-800,Disjoint bases in the type system,Draft,Standards Track,21-Jul-2025,Jelle Zijlstra,Typing,,,3.15
+800,Disjoint bases in the type system,Accepted,Standards Track,21-Jul-2025,Jelle Zijlstra,Typing,,,3.15
 801,Reserved,Active,Informational,21-Jun-2018,Barry Warsaw,,,,
 802,Display Syntax for the Empty Set,Draft,Standards Track,08-Aug-2025,Adam Turner,,,,3.15
 803,"""abi3t"": Stable ABI for Free-Threaded Builds",Accepted,Standards Track,19-Aug-2025,Petr Viktorin; Nathan Goldbaum,,703; 793; 697,,3.15
@@ -638,7 +638,10 @@ pep_number,title,status,type,created,authors,topic,requires,replaces,python_vers
 826,Python 3.16 Release Schedule,Active,Informational,23-Feb-2026,Savannah Ostrowski,Release,,,3.16
 827,Type Manipulation,Draft,Standards Track,27-Feb-2026,Michael J. Sullivan; Daniel W. Park; Yury Selivanov,Typing,,,3.15
 828,Supporting 'yield from' in asynchronous generators,Draft,Standards Track,07-Mar-2026,Peter Bierma,,,,3.15
-829,Structured Startup Configuration via .site.toml Files,Draft,Standards Track,31-Mar-2026,Barry Warsaw,Packaging,,,3.15
+829,Package Startup Configuration Files,Draft,Standards Track,31-Mar-2026,Barry Warsaw,,,,3.15
+830,Add timestamps to exceptions and tracebacks,Draft,Standards Track,15-Mar-2026,Gregory P. Smith,,,,3.15
+831,Frame Pointers Everywhere: Enabling System-Level Observability for Python,Draft,Standards Track,14-Mar-2026,Pablo Galindo Salgado; Ken Jin; Savannah Ostrowski,,,,3.15
+832,Virtual environment discovery,Draft,Standards Track,19-Jan-2026,Brett Cannon,,,,3.15
 2026,Calendar versioning for Python,Rejected,Process,11-Jun-2024,Hugo van Kemenade,,,,3.26
 3000,Python 3000,Final,Process,05-Apr-2006,Guido van Rossum,,,,
 3001,Procedure for reviewing and improving standard library modules,Withdrawn,Process,05-Apr-2006,Georg Brandl,,,,

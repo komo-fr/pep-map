@@ -1,16 +1,18 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-211,Adding A New Outer Product Operator,Rejected,15-Jul-2000,21,4,3,0.17696078351677186
-465,A dedicated infix operator for matrix multiplication,Final,20-Feb-2014,21,5,2,0.16222996137958112
-225,Elementwise/Objectwise Operators,Rejected,19-Sep-2000,21,3,2,0.14959923945316445
-461,Adding % formatting to bytes and bytearray,Final,13-Jan-2014,21,2,1,0.11753107357357742
-460,Add binary interpolation and formatting,Withdrawn,06-Jan-2014,21,1,1,0.11628191770029836
-209,Multi-dimensional Arrays,Withdrawn,03-Jan-2001,21,1,4,0.06651638941898633
-207,Rich Comparisons,Final,25-Jul-2000,21,2,0,0.05644737579304433
-208,Reworking the Coercion Model,Final,04-Dec-2000,21,1,1,0.03051205055279266
-441,Improving Python ZIP Application Support,Final,30-Mar-2013,21,1,0,0.018697363939760778
-471,os.scandir() function -- a better and faster directory iterator,Final,30-May-2014,21,1,0,0.018697363939760778
-485,A Function for testing approximate equality,Final,20-Jan-2015,21,1,0,0.018697363939760778
-488,Elimination of PYO files,Final,20-Feb-2015,21,1,1,0.018697363939760778
-203,Augmented Assignments,Final,13-Jul-2000,21,0,1,0.01637725095091346
-478,Python 3.5 Release Schedule,Final,22-Sep-2014,21,0,6,0.01637725095091346
-820,PySlot: Unified slot system for the C API,Draft,19-Dec-2025,21,0,1,0.01637725095091346
+394,"The ""python"" Command on Unix-Like Systems",Active,02-Mar-2011,21,3,4,0.12551688967507152
+466,Network Security Enhancements for Python 2.7.x,Final,23-Mar-2014,21,4,0,0.11436805987883093
+397,Python launcher for Windows,Final,15-Mar-2011,21,4,1,0.10054121651651872
+370,Per user site-packages directory,Final,11-Jan-2008,21,2,0,0.09797901931052008
+404,Python 2.8 Un-release Schedule,Final,09-Nov-2011,21,2,0,0.08584256490640953
+373,Python 2.7 Release Schedule,Final,03-Nov-2008,21,2,2,0.07621417627574183
+405,Python Virtual Environments,Final,13-Jun-2011,21,3,1,0.07483897359188373
+543,A Unified TLS API for Python,Withdrawn,17-Oct-2016,21,2,0,0.06092255827685356
+476,Enabling certificate verification by default for stdlib http clients,Final,28-Aug-2014,21,1,1,0.038160439642972596
+486,Make the Python Launcher aware of virtual environments,Final,12-Feb-2015,21,1,2,0.03246990998450235
+514,Python registration in the Windows registry,Active,02-Feb-2016,21,1,1,0.03246990998450235
+439,Inclusion of implicit pip bootstrap in Python installation,Rejected,18-Mar-2013,21,0,3,0.02677938032603211
+493,HTTPS verification migration tools for Python 2.7,Final,10-May-2015,21,0,2,0.02677938032603211
+546,Backport ssl.MemoryBIO and ssl.SSLObject to Python 2.7,Rejected,30-May-2017,21,0,2,0.02677938032603211
+748,A Unified TLS API for Python,Draft,27-Jun-2024,21,0,1,0.02677938032603211
+773,A Python Installation Manager for Windows,Accepted,21-Jan-2025,21,0,4,0.02677938032603211
+3146,Merging Unladen Swallow into CPython,Withdrawn,01-Jan-2010,21,0,1,0.02677938032603211

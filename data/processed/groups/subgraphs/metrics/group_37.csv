@@ -1,8 +1,6 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-652,Maintaining the Stable ABI,Final,09-Feb-2021,37,3,0,0.20116687101645644
-703,Making the Global Interpreter Lock Optional in CPython,Accepted,09-Jan-2023,37,3,0,0.20116687101645644
-803,"""abi3t"": Stable ABI for Free-Threaded Builds",Accepted,19-Aug-2025,37,2,6,0.17620464076256176
-697,Limited C API for Extending Opaque Types,Final,23-Aug-2022,37,2,1,0.10873870127548518
-779,Criteria for supported status for free-threaded Python,Final,13-Mar-2025,37,2,1,0.10873870127548518
-793,PyModExport: A new entry point for C extension modules,Accepted,23-May-2025,37,2,1,0.10873870127548518
-809,Stable ABI for the Future,Draft,19-Sep-2025,37,1,6,0.09524551337806988
+3118,Revising the buffer protocol,Final,28-Aug-2006,37,3,0,0.41390787914100396
+436,The Argument Clinic DSL,Final,22-Feb-2013,37,1,0,0.18874169057152618
+437,"A DSL for specifying signatures, annotations and argument converters",Rejected,11-Mar-2013,37,0,2,0.13245014342915673
+574,Pickle protocol 5 with out-of-band data,Final,23-Mar-2018,37,0,1,0.13245014342915673
+688,Making the buffer protocol accessible in Python,Final,23-Apr-2022,37,0,1,0.13245014342915673

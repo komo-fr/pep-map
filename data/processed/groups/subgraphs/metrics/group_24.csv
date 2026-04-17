@@ -1,15 +1,16 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-3121,Extension Module Initialization and Finalization,Final,27-Apr-2007,24,4,0,0.20892422332036809
-489,Multi-phase extension module initialization,Final,11-Aug-2013,24,6,1,0.14383260084160393
-554,Multiple Interpreters in the Stdlib,Superseded,05-Sep-2017,24,3,7,0.08405789509839885
-573,Module State Access from C Extension Methods,Final,02-Jun-2016,24,4,2,0.0821377590843694
-3118,Revising the buffer protocol,Final,28-Aug-2006,24,3,0,0.08190030787540123
-684,A Per-Interpreter GIL,Final,08-Mar-2022,24,2,6,0.070836647179165
-734,Multiple Interpreters in the Stdlib,Final,06-Nov-2023,24,2,2,0.06850719519300472
-683,"Immortal Objects, Using a Fixed Refcount",Final,10-Feb-2022,24,2,0,0.051756212477982164
-630,Isolating Extension Modules,Final,25-Aug-2020,24,2,2,0.05047784685331338
-547,Running extension modules using the -m option,Deferred,25-May-2017,24,0,1,0.031513862415278586
-574,Pickle protocol 5 with out-of-band data,Final,23-Mar-2018,24,0,2,0.031513862415278586
-687,Isolating modules in the standard library,Accepted,04-Apr-2022,24,0,3,0.031513862415278586
-688,Making the buffer protocol accessible in Python,Final,23-Apr-2022,24,0,1,0.031513862415278586
-797,Shared Object Proxies,Draft,08-Aug-2025,24,0,1,0.031513862415278586
+236,Back to the __future__,Final,26-Feb-2001,24,6,4,0.22998924851466032
+227,Statically Nested Scopes,Final,01-Nov-2000,24,3,1,0.11262398210768462
+5,Guidelines for Language Evolution,Superseded,26-Oct-2000,24,4,0,0.09491809382414254
+264,Future statements in simulated shells,Final,30-Jul-2001,24,2,1,0.08808926075752255
+230,Warning Framework,Final,28-Nov-2000,24,2,0,0.08208559945708924
+558,Defined semantics for locals(),Withdrawn,08-Sep-2017,24,2,2,0.0718576466835176
+667,Consistent views of namespaces,Final,30-Jul-2021,24,1,2,0.05641848995499844
+296,Adding a bytes Object Type,Withdrawn,12-Jul-2002,24,2,0,0.05337830951951727
+709,Inlined comprehensions,Final,24-Feb-2023,24,1,0,0.04985908491142626
+238,Changing the Division Operator,Final,11-Mar-2001,24,1,2,0.03137974774742591
+244,The ``directive`` statement,Rejected,20-Mar-2001,24,0,3,0.025880107304403075
+298,The Locked Buffer Interface,Withdrawn,26-Jul-2002,24,0,1,0.025880107304403075
+317,Eliminate Implicit Exception Instantiation,Rejected,06-May-2003,24,0,3,0.025880107304403075
+497,A standard mechanism for backward compatibility,Rejected,04-Aug-2015,24,0,4,0.025880107304403075
+577,Augmented Assignment Expressions,Withdrawn,14-May-2018,24,0,1,0.025880107304403075

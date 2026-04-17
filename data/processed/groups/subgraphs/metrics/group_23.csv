@@ -1,16 +1,17 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-3102,Keyword-Only Arguments,Final,22-Apr-2006,23,4,0,0.2139153680615829
-3115,Metaclasses in Python 3000,Final,07-Mar-2007,23,3,1,0.10450869384159739
-3130,Access to Current Module/Class/Function,Rejected,22-Apr-2007,23,2,0,0.07927734933368769
-3135,New Super,Final,28-Apr-2007,23,2,2,0.06828009934396939
-3113,Removal of Tuple Parameter Unpacking,Final,02-Mar-2007,23,2,1,0.06761177208668175
-570,Python Positional-Only Parameters,Final,20-Jan-2018,23,1,3,0.06485668051612961
-422,Simpler customisation of class creation,Withdrawn,05-Jun-2012,23,2,3,0.06360630482182107
-487,Simpler customisation of class creation,Final,27-Feb-2015,23,2,3,0.06360630482182107
-367,New Super,Superseded,28-Apr-2007,23,1,2,0.05563318840882948
-372,Adding an ordered dictionary to collections,Final,15-Jun-2008,23,1,1,0.0492363816245521
-457,Notation For Positional-Only Parameters,Final,08-Oct-2013,23,1,1,0.04498952252665134
-520,Preserving Class Attribute Definition Order,Final,07-Jun-2016,23,1,2,0.04463593841911119
-375,Python 3.1 Release Schedule,Final,08-Feb-2009,23,0,1,0.0266141320645217
-736,Shorthand syntax for keyword arguments at invocation,Rejected,28-Nov-2023,23,0,1,0.0266141320645217
-3114,Renaming iterator.next() to iterator.__next__(),Final,04-Mar-2007,23,0,1,0.0266141320645217
+540,Add a new UTF-8 Mode,Final,05-Jan-2016,23,5,3,0.10894826932981205
+315,Enhanced While Loop,Rejected,25-Apr-2003,23,1,0,0.0985228016583192
+528,Change Windows console encoding to UTF-8,Final,27-Aug-2016,23,2,0,0.08320901394307237
+529,Change Windows filesystem encoding to UTF-8,Final,27-Aug-2016,23,2,0,0.08320901394307237
+548,More Flexible Loop Control,Rejected,05-Sep-2017,23,1,1,0.08120981684025902
+538,Coercing the legacy C locale to a UTF-8 based locale,Final,28-Dec-2016,23,3,3,0.08062540810192109
+456,Secure and interchangeable hash algorithm,Final,27-Sep-2013,23,1,0,0.07179055472447116
+587,Python Initialization Configuration,Final,27-Mar-2019,23,2,4,0.06584423847151935
+553,Built-in breakpoint(),Final,05-Sep-2017,23,2,1,0.0608382456687591
+432,Restructuring the CPython startup sequence,Withdrawn,28-Dec-2012,23,2,2,0.0560252697548722
+552,Deterministic pycs,Final,04-Sep-2017,23,2,1,0.0497569726492578
+597,Add optional EncodingWarning,Final,05-Jun-2019,23,1,0,0.042033354351915894
+537,Python 3.7 Release Schedule,Final,23-Dec-2016,23,0,4,0.029496760140687094
+559,Built-in noop(),Rejected,08-Sep-2017,23,0,1,0.029496760140687094
+686,Make UTF-8 mode default,Final,18-Mar-2022,23,0,2,0.029496760140687094
+741,Python Configuration C API,Final,18-Jan-2024,23,0,2,0.029496760140687094

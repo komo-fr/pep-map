@@ -1,12 +1,13 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-3003,Python Language Moratorium,Final,21-Oct-2009,31,2,0,0.21933838487919047
-407,New release cycle and introducing long-term support versions,Deferred,12-Jan-2012,31,2,1,0.12394959965675972
-2,Procedure for Adding New Modules,Active,07-Jul-2001,31,2,0,0.08030646721612329
-368,Standard image protocol and class,Deferred,28-Jun-2007,31,2,0,0.08030646721612329
-3143,Standard daemon process library,Deferred,26-Jan-2009,31,2,0,0.08030646721612329
-3144,IP Address Manipulation Library for the Python Standard Library,Final,06-Feb-2012,31,2,0,0.08030646721612329
-3153,Asynchronous IO support,Superseded,29-May-2011,31,2,0,0.08030646721612329
-408,Standard library __preview__ package,Rejected,07-Jan-2012,31,1,6,0.07034138971195386
-392,Python 3.2 Release Schedule,Final,30-Dec-2009,31,0,1,0.061612763223826576
-411,Provisional packages in the Python standard library,Superseded,10-Feb-2012,31,0,6,0.061612763223826576
-413,Faster evolution of the Python Standard Library,Withdrawn,24-Feb-2012,31,0,1,0.061612763223826576
+202,List Comprehensions,Final,13-Jul-2000,31,5,0,0.25168025767777835
+212,Loop Counter Iteration,Rejected,22-Aug-2000,31,4,2,0.14870758312586083
+279,The enumerate() built-in function,Final,30-Jan-2002,31,2,2,0.1332178391346061
+201,Lockstep Iteration,Final,13-Jul-2000,31,1,1,0.09352776132462697
+281,Loop Counter Iteration with range and xrange,Rejected,11-Feb-2002,31,2,2,0.09338927585163741
+289,Generator Expressions,Final,30-Jan-2002,31,2,1,0.06899515626890751
+204,Range Literals,Rejected,14-Jul-2000,31,2,1,0.052400291547694974
+276,Simple Iterator for ints,Rejected,12-Nov-2001,31,1,2,0.03677206208345066
+274,Dict Comprehensions,Final,25-Oct-2001,31,0,1,0.03032744324635928
+284,Integer for-loops,Rejected,01-Mar-2002,31,0,4,0.03032744324635928
+323,Copyable Iterators,Deferred,25-Oct-2003,31,0,1,0.03032744324635928
+3142,"Add a ""while"" clause to generator expressions",Rejected,12-Jan-2009,31,0,2,0.03032744324635928
