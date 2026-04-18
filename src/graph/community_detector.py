@@ -19,6 +19,8 @@ import networkx as nx
 import pandas as pd
 from networkx.algorithms import community
 
+from src.dash_app.utils.constants import STATUS_COLOR_MAP, DEFAULT_STATUS_COLOR
+
 logger = logging.getLogger(__name__)
 
 
@@ -198,11 +200,47 @@ def calculate_detection_stats(communities: list[set], G: nx.DiGraph) -> dict:
     return stats
 
 
+def _generate_subgraph_image(
+    group_id: int, peps: set, G: nx.DiGraph, output_dir: Path
+) -> Path:
+
+    subgraph = G.subgraph(peps)
+    # レイアウト計算
+    pos = nx.spring_layout(subgraph, threshold=1e-6, k=1, seed=42)
+
+    # ノードカラーを取得
+    node_colors = []
+    for n in subgraph.nodes():
+        status = subgraph.nodes[n].get("status", "")
+        color = STATUS_COLOR_MAP.get(status, DEFAULT_STATUS_COLOR)
+        node_colors.append(color)
+
+    # PageRankでノードサイズを計算
+    pagerank = nx.pagerank(subgraph)
+    node_sizes = [pagerank[node] * 20000 for node in subgraph.nodes()]
+
+    # 描画
+    plt.figure(figsize=(10, 10))
+    nx.draw(
+        subgraph,
+        pos,
+        with_labels=True,
+        node_size=node_sizes,
+        node_color=node_colors,
+        font_size=10,
+        connectionstyle="arc3,rad=0.1",
+    )
+
+    # 保存
+    image_path = output_dir / f"group_{group_id}.png"
+    plt.savefig(image_path, dpi=300, bbox_inches="tight")
+    plt.close()
+    logger.debug(f"Saved {image_path}")
+    return image_path
+
+
 def generate_subgraph_images(
-    communities: list[set],
-    G: nx.DiGraph,
-    output_dir: Path,
-    status_color_map: dict[str, str],
+    communities: list[set], G: nx.DiGraph, output_dir: Path
 ) -> list[Path]:
     """
     各コミュニティのサブグラフ画像を生成
@@ -225,47 +263,20 @@ def generate_subgraph_images(
     output_dir.mkdir(parents=True, exist_ok=True)
 
     generated_paths = []
-    default_color = "#CCCCCC"
-
+    isolated_peps = set[int]()
+    count = 0
     for group_id, peps in enumerate(communities):
         if len(peps) == 1:
-            continue  # 孤立点はスキップ
+            isolated_peps = isolated_peps | peps
+            continue
 
-        subgraph = G.subgraph(peps)
-
-        # レイアウト計算
-        pos = nx.spring_layout(subgraph, threshold=1e-6, k=1, seed=42)
-
-        # ノードカラーを取得
-        node_colors = []
-        for n in subgraph.nodes():
-            status = subgraph.nodes[n].get("status", "")
-            color = status_color_map.get(status, default_color)
-            node_colors.append(color)
-
-        # PageRankでノードサイズを計算
-        pagerank = nx.pagerank(subgraph)
-        node_sizes = [pagerank[node] * 20000 for node in subgraph.nodes()]
-
-        # 描画
-        plt.figure(figsize=(10, 10))
-        nx.draw(
-            subgraph,
-            pos,
-            with_labels=True,
-            node_size=node_sizes,
-            node_color=node_colors,
-            font_size=10,
-            connectionstyle="arc3,rad=0.1",
-        )
-
-        # 保存
-        image_path = output_dir / f"group_{group_id}.png"
-        plt.savefig(image_path, dpi=300, bbox_inches="tight")
-        plt.close()
-
+        image_path = _generate_subgraph_image(group_id, peps, G, output_dir)
         generated_paths.append(image_path)
-        logger.debug(f"Generated {image_path}")
+        count += 1
+
+    if isolated_peps:
+        image_path = _generate_subgraph_image(count, isolated_peps, G, output_dir)
+        generated_paths.append(image_path)
 
     logger.info(f"Generated {len(generated_paths)} images")
     return generated_paths
@@ -296,13 +307,26 @@ def save_subgraphs(
     output_dir.mkdir(parents=True, exist_ok=True)
 
     saved_paths = []
-
+    isolated_peps = set[int]()
+    count = 0
     for group_id, peps in enumerate(communities):
         if len(peps) == 1:
-            continue  # 孤立点はスキップ
+            isolated_peps = isolated_peps | peps
+            continue
 
         subgraph = G.subgraph(peps).copy()  # コピーして独立したグラフにする
 
+        # 保存
+        graph_path = output_dir / f"subgraph_{group_id}.pkl"
+        with open(graph_path, "wb") as f:
+            pickle.dump(subgraph, f)
+
+        saved_paths.append(graph_path)
+        logger.debug(f"Saved {graph_path}")
+        count += 1
+    if isolated_peps:
+        group_id = count
+        subgraph = G.subgraph(isolated_peps).copy()
         # 保存
         graph_path = output_dir / f"subgraph_{group_id}.pkl"
         with open(graph_path, "wb") as f:
