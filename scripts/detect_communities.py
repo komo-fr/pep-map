@@ -17,7 +17,6 @@ from src.graph.community_detector import (
     calculate_detection_stats,
     generate_subgraph_images,
     save_subgraphs,
-    save_group_csvs,
 )
 
 logger = logging.getLogger(__name__)
@@ -117,11 +116,6 @@ def main() -> int:
     graphs_dir = OUTPUT_DIR / "subgraphs" / "graphs"
     saved_graphs = save_subgraphs(communities, G, graphs_dir)
     logger.info(f"Saved {len(saved_graphs)} subgraphs")
-
-    # グループごとのCSVを保存
-    metrics_dir = OUTPUT_DIR / "subgraphs" / "metrics"
-    saved_csvs = save_group_csvs(pep_group_df, metrics_dir)
-    logger.info(f"Saved {len(saved_csvs)} group CSVs")
 
     # サブグラフ画像を生成
     images_dir = OUTPUT_DIR / "subgraphs" / "images"
