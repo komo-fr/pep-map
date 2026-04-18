@@ -1,3 +1,18 @@
+<<<<<<< HEAD
+PEP,title,status,created,group_id,in-degree_group,out-degree_group,degree_group,pagerank_group,pagerank_cumsum
+202,List Comprehensions,Final,13-Jul-2000,31,5,0,5,0.25168025767777835,0.4748580617640314
+212,Loop Counter Iteration,Rejected,22-Aug-2000,31,4,2,6,0.14870758312586083,0.7430654417673972
+279,The enumerate() built-in function,Final,30-Jan-2002,31,2,2,4,0.1332178391346061,0.8762832809020032
+201,Lockstep Iteration,Final,13-Jul-2000,31,1,1,2,0.09352776132462697,0.22317780408625304
+281,Loop Counter Iteration with range and xrange,Rejected,11-Feb-2002,31,2,2,4,0.09338927585163741,0.9696725567536406
+289,Generator Expressions,Final,30-Jan-2002,31,2,1,3,0.06899515626890751,0.06899515626890751
+204,Range Literals,Rejected,14-Jul-2000,31,2,1,3,0.052400291547694974,0.5272583533117263
+276,Simple Iterator for ints,Rejected,12-Nov-2001,31,1,2,3,0.03677206208345066,0.5943578586415363
+274,Dict Comprehensions,Final,25-Oct-2001,31,0,1,1,0.03032744324635928,0.5575857965580856
+284,Integer for-loops,Rejected,01-Mar-2002,31,0,4,4,0.03032744324635928,0.9999999999999999
+323,Copyable Iterators,Deferred,25-Oct-2003,31,0,1,1,0.03032744324635928,0.09932259951526679
+3142,"Add a ""while"" clause to generator expressions",Rejected,12-Jan-2009,31,0,2,2,0.03032744324635928,0.12965004276162606
+=======
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
 202,List Comprehensions,Final,13-Jul-2000,31,5,0,0.25168025767777835
 212,Loop Counter Iteration,Rejected,22-Aug-2000,31,4,2,0.14870758312586083
@@ -11,3 +26,4 @@ pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagera
 284,Integer for-loops,Rejected,01-Mar-2002,31,0,4,0.03032744324635928
 323,Copyable Iterators,Deferred,25-Oct-2003,31,0,1,0.03032744324635928
 3142,"Add a ""while"" clause to generator expressions",Rejected,12-Jan-2009,31,0,2,0.03032744324635928
+>>>>>>> origin/production

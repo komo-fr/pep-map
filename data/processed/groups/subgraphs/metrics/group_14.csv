@@ -1,3 +1,24 @@
+<<<<<<< HEAD
+PEP,title,status,created,group_id,in-degree_group,out-degree_group,degree_group,pagerank_group,pagerank_cumsum
+3121,Extension Module Initialization and Finalization,Final,27-Apr-2007,14,4,0,4,0.18363815045988147,0.8076521272117242
+489,Multi-phase extension module initialization,Final,11-Aug-2013,14,8,1,9,0.13836213184480659,0.3963309347603856
+684,A Per-Interpreter GIL,Final,08-Mar-2022,14,3,6,9,0.06769093874414153,0.5733709194101535
+573,Module State Access from C Extension Methods,Final,02-Jun-2016,14,4,2,6,0.062271246237634914,0.9405149365521972
+652,Maintaining the Stable ABI,Final,09-Feb-2021,14,3,0,3,0.05948506344780255,0.09163929907403877
+703,Making the Global Interpreter Lock Optional in CPython,Accepted,09-Jan-2023,14,3,3,6,0.05948506344780255,0.9999999999999998
+683,"Immortal Objects, Using a Fixed Refcount",Final,10-Feb-2022,14,3,0,3,0.05642059677588211,0.5056799806660119
+554,Multiple Interpreters in the Stdlib,Superseded,05-Sep-2017,14,2,6,8,0.05292844912974419,0.4492593838901298
+734,Multiple Interpreters in the Stdlib,Final,06-Nov-2023,14,2,2,4,0.04908372274666756,0.19535599576526913
+803,"""abi3t"": Stable ABI for Free-Threaded Builds",Accepted,19-Aug-2025,14,2,6,8,0.04013406883198328,0.257968802915579
+630,Isolating Extension Modules,Final,25-Aug-2020,14,2,2,4,0.038437327476601876,0.8460894546883261
+697,Limited C API for Extending Opaque Types,Final,23-Aug-2022,14,2,1,3,0.03215423562623622,0.8782436903145623
+779,Criteria for supported status for free-threaded Python,Final,13-Mar-2025,14,2,1,3,0.03215423562623622,0.03215423562623622
+793,PyModExport: A new entry point for C extension modules,Accepted,23-May-2025,14,2,2,4,0.03215423562623622,0.12379353470027499
+809,Stable ABI for the Future,Draft,19-Sep-2025,14,1,6,7,0.02816431902336269,0.6015352384335161
+547,Running extension modules using the -m option,Deferred,25-May-2017,14,0,1,1,0.022478738318326592,0.21783473408359572
+687,Isolating modules in the standard library,Accepted,04-Apr-2022,14,0,3,3,0.022478738318326592,0.6240139767518428
+797,Shared Object Proxies,Draft,08-Aug-2025,14,0,1,1,0.022478738318326592,0.14627227301860157
+=======
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
 3121,Extension Module Initialization and Finalization,Final,27-Apr-2007,14,4,0,0.18363815045988144
 489,Multi-phase extension module initialization,Final,11-Aug-2013,14,8,1,0.13836213184480659
@@ -17,3 +38,4 @@ pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagera
 547,Running extension modules using the -m option,Deferred,25-May-2017,14,0,1,0.022478738318326592
 687,Isolating modules in the standard library,Accepted,04-Apr-2022,14,0,3,0.022478738318326592
 797,Shared Object Proxies,Draft,08-Aug-2025,14,0,1,0.022478738318326592
+>>>>>>> origin/production

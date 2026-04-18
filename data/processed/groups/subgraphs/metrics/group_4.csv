@@ -1,3 +1,27 @@
+<<<<<<< HEAD
+PEP,title,status,created,group_id,in-degree_group,out-degree_group,degree_group,pagerank_group,pagerank_cumsum
+506,Adding A Secrets Module To The Standard Library,Final,19-Sep-2015,4,3,1,4,0.19134179467144966,0.8892274235243043
+504,Using the System RNG by default,Withdrawn,15-Sep-2015,4,1,1,2,0.1787254915118358,0.6978856288528547
+380,Syntax for Delegating to a Subgenerator,Final,13-Feb-2009,4,7,0,7,0.11077257647569565,1.0
+523,Adding a frame evaluation API to CPython,Final,16-May-2016,4,3,0,3,0.05046969629856405,0.13222022660084554
+522,Allow BlockingIOError in security sensitive APIs,Rejected,16-Jun-2016,4,1,2,3,0.04959571798691576,0.08175053030228147
+492,Coroutines with async and await syntax,Final,09-Apr-2015,4,3,4,7,0.049293726704799076,0.4733395190717034
+3156,"Asynchronous IO Support Rebooted: the ""asyncio"" Module",Final,12-Dec-2012,4,2,3,5,0.04021814019909035,0.34926123964871514
+524,Make os.urandom() blocking on Linux,Final,20-Jun-2016,4,2,1,3,0.03943325217288272,0.17165347877372825
+525,Asynchronous Generators,Final,28-Jul-2016,4,3,2,5,0.032988842010982386,0.20464232078471062
+468,Preserving the order of \*\*kwargs in a function.,Final,05-Apr-2014,4,2,0,2,0.032020846437290855,0.30904309944962477
+689,Unstable C API tier,Final,22-Apr-2022,4,1,1,2,0.02974321211163257,0.5191601373410188
+3148,futures - execute computations asynchronously,Final,16-Oct-2009,4,1,0,1,0.027472557499141542,0.23211487828385216
+479,Change StopIteration handling inside generators,Final,15-Nov-2014,4,1,1,2,0.026552334245140627,0.4240457923669043
+3152,Cofunctions,Rejected,13-Feb-2009,4,1,1,2,0.026552334245140627,0.2586672125289928
+530,Asynchronous Comprehensions,Final,03-Sep-2016,4,1,2,3,0.01835504048334114,0.27702225301233396
+472,Support for indexing with keyword arguments,Rejected,24-Jun-2014,4,0,1,1,0.016077406157682855,0.36533864580639797
+494,Python 3.6 Release Schedule,Final,30-May-2015,4,0,6,6,0.016077406157682855,0.4894169252293863
+669,Low Impact Monitoring for CPython,Final,18-Aug-2021,4,0,2,2,0.016077406157682855,0.38141605196408085
+733,An Evaluation of Python's Public C API,Final,16-Oct-2023,4,0,1,1,0.016077406157682855,0.39749345812176373
+828,Supporting 'yield from' in asynchronous generators,Draft,07-Mar-2026,4,0,2,2,0.016077406157682855,0.016077406157682855
+3145,Asynchronous I/O For subprocess.Popen,Withdrawn,04-Aug-2009,4,0,1,1,0.016077406157682855,0.03215481231536571
+=======
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
 506,Adding A Secrets Module To The Standard Library,Final,19-Sep-2015,4,3,1,0.19134179467144966
 504,Using the System RNG by default,Withdrawn,15-Sep-2015,4,1,1,0.1787254915118358
@@ -20,3 +44,4 @@ pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagera
 733,An Evaluation of Python's Public C API,Final,16-Oct-2023,4,0,1,0.016077406157682855
 828,Supporting 'yield from' in asynchronous generators,Draft,07-Mar-2026,4,0,2,0.016077406157682855
 3145,Asynchronous I/O For subprocess.Popen,Withdrawn,04-Aug-2009,4,0,1,0.016077406157682855
+>>>>>>> origin/production

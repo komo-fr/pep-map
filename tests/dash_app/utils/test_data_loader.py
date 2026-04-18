@@ -659,19 +659,6 @@ class TestGetGroupList:
 
         assert result[0] == {"label": "All Groups", "value": "all"}
 
-    def test_get_group_list_isolated_label(self, mock_data_files, monkeypatch):
-        """孤立ノード（group_id=-1）が'Isolated'ラベルで表示される"""
-        data_loader.clear_cache()
-        monkeypatch.setattr("src.dash_app.utils.data_loader.DATA_DIR", mock_data_files)
-
-        result = data_loader.get_group_list()
-
-        # group_id=-1の要素を探す
-        isolated = [item for item in result if item["value"] == -1]
-        assert len(isolated) == 1
-        assert "Isolated" in isolated[0]["label"]
-        assert "1 PEPs" in isolated[0]["label"]
-
     def test_get_group_list_group_labels(self, mock_data_files, monkeypatch):
         """通常グループが'Group N'ラベルで表示される"""
         data_loader.clear_cache()

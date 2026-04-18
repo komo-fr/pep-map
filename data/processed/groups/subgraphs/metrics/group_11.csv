@@ -1,3 +1,25 @@
+<<<<<<< HEAD
+PEP,title,status,created,group_id,in-degree_group,out-degree_group,degree_group,pagerank_group,pagerank_cumsum
+4,Deprecation of Standard Modules,Active,01-Oct-2000,11,4,0,4,0.14266201248726557,0.20533350547839632
+290,Code Migration and Modernization,Active,06-Jun-2002,11,1,1,2,0.10513556468831343,0.6456613448532436
+348,Exception Reorganization for Python 3.0,Rejected,28-Jul-2005,11,2,1,3,0.09749940142806508,0.38424440285101713
+358,"The ""bytes"" Object",Final,15-Feb-2006,11,2,2,4,0.07572666346783416,0.9089886702452437
+3100,Miscellaneous Python 3.0 Plans,Final,20-Aug-2004,11,4,7,11,0.06776575639489248,0.4520101592459096
+352,Required Superclass for Exceptions,Final,27-Oct-2005,11,4,1,5,0.06625487234573489,0.5182650315916445
+3137,Immutable Bytes and Mutable Buffer,Final,26-Sep-2007,11,2,0,2,0.06267149299113076,0.06267149299113076
+3099,Things that will Not Change in Python 3000,Final,04-Apr-2006,11,3,0,3,0.059150747371270074,0.286745001422952
+3112,Bytes literals in Python 3000,Final,23-Feb-2007,11,2,1,3,0.05832848523161109,0.8012615992664817
+3000,Python 3000,Final,05-Apr-2006,11,2,3,5,0.034375290590735186,0.9695104765382294
+361,Python 2.6 and 3.0 Release Schedule,Final,29-Jun-2006,11,1,7,8,0.03200040751092782,0.8332620067774096
+3001,Procedure for reviewing and improving standard library modules,Withdrawn,05-Apr-2006,11,1,0,1,0.030489523461770238,0.9999999999999997
+3110,Catching Exceptions in Python 3000,Final,16-Jan-2006,11,1,2,3,0.030489523461770238,0.720672365461585
+371,Addition of the multiprocessing package to the standard library,Final,06-May-2008,11,1,0,1,0.026146515702250565,0.9351351859474942
+294,Type Names in the types Module,Rejected,19-Jun-2002,11,0,1,1,0.022260748573285617,0.6901828419998147
+3104,Access to Names in Outer Scopes,Final,12-Oct-2006,11,0,1,1,0.022260748573285617,0.5405257801649301
+3109,Raising Exceptions in Python 3000,Final,19-Jan-2006,11,0,1,1,0.022260748573285617,0.6679220934265292
+3111,Simple input built-in in Python 3000,Final,13-Sep-2006,11,0,1,1,0.022260748573285617,0.7429331140348706
+3151,Reworking the OS and IO exception hierarchy,Final,21-Jul-2010,11,0,1,1,0.022260748573285617,0.22759425405168193
+=======
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
 4,Deprecation of Standard Modules,Active,01-Oct-2000,11,4,0,0.14266201248726557
 290,Code Migration and Modernization,Active,06-Jun-2002,11,1,1,0.10513556468831343
@@ -18,3 +40,4 @@ pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagera
 3109,Raising Exceptions in Python 3000,Final,19-Jan-2006,11,0,1,0.022260748573285617
 3111,Simple input built-in in Python 3000,Final,13-Sep-2006,11,0,1,0.022260748573285617
 3151,Reworking the OS and IO exception hierarchy,Final,21-Jul-2010,11,0,1,0.022260748573285617
+>>>>>>> origin/production

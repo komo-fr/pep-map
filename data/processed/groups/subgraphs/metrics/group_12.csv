@@ -1,3 +1,25 @@
+<<<<<<< HEAD
+PEP,title,status,created,group_id,in-degree_group,out-degree_group,degree_group,pagerank_group,pagerank_cumsum
+381,Mirroring infrastructure for PyPI,Withdrawn,21-Mar-2009,12,4,1,5,0.1395331201072029,0.9696367786658162
+305,CSV File API,Final,26-Jan-2003,12,1,0,1,0.13597931170027563,0.6560253863989074
+458,Secure PyPI downloads with signed repository metadata,Accepted,27-Sep-2013,12,3,4,7,0.12586925402600602,0.2107408594594375
+480,Surviving a Compromise of PyPI: End-to-end signing of packages,Draft,08-Oct-2014,12,3,1,4,0.08283023562261366,0.39276242539126527
+740,Index support for digital attestations,Final,08-Jan-2024,12,3,2,5,0.07223936390996184,0.4650017893012271
+438,Transitioning to release-file hosting on PyPI,Superseded,15-Mar-2013,12,2,1,3,0.05943572602645647,0.7576007748248968
+470,Removing External Hosting Support on PyPI,Final,12-May-2014,12,2,1,3,0.04658545145973049,0.27470343211460174
+449,Removal of the PyPI Mirror Auto Discovery and Naming Scheme,Final,04-Aug-2013,12,1,1,2,0.044123644790175345,0.044123644790175345
+708,Extending the Repository API to Mitigate Dependency Confusion Attacks,Rejected,20-Feb-2023,12,3,0,3,0.04074796064325613,0.08487160543343147
+694,Upload 2.0 API for Python Package Indexes,Draft,11-Jun-2022,12,3,1,4,0.03774864134284893,0.8127265373631796
+752,Implicit namespaces for package repositories,Draft,13-Aug-2024,12,2,4,6,0.0376671642019709,0.5200460746986317
+541,Package Index Name Retention,Final,12-Jan-2017,12,3,0,3,0.035228757654049855,0.3099321897686516
+766,Explicit Priority Choices Among Multiple Indexes,Draft,18-Nov-2024,12,2,2,4,0.0303632213341835,0.9999999999999998
+817,Wheel Variants: Beyond Platform Tags,Draft,10-Dec-2025,12,1,2,3,0.024762541204099202,0.6807879276030067
+464,Removal of the PyPI Mirror Authenticity API,Final,02-Mar-2014,12,0,2,2,0.017377121195433776,0.22811798065487127
+755,Implicit namespace policy for PyPI,Draft,05-Sep-2024,12,0,2,2,0.017377121195433776,0.6981650487984404
+759,External Wheel Hosting,Withdrawn,01-Oct-2024,12,0,6,6,0.017377121195433776,0.7749778960203306
+807,Index support for Trusted Publishing,Draft,19-Sep-2025,12,0,1,1,0.017377121195433776,0.4823789104966609
+825,Wheel Variants: Package Format,Draft,17-Feb-2026,12,0,2,2,0.017377121195433776,0.8301036585586133
+=======
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
 381,Mirroring infrastructure for PyPI,Withdrawn,21-Mar-2009,12,4,1,0.1395331201072029
 305,CSV File API,Final,26-Jan-2003,12,1,0,0.13597931170027563
@@ -18,3 +40,4 @@ pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagera
 759,External Wheel Hosting,Withdrawn,01-Oct-2024,12,0,6,0.017377121195433776
 807,Index support for Trusted Publishing,Draft,19-Sep-2025,12,0,1,0.017377121195433776
 825,Wheel Variants: Package Format,Draft,17-Feb-2026,12,0,2,0.017377121195433776
+>>>>>>> origin/production

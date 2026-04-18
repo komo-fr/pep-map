@@ -1,3 +1,0 @@
-pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-3138,String representation in Python 3000,Final,05-May-2008,47,1,0,0.649122638064138
-3140,"str(container) should call str(item), not repr(item)",Rejected,27-May-2008,47,0,1,0.3508773619358619

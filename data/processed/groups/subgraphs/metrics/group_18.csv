@@ -1,3 +1,23 @@
+<<<<<<< HEAD
+PEP,title,status,created,group_id,in-degree_group,out-degree_group,degree_group,pagerank_group,pagerank_cumsum
+462,Core development workflow automation for CPython,Withdrawn,23-Jan-2014,18,3,3,6,0.10938140141609341,0.2565834955912895
+507,Migrate CPython to Git and GitLab,Rejected,30-Sep-2015,18,3,3,6,0.10429774479003716,0.9999999999999998
+101,Doing Python Releases 101,Active,22-Aug-2001,18,4,2,6,0.09969314094759467,0.5925079294796309
+474,Creating forge.python.org,Withdrawn,19-Jul-2014,18,3,2,5,0.09850737635225783,0.3550908719435473
+347,Migrating the Python CVS to Subversion,Final,14-Jul-2004,18,2,0,2,0.07673122547661976,0.4318220974201671
+42,Feature Requests,Withdrawn,12-Sep-2000,18,1,0,1,0.0708987713896285,0.7264622839035697
+102,Doing Python Micro Releases,Superseded,09-Jan-2002,18,1,1,2,0.0630555830343103,0.6555635125139412
+761,Deprecating PGP signatures for CPython artifacts,Active,08-Oct-2024,18,1,0,1,0.0630555830343103,0.8957022552099626
+481,"Migrate CPython to Git, Github, and Phabricator",Withdrawn,29-Nov-2014,18,2,3,5,0.06099269111186916,0.49281478853203625
+3,Guidelines for Handling Bug Reports,Withdrawn,25-Sep-2000,18,2,1,3,0.059074066748855514,0.12651685613542962
+495,Local Time Disambiguation,Final,02-Aug-2015,18,1,1,2,0.038267815124528974,0.7912761960961193
+512,Migrating from hg.python.org to GitHub,Final,17-Jan-2015,18,1,3,4,0.037966262804426394,0.037966262804426394
+385,Migrating from Subversion to Mercurial,Final,25-May-2009,18,1,1,2,0.029476526582147722,0.06744278938657411
+235,Import on Case-Insensitive Platforms,Final,21-Feb-2001,18,1,0,1,0.026546097068020635,0.7530083809715904
+6,Bug Fix Releases,Superseded,15-Mar-2001,18,0,3,3,0.02068523803976647,0.14720209417519609
+374,Choosing a distributed VCS for the Python project,Final,07-Nov-2008,18,0,2,2,0.02068523803976647,0.8326466721756522
+500,A protocol for delegating datetime methods to their tzinfo implementations,Rejected,08-Aug-2015,18,0,1,1,0.02068523803976647,0.8119614341358858
+=======
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
 462,Core development workflow automation for CPython,Withdrawn,23-Jan-2014,18,3,3,0.10938140141609341
 507,Migrate CPython to Git and GitLab,Rejected,30-Sep-2015,18,3,3,0.10429774479003716
@@ -16,3 +36,4 @@ pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagera
 6,Bug Fix Releases,Superseded,15-Mar-2001,18,0,3,0.02068523803976647
 374,Choosing a distributed VCS for the Python project,Final,07-Nov-2008,18,0,2,0.02068523803976647
 500,A protocol for delegating datetime methods to their tzinfo implementations,Rejected,08-Aug-2015,18,0,1,0.02068523803976647
+>>>>>>> origin/production

@@ -1,3 +1,26 @@
+<<<<<<< HEAD
+PEP,title,status,created,group_id,in-degree_group,out-degree_group,degree_group,pagerank_group,pagerank_cumsum
+387,Backwards Compatibility Policy,Active,18-Jun-2009,9,7,2,9,0.166661598758675,0.23016838814545656
+291,Backward Compatibility for the Python 2 Standard Library,Superseded,06-Jun-2002,9,1,0,1,0.09311339044833579,0.751276446298706
+702,Marking deprecations using the type system,Final,30-Dec-2022,9,1,2,3,0.09311339044833579,0.9777170359485959
+659,Specializing Adaptive Interpreter,Final,13-Apr-2021,9,4,0,4,0.08257744795262817,0.494029702081654
+206,Python Advanced Library,Withdrawn,14-Jul-2000,9,1,0,1,0.07486125585455562,0.3273126080514166
+594,Removing dead batteries from the standard library,Final,20-May-2019,9,1,1,2,0.06185668202620477,0.41145225412902575
+744,JIT Compilation,Draft,11-Apr-2024,9,2,2,4,0.060164686619349886,0.8337240969694604
+731,C API Working Group Charter,Active,11-Oct-2023,9,2,0,2,0.05069425597736351,0.5670069221104219
+412,Key-Sharing Dictionary,Final,08-Feb-2012,9,1,0,1,0.0465902056371396,0.6135971277475615
+706,Filter for tarfile.extractall,Final,09-Feb-2023,9,1,1,2,0.04122382533537715,0.04122382533537715
+509,Add a private version to dict,Superseded,04-Jan-2016,9,1,1,2,0.028596584479395323,0.8846036455002602
+674,Disallow using macros as l-values,Deferred,30-Nov-2021,9,0,1,1,0.02228296405140441,0.6581630558503703
+699,Remove private dict version field added in PEP 509,Accepted,03-Oct-2022,9,0,3,3,0.02228296405140441,0.8560070610208648
+707,A simplified signature for __exit__ and __aexit__,Rejected,18-Feb-2023,9,0,1,1,0.02228296405140441,0.06350678938678156
+721,Using tarfile.data_filter for source distribution extraction,Final,12-Jul-2023,9,0,1,1,0.02228296405140441,0.349595572102821
+743,Add Py_OMIT_LEGACY_API to the Python C API,Rejected,11-Mar-2024,9,0,2,2,0.02228296405140441,0.7735594103501104
+774,Removing the LLVM requirement for JIT builds,Deferred,27-Jan-2025,9,0,1,1,0.02228296405140441,0.252451352196861
+788,Protecting the C API from Interpreter Finalization,Draft,23-Apr-2025,9,0,1,1,0.02228296405140441,0.5163126661330584
+799,A dedicated ``profiling`` package for organizing Python profiling tools,Accepted,21-Jul-2025,9,0,2,2,0.02228296405140441,0.6358800917989659
+831,Frame Pointers Everywhere: Enabling System-Level Observability for Python,Draft,14-Mar-2026,9,0,1,1,0.02228296405140441,1.0000000000000002
+=======
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
 387,Backwards Compatibility Policy,Active,18-Jun-2009,9,7,2,0.166661598758675
 291,Backward Compatibility for the Python 2 Standard Library,Superseded,06-Jun-2002,9,1,0,0.09311339044833579
@@ -19,3 +42,4 @@ pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagera
 788,Protecting the C API from Interpreter Finalization,Draft,23-Apr-2025,9,0,1,0.02228296405140441
 799,A dedicated ``profiling`` package for organizing Python profiling tools,Accepted,21-Jul-2025,9,0,2,0.02228296405140441
 831,Frame Pointers Everywhere: Enabling System-Level Observability for Python,Draft,14-Mar-2026,9,0,1,0.02228296405140441
+>>>>>>> origin/production
