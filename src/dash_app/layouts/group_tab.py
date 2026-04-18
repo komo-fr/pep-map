@@ -50,6 +50,8 @@ def create_group_tab_layout() -> html.Div:
             _create_operation_description_section(),
             # === メインコンテンツ: グラフ + テーブル ===
             _create_main_content_section(),
+            # === サブグラフセクション ===
+            _create_subgraph_section(),
         ],
         style={
             "padding": "16px",
@@ -451,4 +453,60 @@ def _create_group_pep_table() -> dash_table.DataTable:  # type: ignore[name-defi
         ]
         + status_styles,
         markdown_options={"html": True},
+    )
+
+
+def _create_subgraph_section() -> html.Div:
+    """サブグラフネットワーク図セクションを生成する"""
+    return html.Div(
+        [
+            # セクションタイトル
+            html.H4(
+                "Subgraph Network",
+                style={"marginTop": "24px", "marginBottom": "8px"},
+            ),
+            # 説明テキスト
+            html.P(
+                [
+                    html.Strong("Node sizes"),
+                    " are based on PageRank computed within the selected group.",
+                ],
+                style={"fontSize": "12px", "color": "#666", "marginBottom": "4px"},
+            ),
+            html.P(
+                [
+                    html.Strong("Color"),
+                    " indicates the status of each PEP.",
+                ],
+                style={"fontSize": "12px", "color": "#666", "marginBottom": "8px"},
+            ),
+            # サブグラフ表示エリア（初期状態はプレースホルダー）
+            html.Div(
+                id="subgraph-container",
+                children=_create_subgraph_placeholder(),
+                style={"minHeight": "600px"},
+            ),
+        ],
+        style={
+            "marginTop": "16px",
+            "borderTop": "1px solid #ddd",
+            "paddingTop": "16px",
+        },
+    )
+
+
+def _create_subgraph_placeholder() -> html.Div:
+    """サブグラフ未選択時のプレースホルダーを生成する"""
+    return html.Div(
+        "Select a group to view its subgraph",
+        style={
+            "height": "600px",
+            "display": "flex",
+            "alignItems": "center",
+            "justifyContent": "center",
+            "backgroundColor": "#f5f5f5",
+            "border": "1px solid #ddd",
+            "color": "#999",
+            "fontSize": "16px",
+        },
     )

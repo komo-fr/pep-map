@@ -1,12 +1,18 @@
 """Groupタブのコールバック関数"""
 
 import pandas as pd
+import dash_cytoscape as cyto
 from dash import Input, Output, State, callback_context, no_update, html
 from src.dash_app.components.pep_info import (
     create_group_initial_info_message,
     create_pep_info_display,
 )
 from src.dash_app.components import parse_pep_number
+from src.dash_app.components.subgraph_network_graph import (
+    build_subgraph_cytoscape_elements,
+    get_subgraph_base_stylesheet,
+    get_subgraph_layout_options,
+)
 from src.dash_app.utils.constants import TEXT_OUTLINE_COLOR, TEXT_OUTLINE_WIDTH
 from src.dash_app.utils.data_loader import (
     get_peps_by_group,
@@ -678,3 +684,61 @@ def register_group_callbacks(app):
         if selection_source == "pep_input":
             return "dropdown", ""
         return no_update, ""
+
+    # ===== グループ選択 → サブグラフ更新（サーバーサイド） =====
+    @app.callback(
+        Output("subgraph-container", "children"),
+        Input("group-selector-dropdown", "value"),
+    )
+    def update_subgraph(selected_group):
+        """
+        グループ選択時にサブグラフを更新する
+
+        Args:
+            selected_group: 選択されたグループ（"all" または グループID）
+
+        Returns:
+            サブグラフコンポーネント または プレースホルダー
+        """
+        # プレースホルダー
+        placeholder = html.Div(
+            "Select a group to view its subgraph",
+            style={
+                "height": "600px",
+                "display": "flex",
+                "alignItems": "center",
+                "justifyContent": "center",
+                "backgroundColor": "#f5f5f5",
+                "border": "1px solid #ddd",
+                "color": "#999",
+                "fontSize": "16px",
+            },
+        )
+
+        # "all"または未選択の場合はプレースホルダーを表示
+        if selected_group is None or selected_group == "all":
+            return placeholder
+
+        # 孤立グループ(-1)の場合もプレースホルダーを表示
+        group_id = int(selected_group)
+        if group_id < 0:
+            return placeholder
+
+        # サブグラフのelementsを構築
+        elements = build_subgraph_cytoscape_elements(group_id)
+        if elements is None:
+            return placeholder
+
+        # Cytoscapeコンポーネントを返す
+        return cyto.Cytoscape(
+            id="subgraph-network-graph",
+            elements=elements,
+            layout=get_subgraph_layout_options(),
+            style={
+                "width": "100%",
+                "height": "600px",
+                "border": "1px solid #ddd",
+                "backgroundColor": "#fafafa",
+            },
+            stylesheet=get_subgraph_base_stylesheet(),
+        )
