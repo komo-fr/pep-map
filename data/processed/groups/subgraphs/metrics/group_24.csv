@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 PEP,title,status,created,group_id,in-degree_group,out-degree_group,degree_group,pagerank_group,pagerank_cumsum
 236,Back to the __future__,Final,26-Feb-2001,24,6,4,10,0.22998924851466032,0.762703793700849
 227,Statically Nested Scopes,Final,01-Nov-2000,24,3,1,4,0.1126239821076846,0.13850408941208767
@@ -14,3 +15,21 @@ PEP,title,status,created,group_id,in-degree_group,out-degree_group,degree_group,
 317,Eliminate Implicit Exception Instantiation,Rejected,06-May-2003,24,0,3,3,0.02588010730440307,1.0
 497,A standard mechanism for backward compatibility,Rejected,04-Aug-2015,24,0,4,4,0.02588010730440307,0.8918212954361955
 577,Augmented Assignment Expressions,Withdrawn,14-May-2018,24,0,1,1,0.02588010730440307,0.02588010730440307
+=======
+pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
+236,Back to the __future__,Final,26-Feb-2001,24,6,4,0.22998924851466032
+227,Statically Nested Scopes,Final,01-Nov-2000,24,3,1,0.11262398210768462
+5,Guidelines for Language Evolution,Superseded,26-Oct-2000,24,4,0,0.09491809382414254
+264,Future statements in simulated shells,Final,30-Jul-2001,24,2,1,0.08808926075752255
+230,Warning Framework,Final,28-Nov-2000,24,2,0,0.08208559945708924
+558,Defined semantics for locals(),Withdrawn,08-Sep-2017,24,2,2,0.0718576466835176
+667,Consistent views of namespaces,Final,30-Jul-2021,24,1,2,0.05641848995499844
+296,Adding a bytes Object Type,Withdrawn,12-Jul-2002,24,2,0,0.05337830951951727
+709,Inlined comprehensions,Final,24-Feb-2023,24,1,0,0.04985908491142626
+238,Changing the Division Operator,Final,11-Mar-2001,24,1,2,0.03137974774742591
+244,The ``directive`` statement,Rejected,20-Mar-2001,24,0,3,0.025880107304403075
+298,The Locked Buffer Interface,Withdrawn,26-Jul-2002,24,0,1,0.025880107304403075
+317,Eliminate Implicit Exception Instantiation,Rejected,06-May-2003,24,0,3,0.025880107304403075
+497,A standard mechanism for backward compatibility,Rejected,04-Aug-2015,24,0,4,0.025880107304403075
+577,Augmented Assignment Expressions,Withdrawn,14-May-2018,24,0,1,0.025880107304403075
+>>>>>>> origin/production

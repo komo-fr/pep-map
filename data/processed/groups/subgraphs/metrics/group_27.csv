@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 PEP,title,status,created,group_id,in-degree_group,out-degree_group,degree_group,pagerank_group,pagerank_cumsum
 427,The Wheel Binary Package Format 1.0,Final,20-Sep-2012,27,7,1,8,0.38357701230134755,0.8502640111205392
 425,Compatibility Tags for Built Distributions,Final,27-Jul-2012,27,7,1,8,0.3813498428585386,0.43894475030445634
@@ -13,3 +14,20 @@ PEP,title,status,created,group_id,in-degree_group,out-degree_group,degree_group,
 704,Require virtual environments by default for package installers,Withdrawn,16-Jan-2023,27,0,1,1,0.013309155035019716,0.013309155035019716
 715,Disabling bdist_egg distribution uploads on PyPI,Final,06-Jun-2023,27,0,2,2,0.013309155035019716,0.8635731661555589
 777,How to Re-invent the Wheel,Draft,09-Oct-2024,27,0,2,2,0.013309155035019716,0.0575949074459177
+=======
+pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
+427,The Wheel Binary Package Format 1.0,Final,20-Sep-2012,27,7,1,0.38357701230134755
+425,Compatibility Tags for Built Distributions,Final,27-Jul-2012,27,7,1,0.3813498428585386
+513,A Platform Tag for Portable Linux Built Distributions,Superseded,19-Jan-2016,27,3,3,0.030976597375878268
+491,The Wheel Binary Package Format 1.9,Deferred,16-Apr-2015,27,2,2,0.027742248514735272
+668,Marking Python base environments as “externally managed”,Accepted,18-May-2021,27,1,2,0.02462193681478647
+627,Recording installed projects,Final,15-Jul-2020,27,1,0,0.023773478181303966
+571,The manylinux2010 Platform Tag,Superseded,05-Feb-2018,27,2,2,0.021737963070791767
+527,Removing Un(der)used file types/extensions on PyPI,Final,23-Aug-2016,27,1,0,0.018965545924903095
+600,Future 'manylinux' Platform Tags for Portable Linux Built Distributions,Final,03-May-2019,27,1,4,0.01708008229494197
+599,The manylinux2014 Platform Tag,Superseded,29-Apr-2019,27,1,3,0.016938672522694882
+656,Platform Tag for Linux Distributions Using Musl,Final,17-Mar-2021,27,0,3,0.013309155035019716
+704,Require virtual environments by default for package installers,Withdrawn,16-Jan-2023,27,0,1,0.013309155035019716
+715,Disabling bdist_egg distribution uploads on PyPI,Final,06-Jun-2023,27,0,2,0.013309155035019716
+777,How to Re-invent the Wheel,Draft,09-Oct-2024,27,0,2,0.013309155035019716
+>>>>>>> origin/production

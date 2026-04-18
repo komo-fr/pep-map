@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 PEP,title,status,created,group_id,in-degree_group,out-degree_group,degree_group,pagerank_group,pagerank_cumsum
 343,"The ""with"" Statement",Final,13-May-2005,17,7,5,12,0.16264586157985006,0.5174464002738163
 310,Reliable Acquisition/Release Pairs,Rejected,18-Dec-2002,17,4,2,6,0.09279039028903761,0.8881670200210137
@@ -16,3 +17,23 @@ PEP,title,status,created,group_id,in-degree_group,out-degree_group,degree_group,
 334,Simple Coroutines via SuspendIteration,Withdrawn,26-Aug-2004,17,0,2,2,0.014916230612537766,0.2070765151935523
 377,Allow __enter__() methods to skip the statement body,Rejected,08-Mar-2009,17,0,1,1,0.014916230612537766,0.9030832506335514
 444,Python Web3 Interface,Deferred,19-Jul-2010,17,0,3,3,0.014916230612537766,0.9179994812460892
+=======
+pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
+343,"The ""with"" Statement",Final,13-May-2005,17,7,5,0.16264586157985006
+310,Reliable Acquisition/Release Pairs,Rejected,18-Dec-2002,17,4,2,0.09279039028903761
+319,Python Synchronize/Asynchronize Block,Rejected,24-Feb-2003,17,2,2,0.08200051875391058
+342,Coroutines via Enhanced Generators,Final,10-May-2005,17,5,4,0.08175540077260639
+255,Simple Generators,Final,18-May-2001,17,4,2,0.07687836433546483
+234,Iterators,Final,30-Jan-2001,17,4,0,0.06648226835116566
+340,Anonymous Block Statements,Rejected,27-Apr-2005,17,3,6,0.06596862272780754
+288,Generators Attributes and Exceptions,Withdrawn,21-Mar-2002,17,4,2,0.06592404897680419
+325,Resource-Release Support for Generators,Rejected,25-Aug-2003,17,6,3,0.06444392672862917
+220,"Coroutines, Generators, Continuations",Rejected,14-Aug-2000,17,1,0,0.055368427720778386
+219,Stackless Python,Deferred,14-Aug-2000,17,1,1,0.04758990888270182
+346,"User Defined (""``with``"") Statements",Withdrawn,06-May-2005,17,1,6,0.042565575526709726
+3333,Python Web Server Gateway Interface v1.0.1,Final,26-Sep-2010,17,2,4,0.026140418428108617
+333,Python Web Server Gateway Interface v1.0,Final,07-Dec-2003,17,2,3,0.024697575088811922
+334,Simple Coroutines via SuspendIteration,Withdrawn,26-Aug-2004,17,0,2,0.014916230612537766
+377,Allow __enter__() methods to skip the statement body,Rejected,08-Mar-2009,17,0,1,0.014916230612537766
+444,Python Web3 Interface,Deferred,19-Jul-2010,17,0,3,0.014916230612537766
+>>>>>>> origin/production

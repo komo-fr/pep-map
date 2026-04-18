@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 PEP,title,status,created,group_id,in-degree_group,out-degree_group,degree_group,pagerank_group,pagerank_cumsum
 241,Metadata for Python Software Packages,Superseded,12-Mar-2001,1,9,0,9,0.14829836706066465,0.6651956766232785
 345,Metadata for Python Software Packages 1.2,Superseded,28-Apr-2005,1,10,4,14,0.10610952423826935,0.3186524560671586
@@ -25,3 +26,32 @@ PEP,title,status,created,group_id,in-degree_group,out-degree_group,degree_group,
 753,Uniform project URLs in core metadata,Accepted,29-Aug-2024,1,0,1,1,0.010617436923360354,0.5168973095626139
 792,Project status markers in the simple index,Final,21-May-2025,1,0,2,2,0.010617436923360354,0.21254293182888925
 819,JSON Package Metadata,Draft,18-Dec-2025,1,0,3,3,0.010617436923360354,0.6939514551644462
+=======
+pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
+241,Metadata for Python Software Packages,Superseded,12-Mar-2001,1,9,0,0.14829836706066468
+345,Metadata for Python Software Packages 1.2,Superseded,28-Apr-2005,1,10,4,0.10610952423826935
+440,Version Identification and Dependency Specification,Final,18-Mar-2013,1,8,5,0.09224138720665648
+301,Package Index and Metadata for Distutils,Final,24-Oct-2002,1,4,2,0.08011660218882452
+314,Metadata for Python Software Packages 1.1,Superseded,12-Apr-2003,1,6,2,0.06736207383832862
+426,Metadata for Python Software Packages 2.0,Withdrawn,30-Aug-2012,1,5,8,0.058310389425652365
+503,Simple Repository API,Final,04-Sep-2015,1,5,2,0.057639437744850516
+262,A Database of Installed Python Packages,Rejected,08-Jul-2001,1,2,3,0.0506089374707236
+243,Module Repository Upload Mechanism,Withdrawn,18-Mar-2001,1,1,1,0.04466621174228449
+386,Changing the version comparison module in Distutils,Superseded,04-Jun-2009,1,4,2,0.03851024671849598
+459,Standard Metadata Extensions for Python Software Packages,Withdrawn,11-Nov-2013,1,2,2,0.032493522962938365
+658,Serve Distribution Metadata in the Simple Repository API,Accepted,10-May-2021,1,4,1,0.030246962247202563
+376,Database of Installed Python Distributions,Final,22-Feb-2009,1,2,4,0.027965551110897355
+566,Metadata for Python Software Packages 2.1,Final,01-Dec-2017,1,2,5,0.0198210254606543
+592,"Adding ""Yank"" Support to the Simple API",Final,07-May-2019,1,2,1,0.018213514736087323
+691,JSON-based Simple API for Python Package Indexes,Accepted,04-May-2022,1,2,5,0.01813834161780738
+629,Versioning PyPI's Simple API,Final,16-Jul-2020,1,1,1,0.013700971919419106
+390,Static metadata for Distutils,Rejected,10-Oct-2009,1,0,3,0.010617436923360356
+396,Module Version Numbers,Withdrawn,16-Mar-2011,1,0,3,0.010617436923360356
+496,Environment Markers,Rejected,03-Jul-2015,1,0,3,0.010617436923360356
+685,Comparison of extra names for optional distribution dependencies,Final,08-Mar-2022,1,0,1,0.010617436923360356
+700,Additional Fields for the Simple API for Package Indexes,Final,21-Oct-2022,1,0,3,0.010617436923360356
+714,Rename dist-info-metadata in the Simple API,Accepted,06-Jun-2023,1,0,2,0.010617436923360356
+753,Uniform project URLs in core metadata,Accepted,29-Aug-2024,1,0,1,0.010617436923360356
+792,Project status markers in the simple index,Final,21-May-2025,1,0,2,0.010617436923360356
+819,JSON Package Metadata,Draft,18-Dec-2025,1,0,3,0.010617436923360356
+>>>>>>> origin/production

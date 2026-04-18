@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 PEP,title,status,created,group_id,in-degree_group,out-degree_group,degree_group,pagerank_group,pagerank_cumsum
 506,Adding A Secrets Module To The Standard Library,Final,19-Sep-2015,4,3,1,4,0.19134179467144966,0.8892274235243043
 504,Using the System RNG by default,Withdrawn,15-Sep-2015,4,1,1,2,0.1787254915118358,0.6978856288528547
@@ -20,3 +21,27 @@ PEP,title,status,created,group_id,in-degree_group,out-degree_group,degree_group,
 733,An Evaluation of Python's Public C API,Final,16-Oct-2023,4,0,1,1,0.016077406157682855,0.39749345812176373
 828,Supporting 'yield from' in asynchronous generators,Draft,07-Mar-2026,4,0,2,2,0.016077406157682855,0.016077406157682855
 3145,Asynchronous I/O For subprocess.Popen,Withdrawn,04-Aug-2009,4,0,1,1,0.016077406157682855,0.03215481231536571
+=======
+pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
+506,Adding A Secrets Module To The Standard Library,Final,19-Sep-2015,4,3,1,0.19134179467144966
+504,Using the System RNG by default,Withdrawn,15-Sep-2015,4,1,1,0.1787254915118358
+380,Syntax for Delegating to a Subgenerator,Final,13-Feb-2009,4,7,0,0.11077257647569565
+523,Adding a frame evaluation API to CPython,Final,16-May-2016,4,3,0,0.05046969629856406
+522,Allow BlockingIOError in security sensitive APIs,Rejected,16-Jun-2016,4,1,2,0.04959571798691576
+492,Coroutines with async and await syntax,Final,09-Apr-2015,4,3,4,0.049293726704799076
+3156,"Asynchronous IO Support Rebooted: the ""asyncio"" Module",Final,12-Dec-2012,4,2,3,0.04021814019909035
+524,Make os.urandom() blocking on Linux,Final,20-Jun-2016,4,2,1,0.039433252172882724
+525,Asynchronous Generators,Final,28-Jul-2016,4,3,2,0.03298884201098239
+468,Preserving the order of \*\*kwargs in a function.,Final,05-Apr-2014,4,2,0,0.03202084643729086
+689,Unstable C API tier,Final,22-Apr-2022,4,1,1,0.029743212111632576
+3148,futures - execute computations asynchronously,Final,16-Oct-2009,4,1,0,0.027472557499141542
+479,Change StopIteration handling inside generators,Final,15-Nov-2014,4,1,1,0.026552334245140627
+3152,Cofunctions,Rejected,13-Feb-2009,4,1,1,0.026552334245140627
+530,Asynchronous Comprehensions,Final,03-Sep-2016,4,1,2,0.01835504048334114
+472,Support for indexing with keyword arguments,Rejected,24-Jun-2014,4,0,1,0.016077406157682855
+494,Python 3.6 Release Schedule,Final,30-May-2015,4,0,6,0.016077406157682855
+669,Low Impact Monitoring for CPython,Final,18-Aug-2021,4,0,2,0.016077406157682855
+733,An Evaluation of Python's Public C API,Final,16-Oct-2023,4,0,1,0.016077406157682855
+828,Supporting 'yield from' in asynchronous generators,Draft,07-Mar-2026,4,0,2,0.016077406157682855
+3145,Asynchronous I/O For subprocess.Popen,Withdrawn,04-Aug-2009,4,0,1,0.016077406157682855
+>>>>>>> origin/production
