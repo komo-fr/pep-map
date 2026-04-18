@@ -233,7 +233,7 @@ def mock_data_files(
     # グループデータディレクトリとファイル作成
     group_dir = data_dir / "groups"
     group_dir.mkdir()
-    group_csv = group_dir / "peps_group.csv"
+    group_csv = group_dir / "pep_group_metrics.csv"
     sample_group_data.to_csv(group_csv, index=False)
 
     # JSONファイル作成

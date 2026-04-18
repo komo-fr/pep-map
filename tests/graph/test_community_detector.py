@@ -78,7 +78,7 @@ class TestCreatePepGroupMetrics:
     def test_isolated_peps_have_group_id_minus_one(
         self, sample_graph, sample_metadata_csv
     ):
-        """孤立点（サイズ1のコミュニティ、グラフに存在しないPEP）は group_id=-1"""
+        """孤立点（サイズ1のコミュニティ）は group_id=最大値のグループID+1"""
         # Given
         communities = run_louvain_detection(sample_graph)
 
@@ -87,14 +87,9 @@ class TestCreatePepGroupMetrics:
 
         # Then
         # PEP 3100 は孤立ノード
-        pep_3100 = df[df["pep_number"] == 3100]
+        pep_3100 = df[df["PEP"] == 3100]
         assert len(pep_3100) == 1
-        assert pep_3100.iloc[0]["group_id"] == -1
-
-        # PEP 9999 はグラフに存在しない
-        pep_9999 = df[df["pep_number"] == 9999]
-        assert len(pep_9999) == 1
-        assert pep_9999.iloc[0]["group_id"] == -1
+        assert pep_3100.iloc[0]["group_id"] == 3
 
 
 class TestCreateGroupMetrics:

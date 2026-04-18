@@ -1,19 +1,21 @@
-pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-343,"The ""with"" Statement",Final,13-May-2005,10,7,5,0.15656401145926735
-310,Reliable Acquisition/Release Pairs,Rejected,18-Dec-2002,10,4,2,0.08868946303877766
-342,Coroutines via Enhanced Generators,Final,10-May-2005,10,5,4,0.08184249774036995
-319,Python Synchronize/Asynchronize Block,Rejected,24-Feb-2003,10,2,2,0.07831200218238685
-255,Simple Generators,Final,18-May-2001,10,4,2,0.07501993519556137
-234,Iterators,Final,30-Jan-2001,10,4,0,0.06707983769154917
-325,Resource-Release Support for Generators,Rejected,25-Aug-2003,10,6,3,0.06539141574434258
-288,Generators Attributes and Exceptions,Withdrawn,21-Mar-2002,10,4,2,0.06471144880691389
-340,Anonymous Block Statements,Rejected,27-Apr-2005,10,3,6,0.06376577524390792
-220,"Coroutines, Generators, Continuations",Rejected,14-Aug-2000,10,1,0,0.05300988173127835
-219,Stackless Python,Deferred,14-Aug-2000,10,1,1,0.04588813516340681
-346,"User Defined (""``with``"") Statements",Withdrawn,06-May-2005,10,1,6,0.040619845932876694
-3333,Python Web Server Gateway Interface v1.0.1,Final,26-Sep-2010,10,3,4,0.03720889024843403
-333,Python Web Server Gateway Interface v1.0,Final,07-Dec-2003,10,2,3,0.025879407288789562
-334,Simple Coroutines via SuspendIteration,Withdrawn,26-Aug-2004,10,0,2,0.01400436313303444
-377,Allow __enter__() methods to skip the statement body,Rejected,08-Mar-2009,10,0,1,0.01400436313303444
-414,Explicit Unicode Literal for Python 3.3,Final,15-Feb-2012,10,0,1,0.01400436313303444
-444,Python Web3 Interface,Deferred,19-Jul-2010,10,0,3,0.01400436313303444
+PEP,title,status,created,group_id,in-degree_group,out-degree_group,degree_group,pagerank_group,pagerank_cumsum
+591,Adding a final qualifier to typing,Final,15-Mar-2019,10,5,1,6,0.2596847426212884,0.743338497503218
+586,Literal Types,Final,14-Mar-2019,10,3,1,4,0.25277866969533014,0.4169027452431773
+646,Variadic Generics,Final,16-Sep-2020,10,5,1,6,0.10826090203131941,0.12994771687103215
+637,Support for indexing with keyword arguments,Rejected,24-Aug-2020,10,1,1,2,0.10164466571359607,0.9903806654294246
+589,TypedDict: Type Hints for Dictionaries with a Fixed Set of Keys,Final,20-Mar-2019,10,7,2,9,0.046347063425005795,0.46324980866818305
+585,Type Hinting Generics In Standard Collections,Final,03-Mar-2019,10,3,0,3,0.034176358676815004,0.16412407554784716
+604,Allow writing union types as ``X | Y``,Final,28-Aug-2019,10,3,1,4,0.023161100441976896,0.780232701065718
+692,Using TypedDict for more precise \*\*kwargs typing,Final,29-May-2022,10,4,3,7,0.021798224081407705,0.8385952182667041
+705,TypedDict: Read-only items,Final,07-Nov-2022,10,2,4,6,0.02168681483971275,0.02168681483971275
+655,Marking individual TypedDict items as required or potentially-missing,Final,30-Jan-2021,10,2,2,4,0.02040394621374659,0.48365375488192963
+612,Parameter Specification Variables,Final,18-Dec-2019,10,3,0,3,0.01569033710142984,0.7959230381671478
+728,TypedDict with Typed Extra Items,Accepted,12-Sep-2023,10,2,3,5,0.01373310312052307,0.7570716006237411
+764,Inline typed dictionaries,Draft,25-Oct-2024,10,1,4,5,0.011663443166822697,0.8887359997158285
+677,Callable Type Syntax,Rejected,13-Dec-2021,10,1,4,5,0.01125462144757324,0.8071776596147211
+569,Python 3.8 Release Schedule,Final,27-Jan-2018,10,0,3,3,0.009619334570575417,0.857833887407855
+698,Override Decorator for Static Typing,Final,05-Sep-2022,10,0,1,1,0.009619334570575417,0.8674532219784304
+747,Annotating Type Forms,Final,27-May-2024,10,0,1,1,0.009619334570575417,0.8167969941852965
+767,Annotating Read-Only Attributes,Draft,18-Nov-2024,10,0,1,1,0.009619334570575417,1.0
+821,Support for unpacking TypedDicts in Callable type hints,Draft,12-Jan-2026,10,0,5,5,0.009619334570575417,0.8482145528372796
+827,Type Manipulation,Draft,27-Feb-2026,10,0,4,4,0.009619334570575417,0.8770725565490058

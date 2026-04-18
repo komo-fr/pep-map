@@ -12,15 +12,26 @@ class TestDetectCommunitiesMain:
 
     @pytest.fixture
     def sample_graph_file(self, temp_dir):
-        """テスト用のグラフファイルを作成"""
+        """テスト用のグラフファイルを作成（サイズ2以上のコミュニティが形成されるデータ）"""
         G = nx.DiGraph()
-        # コミュニティ1
+        # コミュニティ1: PEP 1, 8, 20, 234, 257（相互に引用）
         G.add_edge(1, 8)
-        G.add_edge(8, 1)
-        # コミュニティ2
+        G.add_edge(1, 20)
+        G.add_edge(1, 257)
+        G.add_edge(8, 20)
+        G.add_edge(8, 234)
+        G.add_edge(20, 234)
+        G.add_edge(234, 8)
+        G.add_edge(234, 257)
+        G.add_edge(257, 1)
+        # コミュニティ2: PEP 484, 3107, 3119, 3141（typing関連）
         G.add_edge(484, 3107)
+        G.add_edge(484, 3119)
         G.add_edge(3107, 484)
-        # 孤立ノード
+        G.add_edge(3119, 3107)
+        G.add_edge(3119, 3141)
+        G.add_edge(3141, 3119)
+        # 孤立ノード: PEP 3100
         G.add_node(3100)
 
         # ノード属性を設定
@@ -40,11 +51,16 @@ class TestDetectCommunitiesMain:
         csv_path = temp_dir / "peps_metadata.csv"
         csv_path.write_text(
             "pep_number,title,status,type,created,authors,topic,requires,replaces\n"
-            "1,PEP 1,Final,Process,2000-01-01,Author,,,\n"
-            "8,PEP 8,Final,Process,2000-01-01,Author,,,\n"
-            "484,PEP 484,Final,Standards Track,2014-09-29,Author,typing,,\n"
-            "3100,PEP 3100,Final,Process,2006-04-17,Author,,,\n"
-            "3107,PEP 3107,Final,Standards Track,2006-12-02,Author,typing,,\n"
+            "1,PEP Purpose,Active,Process,2000-06-13,Barry Warsaw,,,\n"
+            "8,Style Guide,Active,Process,2001-07-05,Guido van Rossum,,,\n"
+            "20,Zen of Python,Active,Informational,2004-08-19,Tim Peters,,,\n"
+            "234,Iterators,Final,Standards Track,2000-03-03,Ka-Ping Yee,,,\n"
+            "257,Docstring,Active,Informational,2001-05-29,David Goodger,,,\n"
+            "484,Type Hints,Final,Standards Track,2014-09-29,Guido van Rossum,typing,,\n"
+            "3100,Python 3.0,Final,Process,2006-04-17,Brett Cannon,,,\n"
+            "3107,Annotations,Final,Standards Track,2006-12-02,Collin Winter,typing,,\n"
+            "3119,ABCs,Final,Standards Track,2007-04-04,Guido van Rossum,typing,,\n"
+            "3141,Numbers,Final,Standards Track,2007-04-23,Jeffrey Yasskin,typing,,\n"
         )
         return csv_path
 

@@ -1,3 +1,3 @@
-pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-248,Python Database API Specification v1.0,Final,08-May-1996,44,1,0,0.649122638064138
-249,Python Database API Specification v2.0,Final,12-Apr-1999,44,0,1,0.3508773619358619
+PEP,title,status,created,group_id,in-degree_group,out-degree_group,degree_group,pagerank_group,pagerank_cumsum
+3106,"Revamping dict.keys(), .values() and .items()",Final,19-Dec-2006,44,1,0,1,0.649122638064138,0.649122638064138
+469,Migration of dict iteration code to Python 3,Withdrawn,18-Apr-2014,44,0,1,1,0.3508773619358619,0.9999999999999998

@@ -1,15 +1,16 @@
-pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-427,The Wheel Binary Package Format 1.0,Final,20-Sep-2012,25,7,1,0.38357701230134755
-425,Compatibility Tags for Built Distributions,Final,27-Jul-2012,25,7,1,0.3813498428585386
-513,A Platform Tag for Portable Linux Built Distributions,Superseded,19-Jan-2016,25,3,3,0.030976597375878268
-491,The Wheel Binary Package Format 1.9,Deferred,16-Apr-2015,25,2,2,0.027742248514735272
-668,Marking Python base environments as “externally managed”,Accepted,18-May-2021,25,1,2,0.02462193681478647
-627,Recording installed projects,Final,15-Jul-2020,25,1,0,0.023773478181303966
-571,The manylinux2010 Platform Tag,Superseded,05-Feb-2018,25,2,2,0.021737963070791767
-527,Removing Un(der)used file types/extensions on PyPI,Final,23-Aug-2016,25,1,0,0.018965545924903095
-600,Future 'manylinux' Platform Tags for Portable Linux Built Distributions,Final,03-May-2019,25,1,4,0.01708008229494197
-599,The manylinux2014 Platform Tag,Superseded,29-Apr-2019,25,1,3,0.016938672522694882
-656,Platform Tag for Linux Distributions Using Musl,Final,17-Mar-2021,25,0,3,0.013309155035019716
-704,Require virtual environments by default for package installers,Withdrawn,16-Jan-2023,25,0,1,0.013309155035019716
-715,Disabling bdist_egg distribution uploads on PyPI,Final,06-Jun-2023,25,0,2,0.013309155035019716
-777,How to Re-invent the Wheel,Draft,09-Oct-2024,25,0,2,0.013309155035019716
+PEP,title,status,created,group_id,in-degree_group,out-degree_group,degree_group,pagerank_group,pagerank_cumsum
+3102,Keyword-Only Arguments,Final,22-Apr-2006,25,4,0,4,0.2139153680615829,0.9317199006560307
+3115,Metaclasses in Python 3000,Final,07-Mar-2007,25,3,1,4,0.10450869384159739,0.5214641499804149
+3130,Access to Current Module/Class/Function,Rejected,22-Apr-2007,25,2,0,2,0.07927734933368769,0.10589148139820939
+3135,New Super,Final,28-Apr-2007,25,2,2,4,0.06828009934396939,1.0
+3113,Removal of Tuple Parameter Unpacking,Final,02-Mar-2007,25,2,1,3,0.06761177208668175,0.34535180154764444
+570,Python Positional-Only Parameters,Final,20-Jan-2018,25,1,3,4,0.06485668051612961,0.7178045325944478
+422,Simpler customisation of class creation,Withdrawn,05-Jun-2012,25,2,3,5,0.06360630482182107,0.16949778622003048
+487,Simpler customisation of class creation,Final,27-Feb-2015,25,2,3,5,0.06360630482182107,0.23310409104185154
+367,New Super,Superseded,28-Apr-2007,25,1,2,3,0.05563318840882948,0.5770973383892444
+372,Adding an ordered dictionary to collections,Final,15-Jun-2008,25,1,1,2,0.0492363816245521,0.6263337200137965
+457,Notation For Positional-Only Parameters,Final,08-Oct-2013,25,1,1,2,0.04498952252665134,0.4169554561388175
+520,Preserving Class Attribute Definition Order,Final,07-Jun-2016,25,1,2,3,0.04463593841911119,0.2777400294609627
+375,Python 3.1 Release Schedule,Final,08-Feb-2009,25,0,1,1,0.0266141320645217,0.6529478520783182
+736,Shorthand syntax for keyword arguments at invocation,Rejected,28-Nov-2023,25,0,1,1,0.0266141320645217,0.0266141320645217
+3114,Renaming iterator.next() to iterator.__next__(),Final,04-Mar-2007,25,0,1,1,0.0266141320645217,0.3719659336121662

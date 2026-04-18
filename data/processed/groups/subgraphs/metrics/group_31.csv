@@ -1,12 +1,13 @@
-pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-394,"The ""python"" Command on Unix-Like Systems",Active,02-Mar-2011,31,3,4,0.16993887071820565
-404,Python 2.8 Un-release Schedule,Final,09-Nov-2011,31,2,0,0.16007716232197325
-397,Python launcher for Windows,Final,15-Mar-2011,31,4,1,0.13612381704831872
-370,Per user site-packages directory,Final,11-Jan-2008,31,2,0,0.13265508189421682
-373,Python 2.7 Release Schedule,Final,03-Nov-2008,31,2,1,0.10318710740301243
-405,Python Virtual Environments,Final,13-Jun-2011,31,3,1,0.10132518149873904
-486,Make the Python Launcher aware of virtual environments,Final,12-Feb-2015,31,1,2,0.043961254306082
-514,Python registration in the Windows registry,Active,02-Feb-2016,31,1,1,0.043961254306082
-439,Inclusion of implicit pip bootstrap in Python installation,Rejected,18-Mar-2013,31,0,3,0.0362567568344567
-773,A Python Installation Manager for Windows,Accepted,21-Jan-2025,31,0,4,0.0362567568344567
-3146,Merging Unladen Swallow into CPython,Withdrawn,01-Jan-2010,31,0,1,0.0362567568344567
+PEP,title,status,created,group_id,in-degree_group,out-degree_group,degree_group,pagerank_group,pagerank_cumsum
+202,List Comprehensions,Final,13-Jul-2000,31,5,0,5,0.25168025767777835,0.4748580617640314
+212,Loop Counter Iteration,Rejected,22-Aug-2000,31,4,2,6,0.14870758312586083,0.7430654417673972
+279,The enumerate() built-in function,Final,30-Jan-2002,31,2,2,4,0.1332178391346061,0.8762832809020032
+201,Lockstep Iteration,Final,13-Jul-2000,31,1,1,2,0.09352776132462697,0.22317780408625304
+281,Loop Counter Iteration with range and xrange,Rejected,11-Feb-2002,31,2,2,4,0.09338927585163741,0.9696725567536406
+289,Generator Expressions,Final,30-Jan-2002,31,2,1,3,0.06899515626890751,0.06899515626890751
+204,Range Literals,Rejected,14-Jul-2000,31,2,1,3,0.052400291547694974,0.5272583533117263
+276,Simple Iterator for ints,Rejected,12-Nov-2001,31,1,2,3,0.03677206208345066,0.5943578586415363
+274,Dict Comprehensions,Final,25-Oct-2001,31,0,1,1,0.03032744324635928,0.5575857965580856
+284,Integer for-loops,Rejected,01-Mar-2002,31,0,4,4,0.03032744324635928,0.9999999999999999
+323,Copyable Iterators,Deferred,25-Oct-2003,31,0,1,1,0.03032744324635928,0.09932259951526679
+3142,"Add a ""while"" clause to generator expressions",Rejected,12-Jan-2009,31,0,2,2,0.03032744324635928,0.12965004276162606

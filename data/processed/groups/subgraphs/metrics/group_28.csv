@@ -1,13 +1,15 @@
-pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-384,Defining a Stable ABI,Final,17-May-2009,28,6,1,0.36699338888279326
-3149,ABI version tagged .so files,Final,09-Jul-2010,28,2,1,0.3297522231184222
-580,The C call protocol,Rejected,14-Jun-2018,28,4,5,0.06642975005233898
-393,Flexible String Representation,Final,24-Jan-2010,28,3,1,0.04809374999999999
-576,Rationalize Built-in function classes,Withdrawn,10-May-2018,28,3,1,0.03753312122922922
-579,Refactoring C functions and methods,Final,04-Jun-2018,28,2,5,0.03207959078914727
-575,Unifying function/method classes,Withdrawn,27-Mar-2018,28,2,3,0.029246587964034478
-590,Vectorcall: a fast calling protocol for CPython,Final,29-Mar-2019,28,2,3,0.029246587964034478
-623,Remove wstr from Unicode,Final,25-Jun-2020,28,1,1,0.023125
-624,Remove Py_UNICODE encoder APIs,Final,06-Jul-2020,28,0,1,0.0125
-720,Cross-compiling Python packages,Draft,01-Jul-2023,28,0,2,0.0125
-756,Add PyUnicode_Export() and PyUnicode_Import() C functions,Withdrawn,13-Sep-2024,28,0,1,0.0125
+PEP,title,status,created,group_id,in-degree_group,out-degree_group,degree_group,pagerank_group,pagerank_cumsum
+3134,Exception Chaining and Embedded Tracebacks,Final,12-May-2005,28,5,1,6,0.36596148121434974,0.9461258298579736
+344,Exception Chaining and Embedded Tracebacks,Superseded,12-May-2005,28,1,1,2,0.3250192479821802,0.37573093747114095
+409,Suppressing exception context,Final,26-Jan-2012,28,2,2,4,0.05183637647271738,0.5801643486436239
+654,Exception Groups and except*,Final,22-Feb-2021,28,4,1,5,0.048619766924961,0.4721162696074297
+415,Implement context suppression with exception attributes,Final,26-Feb-2012,28,2,1,3,0.0399280197153615,1.0000000000000002
+515,Underscores in Numeric Literals,Final,10-Feb-2016,28,1,0,1,0.03083842513096307,0.05071168948896075
+657,Include Fine Grained Error Locations in Tracebacks,Final,08-May-2021,28,1,0,1,0.02239228777881406,0.4945085573862438
+641,Using an underscore in the version portion of Python 3.10 compatibility tags,Rejected,20-Oct-2020,28,1,1,2,0.01987326435799768,0.01987326435799768
+664,Python 3.11 Release Schedule,Active,12-Jul-2021,28,1,2,3,0.01987326435799768,0.5283279721709064
+678,Enriching Exceptions with Notes,Final,20-Dec-2021,28,1,2,3,0.01987326435799768,0.39560420182913864
+490,Chain exceptions at C level,Rejected,25-Mar-2015,28,0,3,3,0.013946150426665041,0.4234965026824687
+785,New methods for easier handling of ``ExceptionGroup``\ s,Draft,08-Apr-2025,28,0,1,1,0.013946150426665041,0.5084547078129088
+830,Add timestamps to exceptions and tracebacks,Draft,15-Mar-2026,28,0,2,2,0.013946150426665041,0.9600719802846387
+2026,Calendar versioning for Python,Rejected,11-Jun-2024,28,0,2,2,0.013946150426665041,0.40955035225580366

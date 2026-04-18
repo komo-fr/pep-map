@@ -1,18 +1,18 @@
-pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-302,New Import Hooks,Final,19-Dec-2002,16,11,3,0.2379016276633216
-338,Executing modules as scripts,Final,16-Oct-2004,16,3,3,0.1112366141088555
-366,Main module explicit relative imports,Final,01-May-2007,16,2,4,0.08713581958435225
-273,Import Modules from Zip Archives,Final,11-Oct-2001,16,1,1,0.08304390664329508
-328,Imports: Multi-Line and Absolute/Relative,Final,21-Dec-2003,16,4,0,0.07943817561898127
-299,Special __main__() function in modules,Rejected,12-Aug-2002,16,2,0,0.056830395789177146
-402,Simplified Package Layout and Partitioning,Rejected,12-Jul-2011,16,4,2,0.051561214802082145
-382,Namespace Packages,Rejected,02-Apr-2009,16,3,2,0.04824385553857657
-3147,PYC Repository Directories,Final,16-Dec-2009,16,2,2,0.0352608927604189
-3122,Delineation of the main module,Rejected,27-Apr-2007,16,1,3,0.034152904324834865
-451,A ModuleSpec Type for the Import System,Final,08-Aug-2013,16,3,4,0.031101928635147193
-420,Implicit Namespace Packages,Final,19-Apr-2012,16,3,4,0.031065401335348644
-304,Controlling Generation of Bytecode Files,Withdrawn,22-Jan-2003,16,1,2,0.030622884255078628
-395,Qualified Names for Modules,Withdrawn,04-Mar-2011,16,2,6,0.0288841060270418
-406,Improved Encapsulation of Import State,Withdrawn,04-Jul-2011,16,1,4,0.022246198041312233
-369,Post import hooks,Withdrawn,02-Jan-2008,16,0,1,0.01563703743608791
-499,``python -m foo`` should also bind ``'foo'`` in ``sys.modules``,Deferred,07-Aug-2015,16,0,2,0.01563703743608791
+PEP,title,status,created,group_id,in-degree_group,out-degree_group,degree_group,pagerank_group,pagerank_cumsum
+1,PEP Purpose and Guidelines,Active,13-Jun-2000,16,6,3,9,0.2159784993260178,0.3533562593806757
+12,Sample reStructuredText PEP Template,Active,05-Aug-2002,16,4,1,5,0.12935402305371088,0.5713138185755403
+676,PEP Infrastructure Process,Active,01-Nov-2021,16,1,2,3,0.07702330618247834,0.9841705294383405
+729,Typing governance process,Active,19-Sep-2023,16,1,4,5,0.07702330618247834,0.772424555542093
+287,reStructuredText Docstring Format,Active,25-Mar-2002,16,3,4,7,0.06906599588864878,0.8414905514307417
+647,User-Defined Type Guards,Final,07-Oct-2020,16,3,0,3,0.058097167723188424,0.4114534271038641
+256,Docstring Processing System Framework,Rejected,01-Jun-2001,16,3,3,6,0.05307437739731011,0.05307437739731011
+224,Attribute Docstrings,Rejected,23-Aug-2000,16,2,0,2,0.04982720126346109,0.8913177526942028
+258,Docutils Design Specification,Rejected,31-May-2001,16,2,6,8,0.04680485347687822,0.1373777600546579
+257,Docstring Conventions,Active,29-May-2001,16,2,2,4,0.03749852918046958,0.0905729065777797
+216,Docstring Format,Withdrawn,31-Jul-2000,16,2,1,3,0.0371372107594334,0.6954012493596146
+718,Subscriptable functions,Draft,23-Jun-2023,16,1,0,1,0.03219665648719486,0.6035104750627351
+727,Documentation in Annotated Metadata,Withdrawn,28-Aug-2023,16,1,1,2,0.03219665648719486,0.6582640386001812
+9,Sample Plaintext PEP Template,Withdrawn,14-Aug-2001,16,1,2,3,0.030506368417965328,0.44195979552182946
+724,Stricter Type Guards,Withdrawn,28-Jul-2023,16,1,1,2,0.022556907050251176,0.6260673821129863
+226,Python 2.1 Release Schedule,Final,16-Oct-2000,16,0,1,1,0.01582947056165932,0.9071472232558622
+742,Narrowing types with TypeIs,Final,07-Feb-2024,16,0,2,2,0.01582947056165932,0.9999999999999998

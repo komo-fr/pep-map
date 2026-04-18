@@ -167,7 +167,7 @@ def get_group_color(group_id: int) -> str:
     パレットを超えた場合は黄金比を使って動的に色を生成する。
 
     Args:
-        group_id: グループID（-1は孤立ノード、0以上はコミュニティ）
+        group_id: グループID（最大値のグループIDは孤立ノードの集まり）
 
     Returns:
         str: 色コード（例: "#1f77b4"）

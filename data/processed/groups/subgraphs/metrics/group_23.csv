@@ -1,16 +1,17 @@
-pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-3101,Advanced String Formatting,Final,16-Apr-2006,23,6,0,0.1833091181731604
-215,String Interpolation,Superseded,24-Jul-2000,23,4,0,0.1344901148832121
-498,Literal String Interpolation,Final,01-Aug-2015,23,5,2,0.12214506727920041
-701,Syntactic formalization of f-strings,Accepted,15-Nov-2022,23,3,2,0.08208132759463091
-536,Final Grammar for Literal String Interpolation,Withdrawn,11-Dec-2016,23,1,2,0.06535322023497639
-501,General purpose template literal strings,Withdrawn,08-Aug-2015,23,3,6,0.0634464082487283
-378,Format Specifier for Thousands Separator,Final,12-Mar-2009,23,1,1,0.056367322306368706
-750,Template Strings,Final,08-Jul-2024,23,2,3,0.0524065279643296
-292,Simpler String Substitutions,Final,18-Jun-2002,23,2,1,0.04463706752533915
-306,How to Change Python's Grammar,Withdrawn,29-Jan-2003,23,1,0,0.04341822157471796
-502,String Interpolation - Extended Discussion,Rejected,10-Aug-2015,23,0,5,0.030469120843067212
-682,Format Specifier for Signed Zero,Final,29-Jan-2022,23,0,1,0.030469120843067212
-787,Safer subprocess usage using t-strings,Deferred,13-Apr-2025,23,0,2,0.030469120843067212
-3126,Remove Implicit String Concatenation,Rejected,29-Apr-2007,23,0,1,0.030469120843067212
-3127,Integer Literal Support and Syntax,Final,14-Mar-2007,23,0,2,0.030469120843067212
+PEP,title,status,created,group_id,in-degree_group,out-degree_group,degree_group,pagerank_group,pagerank_cumsum
+540,Add a new UTF-8 Mode,Final,05-Jan-2016,23,5,3,8,0.10894826932981205,0.5651566130064715
+315,Enhanced While Loop,Rejected,25-Apr-2003,23,1,0,1,0.0985228016583192,1.0
+528,Change Windows console encoding to UTF-8,Final,27-Aug-2016,23,2,0,2,0.0832090139430724,0.2208438071390629
+529,Change Windows filesystem encoding to UTF-8,Final,27-Aug-2016,23,2,0,2,0.0832090139430724,0.30405282108213527
+548,More Flexible Loop Control,Rejected,05-Sep-2017,23,1,1,2,0.08120981684025902,0.6463664298467304
+538,Coercing the legacy C locale to a UTF-8 based locale,Final,28-Dec-2016,23,3,3,6,0.08062540810192109,0.4562083436766594
+456,Secure and interchangeable hash algorithm,Final,27-Sep-2013,23,1,0,1,0.07179055472447116,0.07179055472447116
+587,Python Initialization Configuration,Final,27-Mar-2019,23,2,4,6,0.06584423847151935,0.1376347931959905
+553,Built-in breakpoint(),Final,05-Sep-2017,23,2,1,3,0.0608382456687591,0.7864584083054345
+432,Restructuring the CPython startup sequence,Withdrawn,28-Dec-2012,23,2,2,4,0.0560252697548722,0.9014771983416808
+552,Deterministic pycs,Final,04-Sep-2017,23,2,1,3,0.0497569726492578,0.7256201626366754
+597,Add optional EncodingWarning,Final,05-Jun-2019,23,1,0,1,0.042033354351915894,0.3460861754340512
+537,Python 3.7 Release Schedule,Final,23-Dec-2016,23,0,4,4,0.029496760140687094,0.37558293557473826
+559,Built-in noop(),Rejected,08-Sep-2017,23,0,1,1,0.029496760140687094,0.8454519285868086
+686,Make UTF-8 mode default,Final,18-Mar-2022,23,0,2,2,0.029496760140687094,0.8159551684461216
+741,Python Configuration C API,Final,18-Jan-2024,23,0,2,2,0.029496760140687094,0.6758631899874176
