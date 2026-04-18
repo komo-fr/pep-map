@@ -59,9 +59,9 @@ def create_pep_group_metrics(
 
     Returns:
         DataFrame with columns:
-        - pep_number, title, status, created, group_id
-        - in_degree_group, out_degree_group, pagerank_group
-        孤立点（サイズ1のコミュニティ、グラフに存在しないPEP）は group_id=-1
+        - PEP, title, status, created, group_id
+        - in-degree_group, out-degree_group, degree_group, pagerank_group
+        孤立点（サイズ1のコミュニティ、グラフに存在しないPEP）は group_id=最大値のグループID+1
     """
     logger.info(f"Creating PEP group metrics from {metadata_path}")
 

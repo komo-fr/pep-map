@@ -510,7 +510,7 @@ def load_group_data() -> pd.DataFrame:
         - title: PEPのタイトル
         - status: PEPのステータス
         - created: PEPの作成日
-        - group_id (int): グループID（-1は孤立ノード、0〜31はコミュニティ）
+        - group_id (int): グループID（最大値のグループIDは孤立ノードの集まり）
         - in-degree_group (int): グループ内入次数
         - out-degree_group (int): グループ内出次数
         - degree_group (int): グループ内次数
