@@ -1,8 +1,8 @@
-pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-253,Subtyping Built-in Types,Final,14-May-2001,36,2,2,0.2943477695230242
-252,Making Types Look More Like Classes,Final,19-Apr-2001,36,3,1,0.26979545214028494
-254,Making Classes Look More Like Types,Rejected,18-Jun-2001,36,1,0,0.17576575762464916
-213,Attribute Access Handlers,Deferred,21-Jul-2000,36,1,1,0.0937342263620547
-237,Unifying Long Integers and Integers,Final,11-Mar-2001,36,1,0,0.06502275517801034
-231,__findattr__(),Rejected,30-Nov-2000,36,0,1,0.05066701958598817
-251,Python 2.2 Release Schedule,Final,17-Apr-2001,36,0,3,0.05066701958598817
+PEP,title,status,created,group_id,in-degree_group,out-degree_group,degree_group,pagerank_group,pagerank_cumsum
+253,Subtyping Built-in Types,Final,14-May-2001,36,2,2,4,0.2943477695230242,0.4387490154710671
+252,Making Types Look More Like Classes,Final,19-Apr-2001,36,3,1,4,0.26979545214028494,0.7592114871973402
+254,Making Classes Look More Like Types,Rejected,18-Jun-2001,36,1,0,1,0.17576575762464916,0.9999999999999998
+213,Attribute Access Handlers,Deferred,21-Jul-2000,36,1,1,2,0.0937342263620547,0.0937342263620547
+237,Unifying Long Integers and Integers,Final,11-Mar-2001,36,1,0,1,0.06502275517801034,0.8242342423753506
+231,__findattr__(),Rejected,30-Nov-2000,36,0,1,1,0.05066701958598817,0.14440124594804288
+251,Python 2.2 Release Schedule,Final,17-Apr-2001,36,0,3,3,0.05066701958598817,0.4894160350570553

@@ -85,25 +85,32 @@ def create_pep_group_metrics(
         for node in comm:
             results.append(
                 {
-                    "pep_number": node,
+                    "PEP": node,
                     "group_id": -1 if is_isolated else group_id,
-                    "in_degree_group": subgraph.in_degree(node),
-                    "out_degree_group": subgraph.out_degree(node),
+                    "in-degree_group": subgraph.in_degree(node),
+                    "out-degree_group": subgraph.out_degree(node),
+                    "degree_group": subgraph.degree(node),
                     "pagerank_group": local_pagerank.get(node),
                 }
             )
 
     df_metrics = pd.DataFrame(results)
+    df_metrics["pagerank_cumsum"] = df_metrics.groupby("group_id")[
+        "pagerank_group"
+    ].cumsum()
 
     # メタデータとマージ
-    df_merged = df_metadata[["pep_number", "title", "status", "created"]].merge(
-        df_metrics, on="pep_number", how="left"
+    df_metadata = df_metadata.rename(columns={"pep_number": "PEP"})
+    df_merged = df_metadata[["PEP", "title", "status", "created"]].merge(
+        df_metrics, on="PEP", how="left"
     )
 
-    # グラフに存在しないPEPは group_id=-1
-    df_merged["group_id"] = df_merged["group_id"].fillna(-1).astype(int)
-    df_merged["in_degree_group"] = df_merged["in_degree_group"].fillna(0).astype(int)
-    df_merged["out_degree_group"] = df_merged["out_degree_group"].fillna(0).astype(int)
+    # group_idが-1のグループは最大値で置き換える
+    isolated_peps_group_id = df_merged.group_id.max() + 1
+    df_merged.loc[df_merged.group_id == -1, "group_id"] = isolated_peps_group_id
+    df_merged["in-degree_group"] = df_merged["in-degree_group"].fillna(0).astype(int)
+    df_merged["out-degree_group"] = df_merged["out-degree_group"].fillna(0).astype(int)
+    df_merged["degree_group"] = df_merged["degree_group"].fillna(0).astype(int)
 
     # ソート: group_id順、その後pagerank_group降順
     df_merged = df_merged.sort_values(

@@ -1,19 +1,19 @@
-pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-602,Annual Release Cycle for Python,Active,04-Jun-2019,13,11,3,0.2543231915454472
-596,Python 3.9 Release Schedule,Final,04-Jun-2019,13,3,3,0.13388698442554087
-598,Introducing incremental feature releases,Withdrawn,15-Jun-2019,13,3,3,0.10657639480559053
-719,Python 3.13 Release Schedule,Active,26-May-2023,13,1,1,0.08947281540606879
-605,A rolling feature release stream for CPython,Rejected,20-Sep-2019,13,4,4,0.06690432479246813
-614,Relaxing Grammar Restrictions On Decorators,Final,10-Feb-2020,13,1,0,0.05535068221352091
-616,String methods to remove prefixes and suffixes,Final,19-Mar-2020,13,1,0,0.05535068221352091
-20,The Zen of Python,Active,19-Aug-2004,13,3,0,0.03806641959585356
-607,Reducing CPython's Feature Delivery Latency,Final,11-Oct-2019,13,1,2,0.031632611428970295
-565,Show DeprecationWarning in __main__,Final,12-Nov-2017,13,2,0,0.023263028255975204
-606,Python Compatibility Version,Rejected,18-Oct-2019,13,1,6,0.02037636927669971
-3002,Procedure for Backwards-Incompatible Changes,Final,27-Mar-2006,13,1,0,0.020302349987999534
-608,Coordinated Python release,Rejected,25-Oct-2019,13,0,5,0.017415691008724036
-693,Python 3.12 Release Schedule,Active,24-May-2022,13,0,1,0.017415691008724036
-745,Python 3.14 Release Schedule,Active,24-Apr-2024,13,0,1,0.017415691008724036
-790,Python 3.15 Release Schedule,Active,26-Apr-2025,13,0,1,0.017415691008724036
-826,Python 3.16 Release Schedule,Active,23-Feb-2026,13,0,1,0.017415691008724036
-3117,Postfix type declarations,Rejected,01-Apr-2007,13,0,1,0.017415691008724036
+PEP,title,status,created,group_id,in-degree_group,out-degree_group,degree_group,pagerank_group,pagerank_cumsum
+602,Annual Release Cycle for Python,Active,04-Jun-2019,13,11,3,14,0.2543231915454472,0.639741496787225
+596,Python 3.9 Release Schedule,Final,04-Jun-2019,13,3,3,6,0.13388698442554087,0.22335979983160964
+598,Introducing incremental feature releases,Withdrawn,15-Jun-2019,13,3,3,6,0.10657639480559053,0.3680026142330537
+719,Python 3.13 Release Schedule,Active,26-May-2023,13,1,1,2,0.08947281540606879,0.08947281540606879
+605,A rolling feature release stream for CPython,Rejected,20-Sep-2019,13,4,4,8,0.06690432479246812,0.7066458215796931
+614,Relaxing Grammar Restrictions On Decorators,Final,10-Feb-2020,13,1,0,1,0.05535068221352091,0.8314211755076081
+616,String methods to remove prefixes and suffixes,Final,19-Mar-2020,13,1,0,1,0.05535068221352091,0.886771857721129
+20,The Zen of Python,Active,19-Aug-2004,13,3,0,3,0.03806641959585356,0.2614262194274632
+607,Reducing CPython's Feature Delivery Latency,Final,11-Oct-2019,13,1,2,3,0.031632611428970295,0.7586548022853631
+565,Show DeprecationWarning in __main__,Final,12-Nov-2017,13,2,0,2,0.023263028255975204,0.9622819590032763
+606,Python Compatibility Version,Rejected,18-Oct-2019,13,1,6,7,0.02037636927669971,0.7270221908563927
+3002,Procedure for Backwards-Incompatible Changes,Final,27-Mar-2006,13,1,0,1,0.020302349987999534,0.9825843089912758
+608,Coordinated Python release,Rejected,25-Oct-2019,13,0,5,5,0.017415691008724036,0.7760704932940872
+693,Python 3.12 Release Schedule,Active,24-May-2022,13,0,1,1,0.017415691008724036,0.939018930747301
+745,Python 3.14 Release Schedule,Active,24-Apr-2024,13,0,1,1,0.017415691008724036,0.904187548729853
+790,Python 3.15 Release Schedule,Active,26-Apr-2025,13,0,1,1,0.017415691008724036,0.3854183052417778
+826,Python 3.16 Release Schedule,Active,23-Feb-2026,13,0,1,1,0.017415691008724036,0.9999999999999998
+3117,Postfix type declarations,Rejected,01-Apr-2007,13,0,1,1,0.017415691008724036,0.921603239738577

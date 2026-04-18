@@ -1,3 +1,3 @@
-pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-3138,String representation in Python 3000,Final,05-May-2008,45,1,0,0.649122638064138
-3140,"str(container) should call str(item), not repr(item)",Rejected,27-May-2008,45,0,1,0.3508773619358619
+PEP,title,status,created,group_id,in-degree_group,out-degree_group,degree_group,pagerank_group,pagerank_cumsum
+3138,String representation in Python 3000,Final,05-May-2008,45,1,0,1,0.649122638064138,0.649122638064138
+3140,"str(container) should call str(item), not repr(item)",Rejected,27-May-2008,45,0,1,1,0.3508773619358619,0.9999999999999998

@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.6.2] - 2026-04-18
+
+### Fixed
+
+- Fixed Groups tab loading incorrect CSV file for group data.
+
 ## [0.6.1] - 2026-04-04
 
 ### Changed

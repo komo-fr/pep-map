@@ -1,14 +1,14 @@
-pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-3119,Introducing Abstract Base Classes,Final,18-Apr-2007,30,2,2,0.15837692408335582
-3141,A Type Hierarchy for Numbers,Final,23-Apr-2007,30,3,1,0.13436258002196863
-245,Python Interface Syntax,Rejected,11-Jan-2001,30,3,3,0.12033567235911563
-239,Adding a Rational Type to Python,Rejected,11-Mar-2001,30,3,3,0.11649561487252952
-3124,"Overloading, Generic Functions, Interfaces, and Adaptation",Deferred,28-Apr-2007,30,2,3,0.09092678782364426
-246,Object Adaptation,Rejected,21-Mar-2001,30,3,1,0.08347660838938283
-327,Decimal Data Type,Final,17-Oct-2003,30,2,1,0.07658440570630938
-240,Adding a Rational Literal to Python,Rejected,11-Mar-2001,30,2,2,0.05923230292193144
-232,Function Attributes,Final,02-Dec-2000,30,1,0,0.0524989889571471
-233,Python Online Help,Deferred,11-Dec-2000,30,1,0,0.0524989889571471
-228,Reworking Python's Numeric Model,Withdrawn,04-Nov-2000,30,0,1,0.018403708635822753
-313,Adding Roman Numeral Literals to Python,Rejected,01-Apr-2003,30,0,2,0.018403708635822753
-443,Single-dispatch generic functions,Final,22-May-2013,30,0,3,0.018403708635822753
+PEP,title,status,created,group_id,in-degree_group,out-degree_group,degree_group,pagerank_group,pagerank_cumsum
+3119,Introducing Abstract Base Classes,Final,18-Apr-2007,30,2,2,4,0.15837692408335582,0.6684535141562118
+3141,A Type Hierarchy for Numbers,Final,23-Apr-2007,30,3,1,4,0.13436258002196863,0.15276628865779138
+245,Python Interface Syntax,Rejected,11-Jan-2001,30,3,3,6,0.12033567235911563,0.8797159743389716
+239,Adding a Rational Type to Python,Rejected,11-Mar-2001,30,3,3,6,0.11649561487252952,0.45084428715092445
+3124,"Overloading, Generic Functions, Interfaces, and Adaptation",Deferred,28-Apr-2007,30,2,3,5,0.09092678782364426,0.759380301979856
+246,Object Adaptation,Rejected,21-Mar-2001,30,3,1,4,0.08347660838938283,0.9631925827283545
+327,Decimal Data Type,Final,17-Oct-2003,30,2,1,3,0.07658440570630938,0.22935069436410077
+240,Adding a Rational Literal to Python,Rejected,11-Mar-2001,30,2,2,4,0.05923230292193144,0.5100765900728559
+232,Function Attributes,Final,02-Dec-2000,30,1,0,1,0.052498988957147094,0.2818496833212478
+233,Python Online Help,Deferred,11-Dec-2000,30,1,0,1,0.052498988957147094,0.33434867227839493
+228,Reworking Python's Numeric Model,Withdrawn,04-Nov-2000,30,0,1,1,0.018403708635822753,0.018403708635822753
+313,Adding Roman Numeral Literals to Python,Rejected,01-Apr-2003,30,0,2,2,0.018403708635822753,0.9815962913641773
+443,Single-dispatch generic functions,Final,22-May-2013,30,0,3,3,0.018403708635822753,1.0
