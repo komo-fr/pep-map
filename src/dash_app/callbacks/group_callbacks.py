@@ -189,10 +189,7 @@ def register_group_callbacks(app):
         df = get_peps_by_group(group_id)
 
         if df.empty:
-            if group_id == -1:
-                title = "Isolated PEPs (no data)"
-            else:
-                title = f"Group {group_id} (no data)"
+            title = f"Group {group_id} (no data)"
             return [], title
 
         # ソート: PageRank降順 > In-degree降順 > Out-degree降順 > Degree降順 > PEP番号昇順
@@ -229,10 +226,7 @@ def register_group_callbacks(app):
 
         # タイトルを設定
         count = len(table_data)
-        if group_id == -1:
-            title = f"Isolated PEPs ({count} PEPs)"
-        else:
-            title = f"Group {group_id} ({count} PEPs)"
+        title = f"Group {group_id} ({count} PEPs)"
 
         return table_data, title
 

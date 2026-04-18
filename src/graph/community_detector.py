@@ -334,9 +334,6 @@ def save_group_csvs(
 
     # group_idごとにCSVを保存（孤立点は除外）
     for group_id in pep_group_df["group_id"].unique():
-        if group_id == -1:
-            continue  # 孤立点はスキップ
-
         group_df = pep_group_df[pep_group_df["group_id"] == group_id]
         csv_path = output_dir / f"group_{group_id}.csv"
         group_df.to_csv(csv_path, index=False)

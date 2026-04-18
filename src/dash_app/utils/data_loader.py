@@ -578,10 +578,7 @@ def get_group_list() -> list[dict[str, str | int]]:
     options: list[dict[str, str | int]] = [{"label": "All Groups", "value": "all"}]
     for group_id in sorted(cast(list[int], list(group_counts.keys()))):
         count = group_counts[group_id]
-        if group_id == -1:
-            label = f"Isolated ({count} PEPs)"
-        else:
-            label = f"Group {group_id} ({count} PEPs)"
+        label = f"Group {group_id} ({count} PEPs)"
         options.append({"label": label, "value": group_id})
 
     return options
