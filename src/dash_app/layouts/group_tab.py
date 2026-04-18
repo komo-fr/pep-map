@@ -261,29 +261,83 @@ def _create_main_content_section() -> html.Div:
     )
 
 
-def _create_network_tabs() -> dcc.Tabs:
-    """ネットワークグラフのタブ（Full Network / Group Network）を生成する"""
-    return dcc.Tabs(
-        id="group-network-tabs",
-        value="full-network",
-        children=[
-            dcc.Tab(
-                label="Full Network",
-                value="full-network",
-                children=[
-                    _create_full_network_tab_content(),
+def _create_network_tabs() -> html.Div:
+    """ネットワークグラフのタブ（Full Network / Group Network）を生成する
+
+    CSSベースの切り替えを使用して、両方のグラフをDOMに保持し、
+    ズーム・パン状態を維持する。
+    """
+    # タブボタンの共通スタイル
+    tab_button_base_style = {
+        "padding": "8px 16px",
+        "border": "1px solid #ddd",
+        "borderBottom": "none",
+        "backgroundColor": "#f5f5f5",
+        "cursor": "pointer",
+        "marginRight": "4px",
+        "borderRadius": "4px 4px 0 0",
+    }
+    tab_button_selected_style = {
+        **tab_button_base_style,
+        "backgroundColor": "#fff",
+        "fontWeight": "bold",
+        "borderBottom": "1px solid #fff",
+        "marginBottom": "-1px",
+    }
+
+    return html.Div(
+        [
+            # タブ選択状態を管理するStore
+            dcc.Store(id="network-tab-store", data="full-network"),
+            # タブボタン
+            html.Div(
+                [
+                    html.Button(
+                        "Full Network",
+                        id="full-network-tab-button",
+                        n_clicks=0,
+                        style=tab_button_selected_style,
+                    ),
+                    html.Button(
+                        "Group Network",
+                        id="group-network-tab-button",
+                        n_clicks=0,
+                        style=tab_button_base_style,
+                    ),
                 ],
-                style={"padding": "8px"},
-                selected_style={"padding": "8px", "fontWeight": "bold"},
+                style={
+                    "borderBottom": "1px solid #ddd",
+                    "paddingLeft": "4px",
+                },
             ),
-            dcc.Tab(
-                label="Group Network",
-                value="group-network",
-                children=[
-                    _create_subgraph_tab_content(),
+            # タブコンテンツコンテナ（position: relativeで子要素を重ねる）
+            html.Div(
+                [
+                    # Full Networkコンテンツ（初期表示）
+                    html.Div(
+                        id="full-network-content",
+                        children=_create_full_network_tab_content(),
+                        style={
+                            "visibility": "visible",
+                            "position": "relative",
+                            "zIndex": "1",
+                        },
+                    ),
+                    # Group Networkコンテンツ（初期非表示）
+                    html.Div(
+                        id="group-network-content",
+                        children=_create_subgraph_tab_content(),
+                        style={
+                            "visibility": "hidden",
+                            "position": "absolute",
+                            "top": "0",
+                            "left": "0",
+                            "right": "0",
+                            "zIndex": "0",
+                        },
+                    ),
                 ],
-                style={"padding": "8px"},
-                selected_style={"padding": "8px", "fontWeight": "bold"},
+                style={"position": "relative"},
             ),
         ],
     )

@@ -742,3 +742,93 @@ def register_group_callbacks(app):
             },
             stylesheet=get_subgraph_base_stylesheet(),
         )
+
+    # ===== ネットワークタブ切り替え（クライアントサイド） =====
+    # visibility/positionベースの切り替えでCytoscapeのレイアウト計算を維持
+    app.clientside_callback(
+        """
+        function(fullClicks, groupClicks) {
+            // どちらのボタンがクリックされたかを判定
+            const ctx = window.dash_clientside.callback_context;
+
+            // 表示タブのスタイル（通常表示）
+            const visibleContentStyle = {
+                'visibility': 'visible',
+                'position': 'relative',
+                'zIndex': '1'
+            };
+
+            // 非表示タブのスタイル（見えないが高さを持つ）
+            const hiddenContentStyle = {
+                'visibility': 'hidden',
+                'position': 'absolute',
+                'top': '0',
+                'left': '0',
+                'right': '0',
+                'zIndex': '0'
+            };
+
+            // 選択されたタブボタンのスタイル
+            const selectedButtonStyle = {
+                'padding': '8px 16px',
+                'border': '1px solid #ddd',
+                'borderBottom': '1px solid #fff',
+                'backgroundColor': '#fff',
+                'cursor': 'pointer',
+                'marginRight': '4px',
+                'borderRadius': '4px 4px 0 0',
+                'fontWeight': 'bold',
+                'marginBottom': '-1px'
+            };
+
+            // 非選択タブボタンのスタイル
+            const unselectedButtonStyle = {
+                'padding': '8px 16px',
+                'border': '1px solid #ddd',
+                'borderBottom': 'none',
+                'backgroundColor': '#f5f5f5',
+                'cursor': 'pointer',
+                'marginRight': '4px',
+                'borderRadius': '4px 4px 0 0'
+            };
+
+            if (!ctx.triggered || ctx.triggered.length === 0) {
+                // 初期状態: Full Network表示
+                return [
+                    'full-network',
+                    visibleContentStyle,
+                    hiddenContentStyle,
+                    selectedButtonStyle,
+                    unselectedButtonStyle
+                ];
+            }
+
+            const triggeredId = ctx.triggered[0].prop_id.split('.')[0];
+
+            if (triggeredId === 'full-network-tab-button') {
+                return [
+                    'full-network',
+                    visibleContentStyle,
+                    hiddenContentStyle,
+                    selectedButtonStyle,
+                    unselectedButtonStyle
+                ];
+            } else {
+                return [
+                    'group-network',
+                    hiddenContentStyle,
+                    visibleContentStyle,
+                    unselectedButtonStyle,
+                    selectedButtonStyle
+                ];
+            }
+        }
+        """,
+        Output("network-tab-store", "data"),
+        Output("full-network-content", "style"),
+        Output("group-network-content", "style"),
+        Output("full-network-tab-button", "style"),
+        Output("group-network-tab-button", "style"),
+        Input("full-network-tab-button", "n_clicks"),
+        Input("group-network-tab-button", "n_clicks"),
+    )
