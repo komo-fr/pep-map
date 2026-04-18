@@ -42,16 +42,12 @@ def create_group_tab_layout() -> html.Div:
                     "fontSize": "13px",
                 },
             ),
-            # === 上部セクション: グループ選択 + PEP情報 ===
-            _create_top_section(),
-            # === 注意書き + データ取得日付セクション ===
-            _create_note_and_data_info_section(fetched_at, checked_at),
+            # === 上部セクション: グループ選択 + PEP情報 + 日付情報 ===
+            _create_top_section(fetched_at, checked_at),
             # === 操作説明セクション ===
             _create_operation_description_section(),
-            # === メインコンテンツ: グラフ + テーブル ===
+            # === メインコンテンツ: グラフ（タブ切り替え） + テーブル ===
             _create_main_content_section(),
-            # === サブグラフセクション ===
-            _create_subgraph_section(),
         ],
         style={
             "padding": "16px",
@@ -59,8 +55,8 @@ def create_group_tab_layout() -> html.Div:
     )
 
 
-def _create_top_section() -> html.Div:
-    """上部セクション: グループ選択 + PEP情報表示エリア"""
+def _create_top_section(fetched_at: str, checked_at: str) -> html.Div:
+    """上部セクション: グループ選択 + PEP情報表示エリア + 日付情報"""
     return html.Div(
         [
             # 左側: グループ選択
@@ -69,23 +65,58 @@ def _create_top_section() -> html.Div:
                     _create_group_selector_section(),
                 ],
                 style={
-                    "display": "inline-block",
                     "verticalAlign": "top",
                     "width": "250px",
+                    "flexShrink": "0",
                 },
             ),
-            # 右側: PEP情報表示
+            # 中央: PEP情報表示
             html.Div(
                 id="group-pep-info-display",
                 children=create_group_initial_info_message(),
                 style={
-                    "display": "inline-block",
                     "verticalAlign": "top",
                     "marginLeft": "16px",
+                    "flexGrow": "1",
+                },
+            ),
+            # 右側: 日付情報
+            html.Div(
+                [
+                    html.P(
+                        [
+                            html.Strong("Data updated:"),
+                            f" {fetched_at}",
+                        ],
+                        style={
+                            "fontSize": "12px",
+                            "color": "#666",
+                            "margin": "0",
+                            "textAlign": "right",
+                        },
+                    ),
+                    html.P(
+                        [
+                            html.Strong("Last checked:"),
+                            f" {checked_at}",
+                        ],
+                        style={
+                            "fontSize": "12px",
+                            "color": "#666",
+                            "margin": "0",
+                            "textAlign": "right",
+                        },
+                    ),
+                ],
+                style={
+                    "marginLeft": "auto",
+                    "flexShrink": "0",
+                    "alignSelf": "flex-end",
                 },
             ),
         ],
         style={
+            "display": "flex",
             "marginBottom": "16px",
             "borderBottom": "1px solid #ddd",
             "paddingBottom": "16px",
@@ -175,79 +206,6 @@ def _create_group_selector_section() -> html.Div:
     )
 
 
-def _create_note_and_data_info_section(fetched_at: str, checked_at: str) -> html.Div:
-    """注意書き + データ取得日付セクション"""
-    return html.Div(
-        [
-            # 左側: Color と Node sizes の説明
-            html.Div(
-                [
-                    html.P(
-                        [
-                            html.Strong("Color"),
-                            " indicates the group of each PEP.",
-                        ],
-                        style={
-                            "fontSize": "12px",
-                            "color": "#666",
-                            "margin": "0",
-                        },
-                    ),
-                    html.P(
-                        [
-                            html.Strong("Node sizes"),
-                            " in the network graph are based on PageRank computed from the full citation network.",
-                        ],
-                        style={
-                            "fontSize": "12px",
-                            "color": "#666",
-                            "margin": "0",
-                        },
-                    ),
-                ],
-            ),
-            # 右側: Data updated と Last checked（右寄せ）
-            html.Div(
-                [
-                    html.P(
-                        [
-                            html.Strong("Data updated:"),
-                            f" {fetched_at}",
-                        ],
-                        style={
-                            "fontSize": "12px",
-                            "color": "#666",
-                            "margin": "0",
-                            "textAlign": "right",
-                        },
-                    ),
-                    html.P(
-                        [
-                            html.Strong("Last checked:"),
-                            f" {checked_at}",
-                        ],
-                        style={
-                            "fontSize": "12px",
-                            "color": "#666",
-                            "margin": "0",
-                            "textAlign": "right",
-                        },
-                    ),
-                ],
-                style={
-                    "marginLeft": "auto",
-                },
-            ),
-        ],
-        style={
-            "display": "flex",
-            "justifyContent": "space-between",
-            "alignItems": "flex-start",
-            "marginBottom": "8px",
-        },
-    )
-
-
 def _create_operation_description_section() -> html.Div:
     """操作説明セクション"""
     return html.Div(
@@ -273,13 +231,13 @@ def _create_operation_description_section() -> html.Div:
 
 
 def _create_main_content_section() -> html.Div:
-    """メインコンテンツ: グラフエリア + テーブルエリア"""
+    """メインコンテンツ: グラフエリア（タブ切り替え） + テーブルエリア"""
     return html.Div(
         [
-            # 左側: ネットワークグラフ
+            # 左側: ネットワークグラフ（タブ切り替え）
             html.Div(
                 [
-                    _create_group_graph(),
+                    _create_network_tabs(),
                 ],
                 style={
                     "display": "inline-block",
@@ -300,6 +258,90 @@ def _create_main_content_section() -> html.Div:
                 },
             ),
         ],
+    )
+
+
+def _create_network_tabs() -> dcc.Tabs:
+    """ネットワークグラフのタブ（Full Network / Group Network）を生成する"""
+    return dcc.Tabs(
+        id="group-network-tabs",
+        value="full-network",
+        children=[
+            dcc.Tab(
+                label="Full Network",
+                value="full-network",
+                children=[
+                    _create_full_network_tab_content(),
+                ],
+                style={"padding": "8px"},
+                selected_style={"padding": "8px", "fontWeight": "bold"},
+            ),
+            dcc.Tab(
+                label="Group Network",
+                value="group-network",
+                children=[
+                    _create_subgraph_tab_content(),
+                ],
+                style={"padding": "8px"},
+                selected_style={"padding": "8px", "fontWeight": "bold"},
+            ),
+        ],
+    )
+
+
+def _create_full_network_tab_content() -> html.Div:
+    """Full Networkタブの内容を生成する"""
+    return html.Div(
+        [
+            # 説明テキスト
+            html.P(
+                [
+                    html.Strong("Color"),
+                    " indicates the group of each PEP.",
+                ],
+                style={"fontSize": "12px", "color": "#666", "marginBottom": "4px"},
+            ),
+            html.P(
+                [
+                    html.Strong("Node sizes"),
+                    " in the network graph are based on PageRank computed from the full citation network.",
+                ],
+                style={"fontSize": "12px", "color": "#666", "marginBottom": "8px"},
+            ),
+            # ネットワークグラフ
+            _create_group_graph(),
+        ],
+        style={"paddingTop": "8px"},
+    )
+
+
+def _create_subgraph_tab_content() -> html.Div:
+    """Group Networkタブの内容（サブグラフ）を生成する"""
+    return html.Div(
+        [
+            # 説明テキスト
+            html.P(
+                [
+                    html.Strong("Node sizes"),
+                    " are based on PageRank computed within the selected group.",
+                ],
+                style={"fontSize": "12px", "color": "#666", "marginBottom": "4px"},
+            ),
+            html.P(
+                [
+                    html.Strong("Color"),
+                    " indicates the status of each PEP.",
+                ],
+                style={"fontSize": "12px", "color": "#666", "marginBottom": "8px"},
+            ),
+            # サブグラフ表示エリア（初期状態はプレースホルダー）
+            html.Div(
+                id="subgraph-container",
+                children=_create_subgraph_placeholder(),
+                style={"minHeight": "600px"},
+            ),
+        ],
+        style={"paddingTop": "8px"},
     )
 
 
@@ -453,45 +495,6 @@ def _create_group_pep_table() -> dash_table.DataTable:  # type: ignore[name-defi
         ]
         + status_styles,
         markdown_options={"html": True},
-    )
-
-
-def _create_subgraph_section() -> html.Div:
-    """サブグラフネットワーク図セクションを生成する"""
-    return html.Div(
-        [
-            # セクションタイトル
-            html.H4(
-                "Subgraph Network",
-                style={"marginTop": "24px", "marginBottom": "8px"},
-            ),
-            # 説明テキスト
-            html.P(
-                [
-                    html.Strong("Node sizes"),
-                    " are based on PageRank computed within the selected group.",
-                ],
-                style={"fontSize": "12px", "color": "#666", "marginBottom": "4px"},
-            ),
-            html.P(
-                [
-                    html.Strong("Color"),
-                    " indicates the status of each PEP.",
-                ],
-                style={"fontSize": "12px", "color": "#666", "marginBottom": "8px"},
-            ),
-            # サブグラフ表示エリア（初期状態はプレースホルダー）
-            html.Div(
-                id="subgraph-container",
-                children=_create_subgraph_placeholder(),
-                style={"minHeight": "600px"},
-            ),
-        ],
-        style={
-            "marginTop": "16px",
-            "borderTop": "1px solid #ddd",
-            "paddingTop": "16px",
-        },
     )
 
 
