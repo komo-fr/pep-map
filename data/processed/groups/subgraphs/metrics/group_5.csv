@@ -1,22 +1,21 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-13,Python Language Governance,Active,16-Dec-2018,5,16,12,0.29390491847142053
-8001,Python Governance Voting Process,Final,24-Aug-2018,5,9,9,0.11724494046389913
-8016,The Steering Council Model,Accepted,01-Nov-2018,5,10,2,0.09187260585083983
-8000,Python Language Governance Proposal Overview,Final,24-Aug-2018,5,2,10,0.04107023830931952
-8002,Open Source Governance Survey,Final,24-Aug-2018,5,3,0,0.038533567729974426
-8010,The Technical Leader Governance Model,Rejected,24-Aug-2018,5,4,3,0.033683207594102836
-8100,January 2019 Steering Council election,Final,03-Jan-2019,5,1,1,0.02999705878422576
-8101,2020 Term Steering Council election,Final,16-Nov-2019,5,1,1,0.02999705878422576
-8102,2021 Term Steering Council election,Final,29-Oct-2020,5,1,1,0.02999705878422576
-8103,2022 Term Steering Council election,Final,04-Oct-2021,5,1,1,0.02999705878422576
-8104,2023 Term Steering Council election,Final,08-Nov-2022,5,1,1,0.02999705878422576
-8105,2024 Term Steering Council election,Final,23-Oct-2023,5,1,1,0.02999705878422576
-8106,2025 Term Steering Council election,Final,21-Oct-2024,5,1,1,0.02999705878422576
-8107,2026 Term Steering Council election,Final,21-Oct-2025,5,1,1,0.02999705878422576
-8011,Python Governance Model Lead by Trio of Pythonistas,Rejected,24-Aug-2018,5,3,4,0.027779991590802237
-8012,The Community Governance Model,Rejected,03-Oct-2018,5,2,4,0.023743611593486237
-8013,The External Council Governance Model,Rejected,14-Sep-2018,5,2,5,0.023743611593486237
-8014,The Commons Governance Model,Rejected,16-Sep-2018,5,2,2,0.023743611593486237
-8015,Organization of the Python community,Rejected,04-Oct-2018,5,2,2,0.023743611593486237
-609,Python Packaging Authority (PyPA) Governance,Active,05-Nov-2019,5,1,0,0.011780215222601408
-772,Packaging Council governance process,Draft,21-Jan-2025,5,0,3,0.009179398119288817
+266,Optimizing Global Variable/Attribute Access,Withdrawn,13-Aug-2001,5,5,0,0.129082108015116
+218,Adding a Built-In Set Object Type,Final,31-Jul-2000,5,4,0,0.09812610827580742
+267,Optimized Access to Module Namespaces,Deferred,23-May-2001,5,3,2,0.07034716954313583
+280,Optimizing access to globals,Deferred,10-Feb-2002,5,3,2,0.07034716954313583
+263,Defining Python Source Code Encodings,Final,06-Jun-2001,5,2,0,0.06516844076927342
+282,A Logging System,Final,04-Feb-2002,5,2,0,0.06516844076927342
+269,Pgen Module for Python,Deferred,24-Aug-2001,5,2,0,0.04045019013937291
+286,Enhanced Argument Tuples,Deferred,03-Mar-2002,5,2,0,0.04045019013937291
+322,Reverse Iteration,Final,24-Sep-2003,5,1,0,0.03804702688368814
+278,Universal Newline Support,Final,14-Jan-2002,5,1,0,0.03633048170105616
+285,Adding a bool type,Final,08-Mar-2002,5,1,0,0.03633048170105616
+307,Extensions to the pickle protocol,Final,31-Jan-2003,5,1,0,0.03633048170105616
+311,Simplified Global Interpreter Lock Acquisition for Extensions,Final,05-Feb-2003,5,1,0,0.03633048170105616
+270,uniq method for list objects,Rejected,21-Aug-2001,5,0,1,0.03392731844537139
+283,Python 2.3 Release Schedule,Final,27-Feb-2002,5,0,12,0.03392731844537139
+320,Python 2.4 Release Schedule,Final,29-Jul-2003,5,0,7,0.03392731844537139
+329,Treating Builtins as Constants in the Standard Library,Rejected,18-Apr-2004,5,0,1,0.03392731844537139
+337,Logging Usage in the Standard Library,Deferred,02-Oct-2004,5,0,1,0.03392731844537139
+802,Display Syntax for the Empty Set,Draft,08-Aug-2025,5,0,1,0.03392731844537139
+3120,Using UTF-8 as the default source encoding,Final,15-Apr-2007,5,0,1,0.03392731844537139

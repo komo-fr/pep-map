@@ -1,7 +1,6 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-515,Underscores in Numeric Literals,Final,10-Feb-2016,37,1,0,0.2384737584719806
-657,Include Fine Grained Error Locations in Tracebacks,Final,08-May-2021,37,1,0,0.17315997769576022
-675,Arbitrary Literal String Type,Final,30-Nov-2021,37,1,0,0.17315997769576022
-641,Using an underscore in the version portion of Python 3.10 compatibility tags,Rejected,20-Oct-2020,37,1,1,0.1536800446084793
-664,Python 3.11 Release Schedule,Active,12-Jul-2021,37,1,2,0.1536800446084793
-2026,Calendar versioning for Python,Rejected,11-Jun-2024,37,0,2,0.10784619691953984
+3118,Revising the buffer protocol,Final,28-Aug-2006,37,3,0,0.41390787914100396
+436,The Argument Clinic DSL,Final,22-Feb-2013,37,1,0,0.18874169057152618
+437,"A DSL for specifying signatures, annotations and argument converters",Rejected,11-Mar-2013,37,0,2,0.13245014342915673
+574,Pickle protocol 5 with out-of-band data,Final,23-Mar-2018,37,0,1,0.13245014342915673
+688,Making the buffer protocol accessible in Python,Final,23-Apr-2022,37,0,1,0.13245014342915673

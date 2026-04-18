@@ -1,14 +1,15 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-277,Unicode file name support for Windows NT,Final,11-Jan-2002,26,1,0,0.0859512302925086
-293,Codec Error Handling Callbacks,Final,18-Jun-2002,26,1,0,0.0859512302925086
-355,Path - Object oriented filesystem paths,Rejected,24-Jan-2006,26,1,0,0.0859512302925086
-411,Provisional packages in the Python standard library,Superseded,10-Feb-2012,26,1,6,0.0859512302925086
-2,Procedure for Adding New Modules,Active,07-Jul-2001,26,2,0,0.07687819889694732
-368,Standard image protocol and class,Deferred,28-Jun-2007,26,2,0,0.07687819889694732
-3143,Standard daemon process library,Deferred,26-Jan-2009,26,2,0,0.07687819889694732
-3144,IP Address Manipulation Library for the Python Standard Library,Final,06-Feb-2012,26,2,0,0.07687819889694732
-3153,Asynchronous IO support,Superseded,29-May-2011,26,2,0,0.07687819889694732
-383,Non-decodable Bytes in System Character Interfaces,Final,22-Apr-2009,26,1,2,0.07628240353151383
-428,The pathlib module -- object-oriented filesystem paths,Final,30-Jul-2012,26,1,2,0.07628240353151383
-408,Standard library __preview__ package,Rejected,07-Jan-2012,26,1,5,0.065707808476892
-519,Adding a file system path protocol,Final,11-May-2016,26,0,2,0.05353146880530931
+567,Context Variables,Final,12-Dec-2017,26,4,2,0.27110822214073266
+550,Execution Context,Withdrawn,11-Aug-2017,26,3,2,0.20061150859901206
+568,Generator-sensitivity for Context Variables,Deferred,04-Jan-2018,26,2,2,0.14078023469385326
+521,Managing global context via 'with' blocks in generators and coroutines,Withdrawn,27-Apr-2015,26,1,1,0.10346758633908815
+442,Safe object finalization,Final,18-May-2013,26,2,0,0.05425106529039753
+351,The freeze protocol,Rejected,14-Apr-2005,26,2,0,0.0432297927026134
+533,Deterministic cleanup for iterators,Deferred,18-Oct-2016,26,2,1,0.03329855121031548
+670,Convert macros to functions in the Python C API,Final,19-Oct-2021,26,1,0,0.02594684196855153
+789,Preventing task-cancellation bugs by limiting yield in async generators,Draft,14-May-2024,26,1,3,0.02594684196855153
+416,Add a frozendict builtin type,Rejected,29-Feb-2012,26,1,1,0.02336730971801758
+603,Adding a frozenmap type to collections,Draft,12-Sep-2019,26,1,1,0.02336730971801758
+620,Hide implementation details from the C API,Withdrawn,19-Jun-2020,26,0,2,0.01820824521694968
+806,Mixed sync/async context managers with precise async marking,Draft,05-Sep-2025,26,0,2,0.01820824521694968
+814,Add frozendict built-in type,Final,12-Nov-2025,26,0,3,0.01820824521694968

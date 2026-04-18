@@ -1,11 +1,11 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-659,Specializing Adaptive Interpreter,Final,13-Apr-2021,34,3,0,0.19901774575738038
-412,Key-Sharing Dictionary,Final,08-Feb-2012,34,2,0,0.17556069562499496
-351,The freeze protocol,Rejected,14-Apr-2005,34,2,0,0.11646543410014565
-509,Add a private version to dict,Superseded,04-Jan-2016,34,1,1,0.09075226464094974
-416,Add a frozendict builtin type,Rejected,29-Feb-2012,34,1,2,0.08173014121458051
-603,Adding a frozenmap type to collections,Draft,12-Sep-2019,34,1,0,0.08173014121458051
-699,Remove private dict version field added in PEP 509,Accepted,03-Oct-2022,34,0,2,0.06368589436184209
-707,A simplified signature for __exit__ and __aexit__,Rejected,18-Feb-2023,34,0,1,0.06368589436184209
-799,A dedicated ``profiling`` package for organizing Python profiling tools,Accepted,21-Jul-2025,34,0,1,0.06368589436184209
-814,Add frozendict built-in type,Final,12-Nov-2025,34,0,3,0.06368589436184209
+11,CPython platform support,Active,07-Jul-2002,34,6,0,0.3978156654506442
+776,Emscripten Support,Active,18-Mar-2025,34,2,1,0.12868674718546785
+775,Make zlib required to build CPython,Withdrawn,24-Feb-2025,34,1,1,0.09030602975642964
+730,Adding iOS as a supported platform,Final,09-Oct-2023,34,1,1,0.06956014219913388
+783,Emscripten Packaging,Accepted,28-Mar-2025,34,1,1,0.06956014219913388
+539,A New C-API for Thread-Local Storage in CPython,Final,20-Dec-2016,34,0,1,0.04881425464183814
+738,Adding Android as a supported platform,Final,12-Dec-2023,34,0,2,0.04881425464183814
+784,Adding Zstandard to the standard library,Final,06-Apr-2025,34,0,1,0.04881425464183814
+816,WASI Support,Active,05-Nov-2025,34,0,1,0.04881425464183814
+818,Adding the Core of the Pyodide Foreign Function Interface to Python,Draft,10-Dec-2025,34,0,2,0.04881425464183814

@@ -1,22 +1,21 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-591,Adding a final qualifier to typing,Final,15-Mar-2019,7,5,1,0.21618164185738073
-586,Literal Types,Final,14-Mar-2019,7,3,1,0.20969182539329906
-646,Variadic Generics,Final,16-Sep-2020,7,5,1,0.10173661552967482
-637,Support for indexing with keyword arguments,Rejected,24-Aug-2020,7,1,1,0.09551915706481576
-578,Python Runtime Audit Hooks,Final,16-Jun-2018,7,2,1,0.06718587312420565
-551,Security transparency in the Python runtime,Withdrawn,23-Aug-2017,7,1,1,0.06614871190369964
-589,TypedDict: Type Hints for Dictionaries with a Fixed Set of Keys,Final,20-Mar-2019,7,6,2,0.03522999855449058
-585,Type Hinting Generics In Standard Collections,Final,03-Mar-2019,7,3,0,0.03211674710531749
-604,Allow writing union types as ``X | Y``,Final,28-Aug-2019,7,3,1,0.021765314807526834
-692,Using TypedDict for more precise \*\*kwargs typing,Final,29-May-2022,7,4,3,0.020484571126723007
-705,TypedDict: Read-only items,Final,07-Nov-2022,7,2,4,0.02037987587599288
-655,Marking individual TypedDict items as required or potentially-missing,Final,30-Jan-2021,7,2,2,0.019174318326134514
-612,Parameter Specification Variables,Final,18-Dec-2019,7,3,0,0.014744771186687622
-728,TypedDict with Typed Extra Items,Accepted,12-Sep-2023,7,2,3,0.01290548838347429
-764,Inline typed dictionaries,Draft,25-Oct-2024,7,1,4,0.010960554870937996
-677,Callable Type Syntax,Rejected,13-Dec-2021,7,1,4,0.010576370473399963
-569,Python 3.8 Release Schedule,Final,27-Jan-2018,7,0,4,0.009039632883247831
-698,Override Decorator for Static Typing,Final,05-Sep-2022,7,0,1,0.009039632883247831
-767,Annotating Read-Only Attributes,Draft,18-Nov-2024,7,0,1,0.009039632883247831
-821,Support for unpacking TypedDicts in Callable type hints,Draft,12-Jan-2026,7,0,5,0.009039632883247831
-827,Type Manipulation,Draft,27-Feb-2026,7,0,4,0.009039632883247831
+3101,Advanced String Formatting,Final,16-Apr-2006,7,7,0,0.15018246673021118
+498,Literal String Interpolation,Final,01-Aug-2015,7,5,3,0.09994469627985744
+215,String Interpolation,Superseded,24-Jul-2000,7,4,0,0.09461421511757385
+701,Syntactic formalization of f-strings,Accepted,15-Nov-2022,7,3,2,0.06757217865735836
+536,Final Grammar for Literal String Interpolation,Withdrawn,11-Dec-2016,7,1,2,0.054509885533860276
+414,Explicit Unicode Literal for Python 3.3,Final,15-Feb-2012,7,1,0,0.05410864556391549
+378,Format Specifier for Thousands Separator,Final,12-Mar-2009,7,1,1,0.053925287094379354
+501,General purpose template literal strings,Withdrawn,08-Aug-2015,7,3,7,0.05263043331928887
+750,Template Strings,Final,08-Jul-2024,7,2,3,0.04314343579123125
+306,How to Change Python's Grammar,Withdrawn,29-Jan-2003,7,1,0,0.03675255895389813
+292,Simpler String Substitutions,Final,18-Jun-2002,7,2,1,0.03583584026996279
+475,Retry system calls failing with EINTR,Final,29-Jul-2014,7,1,0,0.033098761193263895
+682,Format Specifier for Signed Zero,Final,29-Jan-2022,7,1,1,0.033098761193263895
+675,Arbitrary Literal String Type,Final,30-Nov-2021,7,1,0,0.03218204250932856
+3105,Make print a function,Final,19-Nov-2006,7,1,0,0.029444963432629666
+502,String Interpolation - Extended Discussion,Rejected,10-Aug-2015,7,0,6,0.025791165671995436
+786,Precision and modulo-precision flag format specifiers for integer fields,Draft,04-Apr-2025,7,0,3,0.025791165671995436
+787,Safer subprocess usage using t-strings,Deferred,13-Apr-2025,7,0,2,0.025791165671995436
+3126,Remove Implicit String Concatenation,Rejected,29-Apr-2007,7,0,1,0.025791165671995436
+3127,Integer Literal Support and Syntax,Final,14-Mar-2007,7,0,2,0.025791165671995436

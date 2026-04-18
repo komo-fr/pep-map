@@ -1,24 +1,22 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-3119,Introducing Abstract Base Classes,Final,18-Apr-2007,3,3,3,0.1323255145297599
-358,"The ""bytes"" Object",Final,15-Feb-2006,3,3,2,0.12245438833645585
-236,Back to the __future__,Final,26-Feb-2001,3,7,4,0.09390848967271227
-3112,Bytes literals in Python 3000,Final,23-Feb-2007,3,1,1,0.06334485208976677
-3137,Immutable Bytes and Mutable Buffer,Final,26-Sep-2007,3,1,1,0.06334485208976677
-245,Python Interface Syntax,Rejected,11-Jan-2001,3,3,5,0.06322673316212586
-3141,A Type Hierarchy for Numbers,Final,23-Apr-2007,3,2,1,0.061703574822466106
-3124,"Overloading, Generic Functions, Interfaces, and Adaptation",Deferred,28-Apr-2007,3,2,3,0.05199750738058287
-230,Warning Framework,Final,28-Nov-2000,3,3,0,0.04521068169224175
-5,Guidelines for Language Evolution,Superseded,26-Oct-2000,3,4,0,0.04006692944595194
-246,Object Adaptation,Rejected,21-Mar-2001,3,3,1,0.03998652036139452
-264,Future statements in simulated shells,Final,30-Jul-2001,3,2,1,0.03514288093344897
-227,Statically Nested Scopes,Final,01-Nov-2000,3,2,1,0.03446230984858561
-296,Adding a bytes Object Type,Withdrawn,12-Jul-2002,3,2,1,0.02331319235001209
-232,Function Attributes,Final,02-Dec-2000,3,1,0,0.022051665056454638
-233,Python Online Help,Deferred,11-Dec-2000,3,1,0,0.022051665056454638
-228,Reworking Python's Numeric Model,Withdrawn,04-Nov-2000,3,1,1,0.01518650406758549
-238,Changing the Division Operator,Final,11-Mar-2001,3,1,3,0.01370527304024122
-244,The ``directive`` statement,Rejected,20-Mar-2001,3,0,3,0.011303293212798502
-298,The Locked Buffer Interface,Withdrawn,26-Jul-2002,3,0,1,0.011303293212798502
-317,Eliminate Implicit Exception Instantiation,Rejected,06-May-2003,3,0,3,0.011303293212798502
-443,Single-dispatch generic functions,Final,22-May-2013,3,0,3,0.011303293212798502
-497,A standard mechanism for backward compatibility,Rejected,04-Aug-2015,3,0,4,0.011303293212798502
+13,Python Language Governance,Active,16-Dec-2018,3,16,12,0.29390491847142053
+8001,Python Governance Voting Process,Final,24-Aug-2018,3,9,9,0.1172449404638991
+8016,The Steering Council Model,Accepted,01-Nov-2018,3,10,2,0.09187260585083983
+8000,Python Language Governance Proposal Overview,Final,24-Aug-2018,3,2,10,0.04107023830931951
+8002,Open Source Governance Survey,Final,24-Aug-2018,3,3,0,0.03853356772997441
+8010,The Technical Leader Governance Model,Rejected,24-Aug-2018,3,4,3,0.03368320759410283
+8100,January 2019 Steering Council election,Final,03-Jan-2019,3,1,1,0.029997058784225754
+8101,2020 Term Steering Council election,Final,16-Nov-2019,3,1,1,0.029997058784225754
+8102,2021 Term Steering Council election,Final,29-Oct-2020,3,1,1,0.029997058784225754
+8103,2022 Term Steering Council election,Final,04-Oct-2021,3,1,1,0.029997058784225754
+8104,2023 Term Steering Council election,Final,08-Nov-2022,3,1,1,0.029997058784225754
+8105,2024 Term Steering Council election,Final,23-Oct-2023,3,1,1,0.029997058784225754
+8106,2025 Term Steering Council election,Final,21-Oct-2024,3,1,1,0.029997058784225754
+8107,2026 Term Steering Council election,Final,21-Oct-2025,3,1,1,0.029997058784225754
+8011,Python Governance Model Lead by Trio of Pythonistas,Rejected,24-Aug-2018,3,3,4,0.027779991590802237
+8012,The Community Governance Model,Rejected,03-Oct-2018,3,2,4,0.02374361159348623
+8013,The External Council Governance Model,Rejected,14-Sep-2018,3,2,5,0.02374361159348623
+8014,The Commons Governance Model,Rejected,16-Sep-2018,3,2,2,0.02374361159348623
+8015,Organization of the Python community,Rejected,04-Oct-2018,3,2,2,0.02374361159348623
+609,Python Packaging Authority (PyPA) Governance,Active,05-Nov-2019,3,1,0,0.011780215222601406
+772,Packaging Council governance process,Accepted,21-Jan-2025,3,0,3,0.009179398119288815

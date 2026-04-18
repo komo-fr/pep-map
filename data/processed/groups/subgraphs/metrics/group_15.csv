@@ -1,18 +1,18 @@
 pep_number,title,status,created,group_id,in_degree_group,out_degree_group,pagerank_group
-211,Adding A New Outer Product Operator,Rejected,15-Jul-2000,15,4,3,0.15707468085636564
-461,Adding % formatting to bytes and bytearray,Final,13-Jan-2014,15,3,1,0.14860331488917985
-465,A dedicated infix operator for matrix multiplication,Final,20-Feb-2014,15,5,2,0.14366505695572906
-460,Add binary interpolation and formatting,Withdrawn,06-Jan-2014,15,1,1,0.1409219447529601
-225,Elementwise/Objectwise Operators,Rejected,19-Sep-2000,15,3,2,0.13274095376523737
-209,Multi-dimensional Arrays,Withdrawn,03-Jan-2001,15,1,4,0.05912018633505975
-207,Rich Comparisons,Final,25-Jul-2000,15,2,0,0.05028060327394605
-208,Reworking the Coercion Model,Final,04-Dec-2000,15,1,1,0.02717869543672069
-441,Improving Python ZIP Application Support,Final,30-Mar-2013,15,1,0,0.016390399054413037
-471,os.scandir() function -- a better and faster directory iterator,Final,30-May-2014,15,1,0,0.016390399054413037
-475,Retry system calls failing with EINTR,Final,29-Jul-2014,15,1,0,0.016390399054413037
-485,A Function for testing approximate equality,Final,20-Jan-2015,15,1,0,0.016390399054413037
-488,Elimination of PYO files,Final,20-Feb-2015,15,1,1,0.016390399054413037
-203,Augmented Assignments,Final,13-Jul-2000,15,0,1,0.014615642115684026
-467,Minor API improvements for binary sequences,Draft,30-Mar-2014,15,0,1,0.014615642115684026
-478,Python 3.5 Release Schedule,Final,22-Sep-2014,15,0,7,0.014615642115684026
-820,PySlot: Unified slot system for the C API,Draft,19-Dec-2025,15,0,1,0.014615642115684026
+8,Style Guide for Python Code,Active,05-Jul-2001,15,11,2,0.2933984505322349
+3131,Supporting Non-ASCII Identifiers,Final,01-May-2007,15,2,0,0.16553463316698774
+7,Style Guide for C Code,Active,05-Jul-2001,15,1,1,0.14677053867255258
+3108,Standard Library Reorganization,Final,01-Jan-2007,15,2,3,0.040839325986551885
+3150,"Statement local namespaces (aka ""given"" clause)",Deferred,09-Jul-2010,15,1,3,0.03576383767014914
+324,subprocess - New process module,Final,19-Nov-2003,15,1,0,0.03364633026568819
+360,Externally Maintained Packages,Final,30-May-2006,15,1,0,0.03364633026568819
+359,"The ""make"" Statement",Withdrawn,05-Apr-2006,15,1,0,0.032208327127998065
+403,"General purpose decorator clause (aka ""@in"" clause)",Deferred,13-Oct-2011,15,1,2,0.032208327127998065
+601,Forbid return/break/continue breaking out of finally,Rejected,26-Aug-2019,15,1,1,0.0314572787393343
+364,Transitioning to the Py3K Standard Library,Withdrawn,01-Mar-2007,15,0,2,0.022075231492116716
+391,Dictionary-Based Configuration For Logging,Final,15-Oct-2009,15,0,1,0.022075231492116716
+423,Naming conventions and recipes related to packaging,Deferred,24-May-2012,15,0,2,0.022075231492116716
+672,Unicode-related Security Considerations for Python,Active,01-Nov-2021,15,0,1,0.022075231492116716
+760,No More Bare Excepts,Withdrawn,02-Oct-2024,15,0,1,0.022075231492116716
+762,REPL-acing the default REPL,Final,11-Oct-2024,15,0,1,0.022075231492116716
+765,Disallow return/break/continue that exit a finally block,Final,15-Nov-2024,15,0,2,0.022075231492116716
