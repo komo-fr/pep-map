@@ -1,0 +1,15 @@
+PEP,title,status,created,group_id,in-degree_group,out-degree_group,degree_group,pagerank_group,pagerank_cumsum
+427,The Wheel Binary Package Format 1.0,Final,20-Sep-2012,25,7,1,8,0.3835770123013475,0.3835770123013475
+425,Compatibility Tags for Built Distributions,Final,27-Jul-2012,25,7,1,8,0.3813498428585386,0.7649268551598862
+513,A Platform Tag for Portable Linux Built Distributions,Superseded,19-Jan-2016,25,3,3,6,0.0309765973758782,0.7959034525357644
+491,The Wheel Binary Package Format 1.9,Deferred,16-Apr-2015,25,2,2,4,0.0277422485147352,0.8236457010504997
+668,Marking Python base environments as “externally managed”,Accepted,18-May-2021,25,1,2,3,0.0246219368147864,0.8482676378652861
+627,Recording installed projects,Final,15-Jul-2020,25,1,0,1,0.0237734781813039,0.8720411160465902
+571,The manylinux2010 Platform Tag,Superseded,05-Feb-2018,25,2,2,4,0.0217379630707917,0.893779079117382
+527,Removing Un(der)used file types/extensions on PyPI,Final,23-Aug-2016,25,1,0,1,0.018965545924903,0.912744625042285
+600,Future 'manylinux' Platform Tags for Portable Linux Built Distributions,Final,03-May-2019,25,1,4,5,0.0170800822949419,0.929824707337227
+599,The manylinux2014 Platform Tag,Superseded,29-Apr-2019,25,1,3,4,0.0169386725226948,0.946763379859922
+656,Platform Tag for Linux Distributions Using Musl,Final,17-Mar-2021,25,0,3,3,0.0133091550350197,0.9600725348949416
+704,Require virtual environments by default for package installers,Withdrawn,16-Jan-2023,25,0,1,1,0.0133091550350197,0.9733816899299612
+715,Disabling bdist_egg distribution uploads on PyPI,Final,06-Jun-2023,25,0,2,2,0.0133091550350197,0.986690844964981
+777,How to Re-invent the Wheel,Draft,09-Oct-2024,25,0,2,2,0.0133091550350197,1.0000000000000009

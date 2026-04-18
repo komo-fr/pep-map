@@ -1,0 +1,11 @@
+PEP,title,status,created,group_id,in-degree_group,out-degree_group,degree_group,pagerank_group,pagerank_cumsum
+506,Adding A Secrets Module To The Standard Library,Final,19-Sep-2015,32,2,1,3,0.2765553052333672,0.2765553052333672
+504,Using the System RNG by default,Withdrawn,15-Sep-2015,32,1,1,2,0.265280293791338,0.5418355990247052
+466,Network Security Enhancements for Python 2.7.x,Final,23-Mar-2014,32,3,0,3,0.1102109537717292,0.6520465527964344
+522,Allow BlockingIOError in security sensitive APIs,Rejected,16-Jun-2016,32,1,3,4,0.0736188449467716,0.7256653977432062
+543,A Unified TLS API for Python,Withdrawn,17-Oct-2016,32,2,0,2,0.068727846399215,0.7943932441424211
+476,Enabling certificate verification by default for stdlib http clients,Final,28-Aug-2014,32,2,1,3,0.0639081254958999,0.858301369638321
+524,Make os.urandom() blocking on Linux,Final,20-Jun-2016,32,1,1,2,0.0510688220627133,0.9093701917010344
+493,HTTPS verification migration tools for Python 2.7,Final,10-May-2015,32,0,2,2,0.0302099360996552,0.9395801278006896
+546,Backport ssl.MemoryBIO and ssl.SSLObject to Python 2.7,Rejected,30-May-2017,32,0,2,2,0.0302099360996552,0.9697900639003448
+748,A Unified TLS API for Python,Draft,27-Jun-2024,32,0,1,1,0.0302099360996552,1.0

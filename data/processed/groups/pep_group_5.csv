@@ -1,0 +1,22 @@
+PEP,title,status,created,group_id,in-degree_group,out-degree_group,degree_group,pagerank_group,pagerank_cumsum
+13,Python Language Governance,Active,16-Dec-2018,5,16,12,28,0.2939049184714205,0.2939049184714205
+8001,Python Governance Voting Process,Final,24-Aug-2018,5,9,9,18,0.1172449404638991,0.4111498589353196
+8016,The Steering Council Model,Accepted,01-Nov-2018,5,10,2,12,0.0918726058508398,0.5030224647861595
+8000,Python Language Governance Proposal Overview,Final,24-Aug-2018,5,2,10,12,0.0410702383093195,0.544092703095479
+8002,Open Source Governance Survey,Final,24-Aug-2018,5,3,0,3,0.0385335677299744,0.5826262708254535
+8010,The Technical Leader Governance Model,Rejected,24-Aug-2018,5,4,3,7,0.0336832075941028,0.6163094784195563
+8100,January 2019 Steering Council election,Final,03-Jan-2019,5,1,1,2,0.0299970587842257,0.6463065372037821
+8101,2020 Term Steering Council election,Final,16-Nov-2019,5,1,1,2,0.0299970587842257,0.6763035959880078
+8102,2021 Term Steering Council election,Final,29-Oct-2020,5,1,1,2,0.0299970587842257,0.7063006547722336
+8103,2022 Term Steering Council election,Final,04-Oct-2021,5,1,1,2,0.0299970587842257,0.7362977135564593
+8104,2023 Term Steering Council election,Final,08-Nov-2022,5,1,1,2,0.0299970587842257,0.7662947723406851
+8105,2024 Term Steering Council election,Final,23-Oct-2023,5,1,1,2,0.0299970587842257,0.7962918311249109
+8106,2025 Term Steering Council election,Final,21-Oct-2024,5,1,1,2,0.0299970587842257,0.8262888899091366
+8107,2026 Term Steering Council election,Final,21-Oct-2025,5,1,1,2,0.0299970587842257,0.8562859486933624
+8011,Python Governance Model Lead by Trio of Pythonistas,Rejected,24-Aug-2018,5,3,4,7,0.0277799915908022,0.8840659402841646
+8012,The Community Governance Model,Rejected,03-Oct-2018,5,2,4,6,0.0237436115934862,0.9078095518776508
+8013,The External Council Governance Model,Rejected,14-Sep-2018,5,2,5,7,0.0237436115934862,0.931553163471137
+8014,The Commons Governance Model,Rejected,16-Sep-2018,5,2,2,4,0.0237436115934862,0.9552967750646232
+8015,Organization of the Python community,Rejected,04-Oct-2018,5,2,2,4,0.0237436115934862,0.9790403866581096
+609,Python Packaging Authority (PyPA) Governance,Active,05-Nov-2019,5,1,0,1,0.0117802152226014,0.990820601880711
+772,Packaging Council governance process,Draft,21-Jan-2025,5,0,3,3,0.0091793981192888,0.9999999999999998

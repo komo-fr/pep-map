@@ -1,0 +1,13 @@
+PEP,title,status,created,group_id,in-degree_group,out-degree_group,degree_group,pagerank_group,pagerank_cumsum
+11,CPython platform support,Active,07-Jul-2002,29,7,0,7,0.390313933389991,0.390313933389991
+776,Emscripten Support,Draft,18-Mar-2025,29,2,1,3,0.1058380666220355,0.4961520000120266
+744,JIT Compilation,Draft,11-Apr-2024,29,1,1,2,0.0742722187077571,0.5704242187197838
+775,Make zlib required to build CPython,Withdrawn,24-Feb-2025,29,1,1,2,0.0742722187077571,0.6446964374275409
+730,Adding iOS as a supported platform,Final,09-Oct-2023,29,1,1,2,0.0572097767727858,0.7019062142003267
+783,Emscripten Packaging,Draft,28-Mar-2025,29,1,1,2,0.0572097767727858,0.7591159909731126
+539,A New C-API for Thread-Local Storage in CPython,Final,20-Dec-2016,29,0,1,1,0.0401473348378145,0.7992633258109271
+738,Adding Android as a supported platform,Final,12-Dec-2023,29,0,2,2,0.0401473348378145,0.8394106606487417
+774,Removing the LLVM requirement for JIT builds,Deferred,27-Jan-2025,29,0,1,1,0.0401473348378145,0.8795579954865562
+784,Adding Zstandard to the standard library,Final,06-Apr-2025,29,0,1,1,0.0401473348378145,0.9197053303243709
+816,WASI Support,Active,05-Nov-2025,29,0,1,1,0.0401473348378145,0.9598526651621854
+818,Adding the Core of the Pyodide Foreign Function Interface to Python,Draft,10-Dec-2025,29,0,2,2,0.0401473348378145,1.0

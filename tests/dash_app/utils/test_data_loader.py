@@ -660,7 +660,7 @@ class TestGetGroupList:
         assert result[0] == {"label": "All Groups", "value": "all"}
 
     def test_get_group_list_group_labels(self, mock_data_files, monkeypatch):
-        """通常グループが'Group N'ラベルで表示される"""
+        """通常グループが'Group N (X PEPs): グループ名'ラベルで表示される"""
         data_loader.clear_cache()
         monkeypatch.setattr("src.dash_app.utils.data_loader.DATA_DIR", mock_data_files)
 
@@ -669,12 +669,12 @@ class TestGetGroupList:
         # group_id=0の要素を探す
         group0 = [item for item in result if item["value"] == 0]
         assert len(group0) == 1
-        assert group0[0]["label"] == "Group 0 (2 PEPs)"
+        assert group0[0]["label"] == "Group 0 (2 PEPs): 型ヒントと注釈"
 
         # group_id=1の要素を探す
         group1 = [item for item in result if item["value"] == 1]
         assert len(group1) == 1
-        assert group1[0]["label"] == "Group 1 (1 PEPs)"
+        assert group1[0]["label"] == "Group 1 (1 PEPs): Python言語モデル"
 
     def test_get_group_list_sorted_by_group_id(self, mock_data_files, monkeypatch):
         """グループIDでソートされている"""
@@ -688,3 +688,27 @@ class TestGetGroupList:
 
         # ソートされていることを確認
         assert group_ids == sorted(group_ids)
+
+
+class TestGetGroupNameInfo:
+    """get_group_name_info関数のテスト"""
+
+    def test_get_group_name_info_exists(self, mock_data_files, monkeypatch):
+        """存在するグループIDでグループ名と説明を取得できる"""
+        data_loader.clear_cache()
+        monkeypatch.setattr("src.dash_app.utils.data_loader.DATA_DIR", mock_data_files)
+
+        result = data_loader.get_group_name_info(0)
+
+        assert result["group_name"] == "型ヒントと注釈"
+        assert "型ヒント" in result["description"]
+
+    def test_get_group_name_info_not_exists(self, mock_data_files, monkeypatch):
+        """存在しないグループIDでは空文字列を返す"""
+        data_loader.clear_cache()
+        monkeypatch.setattr("src.dash_app.utils.data_loader.DATA_DIR", mock_data_files)
+
+        result = data_loader.get_group_name_info(999)
+
+        assert result["group_name"] == ""
+        assert result["description"] == ""

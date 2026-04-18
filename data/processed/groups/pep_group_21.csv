@@ -1,0 +1,17 @@
+PEP,title,status,created,group_id,in-degree_group,out-degree_group,degree_group,pagerank_group,pagerank_cumsum
+387,Backwards Compatibility Policy,Active,18-Jun-2009,21,6,2,8,0.1893320377602388,0.1893320377602388
+291,Backward Compatibility for the Python 2 Standard Library,Superseded,06-Jun-2002,21,1,0,1,0.106861553119261,0.2961935908794999
+702,Marking deprecations using the type system,Final,30-Dec-2022,21,1,2,3,0.106861553119261,0.4030551439987609
+206,Python Advanced Library,Withdrawn,14-Jul-2000,21,1,0,1,0.0874338736670937,0.4904890176658546
+558,Defined semantics for locals(),Withdrawn,08-Sep-2017,21,2,2,4,0.0732851754663756,0.5637741931322302
+594,Removing dead batteries from the standard library,Final,20-May-2019,21,1,1,2,0.0718099323046189,0.6355841254368492
+667,Consistent views of namespaces,Final,30-Jul-2021,21,1,2,3,0.057539994078226,0.6931241195150752
+709,Inlined comprehensions,Final,24-Feb-2023,21,1,0,1,0.0508496436181959,0.7439737631332711
+706,Filter for tarfile.extractall,Final,09-Feb-2023,21,1,1,2,0.0488299284944758,0.792803691627747
+597,Add optional EncodingWarning,Final,05-Jun-2019,21,1,0,1,0.037612162570386,0.830415854198133
+731,C API Working Group Charter,Active,11-Oct-2023,21,1,0,1,0.037612162570386,0.868028016768519
+577,Augmented Assignment Expressions,Withdrawn,14-May-2018,21,0,1,1,0.0263943966462961,0.8944224134148152
+674,Disallow using macros as l-values,Deferred,30-Nov-2021,21,0,1,1,0.0263943966462961,0.9208168100611114
+686,Make UTF-8 mode default,Final,18-Mar-2022,21,0,2,2,0.0263943966462961,0.9472112067074075
+721,Using tarfile.data_filter for source distribution extraction,Final,12-Jul-2023,21,0,1,1,0.0263943966462961,0.9736056033537036
+743,Add Py_OMIT_LEGACY_API to the Python C API,Rejected,11-Mar-2024,21,0,2,2,0.0263943966462961,1.0

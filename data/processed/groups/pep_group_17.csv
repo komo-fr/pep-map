@@ -1,0 +1,18 @@
+PEP,title,status,created,group_id,in-degree_group,out-degree_group,degree_group,pagerank_group,pagerank_cumsum
+409,Suppressing exception context,Final,26-Jan-2012,17,3,1,4,0.2376603962232141,0.2376603962232141
+415,Implement context suppression with exception attributes,Final,26-Feb-2012,17,3,1,4,0.2376603962232141,0.4753207924464283
+399,Pure Python/C Accelerator Module Compatibility Requirements,Final,04-Apr-2011,17,4,0,4,0.0645009168329232,0.5398217092793515
+3003,Python Language Moratorium,Final,21-Oct-2009,17,2,0,2,0.0596213767174031,0.5994430859967546
+3155,Qualified name for classes and functions,Final,29-Oct-2011,17,3,0,3,0.0577860772421638,0.6572291632389184
+421,Adding sys.implementation,Final,26-Apr-2012,17,2,2,4,0.0452636304371412,0.7024927936760597
+3139,"Cleaning out sys and the ""interpreter"" module",Rejected,04-Apr-2008,17,1,0,1,0.0418530708307138,0.7443458645067735
+398,Python 3.3 Release Schedule,Final,23-Mar-2011,17,1,8,9,0.0322275961506121,0.7765734606573858
+407,New release cycle and introducing long-term support versions,Deferred,12-Jan-2012,17,1,1,2,0.0322275961506121,0.8088010568079979
+362,Function Signature Object,Final,21-Aug-2006,17,1,0,1,0.0260400070057808,0.8348410638137786
+417,Including mock in the Standard Library,Final,12-Mar-2012,17,1,0,1,0.0260400070057808,0.8608810708195596
+3154,Pickle protocol version 4,Final,11-Aug-2011,17,1,1,2,0.0260400070057808,0.8869210778253404
+392,Python 3.2 Release Schedule,Final,30-Dec-2009,17,0,2,2,0.0226157844349319,0.9095368622602724
+413,Faster evolution of the Python Standard Library,Withdrawn,24-Feb-2012,17,0,2,2,0.0226157844349319,0.932152646695204
+490,Chain exceptions at C level,Rejected,25-Mar-2015,17,0,2,2,0.0226157844349319,0.954768431130136
+737,C API to format a type fully qualified name,Final,29-Nov-2023,17,0,2,2,0.0226157844349319,0.977384215565068
+739,``build-details.json`` 1.0 — a static description file for Python build details,Accepted,19-Dec-2023,17,0,1,1,0.0226157844349319,1.0

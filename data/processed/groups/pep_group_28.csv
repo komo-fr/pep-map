@@ -1,0 +1,13 @@
+PEP,title,status,created,group_id,in-degree_group,out-degree_group,degree_group,pagerank_group,pagerank_cumsum
+384,Defining a Stable ABI,Final,17-May-2009,28,6,1,7,0.3669933888827932,0.3669933888827932
+3149,ABI version tagged .so files,Final,09-Jul-2010,28,2,1,3,0.3297522231184222,0.6967456120012154
+580,The C call protocol,Rejected,14-Jun-2018,28,4,5,9,0.0664297500523389,0.7631753620535544
+393,Flexible String Representation,Final,24-Jan-2010,28,3,1,4,0.0480937499999999,0.8112691120535545
+576,Rationalize Built-in function classes,Withdrawn,10-May-2018,28,3,1,4,0.0375331212292292,0.8488022332827837
+579,Refactoring C functions and methods,Final,04-Jun-2018,28,2,5,7,0.0320795907891472,0.8808818240719309
+575,Unifying function/method classes,Withdrawn,27-Mar-2018,28,2,3,5,0.0292465879640344,0.9101284120359654
+590,Vectorcall: a fast calling protocol for CPython,Final,29-Mar-2019,28,2,3,5,0.0292465879640344,0.9393749999999998
+623,Remove wstr from Unicode,Final,25-Jun-2020,28,1,1,2,0.023125,0.9625
+624,Remove Py_UNICODE encoder APIs,Final,06-Jul-2020,28,0,1,1,0.0125,0.975
+720,Cross-compiling Python packages,Draft,01-Jul-2023,28,0,2,2,0.0125,0.9875
+756,Add PyUnicode_Export() and PyUnicode_Import() C functions,Withdrawn,13-Sep-2024,28,0,1,1,0.0125,1.0

@@ -1,0 +1,12 @@
+PEP,title,status,created,group_id,in-degree_group,out-degree_group,degree_group,pagerank_group,pagerank_cumsum
+394,"The ""python"" Command on Unix-Like Systems",Active,02-Mar-2011,31,3,4,7,0.1699388707182056,0.1699388707182056
+404,Python 2.8 Un-release Schedule,Final,09-Nov-2011,31,2,0,2,0.1600771623219732,0.3300160330401789
+397,Python launcher for Windows,Final,15-Mar-2011,31,4,1,5,0.1361238170483187,0.4661398500884976
+370,Per user site-packages directory,Final,11-Jan-2008,31,2,0,2,0.1326550818942168,0.5987949319827144
+373,Python 2.7 Release Schedule,Final,03-Nov-2008,31,2,1,3,0.1031871074030124,0.7019820393857269
+405,Python Virtual Environments,Final,13-Jun-2011,31,3,1,4,0.101325181498739,0.8033072208844659
+486,Make the Python Launcher aware of virtual environments,Final,12-Feb-2015,31,1,2,3,0.043961254306082,0.8472684751905479
+514,Python registration in the Windows registry,Active,02-Feb-2016,31,1,1,2,0.043961254306082,0.8912297294966299
+439,Inclusion of implicit pip bootstrap in Python installation,Rejected,18-Mar-2013,31,0,3,3,0.0362567568344567,0.9274864863310864
+773,A Python Installation Manager for Windows,Accepted,21-Jan-2025,31,0,4,4,0.0362567568344567,0.9637432431655432
+3146,Merging Unladen Swallow into CPython,Withdrawn,01-Jan-2010,31,0,1,1,0.0362567568344567,1.0

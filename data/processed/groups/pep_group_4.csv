@@ -1,0 +1,23 @@
+PEP,title,status,created,group_id,in-degree_group,out-degree_group,degree_group,pagerank_group,pagerank_cumsum
+3000,Python 3000,Final,05-Apr-2006,4,4,3,7,0.1160460379355688,0.1160460379355688
+344,Exception Chaining and Embedded Tracebacks,Superseded,12-May-2005,4,4,2,6,0.0993830754459136,0.2154291133814825
+3134,Exception Chaining and Embedded Tracebacks,Final,12-May-2005,4,3,2,5,0.0950896532151675,0.31051876659665
+4,Deprecation of Standard Modules,Active,01-Oct-2000,4,4,0,4,0.0851586757966917,0.3956774423933418
+3100,Miscellaneous Python 3.0 Plans,Final,20-Aug-2004,4,4,7,11,0.0773756722130559,0.4730531146063977
+3099,Things that will Not Change in Python 3000,Final,04-Apr-2006,4,3,0,3,0.0713861099757198,0.5444392245821176
+348,Exception Reorganization for Python 3.0,Rejected,28-Jul-2005,4,2,2,4,0.069235939408218,0.6136751639903356
+361,Python 2.6 and 3.0 Release Schedule,Final,29-Jun-2006,4,1,5,6,0.0486150000758915,0.6622901640662271
+352,Required Superclass for Exceptions,Final,27-Oct-2005,4,4,1,5,0.0472044384196631,0.7094946024858902
+290,Code Migration and Modernization,Active,06-Jun-2002,4,1,1,2,0.0451617614856487,0.754656363971539
+654,Exception Groups and except*,Final,22-Feb-2021,4,2,1,3,0.0357988132892201,0.7904551772607592
+3001,Procedure for reviewing and improving standard library modules,Withdrawn,05-Apr-2006,4,1,0,1,0.0251314591002569,0.8155866363610161
+3105,Make print a function,Final,19-Nov-2006,4,1,0,1,0.0251314591002569,0.8407180954612732
+3110,Catching Exceptions in Python 3000,Final,16-Jan-2006,4,1,3,4,0.0251314591002569,0.8658495545615301
+371,Addition of the multiprocessing package to the standard library,Final,06-May-2008,4,1,0,1,0.0240003015868534,0.8898498561483836
+294,Type Names in the types Module,Rejected,19-Jun-2002,4,0,1,1,0.0157357348359452,0.9055855909843288
+678,Enriching Exceptions with Notes,Final,20-Dec-2021,4,0,2,2,0.0157357348359452,0.921321325820274
+785,New methods for easier handling of ``ExceptionGroup``\ s,Draft,08-Apr-2025,4,0,1,1,0.0157357348359452,0.9370570606562192
+3104,Access to Names in Outer Scopes,Final,12-Oct-2006,4,0,1,1,0.0157357348359452,0.9527927954921646
+3109,Raising Exceptions in Python 3000,Final,19-Jan-2006,4,0,2,2,0.0157357348359452,0.9685285303281096
+3111,Simple input built-in in Python 3000,Final,13-Sep-2006,4,0,1,1,0.0157357348359452,0.984264265164055
+3151,Reworking the OS and IO exception hierarchy,Final,21-Jul-2010,4,0,1,1,0.0157357348359452,1.0000000000000002

@@ -1,0 +1,15 @@
+PEP,title,status,created,group_id,in-degree_group,out-degree_group,degree_group,pagerank_group,pagerank_cumsum
+1,PEP Purpose and Guidelines,Active,13-Jun-2000,24,6,3,9,0.2411123052928191,0.2411123052928191
+12,Sample reStructuredText PEP Template,Active,05-Aug-2002,24,4,1,5,0.1419373195167632,0.3830496248095824
+676,PEP Infrastructure Process,Active,01-Nov-2021,24,1,2,3,0.0850589654848498,0.4681085902944322
+729,Typing governance process,Active,19-Sep-2023,24,1,3,4,0.0850589654848498,0.553167555779282
+287,reStructuredText Docstring Format,Active,25-Mar-2002,24,3,4,7,0.0730563190713462,0.6262238748506282
+224,Attribute Docstrings,Rejected,23-Aug-2000,24,2,0,2,0.0584753919506739,0.6846992668013021
+256,Docstring Processing System Framework,Rejected,01-Jun-2001,24,3,3,6,0.056141106483968,0.7408403732852702
+258,Docutils Design Specification,Rejected,31-May-2001,24,2,6,8,0.0495092575791268,0.790349630864397
+718,Subscriptable functions,Draft,23-Jun-2023,24,1,0,1,0.0408442614675857,0.8311938923319828
+727,Documentation in Annotated Metadata,Withdrawn,28-Aug-2023,24,1,1,2,0.0408442614675857,0.8720381537995686
+257,Docstring Conventions,Active,29-May-2001,24,2,2,4,0.0396651988234542,0.9117033526230228
+216,Docstring Format,Withdrawn,31-Jul-2000,24,2,1,3,0.0392831147119628,0.9509864673349856
+9,Sample Plaintext PEP Template,Withdrawn,14-Aug-2001,24,1,2,3,0.0322691816956302,0.983255649030616
+226,Python 2.1 Release Schedule,Final,16-Oct-2000,24,0,1,1,0.0167443509693838,0.9999999999999998

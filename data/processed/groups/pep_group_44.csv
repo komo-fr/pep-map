@@ -1,0 +1,3 @@
+PEP,title,status,created,group_id,in-degree_group,out-degree_group,degree_group,pagerank_group,pagerank_cumsum
+248,Python Database API Specification v1.0,Final,08-May-1996,44,1,0,1,0.649122638064138,0.649122638064138
+249,Python Database API Specification v2.0,Final,12-Apr-1999,44,0,1,1,0.3508773619358619,0.9999999999999998

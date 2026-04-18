@@ -1,0 +1,19 @@
+PEP,title,status,created,group_id,in-degree_group,out-degree_group,degree_group,pagerank_group,pagerank_cumsum
+343,"The ""with"" Statement",Final,13-May-2005,10,7,5,12,0.1565640114592673,0.1565640114592673
+310,Reliable Acquisition/Release Pairs,Rejected,18-Dec-2002,10,4,2,6,0.0886894630387776,0.245253474498045
+342,Coroutines via Enhanced Generators,Final,10-May-2005,10,5,4,9,0.0818424977403699,0.3270959722384149
+319,Python Synchronize/Asynchronize Block,Rejected,24-Feb-2003,10,2,2,4,0.0783120021823868,0.4054079744208018
+255,Simple Generators,Final,18-May-2001,10,4,2,6,0.0750199351955613,0.4804279096163631
+234,Iterators,Final,30-Jan-2001,10,4,0,4,0.0670798376915491,0.5475077473079123
+325,Resource-Release Support for Generators,Rejected,25-Aug-2003,10,6,3,9,0.0653914157443425,0.6128991630522549
+288,Generators Attributes and Exceptions,Withdrawn,21-Mar-2002,10,4,2,6,0.0647114488069138,0.6776106118591688
+340,Anonymous Block Statements,Rejected,27-Apr-2005,10,3,6,9,0.0637657752439079,0.7413763871030767
+220,"Coroutines, Generators, Continuations",Rejected,14-Aug-2000,10,1,0,1,0.0530098817312783,0.794386268834355
+219,Stackless Python,Deferred,14-Aug-2000,10,1,1,2,0.0458881351634068,0.8402744039977619
+346,"User Defined (""``with``"") Statements",Withdrawn,06-May-2005,10,1,6,7,0.0406198459328766,0.8808942499306386
+3333,Python Web Server Gateway Interface v1.0.1,Final,26-Sep-2010,10,3,4,7,0.037208890248434,0.9181031401790726
+333,Python Web Server Gateway Interface v1.0,Final,07-Dec-2003,10,2,3,5,0.0258794072887895,0.943982547467862
+334,Simple Coroutines via SuspendIteration,Withdrawn,26-Aug-2004,10,0,2,2,0.0140043631330344,0.9579869106008966
+377,Allow __enter__() methods to skip the statement body,Rejected,08-Mar-2009,10,0,1,1,0.0140043631330344,0.971991273733931
+414,Explicit Unicode Literal for Python 3.3,Final,15-Feb-2012,10,0,1,1,0.0140043631330344,0.9859956368669656
+444,Python Web3 Interface,Deferred,19-Jul-2010,10,0,3,3,0.0140043631330344,1.0

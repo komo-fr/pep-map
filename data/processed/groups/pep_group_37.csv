@@ -1,0 +1,7 @@
+PEP,title,status,created,group_id,in-degree_group,out-degree_group,degree_group,pagerank_group,pagerank_cumsum
+515,Underscores in Numeric Literals,Final,10-Feb-2016,37,1,0,1,0.2384737584719806,0.2384737584719806
+657,Include Fine Grained Error Locations in Tracebacks,Final,08-May-2021,37,1,0,1,0.1731599776957602,0.4116337361677408
+675,Arbitrary Literal String Type,Final,30-Nov-2021,37,1,0,1,0.1731599776957602,0.5847937138635011
+641,Using an underscore in the version portion of Python 3.10 compatibility tags,Rejected,20-Oct-2020,37,1,1,2,0.1536800446084793,0.7384737584719804
+664,Python 3.11 Release Schedule,Active,12-Jul-2021,37,1,2,3,0.1536800446084793,0.8921538030804597
+2026,Calendar versioning for Python,Rejected,11-Jun-2024,37,0,2,2,0.1078461969195398,0.9999999999999996

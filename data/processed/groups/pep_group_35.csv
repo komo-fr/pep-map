@@ -1,0 +1,9 @@
+PEP,title,status,created,group_id,in-degree_group,out-degree_group,degree_group,pagerank_group,pagerank_cumsum
+505,None-aware operators,Deferred,18-Sep-2015,35,3,2,5,0.2776121195520314,0.2776121195520314
+531,Existence checking operators,Withdrawn,25-Oct-2016,35,2,1,3,0.1963295417231678,0.4739416612751992
+532,A circuit breaking protocol and binary operators,Deferred,30-Oct-2016,35,2,4,6,0.1893817935689624,0.6633234548441617
+335,Overloadable Boolean Operators,Rejected,29-Aug-2004,35,3,0,3,0.1278347083176454,0.7911581631618072
+535,Rich comparison chaining,Deferred,12-Nov-2016,35,1,2,3,0.0783453058222965,0.8695034689841037
+510,Specialize functions with guards,Rejected,04-Jan-2016,35,1,0,1,0.054294187921577,0.9237976569056808
+511,API for code transformers,Rejected,04-Jan-2016,35,0,2,2,0.0381011715471596,0.9618988284528404
+645,Allow writing optional types as ``x?``,Withdrawn,25-Aug-2020,35,0,1,1,0.0381011715471596,1.0
