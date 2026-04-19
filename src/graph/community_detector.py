@@ -318,6 +318,8 @@ def generate_subgraph_images(
         generated_paths.append(image_path)
         count += 1
 
+    # 孤立点グループのIDは非孤立コミュニティの数（= count）とする
+    # 注意: save_subgraphs() でも同一ロジックを使用しているため、変更時は両方を更新すること
     if isolated_peps:
         image_path = _generate_subgraph_image(count, isolated_peps, G, output_dir)
         generated_paths.append(image_path)
@@ -368,6 +370,8 @@ def save_subgraphs(
         saved_paths.append(graph_path)
         logger.debug(f"Saved {graph_path}")
         count += 1
+    # 孤立点グループのIDは非孤立コミュニティの数（= count）とする
+    # 注意: generate_subgraph_images() でも同一ロジックを使用しているため、変更時は両方を更新すること
     if isolated_peps:
         group_id = count
         subgraph = G.subgraph(isolated_peps).copy()
