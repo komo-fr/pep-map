@@ -242,7 +242,7 @@ def _generate_subgraph_image(
     if subgraph.number_of_edges() == 0:
         pos = calculate_grid_layout(subgraph)
     else:
-        pos = nx.spring_layout(subgraph, threshold=1e-6, k=1, seed=42)
+        pos = nx.spring_layout(subgraph, threshold=1e-6, k=1, seed=42, scale=200)
 
     # ノードカラーを取得
     node_colors = []

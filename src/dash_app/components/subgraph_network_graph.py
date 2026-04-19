@@ -88,9 +88,10 @@ def _calculate_node_positions(subgraph: nx.DiGraph) -> dict[int, tuple[float, fl
     )
 
     # 座標を変換（NetworkXは{node: array([x, y])}形式）
+    # Cytoscape.jsはY軸が下向き正、Matplotlibは上向き正のため、Y座標を反転
     positions = {}
     for node, coords in pos.items():
-        positions[node] = (float(coords[0]), float(coords[1]))
+        positions[node] = (float(coords[0]), -float(coords[1]))
 
     return positions
 
