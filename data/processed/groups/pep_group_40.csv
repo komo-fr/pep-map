@@ -1,4 +1,0 @@
-PEP,title,status,created,group_id,in-degree_group,out-degree_group,degree_group,pagerank_group,pagerank_cumsum
-214,Extended Print Statement,Final,24-Jul-2000,40,1,0,1,0.3701297474470766,0.3701297474470766
-223,Change the Meaning of ``\x`` Escapes,Final,20-Aug-2000,40,1,0,1,0.3701297474470766,0.7402594948941533
-200,Python 2.0 Release Schedule,Final,12-Jul-2000,40,0,2,2,0.2597405051058463,0.9999999999999996

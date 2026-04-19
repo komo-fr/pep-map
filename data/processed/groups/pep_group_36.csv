@@ -1,8 +1,0 @@
-PEP,title,status,created,group_id,in-degree_group,out-degree_group,degree_group,pagerank_group,pagerank_cumsum
-253,Subtyping Built-in Types,Final,14-May-2001,36,2,2,4,0.2943477695230242,0.2943477695230242
-252,Making Types Look More Like Classes,Final,19-Apr-2001,36,3,1,4,0.2697954521402849,0.5641432216633091
-254,Making Classes Look More Like Types,Rejected,18-Jun-2001,36,1,0,1,0.1757657576246491,0.7399089792879583
-213,Attribute Access Handlers,Deferred,21-Jul-2000,36,1,1,2,0.0937342263620547,0.833643205650013
-237,Unifying Long Integers and Integers,Final,11-Mar-2001,36,1,0,1,0.0650227551780103,0.8986659608280234
-231,__findattr__(),Rejected,30-Nov-2000,36,0,1,1,0.0506670195859881,0.9493329804140116
-251,Python 2.2 Release Schedule,Final,17-Apr-2001,36,0,3,3,0.0506670195859881,0.9999999999999996

@@ -1,6 +1,0 @@
-PEP,title,status,created,group_id,in-degree_group,out-degree_group,degree_group,pagerank_group,pagerank_cumsum
-3118,Revising the buffer protocol,Final,28-Aug-2006,38,3,0,3,0.4139078791410039,0.4139078791410039
-436,The Argument Clinic DSL,Final,22-Feb-2013,38,1,0,1,0.1887416905715261,0.6026495697125301
-437,"A DSL for specifying signatures, annotations and argument converters",Rejected,11-Mar-2013,38,0,2,2,0.1324501434291567,0.7350997131416869
-574,Pickle protocol 5 with out-of-band data,Final,23-Mar-2018,38,0,1,1,0.1324501434291567,0.8675498565708436
-688,Making the buffer protocol accessible in Python,Final,23-Apr-2022,38,0,1,1,0.1324501434291567,1.0000000000000004

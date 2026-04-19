@@ -2,9 +2,11 @@
 
 import json
 from datetime import datetime
+import pickle
 from typing import cast
 
 import pandas as pd
+import networkx as nx
 
 from src.dash_app.utils.constants import (
     DATA_DIR,
@@ -683,3 +685,43 @@ def clear_cache() -> None:
 
     network_graph.clear_cache()
     group_network_graph.clear_cache()
+
+
+def load_subgraph(group_id: int) -> "nx.DiGraph | None":
+    """
+    指定されたグループIDのサブグラフを読み込む
+
+    Args:
+        group_id: グループID
+
+    Returns:
+        NetworkX DiGraph、存在しない場合はNone
+    """
+
+    subgraph_path = (
+        DATA_DIR / "groups" / "subgraphs" / "graphs" / f"subgraph_{group_id}.pkl"
+    )
+    if not subgraph_path.exists():
+        return None
+
+    with open(subgraph_path, "rb") as f:
+        return pickle.load(f)
+
+
+def load_subgraph_metrics(group_id: int) -> "pd.DataFrame | None":
+    """
+    指定されたグループIDのメトリクスを読み込む
+
+    Args:
+        group_id: グループID
+
+    Returns:
+        DataFrame、存在しない場合はNone
+    """
+    metrics_path = DATA_DIR / "groups" / "pep_group_metrics.csv"
+    if not metrics_path.exists():
+        return None
+    df = pd.read_csv(metrics_path)
+    df = df[df["group_id"] == group_id]
+
+    return df

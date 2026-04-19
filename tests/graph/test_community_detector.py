@@ -140,21 +140,16 @@ class TestGenerateSubgraphImages:
         # Given
         communities = run_louvain_detection(sample_graph)
         output_dir = tmp_path / "subgraphs" / "images"
-        status_color_map = {
-            "Active": "#F27398",
-            "Final": "#58BE89",
-            "Draft": "#FBA848",
-        }
 
         # When
         generated_paths = generate_subgraph_images(
-            communities, sample_graph, output_dir, status_color_map
+            communities, sample_graph, output_dir
         )
 
         # Then
-        # 孤立点以外のコミュニティ数だけ画像が生成される
+        # 「孤立点だけの集まり」のグループを含む、コミュニティ数だけ画像が生成される
         non_isolated_count = sum(1 for c in communities if len(c) > 1)
-        assert len(generated_paths) == non_isolated_count
+        assert len(generated_paths) == non_isolated_count + 1
         # ファイル名が group_{id}.png 形式
         for path in generated_paths:
             assert path.name.startswith("group_")

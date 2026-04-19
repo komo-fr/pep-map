@@ -1,4 +1,0 @@
-PEP,title,status,created,group_id,in-degree_group,out-degree_group,degree_group,pagerank_group,pagerank_cumsum
-100,Python Unicode Integration,Final,10-Mar-2000,41,1,0,1,0.3701297474470766,0.3701297474470766
-3116,New I/O,Final,26-Feb-2007,41,1,0,1,0.3701297474470766,0.7402594948941533
-400,Deprecate codecs.StreamReader and codecs.StreamWriter,Deferred,28-May-2011,41,0,2,2,0.2597405051058463,0.9999999999999996

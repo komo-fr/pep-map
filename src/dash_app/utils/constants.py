@@ -192,3 +192,4 @@ def get_group_color(group_id: int) -> str:
 # 暗い背景色でも文字が見えるように白い縁取りを適用
 TEXT_OUTLINE_WIDTH = 1
 TEXT_OUTLINE_COLOR = "#ffffff"
+TEXT_OUTLINE_OPACITY = 0.7
