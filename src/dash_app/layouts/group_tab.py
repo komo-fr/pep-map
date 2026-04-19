@@ -287,8 +287,6 @@ def _create_network_tabs() -> html.Div:
 
     return html.Div(
         [
-            # タブ選択状態を管理するStore
-            dcc.Store(id="network-tab-store", data="full-network"),
             # タブボタン
             html.Div(
                 [

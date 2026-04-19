@@ -794,7 +794,6 @@ def register_group_callbacks(app):
             if (!ctx.triggered || ctx.triggered.length === 0) {
                 // 初期状態: Full Network表示
                 return [
-                    'full-network',
                     visibleContentStyle,
                     hiddenContentStyle,
                     selectedButtonStyle,
@@ -806,7 +805,6 @@ def register_group_callbacks(app):
 
             if (triggeredId === 'full-network-tab-button') {
                 return [
-                    'full-network',
                     visibleContentStyle,
                     hiddenContentStyle,
                     selectedButtonStyle,
@@ -814,7 +812,6 @@ def register_group_callbacks(app):
                 ];
             } else {
                 return [
-                    'group-network',
                     hiddenContentStyle,
                     visibleContentStyle,
                     unselectedButtonStyle,
@@ -823,7 +820,6 @@ def register_group_callbacks(app):
             }
         }
         """,
-        Output("network-tab-store", "data"),
         Output("full-network-content", "style"),
         Output("group-network-content", "style"),
         Output("full-network-tab-button", "style"),
