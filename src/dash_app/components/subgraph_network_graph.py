@@ -6,6 +6,7 @@ from src.dash_app.utils.constants import (
     DEFAULT_STATUS_COLOR,
     STATUS_COLOR_MAP,
     TEXT_OUTLINE_COLOR,
+    TEXT_OUTLINE_OPACITY,
     TEXT_OUTLINE_WIDTH,
 )
 from src.dash_app.utils.data_loader import (
@@ -19,11 +20,16 @@ from src.graph.community_detector import calculate_grid_layout
 # グループ内PageRankは全体グラフより約50倍大きいため、専用の係数を使用
 # 全体グラフ: pagerank 0.0004〜0.018、グループ内: pagerank_group 0.009〜0.65
 PAGERANK_MULTIPLIER_GROUP = 35.0
+_PAGERANK_EXPONENT = 0.7  # 指数を小さくして大小の差を縮める
+_MIN_NODE_SIZE = 10.0
 
 
 def _calculate_node_size_pagerank(pagerank: float) -> float:
     """
     グループ内PageRankに基づいてノードサイズを計算する
+
+    指数を小さくして大小の差を縮め、最小サイズを保証することで
+    小さいノードも見やすくする。
 
     Args:
         pagerank: グループ内PageRank値（0-1）
@@ -32,8 +38,9 @@ def _calculate_node_size_pagerank(pagerank: float) -> float:
         float: ノードサイズ（ピクセル）
     """
     if pagerank <= 0:
-        return 10.0
-    return 10.0 * ((pagerank * PAGERANK_MULTIPLIER_GROUP) ** 0.5)
+        return _MIN_NODE_SIZE
+    size = 10.0 * ((pagerank * PAGERANK_MULTIPLIER_GROUP) ** _PAGERANK_EXPONENT)
+    return max(_MIN_NODE_SIZE, size)
 
 
 def _calculate_font_size_pagerank(pagerank: float) -> float:
@@ -205,6 +212,7 @@ def get_subgraph_base_stylesheet() -> list[dict]:
                 "opacity": 0.9,
                 "text-outline-width": TEXT_OUTLINE_WIDTH,
                 "text-outline-color": TEXT_OUTLINE_COLOR,
+                "text-outline-opacity": TEXT_OUTLINE_OPACITY,
             },
         },
         # エッジ基本スタイル
