@@ -14,6 +14,7 @@ import matplotlib
 
 matplotlib.use("Agg")  # ヘッドレス環境用のバックエンド設定
 
+import matplotlib.patheffects as pe
 import matplotlib.pyplot as plt
 import networkx as nx
 import pandas as pd
@@ -260,16 +261,21 @@ def _generate_subgraph_image(
     nx.draw(
         subgraph,
         pos,
-        with_labels=True,
+        with_labels=False,
         node_size=node_sizes,
         node_color=node_colors,
         font_size=10,
         connectionstyle="arc3,rad=0.1",
     )
 
+    # ラベルを白フチ付きで描画
+    labels = nx.draw_networkx_labels(subgraph, pos, font_size=10)
+    for text in labels.values():
+        text.set_path_effects([pe.withStroke(linewidth=3, foreground="white")])
+
     # 保存
     image_path = output_dir / f"group_{group_id}.png"
-    plt.savefig(image_path, dpi=300, bbox_inches="tight")
+    plt.savefig(image_path, dpi=100, bbox_inches="tight")
     plt.close()
     logger.debug(f"Saved {image_path}")
     return image_path
