@@ -2,6 +2,7 @@
 
 import json
 from datetime import datetime
+import pickle
 from typing import cast
 
 import pandas as pd
@@ -696,7 +697,6 @@ def load_subgraph(group_id: int) -> "nx.DiGraph | None":
     Returns:
         NetworkX DiGraph、存在しない場合はNone
     """
-    import pickle
 
     subgraph_path = (
         DATA_DIR / "groups" / "subgraphs" / "graphs" / f"subgraph_{group_id}.pkl"
