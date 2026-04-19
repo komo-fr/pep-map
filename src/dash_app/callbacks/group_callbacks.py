@@ -13,6 +13,7 @@ from src.dash_app.components.subgraph_network_graph import (
     get_subgraph_base_stylesheet,
     get_subgraph_layout_options,
 )
+from src.dash_app.layouts.group_tab import _create_subgraph_placeholder_with_dummy
 from src.dash_app.utils.constants import TEXT_OUTLINE_COLOR, TEXT_OUTLINE_WIDTH
 from src.dash_app.utils.data_loader import (
     get_peps_by_group,
@@ -713,47 +714,19 @@ def register_group_callbacks(app):
         Returns:
             サブグラフコンポーネント または プレースホルダー（常にCytoscapeを含む）
         """
-
-        def create_placeholder_with_dummy():
-            """プレースホルダー + ダミーCytoscapeを生成"""
-            return html.Div(
-                [
-                    html.Div(
-                        "Select a group to view its subgraph",
-                        style={
-                            "height": "600px",
-                            "display": "flex",
-                            "alignItems": "center",
-                            "justifyContent": "center",
-                            "backgroundColor": "#f5f5f5",
-                            "border": "1px solid #ddd",
-                            "color": "#999",
-                            "fontSize": "16px",
-                        },
-                    ),
-                    # ダミーのCytoscapeコンポーネント（コールバック用、非表示）
-                    cyto.Cytoscape(
-                        id="group-subgraph-network-graph",
-                        elements=[],
-                        layout={"name": "preset"},
-                        style={"display": "none"},
-                    ),
-                ]
-            )
-
         # "all"または未選択の場合はプレースホルダーを表示
         if selected_group is None or selected_group == "all":
-            return create_placeholder_with_dummy()
+            return _create_subgraph_placeholder_with_dummy()
 
         # 孤立グループ(-1)の場合もプレースホルダーを表示
         group_id = int(selected_group)
         if group_id < 0:
-            return create_placeholder_with_dummy()
+            return _create_subgraph_placeholder_with_dummy()
 
         # サブグラフのelementsを構築
         elements = build_subgraph_cytoscape_elements(group_id)
         if elements is None:
-            return create_placeholder_with_dummy()
+            return _create_subgraph_placeholder_with_dummy()
 
         # Cytoscapeコンポーネントを返す
         return cyto.Cytoscape(
