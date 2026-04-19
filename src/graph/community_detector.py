@@ -200,13 +200,49 @@ def calculate_detection_stats(communities: list[set], G: nx.DiGraph) -> dict:
     return stats
 
 
+def calculate_grid_layout(subgraph: nx.DiGraph) -> dict[int, tuple[float, float]]:
+    """
+    ノードを格子状に配置する（孤立点グループ用）
+
+    Args:
+        subgraph: NetworkX DiGraph
+
+    Returns:
+        dict[int, tuple[float, float]]: ノードをキー、(x, y)座標を値とする辞書
+    """
+    import math
+
+    nodes = sorted(subgraph.nodes())  # PEP番号順にソート
+    num_nodes = len(nodes)
+
+    if num_nodes == 0:
+        return {}
+
+    # 列数を計算（正方形に近い形を目指す）
+    num_cols = math.ceil(math.sqrt(num_nodes))
+
+    positions = {}
+    for i, node in enumerate(nodes):
+        col = i % num_cols
+        row = i // num_cols
+        # 正規化された座標（0〜1の範囲）
+        x = col / max(num_cols - 1, 1)
+        y = row / max((num_nodes - 1) // num_cols, 1)
+        positions[node] = (x, y)
+
+    return positions
+
+
 def _generate_subgraph_image(
     group_id: int, peps: set, G: nx.DiGraph, output_dir: Path
 ) -> Path:
 
     subgraph = G.subgraph(peps)
-    # レイアウト計算
-    pos = nx.spring_layout(subgraph, threshold=1e-6, k=1, seed=42)
+    # レイアウト計算（エッジがない場合は格子状に配置）
+    if subgraph.number_of_edges() == 0:
+        pos = calculate_grid_layout(subgraph)
+    else:
+        pos = nx.spring_layout(subgraph, threshold=1e-6, k=1, seed=42)
 
     # ノードカラーを取得
     node_colors = []

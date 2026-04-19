@@ -12,33 +12,36 @@ from src.dash_app.utils.data_loader import (
     load_subgraph,
     load_subgraph_metrics,
 )
+from src.graph.community_detector import calculate_grid_layout
 
 
-# モジュールレベル定数（network_graph.pyと同じ値）
-PAGERANK_MULTIPLIER = 2000.0
+# モジュールレベル定数
+# グループ内PageRankは全体グラフより約50倍大きいため、専用の係数を使用
+# 全体グラフ: pagerank 0.0004〜0.018、グループ内: pagerank_group 0.009〜0.65
+PAGERANK_MULTIPLIER_GROUP = 35.0
 
 
 def _calculate_node_size_pagerank(pagerank: float) -> float:
     """
-    PageRankに基づいてノードサイズを計算する
+    グループ内PageRankに基づいてノードサイズを計算する
 
     Args:
-        pagerank: PageRank値（0-1）
+        pagerank: グループ内PageRank値（0-1）
 
     Returns:
         float: ノードサイズ（ピクセル）
     """
     if pagerank <= 0:
         return 10.0
-    return 10.0 * ((pagerank * PAGERANK_MULTIPLIER) ** 0.5)
+    return 10.0 * ((pagerank * PAGERANK_MULTIPLIER_GROUP) ** 0.5)
 
 
 def _calculate_font_size_pagerank(pagerank: float) -> float:
     """
-    PageRankに基づいてフォントサイズを計算する
+    グループ内PageRankに基づいてフォントサイズを計算する
 
     Args:
-        pagerank: PageRank値（0-1）
+        pagerank: グループ内PageRank値（0-1）
 
     Returns:
         float: フォントサイズ（ピクセル）
@@ -47,7 +50,7 @@ def _calculate_font_size_pagerank(pagerank: float) -> float:
     max_font_size = 24.0
     if pagerank <= 0:
         return min_font_size
-    scaled_value = pagerank * PAGERANK_MULTIPLIER
+    scaled_value = pagerank * PAGERANK_MULTIPLIER_GROUP
     font_size = min_font_size + 2.0 * (scaled_value**0.7)
     return min(font_size, max_font_size)
 
@@ -65,13 +68,23 @@ def _calculate_node_positions(subgraph: nx.DiGraph) -> dict[int, tuple[float, fl
     if len(subgraph.nodes()) == 0:
         return {}
 
+    # エッジがない場合（孤立点のみ）は格子状に配置
+    if subgraph.number_of_edges() == 0:
+        # 正規化座標（0〜1）を取得し、スケーリング
+        grid_scale = 400  # spring_layoutのscale=200と同程度の広がり
+        normalized_pos = calculate_grid_layout(subgraph)
+        return {
+            node: (coords[0] * grid_scale, coords[1] * grid_scale)
+            for node, coords in normalized_pos.items()
+        }
+
     # spring_layoutで座標を計算
     pos = nx.spring_layout(
         subgraph,
         threshold=1e-6,
         k=1,  # ノード間の理想的な距離
         seed=42,  # 再現性のため
-        scale=500,  # 座標のスケール
+        scale=200,  # 座標のスケール（小さいほどノードが大きく見える）
     )
 
     # 座標を変換（NetworkXは{node: array([x, y])}形式）
@@ -197,11 +210,11 @@ def get_subgraph_base_stylesheet() -> list[dict]:
         {
             "selector": "edge",
             "style": {
-                "width": 2,
+                "width": 1,
                 "line-color": "#999",
                 "target-arrow-color": "#999",
                 "target-arrow-shape": "triangle",
-                "arrow-scale": 1,
+                "arrow-scale": 0.8,
                 "curve-style": "bezier",
                 "opacity": 0.6,
             },
