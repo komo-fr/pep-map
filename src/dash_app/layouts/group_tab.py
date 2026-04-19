@@ -388,10 +388,10 @@ def _create_subgraph_tab_content() -> html.Div:
                 ],
                 style={"fontSize": "12px", "color": "#666", "marginBottom": "8px"},
             ),
-            # サブグラフ表示エリア（初期状態はプレースホルダー）
+            # サブグラフ表示エリア（初期状態はプレースホルダー + 非表示Cytoscape）
             html.Div(
                 id="subgraph-container",
-                children=_create_subgraph_placeholder(),
+                children=_create_subgraph_placeholder_with_dummy(),
                 style={"minHeight": "600px"},
             ),
         ],
@@ -553,7 +553,7 @@ def _create_group_pep_table() -> dash_table.DataTable:  # type: ignore[name-defi
 
 
 def _create_subgraph_placeholder() -> html.Div:
-    """サブグラフ未選択時のプレースホルダーを生成する"""
+    """サブグラフ未選択時のプレースホルダーを生成する（テキストのみ）"""
     return html.Div(
         "Select a group to view its subgraph",
         style={
@@ -566,4 +566,37 @@ def _create_subgraph_placeholder() -> html.Div:
             "color": "#999",
             "fontSize": "16px",
         },
+    )
+
+
+def _create_subgraph_placeholder_with_dummy() -> html.Div:
+    """サブグラフ未選択時のプレースホルダー + ダミーCytoscapeを生成する
+
+    コールバック登録時にsubgraph-network-graphが存在する必要があるため、
+    初期状態では非表示のCytoscapeコンポーネントを含める。
+    """
+    return html.Div(
+        [
+            # プレースホルダーテキスト
+            html.Div(
+                "Select a group to view its subgraph",
+                style={
+                    "height": "600px",
+                    "display": "flex",
+                    "alignItems": "center",
+                    "justifyContent": "center",
+                    "backgroundColor": "#f5f5f5",
+                    "border": "1px solid #ddd",
+                    "color": "#999",
+                    "fontSize": "16px",
+                },
+            ),
+            # ダミーのCytoscapeコンポーネント（コールバック登録用、非表示）
+            cyto.Cytoscape(
+                id="subgraph-network-graph",
+                elements=[],
+                layout={"name": "preset"},
+                style={"display": "none"},
+            ),
+        ]
     )

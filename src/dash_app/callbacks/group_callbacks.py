@@ -37,19 +37,21 @@ def register_group_callbacks(app):
         Input("group-network-graph", "tapNodeData"),
         Input("group-network-graph", "selectedNodeData"),
         Input("group-selector-dropdown", "value"),
+        Input("subgraph-network-graph", "tapNodeData"),
         State("group-selection-source", "data"),
     )
     def update_pep_info_from_tap(
-        tap_data, selected_data, selected_group, selection_source
+        tap_data, selected_data, selected_group, subgraph_tap_data, selection_source
     ):
         """
         ノードタップ時にPEP情報を更新する
         選択が解除された場合やグループが変更された場合は初期メッセージを表示する
 
         Args:
-            tap_data: クリックされたノードのデータ
+            tap_data: フルネットワークグラフでクリックされたノードのデータ
             selected_data: 選択されているノードのリスト
             selected_group: 選択されているグループ
+            subgraph_tap_data: サブグラフでクリックされたノードのデータ
             selection_source: 選択ソース ("dropdown", "node_tap", "pep_input")
 
         Returns:
@@ -59,6 +61,17 @@ def register_group_callbacks(app):
         ctx = callback_context
         if ctx.triggered:
             triggered_id = ctx.triggered[0]["prop_id"]
+
+            # サブグラフのノードがタップされた場合
+            if "subgraph-network-graph" in triggered_id:
+                if subgraph_tap_data is not None:
+                    pep_number = subgraph_tap_data.get("pep_number")
+                    if pep_number is not None:
+                        pep_data = get_pep_by_number(pep_number)
+                        if pep_data is not None:
+                            return create_pep_info_display(pep_data)
+                return no_update
+
             # ドロップダウンが変更された場合
             if "group-selector-dropdown" in triggered_id:
                 # PEP番号入力またはノードタップからのトリガーの場合は、
@@ -698,36 +711,49 @@ def register_group_callbacks(app):
             selected_group: 選択されたグループ（"all" または グループID）
 
         Returns:
-            サブグラフコンポーネント または プレースホルダー
+            サブグラフコンポーネント または プレースホルダー（常にCytoscapeを含む）
         """
-        # プレースホルダー
-        placeholder = html.Div(
-            "Select a group to view its subgraph",
-            style={
-                "height": "600px",
-                "display": "flex",
-                "alignItems": "center",
-                "justifyContent": "center",
-                "backgroundColor": "#f5f5f5",
-                "border": "1px solid #ddd",
-                "color": "#999",
-                "fontSize": "16px",
-            },
-        )
+
+        def create_placeholder_with_dummy():
+            """プレースホルダー + ダミーCytoscapeを生成"""
+            return html.Div(
+                [
+                    html.Div(
+                        "Select a group to view its subgraph",
+                        style={
+                            "height": "600px",
+                            "display": "flex",
+                            "alignItems": "center",
+                            "justifyContent": "center",
+                            "backgroundColor": "#f5f5f5",
+                            "border": "1px solid #ddd",
+                            "color": "#999",
+                            "fontSize": "16px",
+                        },
+                    ),
+                    # ダミーのCytoscapeコンポーネント（コールバック用、非表示）
+                    cyto.Cytoscape(
+                        id="subgraph-network-graph",
+                        elements=[],
+                        layout={"name": "preset"},
+                        style={"display": "none"},
+                    ),
+                ]
+            )
 
         # "all"または未選択の場合はプレースホルダーを表示
         if selected_group is None or selected_group == "all":
-            return placeholder
+            return create_placeholder_with_dummy()
 
         # 孤立グループ(-1)の場合もプレースホルダーを表示
         group_id = int(selected_group)
         if group_id < 0:
-            return placeholder
+            return create_placeholder_with_dummy()
 
         # サブグラフのelementsを構築
         elements = build_subgraph_cytoscape_elements(group_id)
         if elements is None:
-            return placeholder
+            return create_placeholder_with_dummy()
 
         # Cytoscapeコンポーネントを返す
         return cyto.Cytoscape(
@@ -831,4 +857,161 @@ def register_group_callbacks(app):
         Output("group-network-tab-button", "style"),
         Input("full-network-tab-button", "n_clicks"),
         Input("group-network-tab-button", "n_clicks"),
+    )
+
+    # ===== Full Networkタップ → Group Network選択解除（クライアントサイド） =====
+    app.clientside_callback(
+        """
+        function(tapData, currentElements) {
+            // tapDataがない、またはelementsがない場合は更新しない
+            if (!tapData || !currentElements || currentElements.length === 0) {
+                return window.dash_clientside.no_update;
+            }
+            // 全ノードのselectedをfalseにする
+            return currentElements.map(function(el) {
+                var newEl = JSON.parse(JSON.stringify(el));
+                newEl.selected = false;
+                return newEl;
+            });
+        }
+        """,
+        Output("subgraph-network-graph", "elements", allow_duplicate=True),
+        Input("group-network-graph", "tapNodeData"),
+        State("subgraph-network-graph", "elements"),
+        prevent_initial_call=True,
+    )
+
+    # ===== Group Networkタップ → Full Network選択解除（クライアントサイド） =====
+    # NOTE: elementsのselected=falseだけではCytoscapeの:selected状態は解除されない
+    # そのため、下のスタイルシート更新コールバックで:selectedの見た目を上書きする
+    app.clientside_callback(
+        """
+        function(tapData, currentElements) {
+            // tapDataがない、またはelementsがない場合は更新しない
+            if (!tapData || !currentElements || currentElements.length === 0) {
+                return window.dash_clientside.no_update;
+            }
+            // 全ノードのselectedをfalseにする
+            return currentElements.map(function(el) {
+                var newEl = JSON.parse(JSON.stringify(el));
+                newEl.selected = false;
+                return newEl;
+            });
+        }
+        """,
+        Output("group-network-graph", "elements", allow_duplicate=True),
+        Input("subgraph-network-graph", "tapNodeData"),
+        State("group-network-graph", "elements"),
+        prevent_initial_call=True,
+    )
+
+    # ===== Group Networkタップ → Full Networkスタイルシート更新（クライアントサイド） =====
+    # Cytoscapeの:selected擬似クラスによる赤枠を非表示にする
+    app.clientside_callback(
+        f"""
+        function(tapData, selectedGroup) {{
+            // tapDataがない場合は更新しない
+            if (!tapData) {{
+                return window.dash_clientside.no_update;
+            }}
+
+            // 基本スタイルシート
+            var baseStylesheet = [
+                {{
+                    selector: 'node',
+                    style: {{
+                        'label': 'data(label)',
+                        'background-color': 'data(group_color)',
+                        'width': 'data(size_pagerank)',
+                        'height': 'data(size_pagerank)',
+                        'font-size': 'data(font_size_pagerank)',
+                        'text-valign': 'center',
+                        'text-halign': 'center',
+                        'border-width': 1,
+                        'border-color': '#999',
+                        'opacity': 0.8,
+                        'text-outline-width': {TEXT_OUTLINE_WIDTH},
+                        'text-outline-color': '{TEXT_OUTLINE_COLOR}'
+                    }}
+                }},
+                {{
+                    selector: 'edge',
+                    style: {{
+                        'width': 2,
+                        'line-color': '#999',
+                        'target-arrow-color': '#999',
+                        'target-arrow-shape': 'triangle',
+                        'arrow-scale': 1,
+                        'curve-style': 'bezier',
+                        'opacity': 0.3
+                    }}
+                }},
+                {{
+                    selector: '.group-selected',
+                    style: {{
+                        'opacity': 1,
+                        'border-width': 2,
+                        'border-color': '#333',
+                        'text-outline-width': {TEXT_OUTLINE_WIDTH},
+                        'text-outline-color': '{TEXT_OUTLINE_COLOR}'
+                    }}
+                }},
+                {{
+                    selector: '.group-faded',
+                    style: {{
+                        'opacity': 0.15
+                    }}
+                }},
+                {{
+                    selector: '.group-selected-edge',
+                    style: {{
+                        'opacity': 1,
+                        'line-color': '#666',
+                        'target-arrow-color': '#666',
+                        'width': 2
+                    }}
+                }}
+            ];
+
+            // :selectedの赤枠を非表示にするスタイル
+            var overrideStyles = [
+                {{
+                    selector: ':selected',
+                    style: {{
+                        'border-width': 1,
+                        'border-color': '#999',
+                        'opacity': 0.8,
+                        'text-outline-width': {TEXT_OUTLINE_WIDTH},
+                        'text-outline-color': '{TEXT_OUTLINE_COLOR}'
+                    }}
+                }},
+                {{
+                    selector: '.group-selected:selected',
+                    style: {{
+                        'border-width': 2,
+                        'border-color': '#333',
+                        'opacity': 1,
+                        'text-outline-width': {TEXT_OUTLINE_WIDTH},
+                        'text-outline-color': '{TEXT_OUTLINE_COLOR}'
+                    }}
+                }},
+                {{
+                    selector: '.group-faded:selected',
+                    style: {{
+                        'border-width': 1,
+                        'border-color': '#999',
+                        'opacity': 0.15,
+                        'text-outline-width': {TEXT_OUTLINE_WIDTH},
+                        'text-outline-color': '{TEXT_OUTLINE_COLOR}'
+                    }}
+                }}
+            ];
+
+            return baseStylesheet.concat(overrideStyles);
+        }}
+        """,
+        Output("group-network-graph", "stylesheet", allow_duplicate=True),
+        Input("subgraph-network-graph", "tapNodeData"),
+        State("group-selector-dropdown", "value"),
+        prevent_initial_call=True,
     )
