@@ -404,7 +404,7 @@ def _create_group_graph() -> cyto.Cytoscape:
     elements = build_group_cytoscape_elements()
 
     return cyto.Cytoscape(
-        id="group-network-graph",
+        id="group-full-network-graph",
         elements=elements,
         layout=get_preset_layout_options(),
         style={
@@ -572,7 +572,7 @@ def _create_subgraph_placeholder() -> html.Div:
 def _create_subgraph_placeholder_with_dummy() -> html.Div:
     """サブグラフ未選択時のプレースホルダー + ダミーCytoscapeを生成する
 
-    コールバック登録時にsubgraph-network-graphが存在する必要があるため、
+    コールバック登録時にgroup-subgraph-network-graphが存在する必要があるため、
     初期状態では非表示のCytoscapeコンポーネントを含める。
     """
     return html.Div(
@@ -593,7 +593,7 @@ def _create_subgraph_placeholder_with_dummy() -> html.Div:
             ),
             # ダミーのCytoscapeコンポーネント（コールバック登録用、非表示）
             cyto.Cytoscape(
-                id="subgraph-network-graph",
+                id="group-subgraph-network-graph",
                 elements=[],
                 layout={"name": "preset"},
                 style={"display": "none"},

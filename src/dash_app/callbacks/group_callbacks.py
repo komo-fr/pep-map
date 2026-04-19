@@ -34,10 +34,10 @@ def register_group_callbacks(app):
     # ===== ノードタップ → PEP情報更新（サーバーサイド） =====
     @app.callback(
         Output("group-pep-info-display", "children"),
-        Input("group-network-graph", "tapNodeData"),
-        Input("group-network-graph", "selectedNodeData"),
+        Input("group-full-network-graph", "tapNodeData"),
+        Input("group-full-network-graph", "selectedNodeData"),
         Input("group-selector-dropdown", "value"),
-        Input("subgraph-network-graph", "tapNodeData"),
+        Input("group-subgraph-network-graph", "tapNodeData"),
         State("group-selection-source", "data"),
     )
     def update_pep_info_from_tap(
@@ -63,7 +63,7 @@ def register_group_callbacks(app):
             triggered_id = ctx.triggered[0]["prop_id"]
 
             # サブグラフのノードがタップされた場合
-            if "subgraph-network-graph" in triggered_id:
+            if "group-subgraph-network-graph" in triggered_id:
                 if subgraph_tap_data is not None:
                     pep_number = subgraph_tap_data.get("pep_number")
                     if pep_number is not None:
@@ -179,9 +179,9 @@ def register_group_callbacks(app):
             });
         }
         """,
-        Output("group-network-graph", "elements"),
+        Output("group-full-network-graph", "elements"),
         Input("group-selector-dropdown", "value"),
-        State("group-network-graph", "elements"),
+        State("group-full-network-graph", "elements"),
         State("group-pep-input", "value"),
         State("group-selection-source", "data"),
     )
@@ -309,7 +309,7 @@ def register_group_callbacks(app):
         Output("group-selector-dropdown", "value", allow_duplicate=True),
         Output("group-selection-source", "data", allow_duplicate=True),
         Output("group-pep-input", "value", allow_duplicate=True),
-        Input("group-network-graph", "tapNodeData"),
+        Input("group-full-network-graph", "tapNodeData"),
         prevent_initial_call=True,
     )
     def update_from_node_tap(tap_data):
@@ -553,10 +553,10 @@ def register_group_callbacks(app):
             return baseStylesheet.concat(overrideStyles);
         }}
         """,
-        Output("group-network-graph", "stylesheet"),
+        Output("group-full-network-graph", "stylesheet"),
         Input("group-selector-dropdown", "value"),
         State("group-selection-source", "data"),
-        State("group-network-graph", "elements"),
+        State("group-full-network-graph", "elements"),
         State("group-pep-input", "value"),
         prevent_initial_call=True,
     )
@@ -733,7 +733,7 @@ def register_group_callbacks(app):
                     ),
                     # ダミーのCytoscapeコンポーネント（コールバック用、非表示）
                     cyto.Cytoscape(
-                        id="subgraph-network-graph",
+                        id="group-subgraph-network-graph",
                         elements=[],
                         layout={"name": "preset"},
                         style={"display": "none"},
@@ -757,7 +757,7 @@ def register_group_callbacks(app):
 
         # Cytoscapeコンポーネントを返す
         return cyto.Cytoscape(
-            id="subgraph-network-graph",
+            id="group-subgraph-network-graph",
             elements=elements,
             layout=get_subgraph_layout_options(),
             style={
@@ -875,9 +875,9 @@ def register_group_callbacks(app):
             });
         }
         """,
-        Output("subgraph-network-graph", "elements", allow_duplicate=True),
-        Input("group-network-graph", "tapNodeData"),
-        State("subgraph-network-graph", "elements"),
+        Output("group-subgraph-network-graph", "elements", allow_duplicate=True),
+        Input("group-full-network-graph", "tapNodeData"),
+        State("group-subgraph-network-graph", "elements"),
         prevent_initial_call=True,
     )
 
@@ -899,9 +899,9 @@ def register_group_callbacks(app):
             });
         }
         """,
-        Output("group-network-graph", "elements", allow_duplicate=True),
-        Input("subgraph-network-graph", "tapNodeData"),
-        State("group-network-graph", "elements"),
+        Output("group-full-network-graph", "elements", allow_duplicate=True),
+        Input("group-subgraph-network-graph", "tapNodeData"),
+        State("group-full-network-graph", "elements"),
         prevent_initial_call=True,
     )
 
@@ -1010,8 +1010,8 @@ def register_group_callbacks(app):
             return baseStylesheet.concat(overrideStyles);
         }}
         """,
-        Output("group-network-graph", "stylesheet", allow_duplicate=True),
-        Input("subgraph-network-graph", "tapNodeData"),
+        Output("group-full-network-graph", "stylesheet", allow_duplicate=True),
+        Input("group-subgraph-network-graph", "tapNodeData"),
         State("group-selector-dropdown", "value"),
         prevent_initial_call=True,
     )
