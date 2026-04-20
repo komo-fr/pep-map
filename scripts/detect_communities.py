@@ -9,7 +9,6 @@ from pathlib import Path
 
 import networkx as nx
 
-from src.dash_app.utils.constants import STATUS_COLOR_MAP
 from src.graph.community_detector import (
     run_louvain_detection,
     create_pep_group_metrics,
@@ -119,9 +118,7 @@ def main() -> int:
 
     # サブグラフ画像を生成
     images_dir = OUTPUT_DIR / "subgraphs" / "images"
-    generated_images = generate_subgraph_images(
-        communities, G, images_dir, STATUS_COLOR_MAP
-    )
+    generated_images = generate_subgraph_images(communities, G, images_dir)
     logger.info(f"Generated {len(generated_images)} subgraph images")
 
     logger.info("Community detection completed successfully")
