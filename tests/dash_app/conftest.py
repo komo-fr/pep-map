@@ -256,9 +256,9 @@ def mock_data_files(
     group_csv = group_dir / "pep_group_metrics.csv"
     sample_group_data.to_csv(group_csv, index=False)
 
-    # group_names.csv を追加
-    group_names_csv = group_dir / "group_names.csv"
-    sample_group_names.to_csv(group_names_csv, index=False)
+    # group_profiles.csv を追加
+    group_profiles_csv = group_dir / "group_profiles.csv"
+    sample_group_names.to_csv(group_profiles_csv, index=False)
 
     # JSONファイル作成
     metadata_json = data_dir / "metadata.json"

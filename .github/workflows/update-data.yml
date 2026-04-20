@@ -13,6 +13,16 @@ on:
         required: true
         type: boolean
         default: false
+      model:
+        description: 'LLM model for group profile generation (empty = auto select based on dry_run)'
+        required: false
+        type: choice
+        options:
+          - ''
+          - gpt-5.4
+          - gpt-4o
+          - gpt-4o-mini
+        default: ''
 
 jobs:
   update-data:
@@ -77,6 +87,27 @@ jobs:
         # 終了コード2（変更あり）の時だけ実行
         if: steps.fetch.outputs.exit_code == '2'
         run: PYTHONPATH=. python scripts/detect_communities.py
+
+      - name: Generate group profiles
+        # 終了コード2（変更あり）の時だけ実行
+        if: steps.fetch.outputs.exit_code == '2'
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          LANGCHAIN_API_KEY: ${{ secrets.LANGCHAIN_API_KEY }}
+          LANGCHAIN_TRACING_V2: true
+          LANGCHAIN_PROJECT: pep-map
+        run: |
+          # モデル選択: inputs.model が指定されていればそれを使用、
+          # 未指定の場合は dry_run に応じて自動選択
+          if [ -n "${{ github.event.inputs.model }}" ]; then
+            MODEL="${{ github.event.inputs.model }}"
+          elif [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
+            MODEL="gpt-4o-mini"
+          else
+            MODEL="gpt-5.4"
+          fi
+          echo "Using model: $MODEL"
+          PYTHONPATH=. python scripts/generate_group_profiles.py --model "$MODEL"
 
       - name: Check for changes
         id: check_changes

@@ -552,7 +552,7 @@ def load_group_names() -> pd.DataFrame:
     if _group_names_cache is not None:
         return _group_names_cache
 
-    group_names_file = DATA_DIR / "groups" / "group_names.csv"
+    group_names_file = DATA_DIR / "groups" / "group_profiles.csv"
     if not group_names_file.exists():
         # ファイルが存在しない場合は空のDataFrameを返す
         return pd.DataFrame(columns=["group_id", "group_name", "description"])
