@@ -1,6 +1,9 @@
 import base64
+import json
 import logging
 import mimetypes
+import time
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import cast
 
@@ -116,7 +119,7 @@ def generate_all_group_profiles(group_data_dir: Path, model_name: str) -> list[d
 
     group_profiles = []
     for i, group_id in enumerate(group_ids):
-        logger.info(f"[{i}/{total_groups}] Processing group {group_id}")
+        logger.info(f"[{i + 1}/{total_groups}] Processing group {group_id}")
         path = group_data_dir / "pep_group_metrics.csv"
         pep_md_table = format_peps_as_markdown(path, group_id)
         data_dict = {"group_id": group_id}
@@ -129,10 +132,26 @@ def generate_all_group_profiles(group_data_dir: Path, model_name: str) -> list[d
         data_dict.update(group_profile.model_dump())
         group_profiles.append(data_dict)
         logger.info(f"Completed group {group_id}: {group_profile.group_name}")
+        break
     return group_profiles
 
 
 def save_profiles_to_csv(model_name: str, group_data_dir: Path):
+    start_time = time.time()
+
     group_profiles = generate_all_group_profiles(group_data_dir, model_name)
     group_profiles_df = pd.DataFrame(group_profiles)
     group_profiles_df.to_csv(group_data_dir / "group_profiles.csv", index=False)
+
+    execution_time_seconds = round(time.time() - start_time, 1)
+
+    # メタデータを保存
+    metadata = {
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "model": model_name,
+        "execution_time_seconds": execution_time_seconds,
+    }
+    metadata_path = group_data_dir / "group_profiles_metadata.json"
+    with metadata_path.open("w", encoding="utf-8") as f:
+        json.dump(metadata, f, indent=2, ensure_ascii=False)
+    logger.info(f"Metadata saved to {metadata_path}")
