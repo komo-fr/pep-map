@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.7.0] - 2026-04-xx
+
+### Added
+
+- Display LLM-generated group names and descriptions in the `Groups` tab.
+
 ## [0.6.2] - 2026-04-18
 
 ### Fixed
