@@ -2,9 +2,11 @@
 
 import json
 from datetime import datetime
+import pickle
 from typing import cast
 
 import pandas as pd
+import networkx as nx
 
 from src.dash_app.utils.constants import (
     DATA_DIR,
@@ -22,6 +24,7 @@ _peps_with_metrics_cache: pd.DataFrame | None = None
 _metrics_styles_cache: list[dict] | None = None
 _citation_changes_cache: pd.DataFrame | None = None
 _group_data_cache: pd.DataFrame | None = None
+_group_names_cache: pd.DataFrame | None = None
 
 
 def load_peps_metadata() -> pd.DataFrame:
@@ -532,6 +535,56 @@ def load_group_data() -> pd.DataFrame:
     return _group_data_cache
 
 
+def load_group_names() -> pd.DataFrame:
+    """
+    グループ名データを読み込む（キャッシュあり）
+
+    Returns:
+        pd.DataFrame: グループ名データ
+
+    列:
+        - group_id (int): グループID
+        - group_name (str): グループ名
+        - description (str): グループの説明
+    """
+    global _group_names_cache
+
+    if _group_names_cache is not None:
+        return _group_names_cache
+
+    group_names_file = DATA_DIR / "groups" / "group_profiles.csv"
+    if not group_names_file.exists():
+        # ファイルが存在しない場合は空のDataFrameを返す
+        return pd.DataFrame(columns=["group_id", "group_name", "description"])
+
+    _group_names_cache = pd.read_csv(group_names_file)
+    return _group_names_cache
+
+
+def get_group_name_info(group_id: int) -> dict[str, str]:
+    """
+    指定されたグループIDのグループ名と説明を取得する
+
+    Args:
+        group_id: グループID
+
+    Returns:
+        dict: {"group_name": str, "description": str}
+              グループが見つからない場合は空文字列
+    """
+    df = load_group_names()
+    result = df[df["group_id"] == group_id]
+
+    if result.empty:
+        return {"group_name": "", "description": ""}
+
+    row = result.iloc[0]
+    return {
+        "group_name": str(row["group_name"]) if pd.notna(row["group_name"]) else "",
+        "description": str(row["description"]) if pd.notna(row["description"]) else "",
+    }
+
+
 def get_peps_by_group(group_id: int) -> pd.DataFrame:
     """
     指定されたグループに所属するPEPを取得する
@@ -570,15 +623,30 @@ def get_group_list() -> list[dict[str, str | int]]:
     グループ一覧を取得する（ドロップダウン用）
 
     Returns:
-        list[dict[str, str | int]]: [{"label": "All Groups", "value": "all"}, {"label": "Group 0 (58 PEPs)", "value": 0}, ...]
+        list[dict[str, str | int]]: [{"label": "All Groups", "value": "all"}, {"label": "Group 0 (58 PEPs): グループ名", "value": 0}, ...]
     """
     df = load_group_data()
     group_counts = df.groupby("group_id").size().to_dict()
 
+    # グループ名データを取得
+    group_names_df = load_group_names()
+    group_names_dict = {}
+    for _, row in group_names_df.iterrows():
+        group_names_dict[int(row["group_id"])] = (
+            str(row["group_name"]) if pd.notna(row["group_name"]) else ""
+        )
+
     options: list[dict[str, str | int]] = [{"label": "All Groups", "value": "all"}]
     for group_id in sorted(cast(list[int], list(group_counts.keys()))):
         count = group_counts[group_id]
+
         label = f"Group {group_id} ({count} PEPs)"
+        # グループ名を取得
+        group_name = group_names_dict.get(group_id, "")
+        if group_name:
+            label = f"Group {group_id} ({count} PEPs): {group_name}"
+        else:
+            label = f"Group {group_id} ({count} PEPs)"
         options.append({"label": label, "value": group_id})
 
     return options
@@ -599,7 +667,8 @@ def clear_cache() -> None:
         _peps_with_metrics_cache, \
         _metrics_styles_cache, \
         _citation_changes_cache, \
-        _group_data_cache
+        _group_data_cache, \
+        _group_names_cache
     _peps_metadata_cache = None
     _citations_cache = None
     _metadata_cache = None
@@ -609,9 +678,50 @@ def clear_cache() -> None:
     _metrics_styles_cache = None
     _citation_changes_cache = None
     _group_data_cache = None
+    _group_names_cache = None
 
     # 他モジュールのキャッシュもクリア（遅延インポートで循環参照を回避）
     from src.dash_app.components import network_graph, group_network_graph
 
     network_graph.clear_cache()
     group_network_graph.clear_cache()
+
+
+def load_subgraph(group_id: int) -> "nx.DiGraph | None":
+    """
+    指定されたグループIDのサブグラフを読み込む
+
+    Args:
+        group_id: グループID
+
+    Returns:
+        NetworkX DiGraph、存在しない場合はNone
+    """
+
+    subgraph_path = (
+        DATA_DIR / "groups" / "subgraphs" / "graphs" / f"subgraph_{group_id}.pkl"
+    )
+    if not subgraph_path.exists():
+        return None
+
+    with open(subgraph_path, "rb") as f:
+        return pickle.load(f)
+
+
+def load_subgraph_metrics(group_id: int) -> "pd.DataFrame | None":
+    """
+    指定されたグループIDのメトリクスを読み込む
+
+    Args:
+        group_id: グループID
+
+    Returns:
+        DataFrame、存在しない場合はNone
+    """
+    metrics_path = DATA_DIR / "groups" / "pep_group_metrics.csv"
+    if not metrics_path.exists():
+        return None
+    df = pd.read_csv(metrics_path)
+    df = df[df["group_id"] == group_id]
+
+    return df
