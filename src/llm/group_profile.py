@@ -132,7 +132,6 @@ def generate_all_group_profiles(group_data_dir: Path, model_name: str) -> list[d
         data_dict.update(group_profile.model_dump())
         group_profiles.append(data_dict)
         logger.info(f"Completed group {group_id}: {group_profile.group_name}")
-        break
     return group_profiles
 
 
