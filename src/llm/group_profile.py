@@ -21,7 +21,7 @@ load_dotenv()
 logger = logging.getLogger(__name__)
 
 
-def format_peps_as_markdown(csv_path, group_id):
+def format_peps_as_markdown(csv_path: Path, group_id: int) -> str:
     pep_group_df = pd.read_csv(csv_path)
     pep_df = pep_group_df[pep_group_df.group_id == group_id]
     pep_df = pep_df.sort_values(
