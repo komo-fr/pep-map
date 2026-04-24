@@ -374,15 +374,15 @@ def _create_subgraph_tab_content() -> html.Div:
             # 説明テキスト
             html.P(
                 [
-                    html.Strong("Node sizes"),
-                    " are based on PageRank computed within the selected group.",
+                    html.Strong("Color"),
+                    " indicates the status of each PEP.",
                 ],
                 style={"fontSize": "12px", "color": "#666", "marginBottom": "4px"},
             ),
             html.P(
                 [
-                    html.Strong("Color"),
-                    " indicates the status of each PEP.",
+                    html.Strong("Node sizes"),
+                    " are based on PageRank computed within the selected group.",
                 ],
                 style={"fontSize": "12px", "color": "#666", "marginBottom": "8px"},
             ),
