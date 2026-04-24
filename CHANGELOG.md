@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.7.1] - 2026-04-24
+
+### Changed
+- Update Groups tab documentation in README (network views, AI-generated descriptions)
+
 ## [0.7.0] - 2026-04-20
 
 ### Added
