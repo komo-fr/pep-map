@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.7.2] - 2026-YY-DD
+
+### Changed
+- Clarify group descriptions by distinguishing between the `Full Network` and `Group Network` views.
+
 ## [0.7.1] - 2026-04-24
 
 ### Changed
