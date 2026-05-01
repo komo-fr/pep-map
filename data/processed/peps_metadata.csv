@@ -478,7 +478,7 @@ pep_number,title,status,type,created,authors,topic,requires,replaces,python_vers
 658,Serve Distribution Metadata in the Simple Repository API,Accepted,Standards Track,10-May-2021,Tzu-ping Chung,Packaging,,,
 659,Specializing Adaptive Interpreter,Final,Informational,13-Apr-2021,Mark Shannon,,,,
 660,Editable installs for pyproject.toml based builds (wheel based),Final,Standards Track,30-Mar-2021,Daniel Holth; Stéphane Bidoul,Packaging,,,
-661,Sentinel Values,Draft,Standards Track,06-Jun-2021,Tal Einat; Jelle Zijlstra,,,,3.15
+661,Sentinel Values,Final,Standards Track,06-Jun-2021,Tal Einat; Jelle Zijlstra,,,,3.15
 662,Editable installs via virtual wheels,Rejected,Standards Track,28-May-2021,Bernát Gábor,Packaging,,,
 663,"Standardizing Enum str(), repr(), and format() behaviors",Rejected,Informational,30-Jun-2021,Ethan Furman,,,,3.11
 664,Python 3.11 Release Schedule,Active,Informational,12-Jul-2021,Pablo Galindo Salgado,Release,,,3.11
@@ -603,7 +603,7 @@ pep_number,title,status,type,created,authors,topic,requires,replaces,python_vers
 785,New methods for easier handling of ``ExceptionGroup``\ s,Draft,Standards Track,08-Apr-2025,Zac Hatfield-Dodds,,,,3.14
 786,Precision and modulo-precision flag format specifiers for integer fields,Draft,Standards Track,04-Apr-2025,Jay Berry,,,,3.15
 787,Safer subprocess usage using t-strings,Deferred,Standards Track,13-Apr-2025,Nick Humrich; Alyssa Coghlan,,750,,3.15
-788,Protecting the C API from Interpreter Finalization,Draft,Standards Track,23-Apr-2025,Peter Bierma,,,,3.15
+788,Protecting the C API from Interpreter Finalization,Accepted,Standards Track,23-Apr-2025,Peter Bierma,,,,3.15
 789,Preventing task-cancellation bugs by limiting yield in async generators,Draft,Standards Track,14-May-2024,Zac Hatfield-Dodds; Nathaniel J. Smith,,,,3.14
 790,Python 3.15 Release Schedule,Active,Informational,26-Apr-2025,Hugo van Kemenade,Release,,,3.15
 791,math.integer --- submodule for integer-specific mathematics functions,Final,Standards Track,12-May-2025,Neil Girdhar; Sergey B Kirpichev; Tim Peters; Serhiy Storchaka,,,,3.15
@@ -631,16 +631,16 @@ pep_number,title,status,type,created,authors,topic,requires,replaces,python_vers
 817,Wheel Variants: Beyond Platform Tags,Draft,Standards Track,10-Dec-2025,Jonathan Dekhtiar; Michał Górny; Konstantin Schütze; Ralf Gommers; Andrey Talman; Charlie Marsh; Michael Sarahan; Eli Uriegas; Barry Warsaw; Donald Stufft; Andy R. Terrel,Packaging,,,
 818,Adding the Core of the Pyodide Foreign Function Interface to Python,Draft,Standards Track,10-Dec-2025,Hood Chatham,,,,3.15
 819,JSON Package Metadata,Draft,Standards Track,18-Dec-2025,Emma Harper Smith,Packaging,,,
-820,PySlot: Unified slot system for the C API,Draft,Standards Track,19-Dec-2025,Petr Viktorin,,,,3.15
+820,PySlot: Unified slot system for the C API,Accepted,Standards Track,19-Dec-2025,Petr Viktorin,,,,3.15
 821,Support for unpacking TypedDicts in Callable type hints,Draft,Standards Track,12-Jan-2026,Daniel Sperber,Typing,,,3.15
-822,Dedented Multiline String (d-string),Draft,Standards Track,05-Jan-2026,Inada Naoki,,,,3.15
+822,Dedented Multiline String (d-string),Draft,Standards Track,05-Jan-2026,Inada Naoki,,,,3.16
 825,Wheel Variants: Package Format,Draft,Standards Track,17-Feb-2026,Jonathan Dekhtiar; Michał Górny; Konstantin Schütze; Ralf Gommers; Andrey Talman; Charlie Marsh; Michael Sarahan; Eli Uriegas; Barry Warsaw; Donald Stufft; Andy R. Terrel,Packaging,,,
 826,Python 3.16 Release Schedule,Active,Informational,23-Feb-2026,Savannah Ostrowski,Release,,,3.16
 827,Type Manipulation,Draft,Standards Track,27-Feb-2026,Michael J. Sullivan; Daniel W. Park; Yury Selivanov,Typing,,,3.15
 828,Supporting 'yield from' in asynchronous generators,Draft,Standards Track,07-Mar-2026,Peter Bierma,,,,3.15
-829,Package Startup Configuration Files,Draft,Standards Track,31-Mar-2026,Barry Warsaw,,,,3.15
+829,Package Startup Configuration Files,Accepted,Standards Track,31-Mar-2026,Barry Warsaw,,,,3.15
 830,Add timestamps to exceptions and tracebacks,Draft,Standards Track,15-Mar-2026,Gregory P. Smith,,,,3.15
-831,Frame Pointers Everywhere: Enabling System-Level Observability for Python,Draft,Standards Track,14-Mar-2026,Pablo Galindo Salgado; Ken Jin; Savannah Ostrowski,,,,3.15
+831,Frame Pointers Everywhere: Enabling System-Level Observability for Python,Accepted,Standards Track,14-Mar-2026,Pablo Galindo Salgado; Ken Jin; Savannah Ostrowski,,,,3.15
 832,Virtual environment discovery,Draft,Standards Track,19-Jan-2026,Brett Cannon,,,,3.15
 833,Freezing the HTML simple repository API,Draft,Standards Track,21-Apr-2026,William Woodruff,Packaging,,,
 2026,Calendar versioning for Python,Rejected,Process,11-Jun-2024,Hugo van Kemenade,,,,3.26

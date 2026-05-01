@@ -1,9 +1,9 @@
 {
   "source_url": "https://github.com/python/peps/archive/refs/heads/main.zip",
-  "fetched_at": "2026-04-24T12:35:39.162184+00:00",
-  "checked_at": "2026-04-24T12:35:39.191219+00:00",
+  "fetched_at": "2026-05-01T12:34:15.281743+00:00",
+  "checked_at": "2026-05-01T12:34:15.308381+00:00",
   "data_hashes": {
-    "peps_metadata": "0e037c4e80c70dc66db0ab4371e1c939b8ad8b4ce9ed1204da50b7319a78b9c9",
-    "citations": "ec9617a53934151abcc7ae22a19840244ef8afacd5df1cc376b9a1e96d32b73c"
+    "peps_metadata": "3371af1465840eb19a0a19236d56965bf9b618baf7aff7004ff10d8162be53e3",
+    "citations": "ee32242fdddfdf966a3fbb123fa7197fa6bc6e9e11f5813689e63c1534d029e4"
   }
 }

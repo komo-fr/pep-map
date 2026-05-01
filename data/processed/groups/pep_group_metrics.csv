@@ -75,7 +75,7 @@ PEP,title,status,created,group_id,in-degree_group,out-degree_group,degree_group,
 696,Type Defaults for Type Parameters,Final,14-Jul-2022,2,1,1,2,0.01476631737937592,0.9897369013830795
 593,Flexible function and variable annotations,Final,26-Apr-2019,2,1,2,3,0.014624888243921913,0.19892805606854486
 681,Data Class Transforms,Final,02-Dec-2021,2,1,2,3,0.014624888243921913,0.71706843844008
-661,Sentinel Values,Draft,06-Jun-2021,2,1,0,1,0.013170958368254724,0.2120990144367996
+661,Sentinel Values,Final,06-Jun-2021,2,1,0,1,0.013170958368254724,0.2120990144367996
 690,Lazy Imports,Rejected,29-Apr-2022,2,1,2,3,0.013170958368254724,0.8678040864066652
 638,Syntactic Macros,Draft,24-Sep-2020,2,0,1,1,0.01026309861692035,0.9999999999999999
 671,Syntax for late-bound function argument defaults,Draft,24-Oct-2021,2,0,3,3,0.01026309861692035,0.22236211305371995
@@ -104,9 +104,9 @@ PEP,title,status,created,group_id,in-degree_group,out-degree_group,degree_group,
 721,Using tarfile.data_filter for source distribution extraction,Final,12-Jul-2023,3,0,1,1,0.01850119631777074,0.3788290966825902
 743,Add Py_OMIT_LEGACY_API to the Python C API,Rejected,11-Mar-2024,3,0,2,2,0.01850119631777074,0.7716832237640766
 774,Removing the LLVM requirement for JIT builds,Deferred,27-Jan-2025,3,0,1,1,0.01850119631777074,0.293591297840369
-788,Protecting the C API from Interpreter Finalization,Draft,23-Apr-2025,3,0,1,1,0.01850119631777074,0.5173991767124387
+788,Protecting the C API from Interpreter Finalization,Accepted,23-Apr-2025,3,0,1,1,0.01850119631777074,0.5173991767124387
 799,A dedicated ``profiling`` package for organizing Python profiling tools,Accepted,21-Jul-2025,3,0,2,2,0.01850119631777074,0.6446873889444162
-831,Frame Pointers Everywhere: Enabling System-Level Observability for Python,Draft,14-Mar-2026,3,0,1,1,0.01850119631777074,0.9999999999999999
+831,Frame Pointers Everywhere: Enabling System-Level Observability for Python,Accepted,14-Mar-2026,3,0,1,1,0.01850119631777074,0.9999999999999999
 13,Python Language Governance,Active,16-Dec-2018,4,16,12,28,0.29390491847142053,0.5851398738722937
 8001,Python Governance Voting Process,Final,24-Aug-2018,4,9,9,18,0.1172449404638991,0.1583151787732186
 8016,The Steering Council Model,Accepted,01-Nov-2018,4,10,2,12,0.09187260585083983,0.7244997029101059
@@ -495,7 +495,7 @@ PEP,title,status,created,group_id,in-degree_group,out-degree_group,degree_group,
 488,Elimination of PYO files,Final,20-Feb-2015,26,1,1,2,0.024791073014227068,0.24468127613448037
 203,Augmented Assignments,Final,13-Jul-2000,26,0,1,1,0.02118896294324576,0.26587023907772617
 478,Python 3.5 Release Schedule,Final,22-Sep-2014,26,0,5,5,0.02118896294324576,1.0000000000000002
-820,PySlot: Unified slot system for the C API,Draft,19-Dec-2025,26,0,1,1,0.02118896294324576,0.9292288910283002
+820,PySlot: Unified slot system for the C API,Accepted,19-Dec-2025,26,0,1,1,0.02118896294324576,0.9292288910283002
 236,Back to the __future__,Final,26-Feb-2001,27,7,4,11,0.2592450550813203,0.713724641858134
 5,Guidelines for Language Evolution,Superseded,26-Oct-2000,27,5,0,5,0.12437196495372627,0.2526699703599986
 264,Future statements in simulated shells,Final,30-Jul-2001,27,2,1,3,0.10557394839426537,0.45447958677681366
@@ -546,7 +546,7 @@ PEP,title,status,created,group_id,in-degree_group,out-degree_group,degree_group,
 569,Python 3.8 Release Schedule,Final,27-Jan-2018,30,0,4,4,0.01879942191777603,0.9396068570891448
 688,Making the buffer protocol accessible in Python,Final,23-Apr-2022,30,0,1,1,0.01879942191777603,0.875218837020762
 698,Override Decorator for Static Typing,Final,05-Sep-2022,30,0,1,1,0.01879942191777603,0.9584062790069209
-829,Package Startup Configuration Files,Draft,31-Mar-2026,30,0,1,1,0.01879942191777603,0.9772057009246969
+829,Package Startup Configuration Files,Accepted,31-Mar-2026,30,0,1,1,0.01879942191777603,0.9772057009246969
 384,Defining a Stable ABI,Final,17-May-2009,31,6,1,7,0.36699338888279315,0.36699338888279315
 3149,ABI version tagged .so files,Final,09-Jul-2010,31,2,1,3,0.3297522231184222,0.8808818240719308
 580,The C call protocol,Rejected,14-Jun-2018,31,4,5,9,0.06642975005233898,0.5030358509535087
