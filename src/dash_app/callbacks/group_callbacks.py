@@ -73,6 +73,16 @@ def register_group_callbacks(app):
                             return create_pep_info_display(pep_data)
                 return no_update
 
+            # フルネットワークのノードがタップされた場合
+            if "group-full-network-graph.tapNodeData" in triggered_id:
+                if tap_data is not None:
+                    pep_number = tap_data.get("pep_number")
+                    if pep_number is not None:
+                        pep_data = get_pep_by_number(pep_number)
+                        if pep_data is not None:
+                            return create_pep_info_display(pep_data)
+                return no_update
+
             # ドロップダウンが変更された場合
             if "group-selector-dropdown" in triggered_id:
                 # PEP番号入力またはノードタップからのトリガーの場合は、
