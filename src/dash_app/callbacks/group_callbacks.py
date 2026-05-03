@@ -33,82 +33,75 @@ def register_group_callbacks(app):
     """
 
     # ===== ノードタップ → PEP情報更新（サーバーサイド） =====
+    # NOTE: ドロップダウンの Input を分離して競合状態を回避
     @app.callback(
         Output("group-pep-info-display", "children"),
         Input("group-full-network-graph", "tapNodeData"),
-        Input("group-full-network-graph", "selectedNodeData"),
-        Input("group-selector-dropdown", "value"),
         Input("group-subgraph-network-graph", "tapNodeData"),
-        State("group-selection-source", "data"),
+        prevent_initial_call=True,
     )
-    def update_pep_info_from_tap(
-        tap_data, selected_data, selected_group, subgraph_tap_data, selection_source
-    ):
+    def update_pep_info_from_tap(tap_data, subgraph_tap_data):
         """
         ノードタップ時にPEP情報を更新する
-        選択が解除された場合やグループが変更された場合は初期メッセージを表示する
 
         Args:
             tap_data: フルネットワークグラフでクリックされたノードのデータ
-            selected_data: 選択されているノードのリスト
-            selected_group: 選択されているグループ
             subgraph_tap_data: サブグラフでクリックされたノードのデータ
-            selection_source: 選択ソース ("dropdown", "node_tap", "pep_input")
 
         Returns:
             html.Div: PEP情報表示コンテンツ
         """
-        # どの Input がトリガーしたかを判断
         ctx = callback_context
-        if ctx.triggered:
-            triggered_id = ctx.triggered[0]["prop_id"]
+        if not ctx.triggered:
+            return no_update
 
-            # サブグラフのノードがタップされた場合
-            if "group-subgraph-network-graph" in triggered_id:
-                if subgraph_tap_data is not None:
-                    pep_number = subgraph_tap_data.get("pep_number")
-                    if pep_number is not None:
-                        pep_data = get_pep_by_number(pep_number)
-                        if pep_data is not None:
-                            return create_pep_info_display(pep_data)
-                return no_update
+        triggered_id = ctx.triggered[0]["prop_id"]
 
-            # フルネットワークのノードがタップされた場合
-            # NOTE: tapNodeData と selectedNodeData の両方に対応するため部分一致でチェック
-            if "group-full-network-graph" in triggered_id:
-                if tap_data is not None:
-                    pep_number = tap_data.get("pep_number")
-                    if pep_number is not None:
-                        pep_data = get_pep_by_number(pep_number)
-                        if pep_data is not None:
-                            return create_pep_info_display(pep_data)
-                return no_update
+        # サブグラフのノードがタップされた場合
+        if "group-subgraph-network-graph" in triggered_id:
+            if subgraph_tap_data is not None:
+                pep_number = subgraph_tap_data.get("pep_number")
+                if pep_number is not None:
+                    pep_data = get_pep_by_number(pep_number)
+                    if pep_data is not None:
+                        return create_pep_info_display(pep_data)
+            return no_update
 
-            # ドロップダウンが変更された場合
-            if "group-selector-dropdown" in triggered_id:
-                # PEP番号入力またはノードタップからのトリガーの場合は、
-                # それぞれのコールバックに任せる
-                if selection_source == "pep_input" or selection_source == "node_tap":
-                    return no_update
-                # それ以外（ドロップダウン直接操作）は初期メッセージを表示
-                return create_group_initial_info_message()
+        # フルネットワークのノードがタップされた場合
+        if "group-full-network-graph" in triggered_id:
+            if tap_data is not None:
+                pep_number = tap_data.get("pep_number")
+                if pep_number is not None:
+                    pep_data = get_pep_by_number(pep_number)
+                    if pep_data is not None:
+                        return create_pep_info_display(pep_data)
+            return no_update
 
-        # 選択されているノードがない場合は初期メッセージを表示
-        if not selected_data:
-            return create_group_initial_info_message()
+        return no_update
 
-        if tap_data is None:
-            return create_group_initial_info_message()
+    # ===== ドロップダウン直接操作 → 初期メッセージ表示（サーバーサイド） =====
+    @app.callback(
+        Output("group-pep-info-display", "children", allow_duplicate=True),
+        Input("group-selector-dropdown", "value"),
+        State("group-selection-source", "data"),
+        prevent_initial_call=True,
+    )
+    def update_pep_info_from_dropdown(selected_group, selection_source):
+        """
+        ドロップダウン直接操作時に初期メッセージを表示する
 
-        pep_number = tap_data.get("pep_number")
-        if pep_number is None:
-            return create_group_initial_info_message()
+        Args:
+            selected_group: 選択されているグループ
+            selection_source: 選択ソース ("dropdown", "node_tap", "pep_input")
 
-        pep_data = get_pep_by_number(pep_number)
-        if pep_data is None:
-            return create_group_initial_info_message()
-
-        return create_pep_info_display(pep_data)
+        Returns:
+            html.Div: 初期メッセージまたは no_update
+        """
+        # PEP番号入力またはノードタップからのトリガーの場合は何もしない
+        if selection_source == "pep_input" or selection_source == "node_tap":
+            return no_update
+        # ドロップダウン直接操作の場合は初期メッセージを表示
+        return create_group_initial_info_message()
 
     # ===== グループ選択 → グラフハイライト更新（クライアントサイド） =====
     app.clientside_callback(
