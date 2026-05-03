@@ -74,7 +74,8 @@ def register_group_callbacks(app):
                 return no_update
 
             # フルネットワークのノードがタップされた場合
-            if "group-full-network-graph.tapNodeData" in triggered_id:
+            # NOTE: tapNodeData と selectedNodeData の両方に対応するため部分一致でチェック
+            if "group-full-network-graph" in triggered_id:
                 if tap_data is not None:
                     pep_number = tap_data.get("pep_number")
                     if pep_number is not None:
