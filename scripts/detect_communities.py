@@ -15,6 +15,7 @@ from src.graph.community_detector import (
     create_group_metrics,
     calculate_detection_stats,
     generate_subgraph_images,
+    generate_full_network_highlight_images,
     save_subgraphs,
 )
 
@@ -120,6 +121,13 @@ def main() -> int:
     images_dir = OUTPUT_DIR / "subgraphs" / "images"
     generated_images = generate_subgraph_images(communities, G, images_dir)
     logger.info(f"Generated {len(generated_images)} subgraph images")
+
+    # 全体ネットワークハイライト画像を生成
+    full_images_dir = OUTPUT_DIR / "subgraphs" / "full_images"
+    generated_full_images = generate_full_network_highlight_images(
+        communities, G, full_images_dir
+    )
+    logger.info(f"Generated {len(generated_full_images)} full network highlight images")
 
     logger.info("Community detection completed successfully")
     return 0

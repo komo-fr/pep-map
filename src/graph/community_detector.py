@@ -22,8 +22,16 @@ import pandas as pd
 from networkx.algorithms import community
 
 from src.dash_app.utils.constants import STATUS_COLOR_MAP, DEFAULT_STATUS_COLOR
+from src.graph.layout import calculate_full_network_positions
 
 logger = logging.getLogger(__name__)
+
+# 全体ネットワークハイライト画像用の定数
+HIGHLIGHT_COLOR = "#D32F2F"  # ハイライト対象グループのノード色（濃い赤）
+HIGHLIGHT_EDGE_COLOR = "#1976D2"  # ハイライト対象グループのエッジ色（青）
+NON_HIGHLIGHT_COLOR = "#CCCCCC"  # 他グループのノード色（灰色）
+NON_HIGHLIGHT_EDGE_COLOR = "#E0E0E0"  # 他グループのエッジ色（薄いグレー）
+PAGERANK_MULTIPLIER = 2000.0  # PageRankスケーリング係数
 
 
 def run_louvain_detection(
@@ -420,3 +428,228 @@ def save_group_csvs(
 
     logger.info(f"Saved {len(saved_paths)} group CSVs")
     return saved_paths
+
+
+def _calculate_node_size_pagerank_matplotlib(
+    pagerank: float, scale: float = 0.5
+) -> float:
+    """
+    PageRankに基づいてmatplotlib用ノードサイズを計算する
+
+    matplotlibのnode_sizeは面積（平方ポイント）として解釈されるため、
+    Cytoscapeのサイズ（直径）とは異なるスケーリングを適用する。
+
+    Args:
+        pagerank: PageRank値（0-1）
+        scale: スケール係数（デフォルト0.5、figsize=(20,20)用）
+               figsize=(10,10)の場合は0.125を指定
+
+    Returns:
+        matplotlib用ノードサイズ（面積）
+    """
+    base_min_size = 100.0
+    if pagerank <= 0:
+        return base_min_size * (scale / 0.5)  # スケールに応じて最小サイズも調整
+    # Cytoscapeサイズ: 10.0 * ((pagerank * 2000.0) ** 0.5)
+    # matplotlib用: そのサイズを面積として扱う
+    cytoscape_size = 10.0 * ((pagerank * PAGERANK_MULTIPLIER) ** 0.5)
+    # matplotlibではnode_sizeは面積なので、直径を2乗してスケール調整
+    return cytoscape_size**2 * scale
+
+
+def _generate_full_network_highlight_image(
+    group_id: int,
+    highlight_peps: set[int],
+    G: nx.DiGraph,
+    positions: dict[int, tuple[float, float]],
+    pagerank: dict[int, float],
+    output_dir: Path,
+) -> Path:
+    """
+    全体ネットワーク図で指定グループをハイライトした画像を生成する
+
+    ハイライト対象のノード/エッジを最前面に描画するため、
+    描画順序を制御している（後に描画したものが前面に表示される）。
+
+    Args:
+        group_id: グループID
+        highlight_peps: ハイライト対象のPEP番号の集合
+        G: 全体のNetworkXグラフ
+        positions: 全ノードの座標（事前計算済み）
+        pagerank: 全ノードのPageRank値（事前計算済み）
+        output_dir: 出力ディレクトリ
+
+    Returns:
+        生成された画像ファイルのパス
+    """
+    # ノードを分類
+    non_highlight_nodes = [n for n in G.nodes() if n not in highlight_peps]
+    highlight_nodes = [n for n in G.nodes() if n in highlight_peps]
+
+    # エッジを分類（両端がハイライト対象の場合のみハイライトエッジ）
+    non_highlight_edges = [
+        (u, v)
+        for u, v in G.edges()
+        if not (u in highlight_peps and v in highlight_peps)
+    ]
+    highlight_edges = [
+        (u, v) for u, v in G.edges() if u in highlight_peps and v in highlight_peps
+    ]
+
+    # ノードサイズを計算（figsize=(10,10)用にscale=0.125を指定）
+    node_size_scale = 0.125
+    non_highlight_sizes = [
+        _calculate_node_size_pagerank_matplotlib(
+            pagerank.get(n, 0), scale=node_size_scale
+        )
+        for n in non_highlight_nodes
+    ]
+    highlight_sizes = [
+        _calculate_node_size_pagerank_matplotlib(
+            pagerank.get(n, 0), scale=node_size_scale
+        )
+        for n in highlight_nodes
+    ]
+
+    # 描画（zorderで明示的にレイヤーを制御）
+    # zorder: 大きいほど前面に表示
+    ZORDER_NON_HIGHLIGHT_EDGE = 1
+    ZORDER_NON_HIGHLIGHT_NODE = 2
+    ZORDER_HIGHLIGHT_EDGE = 3
+    ZORDER_HIGHLIGHT_NODE = 4
+    ZORDER_LABEL = 5
+
+    plt.figure(figsize=(10, 10))
+
+    # 1. 非ハイライトエッジ（薄いグレー）- 最背面
+    if non_highlight_edges:
+        edge_collection = nx.draw_networkx_edges(
+            G,
+            positions,
+            edgelist=non_highlight_edges,
+            edge_color=NON_HIGHLIGHT_EDGE_COLOR,
+            arrows=True,
+            arrowsize=5,
+            connectionstyle="arc3,rad=0.1",
+        )
+        if edge_collection is not None:
+            for patch in edge_collection:
+                patch.set_zorder(ZORDER_NON_HIGHLIGHT_EDGE)
+
+    # 2. 非ハイライトノード（灰色）
+    if non_highlight_nodes:
+        node_collection = nx.draw_networkx_nodes(
+            G,
+            positions,
+            nodelist=non_highlight_nodes,
+            node_size=non_highlight_sizes,
+            node_color=NON_HIGHLIGHT_COLOR,
+        )
+        if node_collection is not None:
+            node_collection.set_zorder(ZORDER_NON_HIGHLIGHT_NODE)
+
+    # 3. ハイライトエッジ（青色）- 非ハイライトノードより前面
+    if highlight_edges:
+        edge_collection = nx.draw_networkx_edges(
+            G,
+            positions,
+            edgelist=highlight_edges,
+            edge_color=HIGHLIGHT_EDGE_COLOR,
+            arrows=True,
+            arrowsize=5,
+            connectionstyle="arc3,rad=0.1",
+        )
+        if edge_collection is not None:
+            for patch in edge_collection:
+                patch.set_zorder(ZORDER_HIGHLIGHT_EDGE)
+
+    # 4. ハイライトノード（赤色）- 最前面
+    if highlight_nodes:
+        node_collection = nx.draw_networkx_nodes(
+            G,
+            positions,
+            nodelist=highlight_nodes,
+            node_size=highlight_sizes,
+            node_color=HIGHLIGHT_COLOR,
+        )
+        if node_collection is not None:
+            node_collection.set_zorder(ZORDER_HIGHLIGHT_NODE)
+
+    # 5. ハイライト対象のみラベルを描画（白フチ付き）
+    highlight_labels = {node: str(node) for node in highlight_peps}
+    highlight_positions = {
+        node: positions[node] for node in highlight_peps if node in positions
+    }
+    labels = nx.draw_networkx_labels(
+        G,
+        highlight_positions,
+        labels=highlight_labels,
+        font_size=6,
+    )
+    for text in labels.values():
+        text.set_path_effects([pe.withStroke(linewidth=1, foreground="white")])
+        text.set_zorder(ZORDER_LABEL)
+
+    # 軸を非表示
+    plt.axis("off")
+
+    # 保存
+    image_path = output_dir / f"full_group_{group_id}.png"
+    plt.savefig(image_path, dpi=100, bbox_inches="tight")
+    plt.close()
+    logger.debug(f"Saved {image_path}")
+    return image_path
+
+
+def generate_full_network_highlight_images(
+    communities: list[set],
+    G: nx.DiGraph,
+    output_dir: Path,
+) -> list[Path]:
+    """
+    全体ネットワーク図で各グループをハイライトした画像を生成する
+
+    Args:
+        communities: コミュニティのリスト（サイズ降順）
+        G: 全体のNetworkXグラフ
+        output_dir: 出力ディレクトリ
+
+    Returns:
+        生成された画像ファイルのパスのリスト
+    """
+    logger.info(f"Generating full network highlight images to {output_dir}")
+
+    # 既存のディレクトリを削除してから再作成
+    if output_dir.exists():
+        shutil.rmtree(output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    # 座標とPageRankを事前計算（全グループで共通）
+    positions = calculate_full_network_positions(G)
+    pagerank = nx.pagerank(G)
+
+    generated_paths = []
+    isolated_peps: set[int] = set()
+    count = 0
+
+    for group_id, peps in enumerate(communities):
+        if len(peps) == 1:
+            # 孤立点は後でまとめて処理
+            isolated_peps = isolated_peps | peps
+            continue
+
+        image_path = _generate_full_network_highlight_image(
+            group_id, peps, G, positions, pagerank, output_dir
+        )
+        generated_paths.append(image_path)
+        count += 1
+
+    # 孤立点グループ
+    if isolated_peps:
+        image_path = _generate_full_network_highlight_image(
+            count, isolated_peps, G, positions, pagerank, output_dir
+        )
+        generated_paths.append(image_path)
+
+    logger.info(f"Generated {len(generated_paths)} full network highlight images")
+    return generated_paths
