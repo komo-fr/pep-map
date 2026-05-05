@@ -9,6 +9,7 @@ from src.graph.community_detector import (
     create_group_metrics,
     calculate_detection_stats,
     generate_subgraph_images,
+    generate_full_network_highlight_images,
 )
 
 
@@ -154,4 +155,28 @@ class TestGenerateSubgraphImages:
         for path in generated_paths:
             assert path.name.startswith("group_")
             assert path.name.endswith(".png")
+            assert path.exists()
+
+
+class TestGenerateFullNetworkHighlightImages:
+    """generate_full_network_highlight_images関数のテスト"""
+
+    def test_generates_images_for_all_groups(self, sample_graph, tmp_path):
+        """全グループ分の画像が生成される（孤立点グループ含む）"""
+        # Given
+        communities = run_louvain_detection(sample_graph)
+        output_dir = tmp_path / "full_images"
+
+        # When
+        generated_paths = generate_full_network_highlight_images(
+            communities, sample_graph, output_dir
+        )
+
+        # Then
+        # 非孤立コミュニティ数 + 孤立点グループ1つ
+        non_isolated_count = sum(1 for c in communities if len(c) > 1)
+        expected_count = non_isolated_count + 1
+        assert len(generated_paths) == expected_count
+        # ファイルが実際に存在する
+        for path in generated_paths:
             assert path.exists()

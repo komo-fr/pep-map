@@ -216,8 +216,6 @@ class TestGroupProfileStr:
         output = GroupProfile(
             group_name="型ヒント",
             description="このグループは型ヒントに関するPEPを含みます。",
-            group_name_2="型アノテーション",
-            group_name_3="静的型付け",
         )
 
         # Act
@@ -226,6 +224,5 @@ class TestGroupProfileStr:
         # Assert
         lines = result.split("\n")
         assert lines[0] == "型ヒント"
-        assert lines[1] == "型アノテーション / 静的型付け"
-        assert lines[2] == "説明:"
-        assert lines[3] == "このグループは型ヒントに関するPEPを含みます。"
+        assert lines[1] == "説明:"
+        assert lines[2] == "このグループは型ヒントに関するPEPを含みます。"

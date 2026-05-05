@@ -273,6 +273,15 @@ def mock_data_files(
         encoding="utf-8",
     )
 
+    # ノード座標ファイル作成（全体ネットワーク用）
+    node_positions = {
+        "8": [0.0, 0.0],
+        "484": [100.0, 100.0],
+        "3107": [200.0, 0.0],
+    }
+    node_positions_json = data_dir / "node_positions.json"
+    node_positions_json.write_text(json.dumps(node_positions), encoding="utf-8")
+
     return data_dir
 
 

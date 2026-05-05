@@ -1,7 +1,5 @@
 """サブグラフネットワークグラフ構築モジュール"""
 
-import networkx as nx
-
 from src.dash_app.utils.constants import (
     DEFAULT_STATUS_COLOR,
     STATUS_COLOR_MAP,
@@ -12,8 +10,8 @@ from src.dash_app.utils.constants import (
 from src.dash_app.utils.data_loader import (
     load_subgraph,
     load_subgraph_metrics,
+    load_subgraph_positions,
 )
-from src.graph.community_detector import calculate_grid_layout
 
 
 # モジュールレベル定数
@@ -62,45 +60,25 @@ def _calculate_font_size_pagerank(pagerank: float) -> float:
     return min(font_size, max_font_size)
 
 
-def _calculate_node_positions(subgraph: nx.DiGraph) -> dict[int, tuple[float, float]]:
+def _load_node_positions(group_id: int) -> dict[int, tuple[float, float]]:
     """
-    サブグラフ内のノード座標を計算する
+    事前計算されたサブグラフ座標を読み込む
+
+    定期スクリプトで計算・保存された座標を読み込む。
+    Cytoscape.jsはY軸が下向き正、Matplotlibは上向き正のため、Y座標を反転する。
 
     Args:
-        subgraph: NetworkX DiGraph
+        group_id: グループID
 
     Returns:
         dict[int, tuple[float, float]]: PEP番号をキー、(x, y)座標を値とする辞書
     """
-    if len(subgraph.nodes()) == 0:
+    positions = load_subgraph_positions(group_id)
+    if positions is None:
         return {}
 
-    # エッジがない場合（孤立点のみ）は格子状に配置
-    if subgraph.number_of_edges() == 0:
-        # 正規化座標（0〜1）を取得し、スケーリング
-        grid_scale = 400  # spring_layoutのscale=200と同程度の広がり
-        normalized_pos = calculate_grid_layout(subgraph)
-        return {
-            node: (coords[0] * grid_scale, coords[1] * grid_scale)
-            for node, coords in normalized_pos.items()
-        }
-
-    # spring_layoutで座標を計算
-    pos = nx.spring_layout(
-        subgraph,
-        threshold=1e-6,
-        k=1,  # ノード間の理想的な距離
-        seed=42,  # 再現性のため
-        scale=200,  # 座標のスケール（小さいほどノードが大きく見える）
-    )
-
-    # 座標を変換（NetworkXは{node: array([x, y])}形式）
     # Cytoscape.jsはY軸が下向き正、Matplotlibは上向き正のため、Y座標を反転
-    positions = {}
-    for node, coords in pos.items():
-        positions[node] = (float(coords[0]), -float(coords[1]))
-
-    return positions
+    return {node: (x, -y) for node, (x, y) in positions.items()}
 
 
 def build_subgraph_cytoscape_elements(group_id: int) -> list[dict] | None:
@@ -130,8 +108,8 @@ def build_subgraph_cytoscape_elements(group_id: int) -> list[dict] | None:
     # ステータスの辞書を作成
     status_dict = dict(zip(metrics_df["PEP"], metrics_df["status"]))
 
-    # 座標を計算
-    positions = _calculate_node_positions(subgraph)
+    # 事前計算された座標を読み込む
+    positions = _load_node_positions(group_id)
 
     elements = []
 

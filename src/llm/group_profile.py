@@ -53,13 +53,10 @@ def encode_image_as_data_url(image_path: str | Path) -> str:
 class GroupProfile(BaseModel):
     group_name: str = Field(default_factory=str, description="短い名称")
     description: str = Field(default_factory=str, description="4〜5文程度の説明")
-    group_name_2: str = Field(default_factory=str, description="グループ名の候補2")
-    group_name_3: str = Field(default_factory=str, description="グループ名の候補3")
 
     def __str__(self) -> str:
         lines = []
         lines.append(self.group_name)
-        lines.append(f"{self.group_name_2} / {self.group_name_3}")
         lines.append("説明:")
         lines.append(self.description)
         return "\n".join(lines)
@@ -85,8 +82,6 @@ def generate_group_profile(
                             "出力形式:\n"
                             "group_name: ...\n"
                             "description: ...\n"
-                            "group_name_2: ...\n"
-                            "group_name_3: ..."
                         ),
                     },
                     {
