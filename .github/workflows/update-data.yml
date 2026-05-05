@@ -94,8 +94,9 @@ jobs:
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           LANGCHAIN_API_KEY: ${{ secrets.LANGCHAIN_API_KEY }}
-          LANGCHAIN_TRACING_V2: true
-          LANGCHAIN_PROJECT: pep-map
+          LANGSMITH_ENDPOINT: https://api.smith.langchain.com
+          LANGSMITH_TRACING: true
+          LANGSMITH_PROJECT: pep-map
         run: |
           # モデル選択: inputs.model が指定されていればそれを使用、
           # 未指定の場合は dry_run に応じて自動選択
