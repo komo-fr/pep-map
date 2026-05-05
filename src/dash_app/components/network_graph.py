@@ -1,9 +1,7 @@
 """ネットワークグラフ構築モジュール"""
 
-import networkx as nx
 import pandas as pd
 
-from src.graph.layout import calculate_full_network_positions
 from src.dash_app.utils.constants import (
     BASE_FONT_COLOR,
     DEFAULT_STATUS_COLOR,
@@ -13,6 +11,7 @@ from src.dash_app.utils.data_loader import (
     load_citations,
     load_peps_metadata,
     load_node_metrics,
+    load_full_network_positions,
 )
 
 
@@ -85,29 +84,16 @@ def build_cytoscape_elements() -> list[dict]:
 
 def _calculate_node_positions() -> dict[int, tuple[float, float]]:
     """
-    NetworkXを使用してノードの座標を計算する
+    事前計算されたノード座標を読み込む
 
-    孤立ノード(引用関係がないPEP)は左上にグリッド配置し、
-    引用関係のあるノードは中央にspring_layoutで配置する。
+    定期スクリプトで計算・保存された座標を読み込む。
+    Cytoscape.jsはY軸が下向き正、Matplotlibは上向き正のため、Y座標を反転する。
 
     Returns:
         dict[int, tuple[float, float]]: PEP番号をキー、(x, y)座標を値とする辞書
     """
-    existing_peps, edges_df = _load_valid_edges_df()
-
-    # エッジリストから有向グラフを構築
-    G = nx.from_pandas_edgelist(
-        edges_df,
-        source="citing",
-        target="cited",
-        create_using=nx.DiGraph,
-    )
-
-    # 孤立点をノードとして追加
-    G.add_nodes_from(existing_peps)
-
-    # 共通の座標計算ロジックを使用
-    positions = calculate_full_network_positions(G)
+    # 事前計算された座標を読み込む
+    positions = load_full_network_positions()
 
     # Cytoscape.jsはY軸が下向き正、Matplotlibは上向き正のため、Y座標を反転
     return {node: (x, -y) for node, (x, y) in positions.items()}
