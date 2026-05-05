@@ -17,6 +17,8 @@ from src.graph.community_detector import (
     generate_subgraph_images,
     generate_full_network_highlight_images,
     save_subgraphs,
+    save_full_network_positions,
+    save_subgraph_positions,
 )
 
 logger = logging.getLogger(__name__)
@@ -116,6 +118,16 @@ def main() -> int:
     graphs_dir = OUTPUT_DIR / "subgraphs" / "graphs"
     saved_graphs = save_subgraphs(communities, G, graphs_dir)
     logger.info(f"Saved {len(saved_graphs)} subgraphs")
+
+    # 全体ネットワーク座標を保存
+    full_positions_path = OUTPUT_DIR.parent / "node_positions.json"
+    save_full_network_positions(G, full_positions_path)
+    logger.info(f"Saved full network positions to {full_positions_path}")
+
+    # サブグラフ座標を保存
+    positions_dir = OUTPUT_DIR / "subgraphs" / "positions"
+    saved_positions = save_subgraph_positions(communities, G, positions_dir)
+    logger.info(f"Saved {len(saved_positions)} subgraph position files")
 
     # サブグラフ画像を生成
     images_dir = OUTPUT_DIR / "subgraphs" / "images"
