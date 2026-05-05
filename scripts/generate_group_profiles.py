@@ -6,7 +6,7 @@ import os
 import sys
 from pathlib import Path
 
-from src.llm.group_profile import save_profiles_to_csv
+from src.llm.group_profile import SubgraphOnlyProfileGenerator
 
 logger = logging.getLogger(__name__)
 
@@ -58,7 +58,8 @@ def main() -> int:
 
     # グループ名や説明文などのプロファイルを生成して保存
     try:
-        save_profiles_to_csv(args.model, args.data_dir)
+        generator = SubgraphOnlyProfileGenerator(args.model, args.data_dir)
+        generator.save_to_csv()
     except Exception as e:
         logger.error(f"Failed to generate group profiles: {e}")
         return 1
