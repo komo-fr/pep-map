@@ -443,8 +443,12 @@ def _calculate_subgraph_positions(
         return {}
 
     # エッジがない場合（孤立点のみ）は格子状に配置
+    # 孤立点はエッジがないため広めの間隔で配置（scale=400）
     if subgraph.number_of_edges() == 0:
-        return calculate_grid_layout(subgraph)
+        return {
+            node: (coords[0] * 400, coords[1] * 400)
+            for node, coords in calculate_grid_layout(subgraph).items()
+        }
 
     # spring_layoutで座標を計算
     pos = nx.spring_layout(
