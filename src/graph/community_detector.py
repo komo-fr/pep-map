@@ -38,7 +38,7 @@ PAGERANK_MULTIPLIER = 2000.0  # PageRankスケーリング係数
 def save_full_network_positions(
     G: nx.DiGraph,
     output_path: Path,
-) -> Path:
+) -> dict[int, tuple[float, float]]:
     """
     全体ネットワークのノード座標を計算してJSONで保存する
 
@@ -47,7 +47,7 @@ def save_full_network_positions(
         output_path: 出力先のJSONファイルパス
 
     Returns:
-        保存したファイルのパス
+        計算した座標の辞書（PEP番号 -> (x, y)座標）
     """
     logger.info(f"Calculating and saving full network positions to {output_path}")
 
@@ -63,7 +63,7 @@ def save_full_network_positions(
         json.dump(positions_json, f, indent=2)
 
     logger.info(f"Saved {len(positions)} node positions")
-    return output_path
+    return positions
 
 
 def run_louvain_detection(
@@ -739,6 +739,7 @@ def generate_full_network_highlight_images(
     communities: list[set],
     G: nx.DiGraph,
     output_dir: Path,
+    positions: dict[int, tuple[float, float]] | None = None,
 ) -> list[Path]:
     """
     全体ネットワーク図で各グループをハイライトした画像を生成する
@@ -747,6 +748,7 @@ def generate_full_network_highlight_images(
         communities: コミュニティのリスト（サイズ降順）
         G: 全体のNetworkXグラフ
         output_dir: 出力ディレクトリ
+        positions: 事前計算された座標。Noneの場合は内部で計算する
 
     Returns:
         生成された画像ファイルのパスのリスト
@@ -759,7 +761,8 @@ def generate_full_network_highlight_images(
     output_dir.mkdir(parents=True, exist_ok=True)
 
     # 座標とPageRankを事前計算（全グループで共通）
-    positions = calculate_full_network_positions(G)
+    if positions is None:
+        positions = calculate_full_network_positions(G)
     pagerank = nx.pagerank(G)
 
     generated_paths = []

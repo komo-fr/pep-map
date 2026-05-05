@@ -119,9 +119,9 @@ def main() -> int:
     saved_graphs = save_subgraphs(communities, G, graphs_dir)
     logger.info(f"Saved {len(saved_graphs)} subgraphs")
 
-    # 全体ネットワーク座標を保存
+    # 全体ネットワーク座標を計算・保存
     full_positions_path = OUTPUT_DIR.parent / "node_positions.json"
-    save_full_network_positions(G, full_positions_path)
+    full_positions = save_full_network_positions(G, full_positions_path)
     logger.info(f"Saved full network positions to {full_positions_path}")
 
     # サブグラフ座標を保存
@@ -134,10 +134,10 @@ def main() -> int:
     generated_images = generate_subgraph_images(communities, G, images_dir)
     logger.info(f"Generated {len(generated_images)} subgraph images")
 
-    # 全体ネットワークハイライト画像を生成
+    # 全体ネットワークハイライト画像を生成（計算済み座標を渡す）
     full_images_dir = OUTPUT_DIR / "subgraphs" / "full_images"
     generated_full_images = generate_full_network_highlight_images(
-        communities, G, full_images_dir
+        communities, G, full_images_dir, positions=full_positions
     )
     logger.info(f"Generated {len(generated_full_images)} full network highlight images")
 
