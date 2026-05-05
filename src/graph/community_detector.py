@@ -23,7 +23,11 @@ import pandas as pd
 from networkx.algorithms import community
 
 from src.dash_app.utils.constants import STATUS_COLOR_MAP, DEFAULT_STATUS_COLOR
-from src.graph.layout import calculate_full_network_positions
+from src.graph.layout import (
+    calculate_full_network_positions,
+    calculate_grid_layout,
+    calculate_subgraph_positions,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -242,39 +246,6 @@ def calculate_detection_stats(communities: list[set], G: nx.DiGraph) -> dict:
     return stats
 
 
-def calculate_grid_layout(subgraph: nx.Graph) -> dict[int, tuple[float, float]]:
-    """
-    ノードを格子状に配置する（孤立点グループ用）
-
-    Args:
-        subgraph: NetworkX DiGraph
-
-    Returns:
-        dict[int, tuple[float, float]]: ノードをキー、(x, y)座標を値とする辞書
-    """
-    import math
-
-    nodes = sorted(subgraph.nodes())  # PEP番号順にソート
-    num_nodes = len(nodes)
-
-    if num_nodes == 0:
-        return {}
-
-    # 列数を計算（正方形に近い形を目指す）
-    num_cols = math.ceil(math.sqrt(num_nodes))
-
-    positions = {}
-    for i, node in enumerate(nodes):
-        col = i % num_cols
-        row = i // num_cols
-        # 正規化された座標（0〜1の範囲）
-        x = col / max(num_cols - 1, 1)
-        y = row / max((num_nodes - 1) // num_cols, 1)
-        positions[node] = (x, y)
-
-    return positions
-
-
 def _generate_subgraph_image(
     group_id: int, peps: set, G: nx.DiGraph, output_dir: Path
 ) -> Path:
@@ -427,42 +398,6 @@ def save_subgraphs(
     return saved_paths
 
 
-def _calculate_subgraph_positions(
-    subgraph: nx.Graph,
-) -> dict[int, tuple[float, float]]:
-    """
-    サブグラフ内のノード座標を計算する
-
-    Args:
-        subgraph: NetworkX Graph
-
-    Returns:
-        dict[int, tuple[float, float]]: PEP番号をキー、(x, y)座標を値とする辞書
-    """
-    if len(subgraph.nodes()) == 0:
-        return {}
-
-    # エッジがない場合（孤立点のみ）は格子状に配置
-    # 孤立点はエッジがないため広めの間隔で配置（scale=400）
-    if subgraph.number_of_edges() == 0:
-        return {
-            node: (coords[0] * 400, coords[1] * 400)
-            for node, coords in calculate_grid_layout(subgraph).items()
-        }
-
-    # spring_layoutで座標を計算
-    pos = nx.spring_layout(
-        subgraph,
-        threshold=1e-6,
-        k=1,
-        seed=42,
-        scale=200,
-    )
-
-    # 座標を変換（NetworkXは{node: array([x, y])}形式）
-    return {node: (float(coords[0]), float(coords[1])) for node, coords in pos.items()}
-
-
 def save_subgraph_positions(
     communities: list[set],
     G: nx.DiGraph,
@@ -496,7 +431,7 @@ def save_subgraph_positions(
             continue
 
         subgraph = G.subgraph(peps)
-        positions = _calculate_subgraph_positions(subgraph)
+        positions = calculate_subgraph_positions(subgraph)
 
         # JSON形式に変換（キーを文字列に）
         positions_json = {str(node): list(pos) for node, pos in positions.items()}
@@ -514,7 +449,7 @@ def save_subgraph_positions(
     if isolated_peps:
         group_id = count
         subgraph = G.subgraph(isolated_peps)
-        positions = _calculate_subgraph_positions(subgraph)
+        positions = calculate_subgraph_positions(subgraph)
 
         positions_json = {str(node): list(pos) for node, pos in positions.items()}
 

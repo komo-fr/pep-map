@@ -1,9 +1,11 @@
 """
 ネットワークグラフのレイアウト計算モジュール
 
-全体ネットワークの座標計算ロジックを提供する。
+全体ネットワークおよびサブグラフの座標計算ロジックを提供する。
 DashアプリとスクリプトCLIの両方から使用される共通モジュール。
 """
+
+import math
 
 import networkx as nx
 
@@ -84,3 +86,70 @@ def calculate_full_network_positions(
             positions[node] = (float(x), float(y))
 
     return positions
+
+
+def calculate_grid_layout(subgraph: nx.Graph) -> dict[int, tuple[float, float]]:
+    """
+    ノードを格子状に配置する（孤立点グループ用）
+
+    Args:
+        subgraph: NetworkX DiGraph
+
+    Returns:
+        dict[int, tuple[float, float]]: ノードをキー、(x, y)座標を値とする辞書
+    """
+    nodes = sorted(subgraph.nodes())  # PEP番号順にソート
+    num_nodes = len(nodes)
+
+    if num_nodes == 0:
+        return {}
+
+    # 列数を計算（正方形に近い形を目指す）
+    num_cols = math.ceil(math.sqrt(num_nodes))
+
+    positions = {}
+    for i, node in enumerate(nodes):
+        col = i % num_cols
+        row = i // num_cols
+        # 正規化された座標（0〜1の範囲）
+        x = col / max(num_cols - 1, 1)
+        y = row / max((num_nodes - 1) // num_cols, 1)
+        positions[node] = (x, y)
+
+    return positions
+
+
+def calculate_subgraph_positions(
+    subgraph: nx.Graph,
+) -> dict[int, tuple[float, float]]:
+    """
+    サブグラフ内のノード座標を計算する
+
+    Args:
+        subgraph: NetworkX Graph
+
+    Returns:
+        dict[int, tuple[float, float]]: PEP番号をキー、(x, y)座標を値とする辞書
+    """
+    if len(subgraph.nodes()) == 0:
+        return {}
+
+    # エッジがない場合（孤立点のみ）は格子状に配置
+    # 孤立点はエッジがないため広めの間隔で配置（scale=400）
+    if subgraph.number_of_edges() == 0:
+        return {
+            node: (coords[0] * 400, coords[1] * 400)
+            for node, coords in calculate_grid_layout(subgraph).items()
+        }
+
+    # spring_layoutで座標を計算
+    pos = nx.spring_layout(
+        subgraph,
+        threshold=1e-6,
+        k=1,
+        seed=42,
+        scale=200,
+    )
+
+    # 座標を変換（NetworkXは{node: array([x, y])}形式）
+    return {node: (float(coords[0]), float(coords[1])) for node, coords in pos.items()}
