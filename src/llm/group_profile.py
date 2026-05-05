@@ -90,6 +90,7 @@ class BaseGroupProfileGenerator(ABC):
             data_dict.update(group_profile.model_dump())
             group_profiles.append(data_dict)
             logger.info(f"Completed group {group_id}: {group_profile.group_name}")
+            break
         return group_profiles
 
     @abstractmethod
@@ -173,10 +174,12 @@ class SubgraphOnlyProfileGenerator(BaseGroupProfileGenerator):
             GroupProfile
         )
         chain = prompt | llm
+        current_year = datetime.now().year
         result = chain.invoke(
             {
                 "pep_md_table": pep_md_table,
                 "data_url": data_url,
+                "current_year": current_year,
             }
         )
         return cast(GroupProfile, result)
@@ -244,11 +247,13 @@ PEP一覧:
             GroupProfile
         )
         chain = prompt | llm
+        current_year = datetime.now().year
         result = chain.invoke(
             {
                 "pep_md_table": pep_md_table,
                 "subgraph_data_url": subgraph_data_url,
                 "full_network_data_url": full_network_data_url,
+                "current_year": current_year,
             }
         )
         return cast(GroupProfile, result)
