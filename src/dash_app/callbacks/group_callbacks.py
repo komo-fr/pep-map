@@ -109,9 +109,9 @@ def linkify_pep_numbers(text: str) -> list[str | Component]:
     pep_numbers, pep_metadata = _get_pep_data()
 
     # パターン:
-    # 1. 「PEP 数字」のパターン（「PEP 484」など）
+    # 1. 「PEP 数字」「PEP数字」のパターン（「PEP 484」「PEP484」など）
     # 2. 単独の数字（後ろに「年」が続かない）
-    pattern = r"(PEP\s+(\d+))|(\d+)"
+    pattern = r"(PEP\s+(\d+))|\b(\d+)\b"
 
     result: list[str | Component] = []
     last_end = 0
