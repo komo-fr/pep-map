@@ -27,24 +27,69 @@ from src.dash_app.utils.data_loader import (
 )
 
 
-# PEP番号とタイトルのキャッシュ
+# PEP番号とメタデータのキャッシュ
 _pep_numbers_cache: set[int] | None = None
-_pep_titles_cache: dict[int, str] | None = None
+_pep_metadata_cache: dict[int, dict[str, str]] | None = None
 
 
-def _get_pep_data() -> tuple[set[int], dict[int, str]]:
+def _get_pep_data() -> tuple[set[int], dict[int, dict[str, str]]]:
     """
-    PEP番号のセットとタイトルマッピングを取得する（キャッシュ付き）
+    PEP番号のセットとメタデータマッピングを取得する（キャッシュ付き）
 
     Returns:
-        tuple[set[int], dict[int, str]]: (PEP番号のセット, PEP番号→タイトルの辞書)
+        tuple[set[int], dict[int, dict[str, str]]]:
+            (PEP番号のセット, PEP番号→メタデータの辞書)
+            メタデータには title, status, created が含まれる
     """
-    global _pep_numbers_cache, _pep_titles_cache
-    if _pep_numbers_cache is None or _pep_titles_cache is None:
+    global _pep_numbers_cache, _pep_metadata_cache
+    if _pep_numbers_cache is None or _pep_metadata_cache is None:
         df = load_peps_metadata()
         _pep_numbers_cache = set(df["pep_number"].tolist())
-        _pep_titles_cache = dict(zip(df["pep_number"], df["title"]))
-    return _pep_numbers_cache, _pep_titles_cache
+        _pep_metadata_cache = {}
+        for _, row in df.iterrows():
+            pep_num = row["pep_number"]
+            created = row["created"]
+            # created を文字列に変換
+            if pd.isna(created):
+                created_str = ""
+            else:
+                created_str = created.strftime("%Y-%m-%d")
+            _pep_metadata_cache[pep_num] = {
+                "title": row["title"],
+                "status": row["status"],
+                "created": created_str,
+            }
+    return _pep_numbers_cache, _pep_metadata_cache
+
+
+def _build_tooltip_content(metadata: dict[str, str]) -> list:
+    """
+    ツールチップの内容を構築する
+
+    Args:
+        metadata: PEPのメタデータ（title, status, created）
+
+    Returns:
+        list: ツールチップ用のDashコンポーネントリスト
+    """
+    title = metadata.get("title", "")
+    status = metadata.get("status", "")
+    created = metadata.get("created", "")
+
+    tooltip_children = [html.Div(title)]
+    if status or created:
+        meta_parts = []
+        if status:
+            meta_parts.append(f"Status: {status}")
+        if created:
+            meta_parts.append(f"Created: {created}")
+        tooltip_children.append(
+            html.Div(
+                " | ".join(meta_parts),
+                style={"fontSize": "11px", "color": "#aaa", "marginTop": "4px"},
+            )
+        )
+    return tooltip_children
 
 
 def linkify_pep_numbers(text: str) -> list[str | Component]:
@@ -53,7 +98,7 @@ def linkify_pep_numbers(text: str) -> list[str | Component]:
 
     - 「PEP 484」のようなパターンをリンク化
     - 単独の数字で、後ろに「年」が続かず、存在するPEP番号の場合もリンク化
-    - リンクにはtitle属性でPEPタイトルを表示
+    - リンクにはツールチップでPEPタイトル・Status・Createdを表示
 
     Args:
         text: 変換対象のテキスト
@@ -61,7 +106,7 @@ def linkify_pep_numbers(text: str) -> list[str | Component]:
     Returns:
         list: テキストとhtml.Aコンポーネントのリスト
     """
-    pep_numbers, pep_titles = _get_pep_data()
+    pep_numbers, pep_metadata = _get_pep_data()
 
     # パターン:
     # 1. 「PEP 数字」のパターン（「PEP 484」など）
@@ -84,18 +129,26 @@ def linkify_pep_numbers(text: str) -> list[str | Component]:
             matched_text = match.group(1)
             # PEP番号が存在する場合のみリンク化
             if pep_num in pep_numbers:
-                title = pep_titles.get(pep_num, "")
+                metadata = pep_metadata.get(pep_num, {})
                 url = generate_pep_url(pep_num)
                 result.append(
-                    html.A(
-                        matched_text,
-                        href=url,
-                        target="_blank",
-                        title=title,
-                        style={
-                            "color": "#0066cc",
-                            "textDecoration": "underline",
-                        },
+                    html.Span(
+                        [
+                            html.A(
+                                matched_text,
+                                href=url,
+                                target="_blank",
+                                style={
+                                    "color": "#0066cc",
+                                    "textDecoration": "underline",
+                                },
+                            ),
+                            html.Span(
+                                _build_tooltip_content(metadata),
+                                className="pep-tooltip-text",
+                            ),
+                        ],
+                        className="pep-link-tooltip",
                     )
                 )
             else:
@@ -110,18 +163,26 @@ def linkify_pep_numbers(text: str) -> list[str | Component]:
                 result.append(num_str)
             # PEP番号が存在する場合のみリンク化
             elif pep_num in pep_numbers:
-                title = pep_titles.get(pep_num, "")
+                metadata = pep_metadata.get(pep_num, {})
                 url = generate_pep_url(pep_num)
                 result.append(
-                    html.A(
-                        num_str,
-                        href=url,
-                        target="_blank",
-                        title=title,
-                        style={
-                            "color": "#0066cc",
-                            "textDecoration": "underline",
-                        },
+                    html.Span(
+                        [
+                            html.A(
+                                num_str,
+                                href=url,
+                                target="_blank",
+                                style={
+                                    "color": "#0066cc",
+                                    "textDecoration": "underline",
+                                },
+                            ),
+                            html.Span(
+                                _build_tooltip_content(metadata),
+                                className="pep-tooltip-text",
+                            ),
+                        ],
+                        className="pep-link-tooltip",
                     )
                 )
             else:
