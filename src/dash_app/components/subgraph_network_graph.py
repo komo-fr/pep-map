@@ -272,7 +272,7 @@ def get_subgraph_base_stylesheet() -> list[dict]:
                 "opacity": 1,
             },
         },
-        # 接続ノード（太枠）
+        # 接続ノード
         {
             "selector": ".connected",
             "style": {
