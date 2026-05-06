@@ -15,7 +15,12 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_openai import ChatOpenAI
 from langsmith import traceable
 
-from src.llm.prompts import PROMPT_WITH_FULL_NETWORK_IMAGE, PROMPT_WITH_IMAGE
+from src.dash_app.utils.data_loader import load_subgraph
+from src.llm.prompts import (
+    PROMPT_WITH_EDGE_LIST,
+    PROMPT_WITH_FULL_NETWORK_IMAGE,
+    PROMPT_WITH_IMAGE,
+)
 
 load_dotenv()
 
@@ -36,6 +41,34 @@ def format_peps_as_markdown(pep_group_df: pd.DataFrame, group_id: int) -> str:
     )
     # LLMに渡すテキストを作る
     return pep_df.to_markdown(index=False)
+
+
+def format_edges_as_text(group_id: int) -> str | None:
+    """
+    サブグラフのエッジリストをテキスト形式で出力する
+
+    Args:
+        group_id: グループID
+
+    Returns:
+        エッジリストのテキスト。各行は「source -> target」形式。
+        サブグラフが存在しない場合はNone。
+
+    例:
+        1 -> 2
+        1 -> 3
+        2 -> 3
+        3 -> 1
+    """
+    subgraph = load_subgraph(group_id)
+    if subgraph is None:
+        return None
+
+    lines = []
+    for source, target in subgraph.edges():
+        lines.append(f"{source} -> {target}")
+
+    return "\n".join(lines)
 
 
 def encode_image_as_data_url(image_path: str | Path) -> str:
@@ -265,6 +298,93 @@ PEP一覧:
         result = self.chain.invoke(
             {
                 "pep_md_table": pep_md_table,
+                "subgraph_data_url": subgraph_data_url,
+                "full_network_data_url": full_network_data_url,
+                "current_year": current_year,
+            }
+        )
+        return cast(GroupProfile, result)
+
+
+class EdgeListProfileGenerator(BaseGroupProfileGenerator):
+    """エッジリストを含むプロンプトでプロファイルを生成"""
+
+    def __init__(self, model_name: str, group_data_dir: Path):
+        super().__init__(model_name, group_data_dir)
+        self.llm = ChatOpenAI(model=model_name, temperature=0).with_structured_output(
+            GroupProfile
+        )
+        human_message = """
+PEP一覧:
+{pep_md_table}
+
+エッジリスト（引用関係）:
+{edge_list}
+
+このPEPグループの名前と説明を書いてください。
+あわせて、添付したグループ内ネットワーク図と、全体ネットワーク図も参考にしてください。
+"""
+        self.prompt = ChatPromptTemplate.from_messages(
+            [
+                ("system", PROMPT_WITH_EDGE_LIST),
+                (
+                    "human",
+                    [
+                        {
+                            "type": "text",
+                            "text": human_message,
+                        },
+                        {
+                            "type": "image_url",
+                            "image_url": {"url": "{subgraph_data_url}"},
+                        },
+                        {
+                            "type": "image_url",
+                            "image_url": {"url": "{full_network_data_url}"},
+                        },
+                    ],
+                ),
+            ]
+        )
+        self.chain = self.prompt | self.llm
+
+    @traceable(
+        name="generate_all_group_profiles",
+        metadata={"generator": "EdgeListProfileGenerator"},
+        tags=["EdgeListProfileGenerator"],
+    )
+    def generate_all(self) -> list[dict]:
+        """全グループのプロファイルを生成"""
+        return self._generate_all_impl()
+
+    def generate_single(self, group_id: int) -> GroupProfile:
+        """単一グループのプロファイルを生成（エッジリストと画像を使用）"""
+        pep_group_df = self._load_pep_group_data()
+        pep_md_table = format_peps_as_markdown(pep_group_df, group_id)
+
+        # エッジリストを取得
+        edge_list = format_edges_as_text(group_id)
+        if edge_list is None:
+            edge_list = "(エッジなし)"
+
+        subgraph_image_path = (
+            self.group_data_dir / "subgraphs" / "images" / f"group_{group_id}.png"
+        )
+        full_network_image_path = (
+            self.group_data_dir
+            / "subgraphs"
+            / "full_images"
+            / f"full_group_{group_id}.png"
+        )
+
+        subgraph_data_url = encode_image_as_data_url(subgraph_image_path)
+        full_network_data_url = encode_image_as_data_url(full_network_image_path)
+
+        current_year = datetime.now().year
+        result = self.chain.invoke(
+            {
+                "pep_md_table": pep_md_table,
+                "edge_list": edge_list,
                 "subgraph_data_url": subgraph_data_url,
                 "full_network_data_url": full_network_data_url,
                 "current_year": current_year,
