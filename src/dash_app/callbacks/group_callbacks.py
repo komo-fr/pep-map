@@ -1,8 +1,10 @@
 """Groupタブのコールバック関数"""
 
+import re
 import pandas as pd
 import dash_cytoscape as cyto
 from dash import Input, Output, State, callback_context, no_update, html
+from dash.development.base_component import Component
 from src.dash_app.components.pep_info import (
     create_group_initial_info_message,
     create_pep_info_display,
@@ -21,7 +23,117 @@ from src.dash_app.utils.data_loader import (
     get_group_id_by_pep,
     generate_pep_url,
     get_group_name_info,
+    load_peps_metadata,
 )
+
+
+# PEP番号とタイトルのキャッシュ
+_pep_numbers_cache: set[int] | None = None
+_pep_titles_cache: dict[int, str] | None = None
+
+
+def _get_pep_data() -> tuple[set[int], dict[int, str]]:
+    """
+    PEP番号のセットとタイトルマッピングを取得する（キャッシュ付き）
+
+    Returns:
+        tuple[set[int], dict[int, str]]: (PEP番号のセット, PEP番号→タイトルの辞書)
+    """
+    global _pep_numbers_cache, _pep_titles_cache
+    if _pep_numbers_cache is None or _pep_titles_cache is None:
+        df = load_peps_metadata()
+        _pep_numbers_cache = set(df["pep_number"].tolist())
+        _pep_titles_cache = dict(zip(df["pep_number"], df["title"]))
+    return _pep_numbers_cache, _pep_titles_cache
+
+
+def linkify_pep_numbers(text: str) -> list[str | Component]:
+    """
+    テキスト内のPEP番号をリンク付きのDashコンポーネントに変換する
+
+    - 「PEP 484」のようなパターンをリンク化
+    - 単独の数字で、後ろに「年」が続かず、存在するPEP番号の場合もリンク化
+    - リンクにはtitle属性でPEPタイトルを表示
+
+    Args:
+        text: 変換対象のテキスト
+
+    Returns:
+        list: テキストとhtml.Aコンポーネントのリスト
+    """
+    pep_numbers, pep_titles = _get_pep_data()
+
+    # パターン:
+    # 1. 「PEP 数字」のパターン（「PEP 484」など）
+    # 2. 単独の数字（後ろに「年」が続かない）
+    pattern = r"(PEP\s+(\d+))|(\d+)"
+
+    result: list[str | Component] = []
+    last_end = 0
+
+    for match in re.finditer(pattern, text):
+        start, end = match.span()
+
+        # マッチ前のテキストを追加
+        if start > last_end:
+            result.append(text[last_end:start])
+
+        # 「PEP XXX」パターンの場合
+        if match.group(1):
+            pep_num = int(match.group(2))
+            matched_text = match.group(1)
+            # PEP番号が存在する場合のみリンク化
+            if pep_num in pep_numbers:
+                title = pep_titles.get(pep_num, "")
+                url = generate_pep_url(pep_num)
+                result.append(
+                    html.A(
+                        matched_text,
+                        href=url,
+                        target="_blank",
+                        title=title,
+                        style={
+                            "color": "#0066cc",
+                            "textDecoration": "underline",
+                        },
+                    )
+                )
+            else:
+                result.append(matched_text)
+        # 単独の数字の場合
+        elif match.group(3):
+            num_str = match.group(3)
+            pep_num = int(num_str)
+            # 後ろに「年」が続く場合は除外
+            after_match = text[end : end + 1] if end < len(text) else ""
+            if after_match == "年":
+                result.append(num_str)
+            # PEP番号が存在する場合のみリンク化
+            elif pep_num in pep_numbers:
+                title = pep_titles.get(pep_num, "")
+                url = generate_pep_url(pep_num)
+                result.append(
+                    html.A(
+                        num_str,
+                        href=url,
+                        target="_blank",
+                        title=title,
+                        style={
+                            "color": "#0066cc",
+                            "textDecoration": "underline",
+                        },
+                    )
+                )
+            else:
+                result.append(num_str)
+
+        last_end = end
+
+    # 残りのテキストを追加
+    if last_end < len(text):
+        result.append(text[last_end:])
+
+    return result
 
 
 def register_group_callbacks(app):
@@ -265,7 +377,7 @@ def register_group_callbacks(app):
                 ),
                 # 最初の段落（常に表示）
                 html.P(
-                    first_paragraph,
+                    linkify_pep_numbers(first_paragraph),
                     style={
                         "margin": "0",
                         "fontSize": "13px",
@@ -302,7 +414,7 @@ def register_group_callbacks(app):
                                 },
                             ),
                             html.P(
-                                middle_text,
+                                linkify_pep_numbers(middle_text),
                                 style={
                                     "margin": "8px 0 0 0",
                                     "padding": "12px",
@@ -322,7 +434,7 @@ def register_group_callbacks(app):
             if last_paragraph:
                 description_children.append(
                     html.P(
-                        last_paragraph,
+                        linkify_pep_numbers(last_paragraph),
                         style={
                             "marginTop": "8px",
                             "marginBottom": "0",
