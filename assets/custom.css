@@ -18,3 +18,12 @@
 .tooltip.bs-tooltip-auto[data-popper-placement^="bottom"] .tooltip-arrow::before {
     border-bottom-color: #222 !important;
 }
+
+/* 折りたたみの開閉状態でテキストを切り替え */
+details:not([open]) .show-when-open {
+    display: none;
+}
+
+details[open] .show-when-closed {
+    display: none;
+}

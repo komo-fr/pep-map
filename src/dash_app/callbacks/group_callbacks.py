@@ -238,17 +238,14 @@ def register_group_callbacks(app):
             description_children = ""
             description_style = empty_style
         else:
-            # 説明文とNoteを含むコンテンツを生成
+            # 段落を分割（空行で区切る）
+            paragraphs = group_description.split("\n\n")
+            first_paragraph = paragraphs[0]
+            remaining_paragraphs = paragraphs[1:] if len(paragraphs) > 1 else []
+
+            # 注意書き（常に表示） + 説明文を生成
             description_children = [
-                html.P(
-                    group_description,
-                    style={
-                        "margin": "0 0 8px 0",
-                        "fontSize": "13px",
-                        "color": "#333",
-                        "whiteSpace": "pre-line",
-                    },
-                ),
+                # 注意書き（常に表示、上部）
                 html.Div(
                     [
                         html.P(
@@ -260,11 +257,61 @@ def register_group_callbacks(app):
                         "backgroundColor": "#fffacd",
                         "border": "1px solid black",
                         "padding": "8px",
-                        "marginTop": "8px",
+                        "marginBottom": "8px",
                         "borderRadius": "4px",
                     },
                 ),
+                # 最初の段落（常に表示）
+                html.P(
+                    first_paragraph,
+                    style={
+                        "margin": "0",
+                        "fontSize": "13px",
+                        "color": "#333",
+                        "whiteSpace": "pre-line",
+                    },
+                ),
             ]
+
+            # 残りの段落があれば折りたたみで追加
+            if remaining_paragraphs:
+                remaining_text = "\n\n".join(remaining_paragraphs)
+                description_children.append(
+                    html.Details(
+                        [
+                            html.Summary(
+                                [
+                                    html.Span(
+                                        "▶ 説明の続きを読む",
+                                        className="show-when-closed",
+                                    ),
+                                    html.Span(
+                                        "▼ 説明を閉じる",
+                                        className="show-when-open",
+                                    ),
+                                ],
+                                style={
+                                    "cursor": "pointer",
+                                    "fontSize": "12px",
+                                    "color": "#0066cc",
+                                    "marginTop": "8px",
+                                    "textDecoration": "underline",
+                                    "listStyle": "none",  # デフォルトの三角マーカーを非表示
+                                },
+                            ),
+                            html.P(
+                                remaining_text,
+                                style={
+                                    "margin": "8px 0 0 0",
+                                    "fontSize": "13px",
+                                    "color": "#333",
+                                    "whiteSpace": "pre-line",
+                                },
+                            ),
+                        ],
+                    ),
+                )
+
             description_style = filled_style
 
         if df.empty:
