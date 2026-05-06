@@ -73,3 +73,8 @@ details[open] .show-when-closed {
     visibility: visible;
     opacity: 1;
 }
+
+/* safari対応：detailsの三角マーカーを非表示 */
+summary::-webkit-details-marker {
+    display: none;
+}
