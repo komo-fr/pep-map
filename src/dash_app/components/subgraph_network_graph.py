@@ -81,6 +81,53 @@ def _load_node_positions(group_id: int) -> dict[int, tuple[float, float]]:
     return {node: (x, -y) for node, (x, y) in positions.items()}
 
 
+def _calculate_adjacency_info(subgraph) -> dict[int, dict[str, list[str]]]:
+    """
+    サブグラフの各ノードの隣接情報を計算する
+
+    Args:
+        subgraph: NetworkXグラフオブジェクト
+
+    Returns:
+        dict[int, dict[str, list[str]]]: PEP番号をキー、隣接情報を値とする辞書
+            隣接情報: {
+                "adjacent_nodes": list[str],  # 隣接ノードのID一覧
+                "incoming_edges": list[str],  # 入ってくるエッジのID一覧
+                "outgoing_edges": list[str],  # 出ていくエッジのID一覧
+            }
+    """
+    adjacency_info: dict[int, dict[str, list[str]]] = {}
+
+    # 全ノードを初期化
+    for node in subgraph.nodes():
+        adjacency_info[node] = {
+            "adjacent_nodes": [],
+            "incoming_edges": [],
+            "outgoing_edges": [],
+        }
+
+    # エッジを走査して隣接情報を構築
+    for source, target in subgraph.edges():
+        # 自己ループは除外
+        if source == target:
+            continue
+
+        edge_id = f"edge_{source}_{target}"
+
+        # source → target なので:
+        # - sourceから見ると outgoing edge
+        # - targetから見ると incoming edge
+        if source in adjacency_info:
+            adjacency_info[source]["outgoing_edges"].append(edge_id)
+            adjacency_info[source]["adjacent_nodes"].append(f"pep_{target}")
+
+        if target in adjacency_info:
+            adjacency_info[target]["incoming_edges"].append(edge_id)
+            adjacency_info[target]["adjacent_nodes"].append(f"pep_{source}")
+
+    return adjacency_info
+
+
 def build_subgraph_cytoscape_elements(group_id: int) -> list[dict] | None:
     """
     指定されたグループIDのサブグラフからCytoscape用elementsを構築する
@@ -111,6 +158,9 @@ def build_subgraph_cytoscape_elements(group_id: int) -> list[dict] | None:
     # 事前計算された座標を読み込む
     positions = _load_node_positions(group_id)
 
+    # 隣接情報を計算
+    adjacency_info = _calculate_adjacency_info(subgraph)
+
     elements = []
 
     # ノードを生成
@@ -133,6 +183,9 @@ def build_subgraph_cytoscape_elements(group_id: int) -> list[dict] | None:
         size_pagerank = _calculate_node_size_pagerank(pagerank)
         font_size_pagerank = _calculate_font_size_pagerank(pagerank)
 
+        # 隣接情報を取得
+        adj_info = adjacency_info.get(pep_number, {})
+
         node_data = {
             "data": {
                 "id": f"pep_{pep_number}",
@@ -143,6 +196,9 @@ def build_subgraph_cytoscape_elements(group_id: int) -> list[dict] | None:
                 "pagerank": pagerank,
                 "size_pagerank": size_pagerank,
                 "font_size_pagerank": font_size_pagerank,
+                "adjacent_nodes": adj_info.get("adjacent_nodes", []),
+                "incoming_edges": adj_info.get("incoming_edges", []),
+                "outgoing_edges": adj_info.get("outgoing_edges", []),
             },
             "position": {"x": pos[0], "y": pos[1]},
         }
@@ -214,6 +270,48 @@ def get_subgraph_base_stylesheet() -> list[dict]:
                 "border-color": "#FF0000",
                 "z-index": 9999,
                 "opacity": 1,
+            },
+        },
+        # 接続ノード（太枠）
+        {
+            "selector": ".connected",
+            "style": {
+                "border-width": 1,
+                "border-color": "#888",
+                "opacity": 1,
+                "text-outline-width": TEXT_OUTLINE_WIDTH,
+                "text-outline-color": TEXT_OUTLINE_COLOR,
+            },
+        },
+        # 入ってくるエッジ（橙色）
+        {
+            "selector": ".incoming-edge",
+            "style": {
+                "width": 2,
+                "line-color": "#FF8C00",
+                "target-arrow-color": "#FF8C00",
+                "opacity": 1,
+                "z-index": 9998,
+            },
+        },
+        # 出ていくエッジ（水色）
+        {
+            "selector": ".outgoing-edge",
+            "style": {
+                "width": 2,
+                "line-color": "#1E90FF",
+                "target-arrow-color": "#1E90FF",
+                "opacity": 1,
+                "z-index": 9998,
+            },
+        },
+        # 非接続（減衰）
+        {
+            "selector": ".faded",
+            "style": {
+                "opacity": 0.15,
+                "text-outline-width": TEXT_OUTLINE_WIDTH,
+                "text-outline-color": TEXT_OUTLINE_COLOR,
             },
         },
     ]

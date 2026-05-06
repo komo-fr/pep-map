@@ -1035,3 +1035,75 @@ def register_group_callbacks(app):
         State("group-selector-dropdown", "value"),
         prevent_initial_call=True,
     )
+
+    # ===== Group Networkノードタップ → エッジハイライト更新（クライアントサイド） =====
+    app.clientside_callback(
+        """
+        function(tapNodeData, currentElements) {
+            // tapNodeDataまたはelementsがない場合は更新しない
+            if (!tapNodeData || !currentElements || currentElements.length === 0) {
+                return window.dash_clientside.no_update;
+            }
+
+            // タップされたノードのID
+            var selectedNodeId = 'pep_' + tapNodeData.pep_number;
+
+            // タップされたノードを探す
+            var selectedNode = null;
+            for (var i = 0; i < currentElements.length; i++) {
+                if (currentElements[i].data && currentElements[i].data.id === selectedNodeId) {
+                    selectedNode = currentElements[i];
+                    break;
+                }
+            }
+
+            // 選択ノードが見つからない場合は更新しない
+            if (!selectedNode) {
+                return window.dash_clientside.no_update;
+            }
+
+            // 隣接情報を取得
+            var adjacentNodes = selectedNode.data.adjacent_nodes || [];
+            var incomingEdges = selectedNode.data.incoming_edges || [];
+            var outgoingEdges = selectedNode.data.outgoing_edges || [];
+
+            // セットに変換（高速検索用）
+            var adjacentNodesSet = new Set(adjacentNodes);
+            var incomingEdgesSet = new Set(incomingEdges);
+            var outgoingEdgesSet = new Set(outgoingEdges);
+
+            // elementsを更新
+            return currentElements.map(function(el) {
+                var newEl = JSON.parse(JSON.stringify(el));
+                var data = newEl.data;
+
+                // ノードの場合
+                if (!data.source) {
+                    if (data.id === selectedNodeId) {
+                        newEl.classes = 'selected';
+                    } else if (adjacentNodesSet.has(data.id)) {
+                        newEl.classes = 'connected';
+                    } else {
+                        newEl.classes = 'faded';
+                    }
+                }
+                // エッジの場合
+                else {
+                    if (incomingEdgesSet.has(data.id)) {
+                        newEl.classes = 'incoming-edge';
+                    } else if (outgoingEdgesSet.has(data.id)) {
+                        newEl.classes = 'outgoing-edge';
+                    } else {
+                        newEl.classes = 'faded';
+                    }
+                }
+
+                return newEl;
+            });
+        }
+        """,
+        Output("group-subgraph-network-graph", "elements", allow_duplicate=True),
+        Input("group-subgraph-network-graph", "tapNodeData"),
+        State("group-subgraph-network-graph", "elements"),
+        prevent_initial_call=True,
+    )
