@@ -241,7 +241,9 @@ def register_group_callbacks(app):
             # 段落を分割（空行で区切る）
             paragraphs = group_description.split("\n\n")
             first_paragraph = paragraphs[0]
-            remaining_paragraphs = paragraphs[1:] if len(paragraphs) > 1 else []
+            last_paragraph = paragraphs[-1] if len(paragraphs) > 1 else None
+            # 中間段落（第2・第3段落）を折りたたみ対象とする
+            middle_paragraphs = paragraphs[1:-1] if len(paragraphs) > 2 else []
 
             # 注意書き（常に表示） + 説明文を生成
             description_children = [
@@ -273,16 +275,16 @@ def register_group_callbacks(app):
                 ),
             ]
 
-            # 残りの段落があれば折りたたみで追加
-            if remaining_paragraphs:
-                remaining_text = "\n\n".join(remaining_paragraphs)
+            # 中間段落があれば折りたたみで追加
+            if middle_paragraphs:
+                middle_text = "\n\n".join(middle_paragraphs)
                 description_children.append(
                     html.Details(
                         [
                             html.Summary(
                                 [
                                     html.Span(
-                                        "▶ 説明の続きを読む",
+                                        "▶ ネットワーク構造の説明を表示する",
                                         className="show-when-closed",
                                     ),
                                     html.Span(
@@ -300,15 +302,34 @@ def register_group_callbacks(app):
                                 },
                             ),
                             html.P(
-                                remaining_text,
+                                middle_text,
                                 style={
                                     "margin": "8px 0 0 0",
+                                    "padding": "12px",
                                     "fontSize": "13px",
                                     "color": "#333",
                                     "whiteSpace": "pre-line",
+                                    "backgroundColor": "#f0f7ff",
+                                    "border": "1px solid #d0e3f7",
+                                    "borderRadius": "4px",
                                 },
                             ),
                         ],
+                    ),
+                )
+
+            # 最終段落（常に表示）
+            if last_paragraph:
+                description_children.append(
+                    html.P(
+                        last_paragraph,
+                        style={
+                            "marginTop": "8px",
+                            "marginBottom": "0",
+                            "fontSize": "13px",
+                            "color": "#333",
+                            "whiteSpace": "pre-line",
+                        },
                     ),
                 )
 
