@@ -8,6 +8,7 @@ from pathlib import Path
 
 from src.llm.group_profile import (
     BaseGroupProfileGenerator,
+    EdgeListProfileGenerator,
     FullNetworkProfileGenerator,
     SubgraphOnlyProfileGenerator,
 )
@@ -37,9 +38,9 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--generator",
-        choices=["subgraph", "full-network"],
-        default="full-network",
-        help="Generator type: 'subgraph' (subgraph image only) or 'full-network' (subgraph + full network images, default)",
+        choices=["subgraph", "full-network", "edge-list"],
+        default="edge-list",
+        help="Generator type: 'subgraph' (subgraph image only), 'full-network' (subgraph + full network images), or 'edge-list' (full-network + edge list text, default)",
     )
     return parser.parse_args()
 
@@ -69,7 +70,7 @@ def main() -> int:
         logger.error(f"Subgraph images directory not found: {images_dir}")
         return 1
 
-    if args.generator == "full-network":
+    if args.generator in ("full-network", "edge-list"):
         full_images_dir = args.data_dir / "subgraphs" / "full_images"
         if not full_images_dir.exists():
             logger.error(f"Full network images directory not found: {full_images_dir}")
@@ -80,6 +81,8 @@ def main() -> int:
         generator: BaseGroupProfileGenerator
         if args.generator == "subgraph":
             generator = SubgraphOnlyProfileGenerator(args.model, args.data_dir)
+        elif args.generator == "edge-list":
+            generator = EdgeListProfileGenerator(args.model, args.data_dir)
         else:
             generator = FullNetworkProfileGenerator(args.model, args.data_dir)
         generator.save_to_csv()

@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.8.0] - 2026-05-DD
+
+### Changed
+- Improved the prompt for AI-generated group descriptions in the `Groups` tab by including the full network diagram and an edge list.
+
 ## [0.7.2] - 2026-05-03
 
 ### Changed
