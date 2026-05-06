@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 - Improved the prompt for AI-generated group descriptions in the `Groups` tab by including the full network diagram and an edge list.
 - Make group descriptions in the `Groups` tab collapsible.
+- Link PEP numbers in group descriptions to the official PEP documentation.
 
 ## [0.7.2] - 2026-05-03
 
