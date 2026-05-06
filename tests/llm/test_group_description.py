@@ -56,7 +56,7 @@ class TestFormatPepsAsMarkdown:
         df.to_csv(csv_path, index=False)
 
         # Act
-        result = format_peps_as_markdown(csv_path, group_id=0)
+        result = format_peps_as_markdown(df, group_id=0)
 
         # Assert
         assert "PEP Purpose" in result
@@ -104,7 +104,7 @@ class TestFormatPepsAsMarkdown:
         df.to_csv(csv_path, index=False)
 
         # Act
-        result = format_peps_as_markdown(csv_path, group_id=0)
+        result = format_peps_as_markdown(df, group_id=0)
 
         # Assert: High > Mid > Low の順で出現する
         high_pos = result.find("High PageRank")
