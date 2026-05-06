@@ -92,6 +92,41 @@ def _build_tooltip_content(metadata: dict[str, str]) -> list:
     return tooltip_children
 
 
+def _create_pep_link(
+    display_text: str, pep_num: int, metadata: dict[str, str]
+) -> Component:
+    """
+    PEPリンク（ツールチップ付き）コンポーネントを構築する
+
+    Args:
+        display_text: リンクとして表示する文字列
+        pep_num: PEP番号
+        metadata: PEPのメタデータ（title, status, created）
+
+    Returns:
+        Component: ツールチップ付きリンクのDashコンポーネント
+    """
+    url = generate_pep_url(pep_num)
+    return html.Span(
+        [
+            html.A(
+                display_text,
+                href=url,
+                target="_blank",
+                style={
+                    "color": "#0066cc",
+                    "textDecoration": "underline",
+                },
+            ),
+            html.Span(
+                _build_tooltip_content(metadata),
+                className="pep-tooltip-text",
+            ),
+        ],
+        className="pep-link-tooltip",
+    )
+
+
 def linkify_pep_numbers(text: str) -> list[str | Component]:
     """
     テキスト内のPEP番号をリンク付きのDashコンポーネントに変換する
@@ -130,27 +165,7 @@ def linkify_pep_numbers(text: str) -> list[str | Component]:
             # PEP番号が存在する場合のみリンク化
             if pep_num in pep_numbers:
                 metadata = pep_metadata.get(pep_num, {})
-                url = generate_pep_url(pep_num)
-                result.append(
-                    html.Span(
-                        [
-                            html.A(
-                                matched_text,
-                                href=url,
-                                target="_blank",
-                                style={
-                                    "color": "#0066cc",
-                                    "textDecoration": "underline",
-                                },
-                            ),
-                            html.Span(
-                                _build_tooltip_content(metadata),
-                                className="pep-tooltip-text",
-                            ),
-                        ],
-                        className="pep-link-tooltip",
-                    )
-                )
+                result.append(_create_pep_link(matched_text, pep_num, metadata))
             else:
                 result.append(matched_text)
         # 単独の数字の場合
@@ -164,27 +179,7 @@ def linkify_pep_numbers(text: str) -> list[str | Component]:
             # PEP番号が存在する場合のみリンク化
             elif pep_num in pep_numbers:
                 metadata = pep_metadata.get(pep_num, {})
-                url = generate_pep_url(pep_num)
-                result.append(
-                    html.Span(
-                        [
-                            html.A(
-                                num_str,
-                                href=url,
-                                target="_blank",
-                                style={
-                                    "color": "#0066cc",
-                                    "textDecoration": "underline",
-                                },
-                            ),
-                            html.Span(
-                                _build_tooltip_content(metadata),
-                                className="pep-tooltip-text",
-                            ),
-                        ],
-                        className="pep-link-tooltip",
-                    )
-                )
+                result.append(_create_pep_link(num_str, pep_num, metadata))
             else:
                 result.append(num_str)
 
