@@ -1107,3 +1107,33 @@ def register_group_callbacks(app):
         State("group-subgraph-network-graph", "elements"),
         prevent_initial_call=True,
     )
+
+    # ===== Group Network背景クリック → ハイライト解除（クライアントサイド） =====
+    # selectedNodeDataが空配列になったとき（背景クリック等）にハイライトを初期状態に戻す
+    app.clientside_callback(
+        """
+        function(selectedNodeData, currentElements) {
+            // elementsがない場合は更新しない
+            if (!currentElements || currentElements.length === 0) {
+                return window.dash_clientside.no_update;
+            }
+
+            // selectedNodeDataが空配列の場合（ノード選択解除 = 背景クリック等）
+            if (!selectedNodeData || selectedNodeData.length === 0) {
+                // 全elementsのclassesをクリアして初期状態に戻す
+                return currentElements.map(function(el) {
+                    var newEl = JSON.parse(JSON.stringify(el));
+                    newEl.classes = '';
+                    return newEl;
+                });
+            }
+
+            // ノードが選択されている場合は更新しない（tapNodeDataのコールバックで処理）
+            return window.dash_clientside.no_update;
+        }
+        """,
+        Output("group-subgraph-network-graph", "elements", allow_duplicate=True),
+        Input("group-subgraph-network-graph", "selectedNodeData"),
+        State("group-subgraph-network-graph", "elements"),
+        prevent_initial_call=True,
+    )
