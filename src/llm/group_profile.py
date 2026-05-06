@@ -90,7 +90,6 @@ class BaseGroupProfileGenerator(ABC):
             data_dict.update(group_profile.model_dump())
             group_profiles.append(data_dict)
             logger.info(f"Completed group {group_id}: {group_profile.group_name}")
-            break
         return group_profiles
 
     @abstractmethod
@@ -126,26 +125,12 @@ class BaseGroupProfileGenerator(ABC):
 class SubgraphOnlyProfileGenerator(BaseGroupProfileGenerator):
     """サブグラフ画像のみを使用してプロファイルを生成"""
 
-    @traceable(
-        name="generate_all_group_profiles",
-        metadata={"generator": "SubgraphOnlyProfileGenerator"},
-        tags=["SubgraphOnlyProfileGenerator"],
-    )
-    def generate_all(self) -> list[dict]:
-        """全グループのプロファイルを生成"""
-        return self._generate_all_impl()
-
-    def generate_single(self, group_id: int) -> GroupProfile:
-        """単一グループのプロファイルを生成（サブグラフ画像のみ使用）"""
-        path = self.group_data_dir / "pep_group_metrics.csv"
-        pep_md_table = format_peps_as_markdown(path, group_id)
-
-        subgraph_image_path = (
-            self.group_data_dir / "subgraphs" / "images" / f"group_{group_id}.png"
+    def __init__(self, model_name: str, group_data_dir: Path):
+        super().__init__(model_name, group_data_dir)
+        self.llm = ChatOpenAI(model=model_name, temperature=0).with_structured_output(
+            GroupProfile
         )
-        data_url = encode_image_as_data_url(subgraph_image_path)
-
-        prompt = ChatPromptTemplate.from_messages(
+        self.prompt = ChatPromptTemplate.from_messages(
             [
                 ("system", PROMPT_WITH_IMAGE),
                 (
@@ -170,12 +155,29 @@ class SubgraphOnlyProfileGenerator(BaseGroupProfileGenerator):
                 ),
             ]
         )
-        llm = ChatOpenAI(model=self.model_name, temperature=0).with_structured_output(
-            GroupProfile
+        self.chain = self.prompt | self.llm
+
+    @traceable(
+        name="generate_all_group_profiles",
+        metadata={"generator": "SubgraphOnlyProfileGenerator"},
+        tags=["SubgraphOnlyProfileGenerator"],
+    )
+    def generate_all(self) -> list[dict]:
+        """全グループのプロファイルを生成"""
+        return self._generate_all_impl()
+
+    def generate_single(self, group_id: int) -> GroupProfile:
+        """単一グループのプロファイルを生成（サブグラフ画像のみ使用）"""
+        path = self.group_data_dir / "pep_group_metrics.csv"
+        pep_md_table = format_peps_as_markdown(path, group_id)
+
+        subgraph_image_path = (
+            self.group_data_dir / "subgraphs" / "images" / f"group_{group_id}.png"
         )
-        chain = prompt | llm
+        data_url = encode_image_as_data_url(subgraph_image_path)
+
         current_year = datetime.now().year
-        result = chain.invoke(
+        result = self.chain.invoke(
             {
                 "pep_md_table": pep_md_table,
                 "data_url": data_url,
@@ -187,6 +189,42 @@ class SubgraphOnlyProfileGenerator(BaseGroupProfileGenerator):
 
 class FullNetworkProfileGenerator(BaseGroupProfileGenerator):
     """サブグラフ画像と全体ネットワーク画像を使用してプロファイルを生成"""
+
+    def __init__(self, model_name: str, group_data_dir: Path):
+        super().__init__(model_name, group_data_dir)
+        self.llm = ChatOpenAI(model=model_name, temperature=0).with_structured_output(
+            GroupProfile
+        )
+        human_message = """
+PEP一覧:
+{pep_md_table}
+
+このPEPグループの名前と説明を書いてください。
+あわせて、添付したグループ内ネットワーク図と、全体ネットワーク図も参考にしてください。
+"""
+        self.prompt = ChatPromptTemplate.from_messages(
+            [
+                ("system", PROMPT_WITH_FULL_NETWORK_IMAGE),
+                (
+                    "human",
+                    [
+                        {
+                            "type": "text",
+                            "text": human_message,
+                        },
+                        {
+                            "type": "image_url",
+                            "image_url": {"url": "{subgraph_data_url}"},
+                        },
+                        {
+                            "type": "image_url",
+                            "image_url": {"url": "{full_network_data_url}"},
+                        },
+                    ],
+                ),
+            ]
+        )
+        self.chain = self.prompt | self.llm
 
     @traceable(
         name="generate_all_group_profiles",
@@ -214,41 +252,9 @@ class FullNetworkProfileGenerator(BaseGroupProfileGenerator):
 
         subgraph_data_url = encode_image_as_data_url(subgraph_image_path)
         full_network_data_url = encode_image_as_data_url(full_network_image_path)
-        human_message = """
-PEP一覧:
-{pep_md_table}
 
-このPEPグループの名前と説明を書いてください。
-あわせて、添付したグループ内ネットワーク図と、全体ネットワーク図も参考にしてください。
-"""
-        prompt = ChatPromptTemplate.from_messages(
-            [
-                ("system", PROMPT_WITH_FULL_NETWORK_IMAGE),
-                (
-                    "human",
-                    [
-                        {
-                            "type": "text",
-                            "text": human_message,
-                        },
-                        {
-                            "type": "image_url",
-                            "image_url": {"url": "{subgraph_data_url}"},
-                        },
-                        {
-                            "type": "image_url",
-                            "image_url": {"url": "{full_network_data_url}"},
-                        },
-                    ],
-                ),
-            ]
-        )
-        llm = ChatOpenAI(model=self.model_name, temperature=0).with_structured_output(
-            GroupProfile
-        )
-        chain = prompt | llm
         current_year = datetime.now().year
-        result = chain.invoke(
+        result = self.chain.invoke(
             {
                 "pep_md_table": pep_md_table,
                 "subgraph_data_url": subgraph_data_url,
