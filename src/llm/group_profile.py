@@ -98,7 +98,6 @@ class BaseGroupProfileGenerator(ABC):
             data_dict.update(group_profile.model_dump())
             group_profiles.append(data_dict)
             logger.info(f"Completed group {group_id}: {group_profile.group_name}")
-            break
         return group_profiles
 
     @abstractmethod
