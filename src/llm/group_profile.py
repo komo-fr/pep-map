@@ -22,8 +22,7 @@ load_dotenv()
 logger = logging.getLogger(__name__)
 
 
-def format_peps_as_markdown(csv_path: Path, group_id: int) -> str:
-    pep_group_df = pd.read_csv(csv_path)
+def format_peps_as_markdown(pep_group_df: pd.DataFrame, group_id: int) -> str:
     pep_df = pep_group_df[pep_group_df.group_id == group_id]
     pep_df = pep_df.sort_values(
         ["pagerank_group", "in-degree_group", "out-degree_group"], ascending=False
@@ -69,6 +68,15 @@ class BaseGroupProfileGenerator(ABC):
     def __init__(self, model_name: str, group_data_dir: Path):
         self.model_name = model_name
         self.group_data_dir = group_data_dir
+        self._pep_group_df: pd.DataFrame | None = None
+
+    def _load_pep_group_data(self) -> pd.DataFrame:
+        """PEPグループデータをLazy loadingで取得"""
+        if self._pep_group_df is None:
+            self._pep_group_df = pd.read_csv(
+                self.group_data_dir / "pep_group_metrics.csv"
+            )
+        return self._pep_group_df
 
     @abstractmethod
     def generate_single(self, group_id: int) -> GroupProfile:
@@ -77,7 +85,7 @@ class BaseGroupProfileGenerator(ABC):
 
     def _generate_all_impl(self) -> list[dict]:
         """全グループのプロファイルを生成（内部実装）"""
-        peps_group_df = pd.read_csv(self.group_data_dir / "pep_group_metrics.csv")
+        peps_group_df = self._load_pep_group_data()
         group_ids = peps_group_df.group_id.unique()
         total_groups = len(group_ids)
         logger.info(f"Processing {total_groups} groups")
@@ -90,6 +98,7 @@ class BaseGroupProfileGenerator(ABC):
             data_dict.update(group_profile.model_dump())
             group_profiles.append(data_dict)
             logger.info(f"Completed group {group_id}: {group_profile.group_name}")
+            break
         return group_profiles
 
     @abstractmethod
@@ -168,8 +177,8 @@ class SubgraphOnlyProfileGenerator(BaseGroupProfileGenerator):
 
     def generate_single(self, group_id: int) -> GroupProfile:
         """単一グループのプロファイルを生成（サブグラフ画像のみ使用）"""
-        path = self.group_data_dir / "pep_group_metrics.csv"
-        pep_md_table = format_peps_as_markdown(path, group_id)
+        pep_group_df = self._load_pep_group_data()
+        pep_md_table = format_peps_as_markdown(pep_group_df, group_id)
 
         subgraph_image_path = (
             self.group_data_dir / "subgraphs" / "images" / f"group_{group_id}.png"
@@ -237,8 +246,8 @@ PEP一覧:
 
     def generate_single(self, group_id: int) -> GroupProfile:
         """単一グループのプロファイルを生成（両方の画像を使用）"""
-        path = self.group_data_dir / "pep_group_metrics.csv"
-        pep_md_table = format_peps_as_markdown(path, group_id)
+        pep_group_df = self._load_pep_group_data()
+        pep_md_table = format_peps_as_markdown(pep_group_df, group_id)
 
         subgraph_image_path = (
             self.group_data_dir / "subgraphs" / "images" / f"group_{group_id}.png"
