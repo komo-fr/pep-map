@@ -25,6 +25,8 @@ _metrics_styles_cache: list[dict] | None = None
 _citation_changes_cache: pd.DataFrame | None = None
 _group_data_cache: pd.DataFrame | None = None
 _group_names_cache: pd.DataFrame | None = None
+_full_network_positions_cache: dict[int, tuple[float, float]] | None = None
+_subgraph_positions_cache: dict[int, dict[int, tuple[float, float]]] = {}
 
 
 def load_peps_metadata() -> pd.DataFrame:
@@ -668,7 +670,9 @@ def clear_cache() -> None:
         _metrics_styles_cache, \
         _citation_changes_cache, \
         _group_data_cache, \
-        _group_names_cache
+        _group_names_cache, \
+        _full_network_positions_cache, \
+        _subgraph_positions_cache
     _peps_metadata_cache = None
     _citations_cache = None
     _metadata_cache = None
@@ -679,6 +683,8 @@ def clear_cache() -> None:
     _citation_changes_cache = None
     _group_data_cache = None
     _group_names_cache = None
+    _full_network_positions_cache = None
+    _subgraph_positions_cache = {}
 
     # 他モジュールのキャッシュもクリア（遅延インポートで循環参照を回避）
     from src.dash_app.components import network_graph, group_network_graph
@@ -725,3 +731,64 @@ def load_subgraph_metrics(group_id: int) -> "pd.DataFrame | None":
     df = df[df["group_id"] == group_id]
 
     return df
+
+
+def load_full_network_positions() -> dict[int, tuple[float, float]]:
+    """
+    全体ネットワークのノード座標を読み込む
+
+    Returns:
+        dict[int, tuple[float, float]]: PEP番号をキー、(x, y)座標を値とする辞書
+    """
+    global _full_network_positions_cache
+
+    if _full_network_positions_cache is not None:
+        return _full_network_positions_cache
+
+    positions_path = DATA_DIR / "node_positions.json"
+    if not positions_path.exists():
+        raise FileNotFoundError(
+            f"Node positions file not found: {positions_path}. "
+            "Run the data pipeline to generate this file."
+        )
+
+    with open(positions_path, encoding="utf-8") as f:
+        positions_json = json.load(f)
+
+    # キーを整数に変換
+    positions = {int(node): tuple(pos) for node, pos in positions_json.items()}
+
+    _full_network_positions_cache = positions
+    return positions
+
+
+def load_subgraph_positions(group_id: int) -> dict[int, tuple[float, float]] | None:
+    """
+    指定されたグループIDのサブグラフ座標を読み込む
+
+    Args:
+        group_id: グループID
+
+    Returns:
+        dict[int, tuple[float, float]]: PEP番号をキー、(x, y)座標を値とする辞書
+        存在しない場合はNone
+    """
+    global _subgraph_positions_cache
+
+    if group_id in _subgraph_positions_cache:
+        return _subgraph_positions_cache[group_id]
+
+    positions_path = (
+        DATA_DIR / "groups" / "subgraphs" / "positions" / f"group_{group_id}.json"
+    )
+    if not positions_path.exists():
+        return None
+
+    with open(positions_path, encoding="utf-8") as f:
+        positions_json = json.load(f)
+
+    # キーを整数に変換
+    positions = {int(node): tuple(pos) for node, pos in positions_json.items()}
+
+    _subgraph_positions_cache[group_id] = positions
+    return positions

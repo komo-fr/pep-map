@@ -1,8 +1,10 @@
 """Groupタブのコールバック関数"""
 
+import re
 import pandas as pd
 import dash_cytoscape as cyto
 from dash import Input, Output, State, callback_context, no_update, html
+from dash.development.base_component import Component
 from src.dash_app.components.pep_info import (
     create_group_initial_info_message,
     create_pep_info_display,
@@ -21,7 +23,173 @@ from src.dash_app.utils.data_loader import (
     get_group_id_by_pep,
     generate_pep_url,
     get_group_name_info,
+    load_peps_metadata,
 )
+
+
+# PEP番号とメタデータのキャッシュ
+_pep_numbers_cache: set[int] | None = None
+_pep_metadata_cache: dict[int, dict[str, str]] | None = None
+
+
+def _get_pep_data() -> tuple[set[int], dict[int, dict[str, str]]]:
+    """
+    PEP番号のセットとメタデータマッピングを取得する（キャッシュ付き）
+
+    Returns:
+        tuple[set[int], dict[int, dict[str, str]]]:
+            (PEP番号のセット, PEP番号→メタデータの辞書)
+            メタデータには title, status, created が含まれる
+    """
+    global _pep_numbers_cache, _pep_metadata_cache
+    if _pep_numbers_cache is None or _pep_metadata_cache is None:
+        df = load_peps_metadata()
+        _pep_numbers_cache = set(df["pep_number"].tolist())
+        _pep_metadata_cache = {}
+        for _, row in df.iterrows():
+            pep_num = row["pep_number"]
+            created = row["created"]
+            # created を文字列に変換
+            if pd.isna(created):
+                created_str = ""
+            else:
+                created_str = created.strftime("%Y-%m-%d")
+            _pep_metadata_cache[pep_num] = {
+                "title": row["title"],
+                "status": row["status"],
+                "created": created_str,
+            }
+    return _pep_numbers_cache, _pep_metadata_cache
+
+
+def _build_tooltip_content(metadata: dict[str, str]) -> list:
+    """
+    ツールチップの内容を構築する
+
+    Args:
+        metadata: PEPのメタデータ（title, status, created）
+
+    Returns:
+        list: ツールチップ用のDashコンポーネントリスト
+    """
+    title = metadata.get("title", "")
+    status = metadata.get("status", "")
+    created = metadata.get("created", "")
+
+    tooltip_children = [html.Div(title)]
+    if status or created:
+        meta_parts = []
+        if status:
+            meta_parts.append(f"Status: {status}")
+        if created:
+            meta_parts.append(f"Created: {created}")
+        tooltip_children.append(
+            html.Div(
+                " | ".join(meta_parts),
+                style={"fontSize": "11px", "color": "#aaa", "marginTop": "4px"},
+            )
+        )
+    return tooltip_children
+
+
+def _create_pep_link(
+    display_text: str, pep_num: int, metadata: dict[str, str]
+) -> Component:
+    """
+    PEPリンク（ツールチップ付き）コンポーネントを構築する
+
+    Args:
+        display_text: リンクとして表示する文字列
+        pep_num: PEP番号
+        metadata: PEPのメタデータ（title, status, created）
+
+    Returns:
+        Component: ツールチップ付きリンクのDashコンポーネント
+    """
+    url = generate_pep_url(pep_num)
+    return html.Span(
+        [
+            html.A(
+                display_text,
+                href=url,
+                target="_blank",
+                style={
+                    "color": "#0066cc",
+                    "textDecoration": "underline",
+                },
+            ),
+            html.Span(
+                _build_tooltip_content(metadata),
+                className="pep-tooltip-text",
+            ),
+        ],
+        className="pep-link-tooltip",
+    )
+
+
+def linkify_pep_numbers(text: str) -> list[str | Component]:
+    """
+    テキスト内のPEP番号をリンク付きのDashコンポーネントに変換する
+
+    - 「PEP 484」のようなパターンをリンク化
+    - 単独の数字で、後ろに「年」が続かず、存在するPEP番号の場合もリンク化
+    - リンクにはツールチップでPEPタイトル・Status・Createdを表示
+
+    Args:
+        text: 変換対象のテキスト
+
+    Returns:
+        list: テキストとhtml.Aコンポーネントのリスト
+    """
+    pep_numbers, pep_metadata = _get_pep_data()
+
+    # パターン:
+    # 1. 「PEP 数字」のパターン（「PEP 484」など）
+    # 2. 単独の数字（後ろに「年」が続かない）
+    pattern = r"(PEP\s+(\d+))|(\d+)"
+
+    result: list[str | Component] = []
+    last_end = 0
+
+    for match in re.finditer(pattern, text):
+        start, end = match.span()
+
+        # マッチ前のテキストを追加
+        if start > last_end:
+            result.append(text[last_end:start])
+
+        # 「PEP XXX」パターンの場合
+        if match.group(1):
+            pep_num = int(match.group(2))
+            matched_text = match.group(1)
+            # PEP番号が存在する場合のみリンク化
+            if pep_num in pep_numbers:
+                metadata = pep_metadata.get(pep_num, {})
+                result.append(_create_pep_link(matched_text, pep_num, metadata))
+            else:
+                result.append(matched_text)
+        # 単独の数字の場合
+        elif match.group(3):
+            num_str = match.group(3)
+            pep_num = int(num_str)
+            # 後ろに「年」が続く場合は除外
+            after_match = text[end : end + 1] if end < len(text) else ""
+            if after_match == "年":
+                result.append(num_str)
+            # PEP番号が存在する場合のみリンク化
+            elif pep_num in pep_numbers:
+                metadata = pep_metadata.get(pep_num, {})
+                result.append(_create_pep_link(num_str, pep_num, metadata))
+            else:
+                result.append(num_str)
+
+        last_end = end
+
+    # 残りのテキストを追加
+    if last_end < len(text):
+        result.append(text[last_end:])
+
+    return result
 
 
 def register_group_callbacks(app):
@@ -238,17 +406,16 @@ def register_group_callbacks(app):
             description_children = ""
             description_style = empty_style
         else:
-            # 説明文とNoteを含むコンテンツを生成
+            # 段落を分割（空行で区切る）
+            paragraphs = group_description.split("\n\n")
+            first_paragraph = paragraphs[0]
+            last_paragraph = paragraphs[-1] if len(paragraphs) > 1 else None
+            # 中間段落（第2・第3段落）を折りたたみ対象とする
+            middle_paragraphs = paragraphs[1:-1] if len(paragraphs) > 2 else []
+
+            # 注意書き（常に表示） + 説明文を生成
             description_children = [
-                html.P(
-                    group_description,
-                    style={
-                        "margin": "0 0 8px 0",
-                        "fontSize": "13px",
-                        "color": "#333",
-                        "whiteSpace": "pre-line",
-                    },
-                ),
+                # 注意書き（常に表示、上部）
                 html.Div(
                     [
                         html.P(
@@ -260,11 +427,80 @@ def register_group_callbacks(app):
                         "backgroundColor": "#fffacd",
                         "border": "1px solid black",
                         "padding": "8px",
-                        "marginTop": "8px",
+                        "marginBottom": "8px",
                         "borderRadius": "4px",
                     },
                 ),
+                # 最初の段落（常に表示）
+                html.P(
+                    linkify_pep_numbers(first_paragraph),
+                    style={
+                        "margin": "0",
+                        "fontSize": "13px",
+                        "color": "#333",
+                        "whiteSpace": "pre-line",
+                    },
+                ),
             ]
+
+            # 中間段落があれば折りたたみで追加
+            if middle_paragraphs:
+                middle_text = "\n\n".join(middle_paragraphs)
+                description_children.append(
+                    html.Details(
+                        [
+                            html.Summary(
+                                [
+                                    html.Span(
+                                        "▶ ネットワーク構造の説明を表示する",
+                                        className="show-when-closed",
+                                    ),
+                                    html.Span(
+                                        "▼ 説明を閉じる",
+                                        className="show-when-open",
+                                    ),
+                                ],
+                                style={
+                                    "cursor": "pointer",
+                                    "fontSize": "12px",
+                                    "color": "#0066cc",
+                                    "marginTop": "8px",
+                                    "textDecoration": "underline",
+                                    "listStyle": "none",  # デフォルトの三角マーカーを非表示
+                                },
+                            ),
+                            html.P(
+                                linkify_pep_numbers(middle_text),
+                                style={
+                                    "margin": "8px 0 0 0",
+                                    "padding": "12px",
+                                    "fontSize": "13px",
+                                    "color": "#333",
+                                    "whiteSpace": "pre-line",
+                                    "backgroundColor": "#f0f7ff",
+                                    "border": "1px solid #d0e3f7",
+                                    "borderRadius": "4px",
+                                },
+                            ),
+                        ],
+                    ),
+                )
+
+            # 最終段落（常に表示）
+            if last_paragraph:
+                description_children.append(
+                    html.P(
+                        linkify_pep_numbers(last_paragraph),
+                        style={
+                            "marginTop": "8px",
+                            "marginBottom": "0",
+                            "fontSize": "13px",
+                            "color": "#333",
+                            "whiteSpace": "pre-line",
+                        },
+                    ),
+                )
+
             description_style = filled_style
 
         if df.empty:
@@ -986,5 +1222,107 @@ def register_group_callbacks(app):
         Output("group-full-network-graph", "stylesheet", allow_duplicate=True),
         Input("group-subgraph-network-graph", "tapNodeData"),
         State("group-selector-dropdown", "value"),
+        prevent_initial_call=True,
+    )
+
+    # ===== Group Networkノードタップ → エッジハイライト更新（クライアントサイド） =====
+    app.clientside_callback(
+        """
+        function(tapNodeData, currentElements) {
+            // tapNodeDataまたはelementsがない場合は更新しない
+            if (!tapNodeData || !currentElements || currentElements.length === 0) {
+                return window.dash_clientside.no_update;
+            }
+
+            // タップされたノードのID
+            var selectedNodeId = 'pep_' + tapNodeData.pep_number;
+
+            // タップされたノードを探す
+            var selectedNode = null;
+            for (var i = 0; i < currentElements.length; i++) {
+                if (currentElements[i].data && currentElements[i].data.id === selectedNodeId) {
+                    selectedNode = currentElements[i];
+                    break;
+                }
+            }
+
+            // 選択ノードが見つからない場合は更新しない
+            if (!selectedNode) {
+                return window.dash_clientside.no_update;
+            }
+
+            // 隣接情報を取得
+            var adjacentNodes = selectedNode.data.adjacent_nodes || [];
+            var incomingEdges = selectedNode.data.incoming_edges || [];
+            var outgoingEdges = selectedNode.data.outgoing_edges || [];
+
+            // セットに変換（高速検索用）
+            var adjacentNodesSet = new Set(adjacentNodes);
+            var incomingEdgesSet = new Set(incomingEdges);
+            var outgoingEdgesSet = new Set(outgoingEdges);
+
+            // elementsを更新
+            return currentElements.map(function(el) {
+                var newEl = JSON.parse(JSON.stringify(el));
+                var data = newEl.data;
+
+                // ノードの場合
+                if (!data.source) {
+                    if (data.id === selectedNodeId) {
+                        newEl.classes = 'selected';
+                    } else if (adjacentNodesSet.has(data.id)) {
+                        newEl.classes = 'connected';
+                    } else {
+                        newEl.classes = 'faded';
+                    }
+                }
+                // エッジの場合
+                else {
+                    if (incomingEdgesSet.has(data.id)) {
+                        newEl.classes = 'incoming-edge';
+                    } else if (outgoingEdgesSet.has(data.id)) {
+                        newEl.classes = 'outgoing-edge';
+                    } else {
+                        newEl.classes = 'faded';
+                    }
+                }
+
+                return newEl;
+            });
+        }
+        """,
+        Output("group-subgraph-network-graph", "elements", allow_duplicate=True),
+        Input("group-subgraph-network-graph", "tapNodeData"),
+        State("group-subgraph-network-graph", "elements"),
+        prevent_initial_call=True,
+    )
+
+    # ===== Group Network背景クリック → ハイライト解除（クライアントサイド） =====
+    # selectedNodeDataが空配列になったとき（背景クリック等）にハイライトを初期状態に戻す
+    app.clientside_callback(
+        """
+        function(selectedNodeData, currentElements) {
+            // elementsがない場合は更新しない
+            if (!currentElements || currentElements.length === 0) {
+                return window.dash_clientside.no_update;
+            }
+
+            // selectedNodeDataが空配列の場合（ノード選択解除 = 背景クリック等）
+            if (!selectedNodeData || selectedNodeData.length === 0) {
+                // 全elementsのclassesをクリアして初期状態に戻す
+                return currentElements.map(function(el) {
+                    var newEl = JSON.parse(JSON.stringify(el));
+                    newEl.classes = '';
+                    return newEl;
+                });
+            }
+
+            // ノードが選択されている場合は更新しない（tapNodeDataのコールバックで処理）
+            return window.dash_clientside.no_update;
+        }
+        """,
+        Output("group-subgraph-network-graph", "elements", allow_duplicate=True),
+        Input("group-subgraph-network-graph", "selectedNodeData"),
+        State("group-subgraph-network-graph", "elements"),
         prevent_initial_call=True,
     )

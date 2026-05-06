@@ -15,7 +15,10 @@ from src.graph.community_detector import (
     create_group_metrics,
     calculate_detection_stats,
     generate_subgraph_images,
+    generate_full_network_highlight_images,
     save_subgraphs,
+    save_full_network_positions,
+    save_subgraph_positions,
 )
 
 logger = logging.getLogger(__name__)
@@ -116,10 +119,27 @@ def main() -> int:
     saved_graphs = save_subgraphs(communities, G, graphs_dir)
     logger.info(f"Saved {len(saved_graphs)} subgraphs")
 
+    # 全体ネットワーク座標を計算・保存
+    full_positions_path = OUTPUT_DIR.parent / "node_positions.json"
+    full_positions = save_full_network_positions(G, full_positions_path)
+    logger.info(f"Saved full network positions to {full_positions_path}")
+
+    # サブグラフ座標を保存
+    positions_dir = OUTPUT_DIR / "subgraphs" / "positions"
+    saved_positions = save_subgraph_positions(communities, G, positions_dir)
+    logger.info(f"Saved {len(saved_positions)} subgraph position files")
+
     # サブグラフ画像を生成
     images_dir = OUTPUT_DIR / "subgraphs" / "images"
     generated_images = generate_subgraph_images(communities, G, images_dir)
     logger.info(f"Generated {len(generated_images)} subgraph images")
+
+    # 全体ネットワークハイライト画像を生成（計算済み座標を渡す）
+    full_images_dir = OUTPUT_DIR / "subgraphs" / "full_images"
+    generated_full_images = generate_full_network_highlight_images(
+        communities, G, full_images_dir, positions=full_positions
+    )
+    logger.info(f"Generated {len(generated_full_images)} full network highlight images")
 
     logger.info("Community detection completed successfully")
     return 0

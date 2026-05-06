@@ -1,6 +1,5 @@
 """ネットワークグラフ構築モジュール"""
 
-import networkx as nx
 import pandas as pd
 
 from src.dash_app.utils.constants import (
@@ -12,6 +11,7 @@ from src.dash_app.utils.data_loader import (
     load_citations,
     load_peps_metadata,
     load_node_metrics,
+    load_full_network_positions,
 )
 
 
@@ -84,101 +84,19 @@ def build_cytoscape_elements() -> list[dict]:
 
 def _calculate_node_positions() -> dict[int, tuple[float, float]]:
     """
-    NetworkXを使用してノードの座標を計算する
+    事前計算されたノード座標を読み込む
 
-    孤立ノード(引用関係がないPEP)は左上にグリッド配置し、
-    引用関係のあるノードは中央にspring_layoutで配置する。
+    定期スクリプトで計算・保存された座標を読み込む。
+    Cytoscape.jsはY軸が下向き正、Matplotlibは上向き正のため、Y座標を反転する。
 
     Returns:
         dict[int, tuple[float, float]]: PEP番号をキー、(x, y)座標を値とする辞書
     """
-    existing_peps, edges_df = _load_valid_edges_df()
+    # 事前計算された座標を読み込む
+    positions = load_full_network_positions()
 
-    # エッジリストから有向グラフを構築 (from_pandas_edgelist で一括追加)
-    G = nx.from_pandas_edgelist(
-        edges_df,
-        source="citing",
-        target="cited",
-        create_using=nx.DiGraph,
-    )
-
-    # 孤立点(エッジに現れないPEP)をノードとして追加
-    G.add_nodes_from(existing_peps)
-
-    # 孤立ノードと引用関係のあるノードを分離
-    isolated_nodes = [node for node in G.nodes() if G.degree(node) == 0]
-    connected_nodes = [node for node in G.nodes() if G.degree(node) > 0]
-
-    positions = {}
-
-    # 引用関係のあるノードをspring_layoutで配置（先に計算してY座標の範囲を取得）
-    if connected_nodes:
-        # 引用関係のあるノードのみのサブグラフを作成
-        subgraph = G.subgraph(connected_nodes)
-
-        # 座標を計算(spring_layout = Fruchterman-Reingold力指向アルゴリズム)
-        connected_positions = nx.spring_layout(
-            subgraph,
-            threshold=1e-6,
-            k=500,  # ノード間の理想的な距離(大きいほど広がる)
-            iterations=500,  # イテレーション回数
-            seed=42,  # 乱数シード(再現性のため)
-            scale=1000,  # 座標のスケール
-            method="energy",  # 未指定でもノード数が多いため"energy"が適用されるが、明瞭さのため明示
-            gravity=20,  # 重力の強さ
-        )
-
-        # connected_positionsをpositionsに追加(タプルに統一して型を揃える)
-        positions.update(
-            {n: (float(p[0]), float(p[1])) for n, p in connected_positions.items()}
-        )
-
-        # Y座標の範囲を取得
-        y_values = [positions[n][1] for n in connected_nodes]
-        y_min = min(y_values)
-        y_max = max(y_values)
-    else:
-        # 引用関係のあるノードがない場合のデフォルト範囲
-        y_min = -500
-        y_max = 500
-
-    # 孤立ノードを左端に3列で配置
-    if isolated_nodes:
-        isolated_nodes_sorted = sorted(isolated_nodes)  # PEP番号順にソート
-        num_cols = 3  # 列数
-        col_spacing = 40  # 列間の間隔
-
-        # 非孤立ノードのX座標最小値を取得（基準点）
-        if connected_nodes:
-            connected_x_coords = [positions[n][0] for n in connected_nodes]
-            min_connected_x = min(connected_x_coords)
-            # 孤立ノードを非孤立ノードより左側に配置（100ピクセル左に）
-            x_start = min_connected_x - 100
-        else:
-            # 非孤立ノードがない場合はデフォルト値
-            x_start = -700
-
-        # 各列の行数を計算
-        num_nodes = len(isolated_nodes_sorted)
-        nodes_per_col = (num_nodes + num_cols - 1) // num_cols  # 切り上げ除算
-
-        # Y座標の範囲内で均等に配置
-        y_range = y_max - y_min
-        if nodes_per_col > 1:
-            y_spacing = y_range / (nodes_per_col - 1)
-        else:
-            y_spacing = 0
-
-        for i, node in enumerate(isolated_nodes_sorted):
-            col = i // nodes_per_col  # 列番号
-            row_index = i % nodes_per_col  # その列内での行番号
-
-            x = x_start + col * col_spacing
-            y = y_max - row_index * y_spacing
-
-            positions[node] = (float(x), float(y))
-
-    return positions
+    # Cytoscape.jsはY軸が下向き正、Matplotlibは上向き正のため、Y座標を反転
+    return {node: (x, -y) for node, (x, y) in positions.items()}
 
 
 def _calculate_adjacency_info() -> dict[int, dict[str, list[str]]]:

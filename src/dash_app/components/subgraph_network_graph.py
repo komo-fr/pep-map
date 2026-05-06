@@ -1,7 +1,5 @@
 """サブグラフネットワークグラフ構築モジュール"""
 
-import networkx as nx
-
 from src.dash_app.utils.constants import (
     DEFAULT_STATUS_COLOR,
     STATUS_COLOR_MAP,
@@ -12,8 +10,8 @@ from src.dash_app.utils.constants import (
 from src.dash_app.utils.data_loader import (
     load_subgraph,
     load_subgraph_metrics,
+    load_subgraph_positions,
 )
-from src.graph.community_detector import calculate_grid_layout
 
 
 # モジュールレベル定数
@@ -62,45 +60,72 @@ def _calculate_font_size_pagerank(pagerank: float) -> float:
     return min(font_size, max_font_size)
 
 
-def _calculate_node_positions(subgraph: nx.DiGraph) -> dict[int, tuple[float, float]]:
+def _load_node_positions(group_id: int) -> dict[int, tuple[float, float]]:
     """
-    サブグラフ内のノード座標を計算する
+    事前計算されたサブグラフ座標を読み込む
+
+    定期スクリプトで計算・保存された座標を読み込む。
+    Cytoscape.jsはY軸が下向き正、Matplotlibは上向き正のため、Y座標を反転する。
 
     Args:
-        subgraph: NetworkX DiGraph
+        group_id: グループID
 
     Returns:
         dict[int, tuple[float, float]]: PEP番号をキー、(x, y)座標を値とする辞書
     """
-    if len(subgraph.nodes()) == 0:
+    positions = load_subgraph_positions(group_id)
+    if positions is None:
         return {}
 
-    # エッジがない場合（孤立点のみ）は格子状に配置
-    if subgraph.number_of_edges() == 0:
-        # 正規化座標（0〜1）を取得し、スケーリング
-        grid_scale = 400  # spring_layoutのscale=200と同程度の広がり
-        normalized_pos = calculate_grid_layout(subgraph)
-        return {
-            node: (coords[0] * grid_scale, coords[1] * grid_scale)
-            for node, coords in normalized_pos.items()
+    # Cytoscape.jsはY軸が下向き正、Matplotlibは上向き正のため、Y座標を反転
+    return {node: (x, -y) for node, (x, y) in positions.items()}
+
+
+def _calculate_adjacency_info(subgraph) -> dict[int, dict[str, list[str]]]:
+    """
+    サブグラフの各ノードの隣接情報を計算する
+
+    Args:
+        subgraph: NetworkXグラフオブジェクト
+
+    Returns:
+        dict[int, dict[str, list[str]]]: PEP番号をキー、隣接情報を値とする辞書
+            隣接情報: {
+                "adjacent_nodes": list[str],  # 隣接ノードのID一覧
+                "incoming_edges": list[str],  # 入ってくるエッジのID一覧
+                "outgoing_edges": list[str],  # 出ていくエッジのID一覧
+            }
+    """
+    adjacency_info: dict[int, dict[str, list[str]]] = {}
+
+    # 全ノードを初期化
+    for node in subgraph.nodes():
+        adjacency_info[node] = {
+            "adjacent_nodes": [],
+            "incoming_edges": [],
+            "outgoing_edges": [],
         }
 
-    # spring_layoutで座標を計算
-    pos = nx.spring_layout(
-        subgraph,
-        threshold=1e-6,
-        k=1,  # ノード間の理想的な距離
-        seed=42,  # 再現性のため
-        scale=200,  # 座標のスケール（小さいほどノードが大きく見える）
-    )
+    # エッジを走査して隣接情報を構築
+    for source, target in subgraph.edges():
+        # 自己ループは除外
+        if source == target:
+            continue
 
-    # 座標を変換（NetworkXは{node: array([x, y])}形式）
-    # Cytoscape.jsはY軸が下向き正、Matplotlibは上向き正のため、Y座標を反転
-    positions = {}
-    for node, coords in pos.items():
-        positions[node] = (float(coords[0]), -float(coords[1]))
+        edge_id = f"edge_{source}_{target}"
 
-    return positions
+        # source → target なので:
+        # - sourceから見ると outgoing edge
+        # - targetから見ると incoming edge
+        if source in adjacency_info:
+            adjacency_info[source]["outgoing_edges"].append(edge_id)
+            adjacency_info[source]["adjacent_nodes"].append(f"pep_{target}")
+
+        if target in adjacency_info:
+            adjacency_info[target]["incoming_edges"].append(edge_id)
+            adjacency_info[target]["adjacent_nodes"].append(f"pep_{source}")
+
+    return adjacency_info
 
 
 def build_subgraph_cytoscape_elements(group_id: int) -> list[dict] | None:
@@ -130,8 +155,11 @@ def build_subgraph_cytoscape_elements(group_id: int) -> list[dict] | None:
     # ステータスの辞書を作成
     status_dict = dict(zip(metrics_df["PEP"], metrics_df["status"]))
 
-    # 座標を計算
-    positions = _calculate_node_positions(subgraph)
+    # 事前計算された座標を読み込む
+    positions = _load_node_positions(group_id)
+
+    # 隣接情報を計算
+    adjacency_info = _calculate_adjacency_info(subgraph)
 
     elements = []
 
@@ -155,6 +183,9 @@ def build_subgraph_cytoscape_elements(group_id: int) -> list[dict] | None:
         size_pagerank = _calculate_node_size_pagerank(pagerank)
         font_size_pagerank = _calculate_font_size_pagerank(pagerank)
 
+        # 隣接情報を取得
+        adj_info = adjacency_info.get(pep_number, {})
+
         node_data = {
             "data": {
                 "id": f"pep_{pep_number}",
@@ -165,6 +196,9 @@ def build_subgraph_cytoscape_elements(group_id: int) -> list[dict] | None:
                 "pagerank": pagerank,
                 "size_pagerank": size_pagerank,
                 "font_size_pagerank": font_size_pagerank,
+                "adjacent_nodes": adj_info.get("adjacent_nodes", []),
+                "incoming_edges": adj_info.get("incoming_edges", []),
+                "outgoing_edges": adj_info.get("outgoing_edges", []),
             },
             "position": {"x": pos[0], "y": pos[1]},
         }
@@ -236,6 +270,48 @@ def get_subgraph_base_stylesheet() -> list[dict]:
                 "border-color": "#FF0000",
                 "z-index": 9999,
                 "opacity": 1,
+            },
+        },
+        # 接続ノード
+        {
+            "selector": ".connected",
+            "style": {
+                "border-width": 1,
+                "border-color": "#888",
+                "opacity": 1,
+                "text-outline-width": TEXT_OUTLINE_WIDTH,
+                "text-outline-color": TEXT_OUTLINE_COLOR,
+            },
+        },
+        # 入ってくるエッジ（橙色）
+        {
+            "selector": ".incoming-edge",
+            "style": {
+                "width": 2,
+                "line-color": "#FF8C00",
+                "target-arrow-color": "#FF8C00",
+                "opacity": 1,
+                "z-index": 9998,
+            },
+        },
+        # 出ていくエッジ（水色）
+        {
+            "selector": ".outgoing-edge",
+            "style": {
+                "width": 2,
+                "line-color": "#1E90FF",
+                "target-arrow-color": "#1E90FF",
+                "opacity": 1,
+                "z-index": 9998,
+            },
+        },
+        # 非接続（減衰）
+        {
+            "selector": ".faded",
+            "style": {
+                "opacity": 0.15,
+                "text-outline-width": TEXT_OUTLINE_WIDTH,
+                "text-outline-color": TEXT_OUTLINE_COLOR,
             },
         },
     ]

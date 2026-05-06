@@ -2,11 +2,14 @@
 
 import base64
 from pathlib import Path
+from unittest.mock import patch
 
+import networkx as nx
 import pandas as pd
 
 from src.llm.group_profile import (
     format_peps_as_markdown,
+    format_edges_as_text,
     encode_image_as_data_url,
     GroupProfile,
 )
@@ -56,7 +59,7 @@ class TestFormatPepsAsMarkdown:
         df.to_csv(csv_path, index=False)
 
         # Act
-        result = format_peps_as_markdown(csv_path, group_id=0)
+        result = format_peps_as_markdown(df, group_id=0)
 
         # Assert
         assert "PEP Purpose" in result
@@ -104,7 +107,7 @@ class TestFormatPepsAsMarkdown:
         df.to_csv(csv_path, index=False)
 
         # Act
-        result = format_peps_as_markdown(csv_path, group_id=0)
+        result = format_peps_as_markdown(df, group_id=0)
 
         # Assert: High > Mid > Low の順で出現する
         high_pos = result.find("High PageRank")
@@ -216,8 +219,6 @@ class TestGroupProfileStr:
         output = GroupProfile(
             group_name="型ヒント",
             description="このグループは型ヒントに関するPEPを含みます。",
-            group_name_2="型アノテーション",
-            group_name_3="静的型付け",
         )
 
         # Act
@@ -226,6 +227,54 @@ class TestGroupProfileStr:
         # Assert
         lines = result.split("\n")
         assert lines[0] == "型ヒント"
-        assert lines[1] == "型アノテーション / 静的型付け"
-        assert lines[2] == "説明:"
-        assert lines[3] == "このグループは型ヒントに関するPEPを含みます。"
+        assert lines[1] == "説明:"
+        assert lines[2] == "このグループは型ヒントに関するPEPを含みます。"
+
+
+class TestFormatEdgesAsText:
+    """format_edges_as_text() のテスト"""
+
+    def test_returns_edge_list_in_arrow_format(self, tmp_path: Path):
+        """エッジリストが矢印形式で返される"""
+        # Arrange
+        graph: nx.DiGraph = nx.DiGraph()
+        graph.add_edge(1, 2)
+        graph.add_edge(1, 3)
+        graph.add_edge(2, 3)
+        graph.add_edge(3, 1)
+
+        # Act
+        with patch("src.llm.group_profile.load_subgraph", return_value=graph):
+            result = format_edges_as_text(group_id=0)
+
+        # Assert
+        assert result is not None
+        lines = result.split("\n")
+        assert len(lines) == 4
+        assert "1 -> 2" in lines
+        assert "1 -> 3" in lines
+        assert "2 -> 3" in lines
+        assert "3 -> 1" in lines
+
+    def test_returns_none_when_subgraph_not_found(self):
+        """サブグラフが存在しない場合はNoneを返す"""
+        # Act
+        with patch("src.llm.group_profile.load_subgraph", return_value=None):
+            result = format_edges_as_text(group_id=999)
+
+        # Assert
+        assert result is None
+
+    def test_returns_empty_string_for_graph_without_edges(self):
+        """エッジがないグラフの場合は空文字列を返す"""
+        # Arrange
+        graph: nx.DiGraph = nx.DiGraph()
+        graph.add_node(1)
+        graph.add_node(2)
+
+        # Act
+        with patch("src.llm.group_profile.load_subgraph", return_value=graph):
+            result = format_edges_as_text(group_id=0)
+
+        # Assert
+        assert result == ""
