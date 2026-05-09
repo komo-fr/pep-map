@@ -24,6 +24,7 @@ from src.dash_app.utils.data_loader import (
     generate_pep_url,
     get_group_name_info,
     load_peps_metadata,
+    get_adjacent_groups,
 )
 
 
@@ -377,17 +378,20 @@ def register_group_callbacks(app):
         Output("group-name-display", "children"),
         Output("group-description-display", "children"),
         Output("group-description-display", "style"),
+        Output("adjacent-groups-display", "children"),
+        Output("adjacent-groups-display", "style"),
         Input("group-selector-dropdown", "value"),
     )
     def update_group_table(selected_group):
         """
-        グループ選択時にテーブルデータ、タイトル、グループ名、説明を更新する
+        グループ選択時にテーブルデータ、タイトル、グループ名、説明、隣接グループを更新する
 
         Args:
             selected_group: 選択されたグループ（"all" または グループID）
 
         Returns:
-            tuple: (テーブルデータ, タイトル, グループ名, グループ説明, 説明スタイル)
+            tuple: (テーブルデータ, タイトル, グループ名, グループ説明, 説明スタイル,
+                    隣接グループ, 隣接グループスタイル)
         """
         # 説明文が空の時のスタイル（非表示）
         empty_style = {"display": "none"}
@@ -402,7 +406,15 @@ def register_group_callbacks(app):
         }
 
         if selected_group is None or selected_group == "all":
-            return [], "Select a group to view PEPs", "", "", empty_style
+            return (
+                [],
+                "Select a group to view PEPs",
+                "",
+                "",
+                empty_style,
+                "",
+                empty_style,
+            )
 
         group_id = int(selected_group)
         df = get_peps_by_group(group_id)
@@ -514,9 +526,109 @@ def register_group_callbacks(app):
 
             description_style = filled_style
 
+        # 隣接グループ情報を取得
+        adjacent_info = get_adjacent_groups(group_id)
+        citing_groups = adjacent_info["citing_groups"]
+        cited_groups = adjacent_info["cited_groups"]
+
+        # 隣接グループ表示コンポーネントを作成
+        if not citing_groups and not cited_groups:
+            adjacent_children = ""
+            adjacent_style = empty_style
+        else:
+            adjacent_style = {
+                "marginBottom": "8px",
+                "marginTop": "0",
+                "backgroundColor": "#F5F5F5",
+                "padding": "12px",
+                "borderRadius": "4px",
+            }
+
+            # グループボタンのスタイル
+            button_style = {
+                "display": "inline-block",
+                "padding": "4px 10px",
+                "margin": "2px 4px 2px 0",
+                "backgroundColor": "#E8E8E8",
+                "border": "1px solid #CCC",
+                "borderRadius": "16px",
+                "fontSize": "12px",
+                "cursor": "pointer",
+                "color": "#333",
+            }
+
+            adjacent_children = []
+
+            # 選択中のグループを引用しているグループ
+            if citing_groups:
+                citing_buttons = []
+                for grp_id, weight in citing_groups:
+                    citing_buttons.append(
+                        html.Span(
+                            f"Group {grp_id}",
+                            id={"type": "adjacent-group-button", "group_id": grp_id},
+                            style=button_style,
+                            title=f"引用数: {weight}",
+                        )
+                    )
+                adjacent_children.append(
+                    html.Div(
+                        [
+                            html.P(
+                                "選択中のグループを引用しているグループ:",
+                                style={
+                                    "margin": "0 0 4px 0",
+                                    "fontSize": "12px",
+                                    "color": "#666",
+                                    "fontWeight": "bold",
+                                },
+                            ),
+                            html.Div(citing_buttons),
+                        ],
+                        style={"marginBottom": "8px"},
+                    )
+                )
+
+            # 選択中のグループが引用しているグループ
+            if cited_groups:
+                cited_buttons = []
+                for grp_id, weight in cited_groups:
+                    cited_buttons.append(
+                        html.Span(
+                            f"Group {grp_id}",
+                            id={"type": "adjacent-group-button", "group_id": grp_id},
+                            style=button_style,
+                            title=f"引用数: {weight}",
+                        )
+                    )
+                adjacent_children.append(
+                    html.Div(
+                        [
+                            html.P(
+                                "選択中のグループが引用しているグループ:",
+                                style={
+                                    "margin": "0 0 4px 0",
+                                    "fontSize": "12px",
+                                    "color": "#666",
+                                    "fontWeight": "bold",
+                                },
+                            ),
+                            html.Div(cited_buttons),
+                        ],
+                    )
+                )
+
         if df.empty:
             title = f"Group {group_id} (no data)"
-            return [], title, group_name, description_children, description_style
+            return (
+                [],
+                title,
+                group_name,
+                description_children,
+                description_style,
+                adjacent_children,
+                adjacent_style,
+            )
 
         # ソート: PageRank降順 > In-degree降順 > Out-degree降順 > Degree降順 > PEP番号昇順
         df = df.sort_values(
@@ -573,7 +685,15 @@ def register_group_callbacks(app):
         count = len(table_data)
         title = f"Group {group_id} ({count} PEPs)"
 
-        return table_data, title, group_name, description_children, description_style
+        return (
+            table_data,
+            title,
+            group_name,
+            description_children,
+            description_style,
+            adjacent_children,
+            adjacent_style,
+        )
 
     # ===== ノードクリック → グループ選択更新 + 選択ソース更新 + PEP入力欄更新（サーバーサイド） =====
     @app.callback(
