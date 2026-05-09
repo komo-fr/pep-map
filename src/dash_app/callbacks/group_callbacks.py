@@ -15,7 +15,7 @@ from src.dash_app.components.subgraph_network_graph import (
     get_subgraph_base_stylesheet,
     get_subgraph_layout_options,
 )
-from src.dash_app.layouts.group_tab import _create_subgraph_placeholder_with_dummy
+from src.dash_app.layouts.group_tab import create_subgraph_placeholder_with_dummy
 from src.dash_app.utils.constants import TEXT_OUTLINE_COLOR, TEXT_OUTLINE_WIDTH
 from src.dash_app.utils.data_loader import (
     get_peps_by_group,
