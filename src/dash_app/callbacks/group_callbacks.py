@@ -46,6 +46,15 @@ _GROUP_BUTTON_STYLE: dict[str, str] = {
     "color": "#333",
 }
 
+# 隣接グループセクションのスタイル
+_ADJACENT_SECTION_STYLE: dict[str, str] = {
+    "marginBottom": "8px",
+    "marginTop": "0",
+    "backgroundColor": "#F5F5F5",
+    "padding": "12px",
+    "borderRadius": "4px",
+}
+
 
 def _create_group_button_with_tooltip(
     grp_id: int,
@@ -608,14 +617,6 @@ def register_group_callbacks(app):
         cited_groups = adjacent_info["cited_groups"]
 
         # 隣接グループ表示コンポーネントを作成
-        adjacent_style = {
-            "marginBottom": "8px",
-            "marginTop": "0",
-            "backgroundColor": "#F5F5F5",
-            "padding": "12px",
-            "borderRadius": "4px",
-        }
-
         adjacent_children = []
 
         # 選択中のグループを引用しているグループ
@@ -702,7 +703,7 @@ def register_group_callbacks(app):
                 description_children,
                 description_style,
                 adjacent_children,
-                adjacent_style,
+                _ADJACENT_SECTION_STYLE,
             )
 
         # ソート: PageRank降順 > In-degree降順 > Out-degree降順 > Degree降順 > PEP番号昇順
@@ -767,7 +768,7 @@ def register_group_callbacks(app):
             description_children,
             description_style,
             adjacent_children,
-            adjacent_style,
+            _ADJACENT_SECTION_STYLE,
         )
 
     # ===== ノードクリック → グループ選択更新 + 選択ソース更新 + PEP入力欄更新（サーバーサイド） =====
