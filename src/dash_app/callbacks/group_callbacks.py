@@ -3,7 +3,7 @@
 import re
 import pandas as pd
 import dash_cytoscape as cyto
-from dash import Input, Output, State, callback_context, no_update, html
+from dash import Input, Output, State, callback_context, no_update, html, ALL
 from dash.development.base_component import Component
 from src.dash_app.components.pep_info import (
     create_group_initial_info_message,
@@ -554,8 +554,14 @@ def register_group_callbacks(app):
             "color": "#333",
         }
 
-        def create_group_button_with_tooltip(grp_id: int, weight: int):
-            """ツールチップ付きのグループボタンを作成"""
+        def create_group_button_with_tooltip(grp_id: int, weight: int, direction: str):
+            """ツールチップ付きのグループボタンを作成
+
+            Args:
+                grp_id: グループID
+                weight: 引用数
+                direction: "citing" または "cited"（IDの一意性のため）
+            """
             # グループ名を取得
             grp_info = get_group_name_info(grp_id)
             grp_name = grp_info["group_name"] or f"Group {grp_id}"
@@ -591,7 +597,11 @@ def register_group_callbacks(app):
                         className="pep-tooltip-text",
                     ),
                 ],
-                id={"type": "adjacent-group-button", "group_id": grp_id},
+                id={
+                    "type": "adjacent-group-button",
+                    "group_id": grp_id,
+                    "direction": direction,
+                },
                 className="pep-link-tooltip",
                 style={"cursor": "pointer"},
             )
@@ -602,7 +612,9 @@ def register_group_callbacks(app):
         if citing_groups:
             citing_buttons = []
             for grp_id, weight in citing_groups:
-                citing_buttons.append(create_group_button_with_tooltip(grp_id, weight))
+                citing_buttons.append(
+                    create_group_button_with_tooltip(grp_id, weight, "citing")
+                )
             citing_content = html.Div(citing_buttons)
         else:
             citing_content = html.P(
@@ -636,7 +648,9 @@ def register_group_callbacks(app):
         if cited_groups:
             cited_buttons = []
             for grp_id, weight in cited_groups:
-                cited_buttons.append(create_group_button_with_tooltip(grp_id, weight))
+                cited_buttons.append(
+                    create_group_button_with_tooltip(grp_id, weight, "cited")
+                )
             cited_content = html.Div(cited_buttons)
         else:
             cited_content = html.P(
@@ -787,6 +801,55 @@ def register_group_callbacks(app):
                     # PEP番号を文字列に変換（入力欄に表示するため）
                     pep_input_value = str(pep_number) if pep_number is not None else ""
                     return group_id, "node_tap", pep_input_value
+
+        return no_update, no_update, no_update
+
+    # ===== 隣接グループボタンクリック → グループ選択更新（サーバーサイド） =====
+    @app.callback(
+        Output("group-selector-dropdown", "value", allow_duplicate=True),
+        Output("group-selection-source", "data", allow_duplicate=True),
+        Output("group-pep-input", "value", allow_duplicate=True),
+        Input(
+            {"type": "adjacent-group-button", "group_id": ALL, "direction": ALL},
+            "n_clicks",
+        ),
+        prevent_initial_call=True,
+    )
+    def update_from_adjacent_group_click(n_clicks_list):
+        """
+        隣接グループボタンクリック時にグループ選択を更新する
+
+        Args:
+            n_clicks_list: 各ボタンのクリック数リスト
+
+        Returns:
+            tuple: (グループID, 選択ソース, PEP入力欄の値)
+        """
+        ctx = callback_context
+        if not ctx.triggered:
+            return no_update, no_update, no_update
+
+        # ctx.triggered から実際にクリックがあったボタンを探す
+        for triggered in ctx.triggered:
+            value = triggered.get("value")
+            # 実際にクリックがあった場合のみ処理（value が 1 以上）
+            if value is not None and value >= 1:
+                # prop_id から group_id を抽出
+                prop_id = triggered.get("prop_id", "")
+                # prop_id の形式:
+                # {"direction":"citing","group_id":7,"type":"adjacent-group-button"}.n_clicks
+                if "adjacent-group-button" in prop_id:
+                    import json
+
+                    try:
+                        # .n_clicks を除去してJSONをパース
+                        id_json = prop_id.rsplit(".", 1)[0]
+                        id_dict = json.loads(id_json)
+                        group_id = id_dict.get("group_id")
+                        if group_id is not None:
+                            return group_id, "dropdown", ""
+                    except (json.JSONDecodeError, IndexError):
+                        pass
 
         return no_update, no_update, no_update
 
