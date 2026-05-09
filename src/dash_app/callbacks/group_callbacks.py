@@ -613,7 +613,7 @@ def register_group_callbacks(app):
                     html.Div(
                         [
                             html.P(
-                                "選択中のグループを引用しているグループ:",
+                                "Groups citing this group:",
                                 style={
                                     "margin": "0 0 4px 0",
                                     "fontSize": "12px",
@@ -638,7 +638,7 @@ def register_group_callbacks(app):
                     html.Div(
                         [
                             html.P(
-                                "選択中のグループが引用しているグループ:",
+                                "Groups this group cites:",
                                 style={
                                     "margin": "0 0 4px 0",
                                     "fontSize": "12px",
