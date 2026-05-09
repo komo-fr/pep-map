@@ -521,7 +521,10 @@ def register_group_callbacks(app):
 
         # テーブルデータに変換（pandasを使って効率的に処理）
         # created列を日付型に変換してからフォーマット
-        df["created"] = pd.to_datetime(df["created"], errors="coerce")
+        # フォーマット: "09-Jul-2010" → %d-%b-%Y
+        df["created"] = pd.to_datetime(
+            df["created"], format="%d-%b-%Y", errors="coerce"
+        )
         df["created_str"] = df["created"].dt.strftime("%Y-%m-%d").fillna("")
 
         # PEP列にMarkdownリンクを追加
