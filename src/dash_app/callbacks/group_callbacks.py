@@ -520,8 +520,7 @@ def register_group_callbacks(app):
         ).reset_index(drop=True)
 
         # テーブルデータに変換（pandasを使って効率的に処理）
-        # created列を日付型に変換してからフォーマット
-        df["created"] = pd.to_datetime(df["created"], errors="coerce")
+        # created列を文字列にフォーマット（日付型への変換はload_group_dataで実施済み）
         df["created_str"] = df["created"].dt.strftime("%Y-%m-%d").fillna("")
 
         # PEP列にMarkdownリンクを追加

@@ -533,7 +533,13 @@ def load_group_data() -> pd.DataFrame:
             f"Group data file not found: {group_file}. "
             "Run the data pipeline to generate this file."
         )
-    _group_data_cache = pd.read_csv(group_file)
+    df = pd.read_csv(group_file)
+
+    # created列を日付型に変換
+    # フォーマット: "09-Jul-2010" → %d-%b-%Y
+    df["created"] = pd.to_datetime(df["created"], format="%d-%b-%Y")
+
+    _group_data_cache = df
     return _group_data_cache
 
 
