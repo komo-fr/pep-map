@@ -519,25 +519,45 @@ def register_group_callbacks(app):
             ascending=[False, False, False, False, True],
         ).reset_index(drop=True)
 
-        # テーブルデータに変換
-        table_data = []
-        for _, row in df.iterrows():
-            pep_num = int(row["PEP"])
-            pep_url = generate_pep_url(pep_num)
-            # 日付をフォーマット（YYYY-MM-DD）
-            created_str = row["created"] if pd.notna(row["created"]) else ""
-            table_data.append(
-                {
-                    "pep": f"[PEP {pep_num}]({pep_url})",
-                    "title": row["title"],
-                    "status": row["status"],
-                    "created": created_str,
-                    "in_degree": int(row["in-degree_group"]),
-                    "out_degree": int(row["out-degree_group"]),
-                    "degree": int(row["degree_group"]),
-                    "pagerank": f"{row['pagerank_group']:.4f}",
+        # テーブルデータに変換（pandasを使って効率的に処理）
+        # created列を日付型に変換してからフォーマット
+        df["created"] = pd.to_datetime(df["created"], errors="coerce")
+        df["created_str"] = df["created"].dt.strftime("%Y-%m-%d").fillna("")
+
+        # PEP列にMarkdownリンクを追加
+        df["pep_markdown"] = df["PEP"].apply(
+            lambda pep_num: f"[PEP {pep_num}]({generate_pep_url(pep_num)})"
+        )
+
+        # PageRank列をフォーマット
+        df["pagerank_str"] = df["pagerank_group"].apply(lambda x: f"{x:.4f}")
+
+        # テーブルデータ用の辞書リストを作成
+        table_data = (
+            df[
+                [
+                    "pep_markdown",
+                    "title",
+                    "status",
+                    "created_str",
+                    "in-degree_group",
+                    "out-degree_group",
+                    "degree_group",
+                    "pagerank_str",
+                ]
+            ]
+            .rename(
+                columns={
+                    "pep_markdown": "pep",
+                    "created_str": "created",
+                    "in-degree_group": "in_degree",
+                    "out-degree_group": "out_degree",
+                    "degree_group": "degree",
+                    "pagerank_str": "pagerank",
                 }
             )
+            .to_dict("records")
+        )
 
         # タイトルを設定
         count = len(table_data)

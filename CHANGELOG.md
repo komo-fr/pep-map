@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.8.1] - 2026-05-09
+
+### Added
+- Show tooltips with metric descriptions on column headers in the `Groups (beta)` tab table.
+
+### Fixed
+- Fix sorting by the `Created` column in the `Groups (beta)` tab table.
+
 ## [0.8.0] - 2026-05-06
 
 ### Changed
