@@ -1689,13 +1689,15 @@ def register_group_callbacks(app):
 
                 // ノードの場合
                 if (!data.source) {
-                    newEl.selected = false;
                     if (data.id === selectedNodeId) {
                         newEl.classes = 'selected';
+                        newEl.selected = true;
                     } else if (adjacentNodesSet.has(data.id)) {
                         newEl.classes = 'connected';
+                        newEl.selected = false;
                     } else {
                         newEl.classes = 'faded';
+                        newEl.selected = false;
                     }
                 }
                 // エッジの場合
