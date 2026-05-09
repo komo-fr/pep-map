@@ -1,6 +1,5 @@
 """Groupタブのコールバック関数"""
 
-import json
 import re
 import pandas as pd
 import dash_cytoscape as cyto
@@ -830,25 +829,17 @@ def register_group_callbacks(app):
         if not ctx.triggered:
             return no_update, no_update, no_update
 
-        # ctx.triggered から実際にクリックがあったボタンを探す
-        for triggered in ctx.triggered:
-            value = triggered.get("value")
-            # 実際にクリックがあった場合のみ処理（value が 1 以上）
-            if value is not None and value >= 1:
-                # prop_id から group_id を抽出
-                prop_id = triggered.get("prop_id", "")
-                # prop_id の形式:
-                # {"direction":"citing","group_id":7,"type":"adjacent-group-button"}.n_clicks
-                if "adjacent-group-button" in prop_id:
-                    try:
-                        # .n_clicks を除去してJSONをパース
-                        id_json = prop_id.rsplit(".", 1)[0]
-                        id_dict = json.loads(id_json)
-                        group_id = id_dict.get("group_id")
-                        if group_id is not None:
-                            return group_id, "dropdown", ""
-                    except (json.JSONDecodeError, IndexError):
-                        pass
+        # ctx.triggered_id を使用（Dash推奨パターン）
+        # pattern-matching callbacks では辞書として返される
+        triggered_id = ctx.triggered_id
+        if triggered_id and isinstance(triggered_id, dict):
+            if triggered_id.get("type") == "adjacent-group-button":
+                # 実際にクリックがあった場合のみ処理（value が 1 以上）
+                value = ctx.triggered[0].get("value")
+                if value is not None and value >= 1:
+                    group_id = triggered_id.get("group_id")
+                    if group_id is not None:
+                        return group_id, "dropdown", ""
 
         return no_update, no_update, no_update
 
