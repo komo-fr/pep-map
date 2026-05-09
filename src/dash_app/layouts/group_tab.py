@@ -8,6 +8,11 @@ from src.dash_app.components.group_network_graph import (
     get_group_base_stylesheet,
     get_preset_layout_options,
 )
+from src.dash_app.components.group_to_group_network_graph import (
+    build_group_to_group_cytoscape_elements,
+    get_group_to_group_base_stylesheet,
+    get_group_to_group_layout_options,
+)
 from src.dash_app.components.pep_info import create_group_initial_info_message
 from src.dash_app.components.pep_tables import generate_status_styles
 from src.dash_app.utils.data_loader import get_group_list, load_metadata
@@ -302,6 +307,12 @@ def _create_network_tabs() -> html.Div:
                         n_clicks=0,
                         style=tab_button_base_style,
                     ),
+                    html.Button(
+                        "Group-to-Group Network",
+                        id="group-to-group-tab-button",
+                        n_clicks=0,
+                        style=tab_button_base_style,
+                    ),
                 ],
                 style={
                     "borderBottom": "1px solid #ddd",
@@ -325,6 +336,19 @@ def _create_network_tabs() -> html.Div:
                     html.Div(
                         id="group-network-content",
                         children=_create_subgraph_tab_content(),
+                        style={
+                            "visibility": "hidden",
+                            "position": "absolute",
+                            "top": "0",
+                            "left": "0",
+                            "right": "0",
+                            "zIndex": "0",
+                        },
+                    ),
+                    # Group-to-Group Networkコンテンツ（初期非表示）
+                    html.Div(
+                        id="group-to-group-content",
+                        children=_create_group_to_group_tab_content(),
                         style={
                             "visibility": "hidden",
                             "position": "absolute",
@@ -394,6 +418,57 @@ def _create_subgraph_tab_content() -> html.Div:
             ),
         ],
         style={"paddingTop": "8px"},
+    )
+
+
+def _create_group_to_group_tab_content() -> html.Div:
+    """Group-to-Group Networkタブの内容を生成する"""
+    return html.Div(
+        [
+            # 説明テキスト
+            html.P(
+                [
+                    html.Strong("Color"),
+                    " indicates the group (same as Full Network).",
+                ],
+                style={"fontSize": "12px", "color": "#666", "marginBottom": "4px"},
+            ),
+            html.P(
+                [
+                    html.Strong("Node sizes"),
+                    " are based on the number of PEPs in each group.",
+                ],
+                style={"fontSize": "12px", "color": "#666", "marginBottom": "4px"},
+            ),
+            html.P(
+                [
+                    html.Strong("Edge widths"),
+                    " are based on the number of citations between groups.",
+                ],
+                style={"fontSize": "12px", "color": "#666", "marginBottom": "8px"},
+            ),
+            # ネットワークグラフ
+            _create_group_to_group_graph(),
+        ],
+        style={"paddingTop": "8px"},
+    )
+
+
+def _create_group_to_group_graph() -> cyto.Cytoscape:
+    """Group-to-Groupネットワークグラフコンポーネントを生成する"""
+    elements = build_group_to_group_cytoscape_elements()
+
+    return cyto.Cytoscape(
+        id="group-to-group-network-graph",
+        elements=elements,
+        layout=get_group_to_group_layout_options(),
+        style={
+            "width": "100%",
+            "height": "800px",
+            "border": "1px solid #ddd",
+            "backgroundColor": "#fafafa",
+        },
+        stylesheet=get_group_to_group_base_stylesheet(),
     )
 
 

@@ -27,6 +27,7 @@ _group_data_cache: pd.DataFrame | None = None
 _group_names_cache: pd.DataFrame | None = None
 _full_network_positions_cache: dict[int, tuple[float, float]] | None = None
 _subgraph_positions_cache: dict[int, dict[int, tuple[float, float]]] = {}
+_group_to_group_network_cache: "nx.DiGraph | None" = None
 
 
 def load_peps_metadata() -> pd.DataFrame:
@@ -678,7 +679,8 @@ def clear_cache() -> None:
         _group_data_cache, \
         _group_names_cache, \
         _full_network_positions_cache, \
-        _subgraph_positions_cache
+        _subgraph_positions_cache, \
+        _group_to_group_network_cache
     _peps_metadata_cache = None
     _citations_cache = None
     _metadata_cache = None
@@ -691,6 +693,7 @@ def clear_cache() -> None:
     _group_names_cache = None
     _full_network_positions_cache = None
     _subgraph_positions_cache = {}
+    _group_to_group_network_cache = None
 
     # 他モジュールのキャッシュもクリア（遅延インポートで循環参照を回避）
     from src.dash_app.components import network_graph, group_network_graph
@@ -798,3 +801,33 @@ def load_subgraph_positions(group_id: int) -> dict[int, tuple[float, float]] | N
 
     _subgraph_positions_cache[group_id] = positions
     return positions
+
+
+def load_group_to_group_network() -> "nx.DiGraph":
+    """
+    グループ間ネットワークを読み込む（キャッシュあり）
+
+    Returns:
+        nx.DiGraph: グループ間ネットワークグラフ
+            ノード属性:
+                - group_name (str): グループ名
+                - pep_count (int): グループに含まれるPEP数
+            エッジ属性:
+                - weight (int): グループ間の引用数
+    """
+    global _group_to_group_network_cache
+
+    if _group_to_group_network_cache is not None:
+        return _group_to_group_network_cache
+
+    network_path = DATA_DIR / "groups" / "group_to_group" / "group_to_group_network.pkl"
+    if not network_path.exists():
+        raise FileNotFoundError(
+            f"Group-to-group network file not found: {network_path}. "
+            "Run the data pipeline to generate this file."
+        )
+
+    with open(network_path, "rb") as f:
+        _group_to_group_network_cache = pickle.load(f)
+
+    return _group_to_group_network_cache

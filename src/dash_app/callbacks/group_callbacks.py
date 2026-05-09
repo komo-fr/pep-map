@@ -1005,8 +1005,8 @@ def register_group_callbacks(app):
     # visibility/positionベースの切り替えでCytoscapeのレイアウト計算を維持
     app.clientside_callback(
         """
-        function(fullClicks, groupClicks) {
-            // どちらのボタンがクリックされたかを判定
+        function(fullClicks, groupClicks, groupToGroupClicks) {
+            // どのボタンがクリックされたかを判定
             const ctx = window.dash_clientside.callback_context;
 
             // 表示タブのスタイル（通常表示）
@@ -1055,7 +1055,9 @@ def register_group_callbacks(app):
                 return [
                     visibleContentStyle,
                     hiddenContentStyle,
+                    hiddenContentStyle,
                     selectedButtonStyle,
+                    unselectedButtonStyle,
                     unselectedButtonStyle
                 ];
             }
@@ -1066,13 +1068,27 @@ def register_group_callbacks(app):
                 return [
                     visibleContentStyle,
                     hiddenContentStyle,
+                    hiddenContentStyle,
+                    selectedButtonStyle,
+                    unselectedButtonStyle,
+                    unselectedButtonStyle
+                ];
+            } else if (triggeredId === 'group-network-tab-button') {
+                return [
+                    hiddenContentStyle,
+                    visibleContentStyle,
+                    hiddenContentStyle,
+                    unselectedButtonStyle,
                     selectedButtonStyle,
                     unselectedButtonStyle
                 ];
             } else {
+                // group-to-group-tab-button
                 return [
                     hiddenContentStyle,
+                    hiddenContentStyle,
                     visibleContentStyle,
+                    unselectedButtonStyle,
                     unselectedButtonStyle,
                     selectedButtonStyle
                 ];
@@ -1081,10 +1097,13 @@ def register_group_callbacks(app):
         """,
         Output("full-network-content", "style"),
         Output("group-network-content", "style"),
+        Output("group-to-group-content", "style"),
         Output("full-network-tab-button", "style"),
         Output("group-network-tab-button", "style"),
+        Output("group-to-group-tab-button", "style"),
         Input("full-network-tab-button", "n_clicks"),
         Input("group-network-tab-button", "n_clicks"),
+        Input("group-to-group-tab-button", "n_clicks"),
     )
 
     # ===== Full Networkタップ → Group Network選択解除（クライアントサイド） =====
