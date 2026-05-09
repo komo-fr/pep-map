@@ -140,6 +140,53 @@ def _calculate_edge_width(weight: int, min_weight: int, max_weight: int) -> floa
     return _MIN_EDGE_WIDTH + normalized * (_MAX_EDGE_WIDTH - _MIN_EDGE_WIDTH)
 
 
+def _calculate_adjacency_info(G: nx.DiGraph) -> dict[int, dict[str, list[str]]]:
+    """
+    グループ間ネットワークの各ノードの隣接情報を計算する
+
+    Args:
+        G: NetworkXグラフオブジェクト
+
+    Returns:
+        dict[int, dict[str, list[str]]]: グループIDをキー、隣接情報を値とする辞書
+            隣接情報: {
+                "adjacent_nodes": list[str],  # 隣接ノードのID一覧
+                "incoming_edges": list[str],  # 入ってくるエッジのID一覧
+                "outgoing_edges": list[str],  # 出ていくエッジのID一覧
+            }
+    """
+    adjacency_info: dict[int, dict[str, list[str]]] = {}
+
+    # 全ノードを初期化
+    for node in G.nodes():
+        adjacency_info[node] = {
+            "adjacent_nodes": [],
+            "incoming_edges": [],
+            "outgoing_edges": [],
+        }
+
+    # エッジを走査して隣接情報を構築
+    for source, target in G.edges():
+        # 自己ループは除外
+        if source == target:
+            continue
+
+        edge_id = f"edge_{source}_{target}"
+
+        # source → target なので:
+        # - sourceから見ると outgoing edge
+        # - targetから見ると incoming edge
+        if source in adjacency_info:
+            adjacency_info[source]["outgoing_edges"].append(edge_id)
+            adjacency_info[source]["adjacent_nodes"].append(f"group_{target}")
+
+        if target in adjacency_info:
+            adjacency_info[target]["incoming_edges"].append(edge_id)
+            adjacency_info[target]["adjacent_nodes"].append(f"group_{source}")
+
+    return adjacency_info
+
+
 def build_group_to_group_cytoscape_elements() -> list[dict]:
     """
     グループ間ネットワークのCytoscape用elementsを構築する
@@ -186,6 +233,9 @@ def build_group_to_group_cytoscape_elements() -> list[dict]:
     # Cytoscapeのスケーリング用の係数（座標系を大きくする）
     scale_factor = 500
 
+    # 隣接情報を計算
+    adjacency_info = _calculate_adjacency_info(G)
+
     elements = []
 
     # ノードを生成
@@ -207,6 +257,9 @@ def build_group_to_group_cytoscape_elements() -> list[dict]:
         # グループ色を取得
         group_color = get_group_color(group_id)
 
+        # 隣接情報を取得
+        adj_info = adjacency_info.get(group_id, {})
+
         element = {
             "data": {
                 "id": f"group_{group_id}",
@@ -217,6 +270,9 @@ def build_group_to_group_cytoscape_elements() -> list[dict]:
                 "group_color": group_color,
                 "size": size,
                 "font_size": font_size,
+                "adjacent_nodes": adj_info.get("adjacent_nodes", []),
+                "incoming_edges": adj_info.get("incoming_edges", []),
+                "outgoing_edges": adj_info.get("outgoing_edges", []),
             },
             "position": {"x": x, "y": y},
         }
@@ -296,6 +352,46 @@ def get_group_to_group_base_stylesheet() -> list[dict]:
                 "border-color": "#FF0000",
                 "z-index": 9999,
                 "opacity": 1,
+            },
+        },
+        # 接続ノード
+        {
+            "selector": ".connected",
+            "style": {
+                "border-width": 2,
+                "border-color": "#888",
+                "opacity": 1,
+                "text-outline-width": TEXT_OUTLINE_WIDTH,
+                "text-outline-color": TEXT_OUTLINE_COLOR,
+            },
+        },
+        # 入ってくるエッジ（オレンジ色）
+        {
+            "selector": ".incoming-edge",
+            "style": {
+                "line-color": "#FF8C00",
+                "target-arrow-color": "#FF8C00",
+                "opacity": 1,
+                "z-index": 9998,
+            },
+        },
+        # 出ていくエッジ（水色）
+        {
+            "selector": ".outgoing-edge",
+            "style": {
+                "line-color": "#1E90FF",
+                "target-arrow-color": "#1E90FF",
+                "opacity": 1,
+                "z-index": 9998,
+            },
+        },
+        # 非接続（減衰）
+        {
+            "selector": ".faded",
+            "style": {
+                "opacity": 0.15,
+                "text-outline-width": TEXT_OUTLINE_WIDTH,
+                "text-outline-color": TEXT_OUTLINE_COLOR,
             },
         },
     ]
