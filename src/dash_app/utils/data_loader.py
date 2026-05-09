@@ -831,3 +831,65 @@ def load_group_to_group_network() -> "nx.DiGraph":
         _group_to_group_network_cache = pickle.load(f)
 
     return _group_to_group_network_cache
+
+
+def get_adjacent_groups(group_id: int) -> dict:
+    """
+    指定されたグループの隣接グループ情報を取得する
+
+    Args:
+        group_id: グループID
+
+    Returns:
+        dict: 隣接グループ情報
+            - citing_groups: 選択中のグループを引用しているグループのリスト
+                             [(group_id, weight), ...] 引用数(weight)の降順
+            - cited_groups: 選択中のグループが引用しているグループのリスト
+                            [(group_id, weight), ...] 引用数(weight)の降順
+    """
+    G = load_group_to_group_network()
+
+    # 選択中のグループを引用しているグループ（in_edges）
+    # edge: (source, target, data) で target が group_id
+    citing_groups = []
+    for source, _, data in G.in_edges(group_id, data=True):
+        if source != group_id:  # 自己ループを除外
+            citing_groups.append((source, data.get("weight", 1)))
+    # 引用数の降順でソート
+    citing_groups.sort(key=lambda x: x[1], reverse=True)
+
+    # 選択中のグループが引用しているグループ（out_edges）
+    # edge: (source, target, data) で source が group_id
+    cited_groups = []
+    for _, target, data in G.out_edges(group_id, data=True):
+        if target != group_id:  # 自己ループを除外
+            cited_groups.append((target, data.get("weight", 1)))
+    # 引用数の降順でソート
+    cited_groups.sort(key=lambda x: x[1], reverse=True)
+
+    return {
+        "citing_groups": citing_groups,
+        "cited_groups": cited_groups,
+    }
+
+
+def get_top_peps_by_group(group_id: int, top_n: int = 5) -> list[int]:
+    """
+    指定されたグループのPageRank上位のPEP番号を取得する
+
+    Args:
+        group_id: グループID
+        top_n: 取得するPEP数（デフォルト: 5）
+
+    Returns:
+        list[int]: PageRank上位のPEP番号リスト
+    """
+    df = get_peps_by_group(group_id)
+    if df.empty:
+        return []
+
+    # PageRank降順でソート
+    df_sorted = df.sort_values(by="pagerank_group", ascending=False)
+
+    # 上位N件のPEP番号を取得
+    return df_sorted["PEP"].head(top_n).tolist()

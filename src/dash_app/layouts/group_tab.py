@@ -518,6 +518,14 @@ def _create_group_pep_table_section() -> html.Div:
                     "display": "none",  # 初期状態は非表示
                 },
             ),
+            # 隣接グループ表示エリア（初期状態は非表示）
+            html.Div(
+                id="adjacent-groups-display",
+                children="",
+                style={
+                    "display": "none",  # 初期状態は非表示
+                },
+            ),
             html.P(
                 "Scroll the table to view all rows.",
                 style={"fontSize": "12px", "color": "#666", "marginBottom": "2px"},
