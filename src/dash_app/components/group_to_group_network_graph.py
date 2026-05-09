@@ -308,7 +308,7 @@ def get_group_to_group_base_stylesheet() -> list[dict]:
         {
             "selector": ":selected",
             "style": {
-                "border-width": 3,
+                "border-width": 5,
                 "border-color": "#FF0000",
                 "z-index": 9999,
                 "opacity": 1,
