@@ -11,6 +11,7 @@ from src.dash_app.layouts.group_tab import create_group_tab_layout
 from src.dash_app.callbacks.group_callbacks import register_group_callbacks
 from src.dash_app.components.header import create_header
 from src.dash_app.components.network_graph import build_cytoscape_elements
+from src.dash_app.components.subgraph_network_graph import preload_all_subgraph_elements
 from src.dash_app.layouts.common import create_tab_navigation
 from src.dash_app.layouts.timeline import create_timeline_layout
 from src.dash_app.layouts.network import create_network_layout
@@ -54,6 +55,7 @@ build_cytoscape_elements()  # Networkグラフの座標計算（2秒程度）
 load_citation_changes()  # 引用変更履歴データを読み込む
 load_group_data()  # グループデータを読み込む
 load_group_to_group_network()  # グループ間ネットワークを読み込む
+preload_all_subgraph_elements()  # 全グループのサブグラフ要素を事前計算
 logger.info("Data preload complete.")
 
 # アプリレイアウトの定義
