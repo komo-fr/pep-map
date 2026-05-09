@@ -413,7 +413,7 @@ def _create_subgraph_tab_content() -> html.Div:
             # サブグラフ表示エリア（初期状態はプレースホルダー + 非表示Cytoscape）
             html.Div(
                 id="subgraph-container",
-                children=_create_subgraph_placeholder_with_dummy(),
+                children=create_subgraph_placeholder_with_dummy(),
                 style={"minHeight": "600px"},
             ),
         ],
@@ -664,7 +664,7 @@ def _create_subgraph_placeholder() -> html.Div:
     )
 
 
-def _create_subgraph_placeholder_with_dummy() -> html.Div:
+def create_subgraph_placeholder_with_dummy() -> html.Div:
     """サブグラフ未選択時のプレースホルダー + ダミーCytoscapeを生成する
 
     コールバック登録時にgroup-subgraph-network-graphが存在する必要があるため、
