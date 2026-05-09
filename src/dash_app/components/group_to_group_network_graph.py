@@ -14,7 +14,6 @@ from src.dash_app.utils.data_loader import load_group_to_group_network
 
 # モジュールレベルでキャッシュ
 _group_to_group_cytoscape_elements_cache: list[dict] | None = None
-_group_to_group_positions_cache: dict[int, tuple[float, float]] | None = None
 
 # ノードサイズ計算用の定数（面積がpep_countに比例するため、サイズは√pep_countに比例）
 _MIN_NODE_SIZE = 30.0
@@ -415,6 +414,5 @@ def clear_cache() -> None:
     """
     キャッシュをクリアする（テスト用）
     """
-    global _group_to_group_cytoscape_elements_cache, _group_to_group_positions_cache
+    global _group_to_group_cytoscape_elements_cache
     _group_to_group_cytoscape_elements_cache = None
-    _group_to_group_positions_cache = None
