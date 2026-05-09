@@ -533,123 +533,137 @@ def register_group_callbacks(app):
         cited_groups = adjacent_info["cited_groups"]
 
         # 隣接グループ表示コンポーネントを作成
-        if not citing_groups and not cited_groups:
-            adjacent_children = ""
-            adjacent_style = empty_style
+        adjacent_style = {
+            "marginBottom": "8px",
+            "marginTop": "0",
+            "backgroundColor": "#F5F5F5",
+            "padding": "12px",
+            "borderRadius": "4px",
+        }
+
+        # グループボタンのスタイル
+        button_style = {
+            "display": "inline-block",
+            "padding": "4px 10px",
+            "margin": "2px 4px 2px 0",
+            "backgroundColor": "#E8E8E8",
+            "border": "1px solid #CCC",
+            "borderRadius": "16px",
+            "fontSize": "12px",
+            "cursor": "pointer",
+            "color": "#333",
+        }
+
+        def create_group_button_with_tooltip(grp_id: int, weight: int):
+            """ツールチップ付きのグループボタンを作成"""
+            # グループ名を取得
+            grp_info = get_group_name_info(grp_id)
+            grp_name = grp_info["group_name"] or f"Group {grp_id}"
+
+            # 代表的なPEPを取得
+            top_peps = get_top_peps_by_group(grp_id, top_n=5)
+            top_peps_str = ", ".join(str(p) for p in top_peps) if top_peps else "-"
+
+            # ツールチップコンテンツを作成
+            tooltip_content = [
+                html.Div(
+                    grp_name,
+                    style={"fontWeight": "bold", "marginBottom": "4px"},
+                ),
+                html.Div(
+                    f"Citation links: {weight}",
+                    style={"fontSize": "11px", "color": "#aaa"},
+                ),
+                html.Div(
+                    f"Top PEPs by PageRank: {top_peps_str}",
+                    style={"fontSize": "11px", "color": "#aaa", "marginTop": "2px"},
+                ),
+            ]
+
+            return html.Span(
+                [
+                    html.Span(
+                        f"Group {grp_id}",
+                        style=button_style,
+                    ),
+                    html.Span(
+                        tooltip_content,
+                        className="pep-tooltip-text",
+                    ),
+                ],
+                id={"type": "adjacent-group-button", "group_id": grp_id},
+                className="pep-link-tooltip",
+                style={"cursor": "pointer"},
+            )
+
+        adjacent_children = []
+
+        # 選択中のグループを引用しているグループ
+        if citing_groups:
+            citing_buttons = []
+            for grp_id, weight in citing_groups:
+                citing_buttons.append(create_group_button_with_tooltip(grp_id, weight))
+            citing_content = html.Div(citing_buttons)
         else:
-            adjacent_style = {
-                "marginBottom": "8px",
-                "marginTop": "0",
-                "backgroundColor": "#F5F5F5",
-                "padding": "12px",
-                "borderRadius": "4px",
-            }
-
-            # グループボタンのスタイル
-            button_style = {
-                "display": "inline-block",
-                "padding": "4px 10px",
-                "margin": "2px 4px 2px 0",
-                "backgroundColor": "#E8E8E8",
-                "border": "1px solid #CCC",
-                "borderRadius": "16px",
-                "fontSize": "12px",
-                "cursor": "pointer",
-                "color": "#333",
-            }
-
-            def create_group_button_with_tooltip(grp_id: int, weight: int):
-                """ツールチップ付きのグループボタンを作成"""
-                # グループ名を取得
-                grp_info = get_group_name_info(grp_id)
-                grp_name = grp_info["group_name"] or f"Group {grp_id}"
-
-                # 代表的なPEPを取得
-                top_peps = get_top_peps_by_group(grp_id, top_n=5)
-                top_peps_str = ", ".join(str(p) for p in top_peps) if top_peps else "-"
-
-                # ツールチップコンテンツを作成
-                tooltip_content = [
-                    html.Div(
-                        grp_name,
-                        style={"fontWeight": "bold", "marginBottom": "4px"},
+            citing_content = html.P(
+                "No citing groups.",
+                style={
+                    "margin": "0",
+                    "fontSize": "12px",
+                    "color": "#999",
+                    "fontStyle": "italic",
+                },
+            )
+        adjacent_children.append(
+            html.Div(
+                [
+                    html.P(
+                        "Groups citing this group:",
+                        style={
+                            "margin": "0 0 4px 0",
+                            "fontSize": "12px",
+                            "color": "#666",
+                            "fontWeight": "bold",
+                        },
                     ),
-                    html.Div(
-                        f"Citation links: {weight}",
-                        style={"fontSize": "11px", "color": "#aaa"},
+                    citing_content,
+                ],
+                style={"marginBottom": "8px"},
+            )
+        )
+
+        # 選択中のグループが引用しているグループ
+        if cited_groups:
+            cited_buttons = []
+            for grp_id, weight in cited_groups:
+                cited_buttons.append(create_group_button_with_tooltip(grp_id, weight))
+            cited_content = html.Div(cited_buttons)
+        else:
+            cited_content = html.P(
+                "No cited groups.",
+                style={
+                    "margin": "0",
+                    "fontSize": "12px",
+                    "color": "#999",
+                    "fontStyle": "italic",
+                },
+            )
+        adjacent_children.append(
+            html.Div(
+                [
+                    html.P(
+                        "Groups this group cites:",
+                        style={
+                            "margin": "0 0 4px 0",
+                            "fontSize": "12px",
+                            "color": "#666",
+                            "fontWeight": "bold",
+                        },
                     ),
-                    html.Div(
-                        f"Top PEPs by PageRank: {top_peps_str}",
-                        style={"fontSize": "11px", "color": "#aaa", "marginTop": "2px"},
-                    ),
-                ]
-
-                return html.Span(
-                    [
-                        html.Span(
-                            f"Group {grp_id}",
-                            style=button_style,
-                        ),
-                        html.Span(
-                            tooltip_content,
-                            className="pep-tooltip-text",
-                        ),
-                    ],
-                    id={"type": "adjacent-group-button", "group_id": grp_id},
-                    className="pep-link-tooltip",
-                    style={"cursor": "pointer"},
-                )
-
-            adjacent_children = []
-
-            # 選択中のグループを引用しているグループ
-            if citing_groups:
-                citing_buttons = []
-                for grp_id, weight in citing_groups:
-                    citing_buttons.append(
-                        create_group_button_with_tooltip(grp_id, weight)
-                    )
-                adjacent_children.append(
-                    html.Div(
-                        [
-                            html.P(
-                                "Groups citing this group:",
-                                style={
-                                    "margin": "0 0 4px 0",
-                                    "fontSize": "12px",
-                                    "color": "#666",
-                                    "fontWeight": "bold",
-                                },
-                            ),
-                            html.Div(citing_buttons),
-                        ],
-                        style={"marginBottom": "8px"},
-                    )
-                )
-
-            # 選択中のグループが引用しているグループ
-            if cited_groups:
-                cited_buttons = []
-                for grp_id, weight in cited_groups:
-                    cited_buttons.append(
-                        create_group_button_with_tooltip(grp_id, weight)
-                    )
-                adjacent_children.append(
-                    html.Div(
-                        [
-                            html.P(
-                                "Groups this group cites:",
-                                style={
-                                    "margin": "0 0 4px 0",
-                                    "fontSize": "12px",
-                                    "color": "#666",
-                                    "fontWeight": "bold",
-                                },
-                            ),
-                            html.Div(cited_buttons),
-                        ],
-                    )
-                )
+                    cited_content,
+                ],
+            )
+        )
 
         if df.empty:
             title = f"Group {group_id} (no data)"
