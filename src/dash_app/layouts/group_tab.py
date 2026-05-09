@@ -468,15 +468,23 @@ def _create_group_pep_table() -> dash_table.DataTable:  # type: ignore[name-defi
             {"name": "Title", "id": "title", "type": "text"},
             {"name": "Status", "id": "status", "type": "text"},
             {"name": "Created", "id": "created", "type": "text"},
-            {"name": "In-degree", "id": "in_degree", "type": "numeric"},
-            {"name": "Out-degree", "id": "out_degree", "type": "numeric"},
-            {"name": "Degree", "id": "degree", "type": "numeric"},
-            {"name": "PageRank", "id": "pagerank", "type": "text"},
+            {"name": "In-degree ⓘ", "id": "in_degree", "type": "numeric"},
+            {"name": "Out-degree ⓘ", "id": "out_degree", "type": "numeric"},
+            {"name": "Degree ⓘ", "id": "degree", "type": "numeric"},
+            {"name": "PageRank ⓘ", "id": "pagerank", "type": "text"},
         ],
         data=[],
         sort_action="native",
         sort_mode="single",
         page_action="none",
+        tooltip_header={
+            "in_degree": "Number of PEPs within the selected group that cite this PEP. PEPs with a high in-degree are widely referenced within the group and often influential.",
+            "out_degree": "Number of PEPs within the selected group cited by this PEP. PEPs with a high out-degree tend to reference many other PEPs within the group and may serve as integrative or coordinating proposals.",
+            "degree": "Sum of in-degree and out-degree within the selected group.",
+            "pagerank": "Network-based importance score computed from the citation structure within the selected group.",
+        },
+        tooltip_delay=0,
+        tooltip_duration=None,
         style_table={
             "overflowX": "auto",
             "overflowY": "scroll",
@@ -546,6 +554,12 @@ def _create_group_pep_table() -> dash_table.DataTable:  # type: ignore[name-defi
             },
         ]
         + status_styles,
+        css=[
+            {
+                "selector": ".dash-table-tooltip",
+                "rule": "background-color: #222; color: white; font-size: 12px;",
+            },
+        ],
         markdown_options={"html": True},
     )
 
