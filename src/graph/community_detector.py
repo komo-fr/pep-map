@@ -725,3 +725,165 @@ def generate_full_network_highlight_images(
 
     logger.info(f"Generated {len(generated_paths)} full network highlight images")
     return generated_paths
+
+
+def create_group_citations_df(
+    pep_group_metrics_path: Path,
+    citations_path: Path,
+) -> pd.DataFrame:
+    """
+    グループ間の引用関係を集計したDataFrameを作成する
+
+    Args:
+        pep_group_metrics_path: pep_group_metrics.csvへのパス
+        citations_path: citations.csvへのパス
+
+    Returns:
+        DataFrame with columns: citing_group, cited_group, size
+        (sizeはそのグループ間の引用数)
+    """
+    logger.info("Creating group citations DataFrame")
+
+    # データ読み込み
+    pep_groups_df = pd.read_csv(pep_group_metrics_path)
+    citations_df = pd.read_csv(citations_path)
+
+    # PEPとグループIDの対応を取得（重複除去は念のため）
+    pep_groups_df = pep_groups_df[["PEP", "group_id"]].drop_duplicates()
+
+    # 引用データにグループ情報をマージ
+    group_edges_detail_df = (
+        citations_df.merge(
+            pep_groups_df.rename(columns={"PEP": "citing", "group_id": "citing_group"}),
+            on="citing",
+            how="left",
+        ).merge(
+            pep_groups_df.rename(columns={"PEP": "cited", "group_id": "cited_group"}),
+            on="cited",
+            how="left",
+        )
+    ).rename(columns={"citing": "citing_pep", "cited": "cited_pep"})
+
+    # グループ間の引用数を集計
+    group_citations_df = (
+        group_edges_detail_df[["citing_group", "cited_group"]]
+        .groupby(["citing_group", "cited_group"], as_index=False)
+        .size()
+    )
+
+    logger.info(
+        f"Created group citations: {len(group_citations_df)} group-to-group edges"
+    )
+    return group_citations_df
+
+
+def create_group_to_group_network(
+    group_citations_df: pd.DataFrame,
+    pep_group_metrics_path: Path,
+) -> nx.DiGraph:
+    """
+    グループ間ネットワークのNetworkX DiGraphを作成する
+
+    Args:
+        group_citations_df: create_group_citations_dfで作成したDataFrame
+        pep_group_metrics_path: pep_group_metrics.csvへのパス
+
+    Returns:
+        グループをノード、グループ間引用をエッジとするDiGraph
+        ノード属性: pep_count
+        エッジ属性: weight（引用数）
+
+    Note:
+        group_nameはgroup_profiles.csvで別途管理されるため、
+        Dashアプリ側で必要に応じてマージすること
+    """
+    logger.info("Creating group-to-group network")
+
+    # データ読み込み
+    pep_group_metrics_df = pd.read_csv(pep_group_metrics_path)
+
+    # 自己ループを除外し、欠損を除いてint型にそろえる
+    df = group_citations_df.dropna(subset=["citing_group", "cited_group"]).copy()
+    df["citing_group"] = df["citing_group"].astype(int)
+    df["cited_group"] = df["cited_group"].astype(int)
+    df = df[df["citing_group"] != df["cited_group"]].copy()
+
+    # NetworkX用に列名をそろえる
+    group_edges_df = df.rename(
+        columns={
+            "citing_group": "source",
+            "cited_group": "target",
+            "size": "weight",
+        }
+    )
+
+    # pandasのエッジリストからDiGraphを作成
+    G = nx.from_pandas_edgelist(
+        group_edges_df,
+        source="source",
+        target="target",
+        edge_attr=["weight"],
+        create_using=nx.DiGraph,
+    )
+
+    # 全グループをノードとして追加（エッジを持たない孤立点も含める）
+    all_group_ids = sorted(
+        pep_group_metrics_df["group_id"].dropna().astype(int).unique()
+    )
+    G.add_nodes_from(all_group_ids)
+
+    # グループごとのPEP数を計算
+    group_pep_counts_df = pep_group_metrics_df.groupby("group_id", as_index=False).agg(
+        pep_count=("PEP", "nunique")
+    )
+
+    # ノード属性を追加（pep_countのみ）
+    node_attrs = {
+        int(row["group_id"]): {"pep_count": int(row["pep_count"])}
+        for _, row in group_pep_counts_df.iterrows()
+    }
+    nx.set_node_attributes(G, node_attrs)
+
+    logger.info(
+        f"Created group-to-group network: "
+        f"{G.number_of_nodes()} nodes, {G.number_of_edges()} edges"
+    )
+    return G
+
+
+def save_group_to_group_network(
+    pep_group_metrics_path: Path,
+    citations_path: Path,
+    output_dir: Path,
+) -> tuple[Path, Path]:
+    """
+    グループ間引用CSVとネットワークpickleを作成・保存する
+
+    Args:
+        pep_group_metrics_path: pep_group_metrics.csvへのパス
+        citations_path: citations.csvへのパス
+        output_dir: 出力ディレクトリ
+
+    Returns:
+        (group_citations.csvのパス, group_to_group_network.pklのパス)のタプル
+    """
+    logger.info(f"Saving group-to-group network to {output_dir}")
+
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    # グループ間引用DataFrameを作成・保存
+    group_citations_df = create_group_citations_df(
+        pep_group_metrics_path, citations_path
+    )
+    citations_csv_path = output_dir / "group_citations.csv"
+    group_citations_df.to_csv(citations_csv_path, index=False)
+    logger.info(f"Saved group citations to {citations_csv_path}")
+
+    # グループ間ネットワークを作成・保存
+    G = create_group_to_group_network(group_citations_df, pep_group_metrics_path)
+    network_pkl_path = output_dir / "group_to_group_network.pkl"
+    with open(network_pkl_path, "wb") as f:
+        pickle.dump(G, f)
+    logger.info(f"Saved group-to-group network to {network_pkl_path}")
+
+    return citations_csv_path, network_pkl_path

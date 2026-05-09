@@ -9,7 +9,10 @@ from src.dash_app.utils.constants import (
     TEXT_OUTLINE_WIDTH,
     get_group_color,
 )
-from src.dash_app.utils.data_loader import load_group_to_group_network
+from src.dash_app.utils.data_loader import (
+    get_group_name_info,
+    load_group_to_group_network,
+)
 
 
 # モジュールレベルでキャッシュ
@@ -242,7 +245,7 @@ def build_group_to_group_cytoscape_elements() -> list[dict]:
     for node in G.nodes():
         group_id = node
         node_data = G.nodes[node]
-        group_name = node_data.get("group_name", "")
+        group_name = get_group_name_info(group_id)["group_name"]
         pep_count = node_data.get("pep_count", 1)
 
         # 座標を取得（Cytoscapeはy軸が下向きなので反転）
