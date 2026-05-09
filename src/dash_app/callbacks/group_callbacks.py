@@ -1393,6 +1393,97 @@ def register_group_callbacks(app):
         prevent_initial_call=True,
     )
 
+    # ===== グループ選択 → Group-to-Group Networkハイライト更新（クライアントサイド） =====
+    # ドロップダウンやFull Networkタップでグループが選択されたときに
+    # Group-to-Group Networkの該当ノードをハイライトする
+    app.clientside_callback(
+        """
+        function(selectedGroup, currentElements) {
+            // elementsがない場合は更新しない
+            if (!currentElements || currentElements.length === 0) {
+                return window.dash_clientside.no_update;
+            }
+
+            // "all"または未選択の場合は全要素のハイライトをクリア
+            if (selectedGroup === null || selectedGroup === undefined || selectedGroup === 'all') {
+                return currentElements.map(function(el) {
+                    var newEl = JSON.parse(JSON.stringify(el));
+                    newEl.classes = '';
+                    newEl.selected = false;
+                    return newEl;
+                });
+            }
+
+            // 選択されたグループIDを数値に変換
+            var selectedGroupId = parseInt(selectedGroup, 10);
+            var selectedNodeId = 'group_' + selectedGroupId;
+
+            // 選択されたノードを探す
+            var selectedNode = null;
+            for (var i = 0; i < currentElements.length; i++) {
+                if (currentElements[i].data && currentElements[i].data.id === selectedNodeId) {
+                    selectedNode = currentElements[i];
+                    break;
+                }
+            }
+
+            // 選択ノードが見つからない場合はハイライトをクリア
+            if (!selectedNode) {
+                return currentElements.map(function(el) {
+                    var newEl = JSON.parse(JSON.stringify(el));
+                    newEl.classes = '';
+                    newEl.selected = false;
+                    return newEl;
+                });
+            }
+
+            // 隣接情報を取得
+            var adjacentNodes = selectedNode.data.adjacent_nodes || [];
+            var incomingEdges = selectedNode.data.incoming_edges || [];
+            var outgoingEdges = selectedNode.data.outgoing_edges || [];
+
+            // セットに変換（高速検索用）
+            var adjacentNodesSet = new Set(adjacentNodes);
+            var incomingEdgesSet = new Set(incomingEdges);
+            var outgoingEdgesSet = new Set(outgoingEdges);
+
+            // elementsを更新
+            return currentElements.map(function(el) {
+                var newEl = JSON.parse(JSON.stringify(el));
+                var data = newEl.data;
+
+                // ノードの場合
+                if (!data.source) {
+                    newEl.selected = false;
+                    if (data.id === selectedNodeId) {
+                        newEl.classes = 'selected';
+                    } else if (adjacentNodesSet.has(data.id)) {
+                        newEl.classes = 'connected';
+                    } else {
+                        newEl.classes = 'faded';
+                    }
+                }
+                // エッジの場合
+                else {
+                    if (incomingEdgesSet.has(data.id)) {
+                        newEl.classes = 'incoming-edge';
+                    } else if (outgoingEdgesSet.has(data.id)) {
+                        newEl.classes = 'outgoing-edge';
+                    } else {
+                        newEl.classes = 'faded';
+                    }
+                }
+
+                return newEl;
+            });
+        }
+        """,
+        Output("group-to-group-network-graph", "elements", allow_duplicate=True),
+        Input("group-selector-dropdown", "value"),
+        State("group-to-group-network-graph", "elements"),
+        prevent_initial_call=True,
+    )
+
     # ===== Group-to-Group Networkノードタップ → エッジハイライト更新（クライアントサイド） =====
     app.clientside_callback(
         """
