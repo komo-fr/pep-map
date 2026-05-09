@@ -1,5 +1,6 @@
 """Groupタブのコールバック関数"""
 
+import json
 import re
 import pandas as pd
 import dash_cytoscape as cyto
@@ -839,8 +840,6 @@ def register_group_callbacks(app):
                 # prop_id の形式:
                 # {"direction":"citing","group_id":7,"type":"adjacent-group-button"}.n_clicks
                 if "adjacent-group-button" in prop_id:
-                    import json
-
                     try:
                         # .n_clicks を除去してJSONをパース
                         id_json = prop_id.rsplit(".", 1)[0]
