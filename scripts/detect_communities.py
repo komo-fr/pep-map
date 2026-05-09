@@ -145,12 +145,14 @@ def main() -> int:
     logger.info(f"Generated {len(generated_full_images)} full network highlight images")
 
     # グループ間ネットワークを生成・保存
-    citations_csv, network_pkl = save_group_to_group_network(
+    citations_csv, network_pkl, positions_json = save_group_to_group_network(
         pep_group_metrics_path=pep_group_path,
         citations_path=CITATIONS_FILE,
         output_dir=GROUP_TO_GROUP_DIR,
     )
-    logger.info(f"Saved group-to-group network: {citations_csv}, {network_pkl}")
+    logger.info(
+        f"Saved group-to-group network: {citations_csv}, {network_pkl}, {positions_json}"
+    )
 
     logger.info("Community detection completed successfully")
     return 0

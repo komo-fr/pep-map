@@ -26,6 +26,7 @@ from src.dash_app.utils.constants import STATUS_COLOR_MAP, DEFAULT_STATUS_COLOR
 from src.graph.layout import (
     calculate_full_network_positions,
     calculate_grid_layout,
+    calculate_group_to_group_positions,
     calculate_subgraph_positions,
 )
 
@@ -67,6 +68,37 @@ def save_full_network_positions(
         json.dump(positions_json, f, indent=2)
 
     logger.info(f"Saved {len(positions)} node positions")
+    return positions
+
+
+def save_group_to_group_positions(
+    G: nx.DiGraph,
+    output_path: Path,
+) -> dict[int, tuple[float, float]]:
+    """
+    グループ間ネットワークのノード座標を計算してJSONで保存する
+
+    Args:
+        G: グループ間ネットワークのNetworkX DiGraph
+        output_path: 出力先のJSONファイルパス
+
+    Returns:
+        計算した座標の辞書（グループID -> (x, y)座標）
+    """
+    logger.info(f"Calculating and saving group-to-group positions to {output_path}")
+
+    # 座標を計算
+    positions = calculate_group_to_group_positions(G)
+
+    # JSON形式に変換（キーを文字列に）
+    positions_json = {str(node): list(pos) for node, pos in positions.items()}
+
+    # 保存
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(output_path, "w", encoding="utf-8") as f:
+        json.dump(positions_json, f, indent=2)
+
+    logger.info(f"Saved {len(positions)} group positions")
     return positions
 
 
@@ -855,9 +887,9 @@ def save_group_to_group_network(
     pep_group_metrics_path: Path,
     citations_path: Path,
     output_dir: Path,
-) -> tuple[Path, Path]:
+) -> tuple[Path, Path, Path]:
     """
-    グループ間引用CSVとネットワークpickleを作成・保存する
+    グループ間引用CSV、ネットワークpickle、座標JSONを作成・保存する
 
     Args:
         pep_group_metrics_path: pep_group_metrics.csvへのパス
@@ -865,7 +897,8 @@ def save_group_to_group_network(
         output_dir: 出力ディレクトリ
 
     Returns:
-        (group_citations.csvのパス, group_to_group_network.pklのパス)のタプル
+        (group_citations.csvのパス, group_to_group_network.pklのパス,
+         group_to_group_positions.jsonのパス)のタプル
     """
     logger.info(f"Saving group-to-group network to {output_dir}")
 
@@ -886,4 +919,8 @@ def save_group_to_group_network(
         pickle.dump(G, f)
     logger.info(f"Saved group-to-group network to {network_pkl_path}")
 
-    return citations_csv_path, network_pkl_path
+    # グループ間ネットワークの座標を計算・保存
+    positions_path = output_dir / "group_to_group_positions.json"
+    save_group_to_group_positions(G, positions_path)
+
+    return citations_csv_path, network_pkl_path, positions_path
