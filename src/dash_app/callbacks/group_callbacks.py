@@ -33,6 +33,11 @@ from src.dash_app.utils.data_loader import (
 _pep_numbers_cache: set[int] | None = None
 _pep_metadata_cache: dict[int, dict[str, str]] | None = None
 
+# グループ選択コールバックの静的出力キャッシュ
+# キー: group_id, 値: (table_data, title, group_name, description_children,
+#                      description_style, adjacent_children, adjacent_style, subgraph_children)
+_group_selection_output_cache: dict[int, tuple] = {}
+
 # グループボタンのスタイル（隣接グループ表示用）
 _GROUP_BUTTON_STYLE: dict[str, str] = {
     "display": "inline-block",
@@ -276,6 +281,329 @@ def linkify_pep_numbers(text: str) -> list[str | Component]:
         result.append(text[last_end:])
 
     return result
+
+
+def _compute_group_static_outputs(group_id: int) -> tuple:
+    """
+    指定されたグループIDの静的出力を計算する
+
+    この関数はコールバックとプリロードの両方から呼ばれる。
+    結果はキャッシュされ、2回目以降はキャッシュから返される。
+
+    Args:
+        group_id: グループID
+
+    Returns:
+        tuple: (table_data, title, group_name, description_children,
+                description_style, adjacent_children, adjacent_style, subgraph_children)
+    """
+    # キャッシュチェック
+    if group_id in _group_selection_output_cache:
+        return _group_selection_output_cache[group_id]
+
+    empty_style = {"display": "none"}
+    filled_style = {
+        "marginBottom": "8px",
+        "marginTop": "0",
+        "backgroundColor": "#EAEAEA",
+        "padding": "8px",
+        "borderRadius": "4px",
+    }
+
+    # サブグラフ計算
+    if group_id < 0:
+        subgraph_children: object = _create_subgraph_placeholder_with_dummy()
+    else:
+        subgraph_elements = build_subgraph_cytoscape_elements(group_id)
+        if subgraph_elements is None:
+            subgraph_children = _create_subgraph_placeholder_with_dummy()
+        else:
+            subgraph_children = cyto.Cytoscape(
+                id="group-subgraph-network-graph",
+                elements=subgraph_elements,
+                layout=get_subgraph_layout_options(),
+                style={
+                    "width": "100%",
+                    "height": "600px",
+                    "border": "1px solid #ddd",
+                    "backgroundColor": "#fafafa",
+                },
+                stylesheet=get_subgraph_base_stylesheet(),
+            )
+
+    df = get_peps_by_group(group_id)
+
+    # グループ名と説明を取得
+    group_info = get_group_name_info(group_id)
+    group_name = group_info["group_name"]
+    group_description = group_info["description"]
+
+    # 説明文コンポーネント
+    if not group_description:
+        description_children: object = ""
+        description_style = empty_style
+    else:
+        paragraphs = group_description.split("\n\n")
+        first_paragraph = paragraphs[0]
+        last_paragraph = paragraphs[-1] if len(paragraphs) > 1 else None
+        middle_paragraphs = paragraphs[1:-1] if len(paragraphs) > 2 else []
+
+        description_children = [
+            html.Div(
+                [
+                    html.P(
+                        "🤖 グループ名と説明はAIが自動生成したものです。内容の正確性・完全性は保証されません。",
+                        style={"margin": "0", "fontSize": "12px"},
+                    ),
+                ],
+                style={
+                    "backgroundColor": "#fffacd",
+                    "border": "1px solid black",
+                    "padding": "8px",
+                    "marginBottom": "8px",
+                    "borderRadius": "4px",
+                },
+            ),
+            html.P(
+                linkify_pep_numbers(first_paragraph),
+                style={
+                    "margin": "0",
+                    "fontSize": "13px",
+                    "color": "#333",
+                    "whiteSpace": "pre-line",
+                },
+            ),
+        ]
+
+        if middle_paragraphs:
+            middle_text = "\n\n".join(middle_paragraphs)
+            description_children.append(
+                html.Details(
+                    [
+                        html.Summary(
+                            [
+                                html.Span(
+                                    "▶ ネットワーク構造の説明を表示する",
+                                    className="show-when-closed",
+                                ),
+                                html.Span(
+                                    "▼ 説明を閉じる",
+                                    className="show-when-open",
+                                ),
+                            ],
+                            style={
+                                "cursor": "pointer",
+                                "fontSize": "12px",
+                                "color": "#0066cc",
+                                "marginTop": "8px",
+                                "textDecoration": "underline",
+                                "listStyle": "none",
+                            },
+                        ),
+                        html.P(
+                            linkify_pep_numbers(middle_text),
+                            style={
+                                "margin": "8px 0 0 0",
+                                "padding": "12px",
+                                "fontSize": "13px",
+                                "color": "#333",
+                                "whiteSpace": "pre-line",
+                                "backgroundColor": "#f0f7ff",
+                                "border": "1px solid #d0e3f7",
+                                "borderRadius": "4px",
+                            },
+                        ),
+                    ],
+                ),
+            )
+
+        if last_paragraph:
+            description_children.append(
+                html.P(
+                    linkify_pep_numbers(last_paragraph),
+                    style={
+                        "marginTop": "8px",
+                        "marginBottom": "0",
+                        "fontSize": "13px",
+                        "color": "#333",
+                        "whiteSpace": "pre-line",
+                    },
+                ),
+            )
+
+        description_style = filled_style
+
+    # 隣接グループ
+    adjacent_info = get_adjacent_groups(group_id)
+    citing_groups = adjacent_info["citing_groups"]
+    cited_groups = adjacent_info["cited_groups"]
+
+    adjacent_children = []
+
+    citing_content: html.Div | html.P
+    if citing_groups:
+        citing_buttons = [
+            _create_group_button_with_tooltip(
+                grp_id, weight, "citing", _GROUP_BUTTON_STYLE
+            )
+            for grp_id, weight in citing_groups
+        ]
+        citing_content = html.Div(citing_buttons)
+    else:
+        citing_content = html.P(
+            "No citing groups.",
+            style={
+                "margin": "0",
+                "fontSize": "12px",
+                "color": "#999",
+                "fontStyle": "italic",
+            },
+        )
+    adjacent_children.append(
+        html.Div(
+            [
+                html.P(
+                    "Groups citing this group:",
+                    style={
+                        "margin": "0 0 4px 0",
+                        "fontSize": "12px",
+                        "color": "#666",
+                        "fontWeight": "bold",
+                    },
+                ),
+                citing_content,
+            ],
+            style={"marginBottom": "8px"},
+        )
+    )
+
+    cited_content: html.Div | html.P
+    if cited_groups:
+        cited_buttons = [
+            _create_group_button_with_tooltip(
+                grp_id, weight, "cited", _GROUP_BUTTON_STYLE
+            )
+            for grp_id, weight in cited_groups
+        ]
+        cited_content = html.Div(cited_buttons)
+    else:
+        cited_content = html.P(
+            "No cited groups.",
+            style={
+                "margin": "0",
+                "fontSize": "12px",
+                "color": "#999",
+                "fontStyle": "italic",
+            },
+        )
+    adjacent_children.append(
+        html.Div(
+            [
+                html.P(
+                    "Groups this group cites:",
+                    style={
+                        "margin": "0 0 4px 0",
+                        "fontSize": "12px",
+                        "color": "#666",
+                        "fontWeight": "bold",
+                    },
+                ),
+                cited_content,
+            ],
+        )
+    )
+
+    # テーブルデータ
+    if df.empty:
+        title = f"Group {group_id} (no data)"
+        result: tuple = (
+            [],
+            title,
+            group_name,
+            description_children,
+            description_style,
+            adjacent_children,
+            _ADJACENT_SECTION_STYLE,
+            subgraph_children,
+        )
+        _group_selection_output_cache[group_id] = result
+        return result
+
+    df = df.sort_values(
+        by=[
+            "pagerank_group",
+            "in-degree_group",
+            "out-degree_group",
+            "degree_group",
+            "PEP",
+        ],
+        ascending=[False, False, False, False, True],
+    ).reset_index(drop=True)
+
+    df["created_str"] = df["created"].dt.strftime("%Y-%m-%d").fillna("")
+    df["pep_markdown"] = df["PEP"].apply(
+        lambda pep_num: f"[PEP {pep_num}]({generate_pep_url(pep_num)})"
+    )
+    df["pagerank_str"] = df["pagerank_group"].apply(lambda x: f"{x:.4f}")
+
+    table_data = (
+        df[
+            [
+                "pep_markdown",
+                "title",
+                "status",
+                "created_str",
+                "in-degree_group",
+                "out-degree_group",
+                "degree_group",
+                "pagerank_str",
+            ]
+        ]
+        .rename(
+            columns={
+                "pep_markdown": "pep",
+                "created_str": "created",
+                "in-degree_group": "in_degree",
+                "out-degree_group": "out_degree",
+                "degree_group": "degree",
+                "pagerank_str": "pagerank",
+            }
+        )
+        .to_dict("records")
+    )
+
+    count = len(table_data)
+    title = f"Group {group_id} ({count} PEPs)"
+
+    result = (
+        table_data,
+        title,
+        group_name,
+        description_children,
+        description_style,
+        adjacent_children,
+        _ADJACENT_SECTION_STYLE,
+        subgraph_children,
+    )
+    _group_selection_output_cache[group_id] = result
+    return result
+
+
+def preload_group_selection_outputs() -> None:
+    """
+    全グループの静的出力を事前計算してキャッシュをウォームアップする
+
+    起動時に呼び出すことで、グループ選択時のレスポンスを高速化する。
+    """
+    from src.dash_app.utils.data_loader import load_group_data
+
+    df = load_group_data()
+    group_ids = df["group_id"].unique().tolist()
+
+    for group_id in group_ids:
+        if group_id < 0:
+            continue
+        _compute_group_static_outputs(group_id)
 
 
 def register_group_callbacks(app):
@@ -545,6 +873,24 @@ def register_group_callbacks(app):
 
         group_id = int(selected_group)
 
+        # === キャッシュチェック ===
+        # 静的出力（group_idのみに依存する部分）がキャッシュされていれば使う
+        if group_id in _group_selection_output_cache:
+            cached = _group_selection_output_cache[group_id]
+            return (
+                cached[0],  # table_data
+                cached[1],  # title
+                cached[2],  # group_name
+                cached[3],  # description_children
+                cached[4],  # description_style
+                cached[5],  # adjacent_children
+                cached[6],  # adjacent_style
+                cached[7],  # subgraph_children
+                pep_info_children,
+                new_selection_source,
+                new_pep_input,
+            )
+
         # === サブグラフ計算 ===
         # 元の `update_subgraph` の挙動を保持する。孤立グループ(-1)はプレースホルダー
         if group_id < 0:
@@ -761,6 +1107,17 @@ def register_group_callbacks(app):
 
         if df.empty:
             title = f"Group {group_id} (no data)"
+            # 静的出力をキャッシュ
+            _group_selection_output_cache[group_id] = (
+                [],
+                title,
+                group_name,
+                description_children,
+                description_style,
+                adjacent_children,
+                _ADJACENT_SECTION_STYLE,
+                subgraph_children,
+            )
             return (
                 [],
                 title,
@@ -829,6 +1186,18 @@ def register_group_callbacks(app):
         # タイトルを設定
         count = len(table_data)
         title = f"Group {group_id} ({count} PEPs)"
+
+        # 静的出力をキャッシュ
+        _group_selection_output_cache[group_id] = (
+            table_data,
+            title,
+            group_name,
+            description_children,
+            description_style,
+            adjacent_children,
+            _ADJACENT_SECTION_STYLE,
+            subgraph_children,
+        )
 
         return (
             table_data,
