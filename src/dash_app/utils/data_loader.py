@@ -871,3 +871,25 @@ def get_adjacent_groups(group_id: int) -> dict:
         "citing_groups": citing_groups,
         "cited_groups": cited_groups,
     }
+
+
+def get_top_peps_by_group(group_id: int, top_n: int = 5) -> list[int]:
+    """
+    指定されたグループのPageRank上位のPEP番号を取得する
+
+    Args:
+        group_id: グループID
+        top_n: 取得するPEP数（デフォルト: 5）
+
+    Returns:
+        list[int]: PageRank上位のPEP番号リスト
+    """
+    df = get_peps_by_group(group_id)
+    if df.empty:
+        return []
+
+    # PageRank降順でソート
+    df_sorted = df.sort_values(by="pagerank_group", ascending=False)
+
+    # 上位N件のPEP番号を取得
+    return df_sorted["PEP"].head(top_n).tolist()

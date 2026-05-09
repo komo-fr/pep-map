@@ -25,6 +25,7 @@ from src.dash_app.utils.data_loader import (
     get_group_name_info,
     load_peps_metadata,
     get_adjacent_groups,
+    get_top_peps_by_group,
 )
 
 
@@ -557,6 +558,48 @@ def register_group_callbacks(app):
                 "color": "#333",
             }
 
+            def create_group_button_with_tooltip(grp_id: int, weight: int):
+                """ツールチップ付きのグループボタンを作成"""
+                # グループ名を取得
+                grp_info = get_group_name_info(grp_id)
+                grp_name = grp_info["group_name"] or f"Group {grp_id}"
+
+                # 代表的なPEPを取得
+                top_peps = get_top_peps_by_group(grp_id, top_n=5)
+                top_peps_str = ", ".join(str(p) for p in top_peps) if top_peps else "-"
+
+                # ツールチップコンテンツを作成
+                tooltip_content = [
+                    html.Div(
+                        grp_name,
+                        style={"fontWeight": "bold", "marginBottom": "4px"},
+                    ),
+                    html.Div(
+                        f"Citation links: {weight}",
+                        style={"fontSize": "11px", "color": "#aaa"},
+                    ),
+                    html.Div(
+                        f"Top PEPs by PageRank: {top_peps_str}",
+                        style={"fontSize": "11px", "color": "#aaa", "marginTop": "2px"},
+                    ),
+                ]
+
+                return html.Span(
+                    [
+                        html.Span(
+                            f"Group {grp_id}",
+                            style=button_style,
+                        ),
+                        html.Span(
+                            tooltip_content,
+                            className="pep-tooltip-text",
+                        ),
+                    ],
+                    id={"type": "adjacent-group-button", "group_id": grp_id},
+                    className="pep-link-tooltip",
+                    style={"cursor": "pointer"},
+                )
+
             adjacent_children = []
 
             # 選択中のグループを引用しているグループ
@@ -564,12 +607,7 @@ def register_group_callbacks(app):
                 citing_buttons = []
                 for grp_id, weight in citing_groups:
                     citing_buttons.append(
-                        html.Span(
-                            f"Group {grp_id}",
-                            id={"type": "adjacent-group-button", "group_id": grp_id},
-                            style=button_style,
-                            title=f"引用数: {weight}",
-                        )
+                        create_group_button_with_tooltip(grp_id, weight)
                     )
                 adjacent_children.append(
                     html.Div(
@@ -594,12 +632,7 @@ def register_group_callbacks(app):
                 cited_buttons = []
                 for grp_id, weight in cited_groups:
                     cited_buttons.append(
-                        html.Span(
-                            f"Group {grp_id}",
-                            id={"type": "adjacent-group-button", "group_id": grp_id},
-                            style=button_style,
-                            title=f"引用数: {weight}",
-                        )
+                        create_group_button_with_tooltip(grp_id, weight)
                     )
                 adjacent_children.append(
                     html.Div(
