@@ -296,13 +296,13 @@ def _create_network_tabs() -> html.Div:
             html.Div(
                 [
                     html.Button(
-                        "Full Network",
+                        "Full PEP Network",
                         id="full-network-tab-button",
                         n_clicks=0,
                         style=tab_button_selected_style,
                     ),
                     html.Button(
-                        "Group Network",
+                        "SelectedGroup Network",
                         id="group-network-tab-button",
                         n_clicks=0,
                         style=tab_button_base_style,
