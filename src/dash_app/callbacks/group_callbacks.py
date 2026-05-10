@@ -971,7 +971,7 @@ def register_group_callbacks(app):
     # round trip 数を削減する。元々は4つのコールバックに分散していた。
     @app.callback(
         # テーブル関連
-        Output("group-pep-table", "data"),
+        Output("group-pep-table", "rowData"),
         Output("group-pep-table-title", "children"),
         Output("group-name-display", "children"),
         Output("group-description-display", "children"),

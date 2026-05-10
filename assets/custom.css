@@ -9,6 +9,19 @@
     padding: 8px 10px !important;
 }
 
+/* AG Gridのヘッダーツールチップスタイル */
+.ag-tooltip {
+    max-width: 400px !important;
+    background-color: #222 !important;
+    color: white !important;
+    font-size: 12px !important;
+    text-align: left !important;
+    padding: 8px 10px !important;
+    border-radius: 4px !important;
+    border: none !important;
+    white-space: pre-line !important;
+}
+
 .tooltip.bs-tooltip-top .tooltip-arrow::before,
 .tooltip.bs-tooltip-auto[data-popper-placement^="top"] .tooltip-arrow::before {
     border-top-color: #222 !important;

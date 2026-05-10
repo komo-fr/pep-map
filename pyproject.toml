@@ -51,6 +51,10 @@ ignore_missing_imports = true
 module = "dash_bootstrap_components"
 ignore_missing_imports = true
 
+[[tool.mypy.overrides]]
+module = "dash_ag_grid"
+ignore_missing_imports = true
+
 # 上記ライブラリを import しているモジュールでは [import-untyped] を出さない
 [[tool.mypy.overrides]]
 module = [
