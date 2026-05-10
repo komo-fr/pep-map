@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 - Add `Cited by Groups` and `Cites Groups` columns to the `Groups` tab table to show boundary PEPs.
+- Add `Created` tab in the `Groups` tab to display a histogram of PEP creation dates within the group.
 
 ### Changed
 - Replace DataTable with AG Grid in the `Groups` tab table.
