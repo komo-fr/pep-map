@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.9.0] - 2026-05-10
+
+### Added
+- Add a `Group-to-Group Network` view to the `Groups` tab to visualize relationships between groups.
+- Add an `Related Groups` section to the `Groups` tab to display neighboring groups.
+
+### Changed
+- Make group descriptions in the `Groups` tab collapsible.
+- Add tooltips on tab hover and other UI improvements.
+
 ## [0.8.1] - 2026-05-09
 
 ### Added
