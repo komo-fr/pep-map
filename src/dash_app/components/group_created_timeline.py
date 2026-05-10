@@ -62,6 +62,7 @@ def create_group_timeline_empty_figure() -> go.Figure:
         ),
         showlegend=False,
         margin=dict(**TIMELINE_MARGIN),
+        height=520,
         annotations=[
             dict(
                 text="Select a group to see PEP creation timeline",
