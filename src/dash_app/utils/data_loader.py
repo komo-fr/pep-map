@@ -908,47 +908,6 @@ def load_group_to_group_network() -> "nx.DiGraph":
     return _group_to_group_network_cache
 
 
-def get_pep_boundary_groups(pep_number: int, current_group_id: int) -> dict:
-    """
-    指定されたPEPの境界グループ情報を取得する
-
-    Args:
-        pep_number: PEP番号
-        current_group_id: 現在のグループID（自グループを除外するため）
-
-    Returns:
-        dict: 境界グループ情報
-            - cited_by_groups: このPEPを引用しているPEPの所属グループIDリスト（自グループ除く、ソート済み）
-            - cites_groups: このPEPが引用しているPEPの所属グループIDリスト（自グループ除く、ソート済み）
-    """
-    citations = load_citations()
-    group_data = load_group_data()
-
-    # PEP→グループIDのマッピングを作成
-    pep_to_group = dict(zip(group_data["PEP"], group_data["group_id"]))
-
-    # このPEPを引用しているPEP（cited == pep_number となるciting）
-    citing_peps = citations[citations["cited"] == pep_number]["citing"].tolist()
-    cited_by_groups = set()
-    for citing_pep in citing_peps:
-        grp = pep_to_group.get(citing_pep)
-        if grp is not None and grp != current_group_id:
-            cited_by_groups.add(grp)
-
-    # このPEPが引用しているPEP（citing == pep_number となるcited）
-    cited_peps = citations[citations["citing"] == pep_number]["cited"].tolist()
-    cites_groups = set()
-    for cited_pep in cited_peps:
-        grp = pep_to_group.get(cited_pep)
-        if grp is not None and grp != current_group_id:
-            cites_groups.add(grp)
-
-    return {
-        "cited_by_groups": sorted(cited_by_groups),
-        "cites_groups": sorted(cites_groups),
-    }
-
-
 def get_group_boundary_data(group_id: int) -> dict[int, dict]:
     """
     指定されたグループの全PEPについて境界グループ情報を一括取得する
