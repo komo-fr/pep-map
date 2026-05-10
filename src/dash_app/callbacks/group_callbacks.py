@@ -1370,6 +1370,7 @@ def register_group_callbacks(app):
             const selectedButtonStyle = {
                 'padding': '8px 16px',
                 'border': '1px solid #ddd',
+                'borderTop': '6px solid #DDAD3E',
                 'borderBottom': '1px solid #fff',
                 'backgroundColor': '#fff',
                 'cursor': 'pointer',

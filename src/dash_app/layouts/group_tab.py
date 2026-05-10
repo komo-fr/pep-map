@@ -1,5 +1,6 @@
 """Groupタブのレイアウト"""
 
+import dash_bootstrap_components as dbc
 import dash_cytoscape as cyto
 from dash import dcc, html, dash_table
 
@@ -41,9 +42,9 @@ def create_group_tab_layout() -> html.Div:
                 style={
                     "backgroundColor": "#fffacd",
                     "border": "1px solid black",
-                    "padding": "8px",
+                    "padding": "4px 8px",
                     "borderRadius": "4px",
-                    "marginBottom": "16px",
+                    "marginBottom": "12px",
                     "fontSize": "13px",
                 },
             ),
@@ -286,6 +287,7 @@ def _create_network_tabs() -> html.Div:
         **tab_button_base_style,
         "backgroundColor": "#fff",
         "fontWeight": "bold",
+        "borderTop": "3px solid #DDAD3E",
         "borderBottom": "1px solid #fff",
         "marginBottom": "-1px",
     }
@@ -302,7 +304,7 @@ def _create_network_tabs() -> html.Div:
                         style=tab_button_selected_style,
                     ),
                     html.Button(
-                        "SelectedGroup Network",
+                        "Selected Group Network",
                         id="group-network-tab-button",
                         n_clicks=0,
                         style=tab_button_base_style,
@@ -312,6 +314,25 @@ def _create_network_tabs() -> html.Div:
                         id="group-to-group-tab-button",
                         n_clicks=0,
                         style=tab_button_base_style,
+                    ),
+                    # ツールチップ
+                    dbc.Tooltip(
+                        "Use this view to see the selected group in the context of the entire PEP citation network.",
+                        target="full-network-tab-button",
+                        placement="bottom",
+                        style={"maxWidth": "300px"},
+                    ),
+                    dbc.Tooltip(
+                        "Use this view to see which PEPs are central within the selected group and how they cite each other.",
+                        target="group-network-tab-button",
+                        placement="bottom",
+                        style={"maxWidth": "300px"},
+                    ),
+                    dbc.Tooltip(
+                        "Use this view to see how the selected group is connected to other groups through citations.",
+                        target="group-to-group-tab-button",
+                        placement="bottom",
+                        style={"maxWidth": "300px"},
                     ),
                 ],
                 style={
@@ -375,19 +396,19 @@ def _create_full_network_tab_content() -> html.Div:
                     html.Strong("Color"),
                     " indicates the group of each PEP.",
                 ],
-                style={"fontSize": "12px", "color": "#666", "marginBottom": "4px"},
+                style={"fontSize": "12px", "color": "#666", "margin": "0"},
             ),
             html.P(
                 [
                     html.Strong("Node sizes"),
                     " in the network graph are based on PageRank computed from the full citation network.",
                 ],
-                style={"fontSize": "12px", "color": "#666", "marginBottom": "8px"},
+                style={"fontSize": "12px", "color": "#666", "margin": "0 0 4px 0"},
             ),
             # ネットワークグラフ
             _create_group_graph(),
         ],
-        style={"paddingTop": "8px"},
+        style={"paddingTop": "4px"},
     )
 
 
@@ -401,14 +422,14 @@ def _create_subgraph_tab_content() -> html.Div:
                     html.Strong("Color"),
                     " indicates the status of each PEP.",
                 ],
-                style={"fontSize": "12px", "color": "#666", "marginBottom": "4px"},
+                style={"fontSize": "12px", "color": "#666", "margin": "0"},
             ),
             html.P(
                 [
                     html.Strong("Node sizes"),
                     " are based on PageRank computed within the selected group.",
                 ],
-                style={"fontSize": "12px", "color": "#666", "marginBottom": "8px"},
+                style={"fontSize": "12px", "color": "#666", "margin": "0 0 4px 0"},
             ),
             # サブグラフ表示エリア（初期状態はプレースホルダー + 非表示Cytoscape）
             html.Div(
@@ -417,7 +438,7 @@ def _create_subgraph_tab_content() -> html.Div:
                 style={"minHeight": "600px"},
             ),
         ],
-        style={"paddingTop": "8px"},
+        style={"paddingTop": "4px"},
     )
 
 
@@ -431,26 +452,26 @@ def _create_group_to_group_tab_content() -> html.Div:
                     html.Strong("Color"),
                     " indicates the group (same as Full Network).",
                 ],
-                style={"fontSize": "12px", "color": "#666", "marginBottom": "4px"},
+                style={"fontSize": "12px", "color": "#666", "margin": "0"},
             ),
             html.P(
                 [
                     html.Strong("Node sizes"),
                     " are based on the number of PEPs in each group.",
                 ],
-                style={"fontSize": "12px", "color": "#666", "marginBottom": "4px"},
+                style={"fontSize": "12px", "color": "#666", "margin": "0"},
             ),
             html.P(
                 [
                     html.Strong("Edge widths"),
                     " are based on the number of citations between groups.",
                 ],
-                style={"fontSize": "12px", "color": "#666", "marginBottom": "8px"},
+                style={"fontSize": "12px", "color": "#666", "margin": "0 0 4px 0"},
             ),
             # ネットワークグラフ
             _create_group_to_group_graph(),
         ],
-        style={"paddingTop": "8px"},
+        style={"paddingTop": "4px"},
     )
 
 

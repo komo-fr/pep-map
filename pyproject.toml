@@ -47,7 +47,16 @@ ignore_missing_imports = true
 module = "plotly"
 ignore_missing_imports = true
 
+[[tool.mypy.overrides]]
+module = "dash_bootstrap_components"
+ignore_missing_imports = true
+
 # 上記ライブラリを import しているモジュールでは [import-untyped] を出さない
 [[tool.mypy.overrides]]
-module = ["dash_app.layouts.network", "dash_app.callbacks.timeline_callbacks"]
+module = [
+    "dash_app.layouts.network",
+    "dash_app.layouts.common",
+    "dash_app.layouts.group_tab",
+    "dash_app.callbacks.timeline_callbacks",
+]
 disable_error_code = ["import-untyped"]
