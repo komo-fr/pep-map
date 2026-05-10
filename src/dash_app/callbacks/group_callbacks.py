@@ -41,7 +41,7 @@ _group_selection_output_cache: dict[int, tuple] = {}
 # グループボタンのスタイル（隣接グループ表示用）
 _GROUP_BUTTON_STYLE: dict[str, str] = {
     "display": "inline-block",
-    "padding": "4px 10px",
+    "padding": "0px 5px",
     "margin": "2px 4px 2px 0",
     "backgroundColor": "#E8E8E8",
     "border": "1px solid #CCC",
@@ -55,9 +55,6 @@ _GROUP_BUTTON_STYLE: dict[str, str] = {
 _ADJACENT_SECTION_STYLE: dict[str, str] = {
     "marginBottom": "8px",
     "marginTop": "0",
-    "backgroundColor": "#F5F5F5",
-    "padding": "12px",
-    "borderRadius": "4px",
 }
 
 
@@ -305,9 +302,6 @@ def _compute_group_static_outputs(group_id: int) -> tuple:
     filled_style = {
         "marginBottom": "8px",
         "marginTop": "0",
-        "backgroundColor": "#EAEAEA",
-        "padding": "8px",
-        "borderRadius": "4px",
     }
 
     # サブグラフ計算
@@ -338,6 +332,15 @@ def _compute_group_static_outputs(group_id: int) -> tuple:
     group_name = group_info["group_name"]
     group_description = group_info["description"]
 
+    # グループ名表示コンポーネント
+    if group_name:
+        group_name_display: object = [
+            html.Span("Group Name: ", className="group-name-label"),
+            html.Span(group_name, className="group-name-text"),
+        ]
+    else:
+        group_name_display = ""
+
     # 説明文コンポーネント
     if not group_description:
         description_children: object = ""
@@ -348,22 +351,8 @@ def _compute_group_static_outputs(group_id: int) -> tuple:
         last_paragraph = paragraphs[-1] if len(paragraphs) > 1 else None
         middle_paragraphs = paragraphs[1:-1] if len(paragraphs) > 2 else []
 
-        description_children = [
-            html.Div(
-                [
-                    html.P(
-                        "🤖 グループ名と説明はAIが自動生成したものです。内容の正確性・完全性は保証されません。",
-                        style={"margin": "0", "fontSize": "12px"},
-                    ),
-                ],
-                style={
-                    "backgroundColor": "#fffacd",
-                    "border": "1px solid black",
-                    "padding": "8px",
-                    "marginBottom": "8px",
-                    "borderRadius": "4px",
-                },
-            ),
+        # 説明文の内容を構築
+        description_content: list[Component] = [
             html.P(
                 linkify_pep_numbers(first_paragraph),
                 style={
@@ -377,7 +366,7 @@ def _compute_group_static_outputs(group_id: int) -> tuple:
 
         if middle_paragraphs:
             middle_text = "\n\n".join(middle_paragraphs)
-            description_children.append(
+            description_content.append(
                 html.Details(
                     [
                         html.Summary(
@@ -418,7 +407,7 @@ def _compute_group_static_outputs(group_id: int) -> tuple:
             )
 
         if last_paragraph:
-            description_children.append(
+            description_content.append(
                 html.P(
                     linkify_pep_numbers(last_paragraph),
                     style={
@@ -431,14 +420,60 @@ def _compute_group_static_outputs(group_id: int) -> tuple:
                 ),
             )
 
+        # AI生成の注意書きを一番下に追加
+        description_content.append(
+            html.Div(
+                [
+                    html.P(
+                        "🤖 グループ名と説明はAIが自動生成したものです。内容の正確性・完全性は保証されません。",
+                        style={"margin": "0", "fontSize": "12px"},
+                    ),
+                ],
+                style={
+                    "backgroundColor": "#fffacd",
+                    "border": "1px solid black",
+                    "padding": "4px 8px",
+                    "marginTop": "12px",
+                    "borderRadius": "4px",
+                },
+            ),
+        )
+
+        # 全体を折りたたみ可能な Details でラップ
+        description_children = [
+            html.Details(
+                [
+                    html.Summary(
+                        [
+                            "Group Description ",
+                            html.Span(
+                                "🤖 AI Generated",
+                                className="ai-badge",
+                            ),
+                        ],
+                        className="group-description-summary",
+                    ),
+                    html.Div(
+                        description_content,
+                        style={"padding": "8px 12px"},
+                    ),
+                ],
+                open=True,
+                className="group-description-details",
+                style={
+                    "border": "1px solid #ddd",
+                    "borderRadius": "4px",
+                    "marginTop": "8px",
+                },
+            )
+        ]
+
         description_style = filled_style
 
     # 隣接グループ
     adjacent_info = get_adjacent_groups(group_id)
     citing_groups = adjacent_info["citing_groups"]
     cited_groups = adjacent_info["cited_groups"]
-
-    adjacent_children = []
 
     citing_content: html.Div | html.P
     if citing_groups:
@@ -459,23 +494,6 @@ def _compute_group_static_outputs(group_id: int) -> tuple:
                 "fontStyle": "italic",
             },
         )
-    adjacent_children.append(
-        html.Div(
-            [
-                html.P(
-                    "Groups citing this group:",
-                    style={
-                        "margin": "0 0 4px 0",
-                        "fontSize": "12px",
-                        "color": "#666",
-                        "fontWeight": "bold",
-                    },
-                ),
-                citing_content,
-            ],
-            style={"marginBottom": "8px"},
-        )
-    )
 
     cited_content: html.Div | html.P
     if cited_groups:
@@ -496,22 +514,58 @@ def _compute_group_static_outputs(group_id: int) -> tuple:
                 "fontStyle": "italic",
             },
         )
-    adjacent_children.append(
-        html.Div(
+
+    adjacent_children = [
+        html.Details(
             [
-                html.P(
-                    "Groups this group cites:",
-                    style={
-                        "margin": "0 0 4px 0",
-                        "fontSize": "12px",
-                        "color": "#666",
-                        "fontWeight": "bold",
-                    },
+                html.Summary(
+                    "Related Groups",
+                    className="related-groups-summary",
                 ),
-                cited_content,
+                html.Div(
+                    [
+                        html.Div(
+                            [
+                                html.P(
+                                    "Groups citing this group:",
+                                    style={
+                                        "margin": "0 0 4px 0",
+                                        "fontSize": "12px",
+                                        "color": "#666",
+                                        "fontWeight": "bold",
+                                    },
+                                ),
+                                citing_content,
+                            ],
+                            style={"marginBottom": "8px"},
+                        ),
+                        html.Div(
+                            [
+                                html.P(
+                                    "Groups this group cites:",
+                                    style={
+                                        "margin": "0 0 4px 0",
+                                        "fontSize": "12px",
+                                        "color": "#666",
+                                        "fontWeight": "bold",
+                                    },
+                                ),
+                                cited_content,
+                            ],
+                        ),
+                    ],
+                    style={"padding": "8px 12px"},
+                ),
             ],
+            open=True,
+            className="related-groups-details",
+            style={
+                "border": "1px solid #ddd",
+                "borderRadius": "4px",
+                "marginTop": "8px",
+            },
         )
-    )
+    ]
 
     # テーブルデータ
     if df.empty:
@@ -519,7 +573,7 @@ def _compute_group_static_outputs(group_id: int) -> tuple:
         result: tuple = (
             [],
             title,
-            group_name,
+            group_name_display,
             description_children,
             description_style,
             adjacent_children,
@@ -578,7 +632,7 @@ def _compute_group_static_outputs(group_id: int) -> tuple:
     result = (
         table_data,
         title,
-        group_name,
+        group_name_display,
         description_children,
         description_style,
         adjacent_children,
@@ -1316,6 +1370,7 @@ def register_group_callbacks(app):
             const selectedButtonStyle = {
                 'padding': '8px 16px',
                 'border': '1px solid #ddd',
+                'borderTop': '6px solid #DDAD3E',
                 'borderBottom': '1px solid #fff',
                 'backgroundColor': '#fff',
                 'cursor': 'pointer',
