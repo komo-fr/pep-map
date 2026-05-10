@@ -27,6 +27,8 @@ _group_data_cache: pd.DataFrame | None = None
 _group_names_cache: pd.DataFrame | None = None
 _full_network_positions_cache: dict[int, tuple[float, float]] | None = None
 _subgraph_positions_cache: dict[int, dict[int, tuple[float, float]]] = {}
+_subgraph_cache: dict[int, "nx.DiGraph"] = {}
+_subgraph_metrics_cache: pd.DataFrame | None = None
 _group_to_group_network_cache: "nx.DiGraph | None" = None
 _group_to_group_positions_cache: dict[int, tuple[float, float]] | None = None
 
@@ -681,6 +683,8 @@ def clear_cache() -> None:
         _group_names_cache, \
         _full_network_positions_cache, \
         _subgraph_positions_cache, \
+        _subgraph_cache, \
+        _subgraph_metrics_cache, \
         _group_to_group_network_cache, \
         _group_to_group_positions_cache
     _peps_metadata_cache = None
@@ -695,14 +699,23 @@ def clear_cache() -> None:
     _group_names_cache = None
     _full_network_positions_cache = None
     _subgraph_positions_cache = {}
+    _subgraph_cache = {}
+    _subgraph_metrics_cache = None
     _group_to_group_network_cache = None
     _group_to_group_positions_cache = None
 
     # 他モジュールのキャッシュもクリア（遅延インポートで循環参照を回避）
-    from src.dash_app.components import network_graph, group_network_graph
+    from src.dash_app.components import (
+        network_graph,
+        group_network_graph,
+        subgraph_network_graph,
+    )
+    from src.dash_app.callbacks import group_callbacks
 
     network_graph.clear_cache()
     group_network_graph.clear_cache()
+    subgraph_network_graph.clear_cache()
+    group_callbacks.clear_cache()
 
 
 def load_subgraph(group_id: int) -> "nx.DiGraph | None":
@@ -715,6 +728,10 @@ def load_subgraph(group_id: int) -> "nx.DiGraph | None":
     Returns:
         NetworkX DiGraph、存在しない場合はNone
     """
+    global _subgraph_cache
+
+    if group_id in _subgraph_cache:
+        return _subgraph_cache[group_id]
 
     subgraph_path = (
         DATA_DIR / "groups" / "subgraphs" / "graphs" / f"subgraph_{group_id}.pkl"
@@ -723,7 +740,30 @@ def load_subgraph(group_id: int) -> "nx.DiGraph | None":
         return None
 
     with open(subgraph_path, "rb") as f:
-        return pickle.load(f)
+        subgraph = pickle.load(f)
+
+    _subgraph_cache[group_id] = subgraph
+    return subgraph
+
+
+def _load_all_subgraph_metrics() -> pd.DataFrame | None:
+    """
+    全グループのメトリクスを読み込む（内部用）
+
+    Returns:
+        DataFrame、存在しない場合はNone
+    """
+    global _subgraph_metrics_cache
+
+    if _subgraph_metrics_cache is not None:
+        return _subgraph_metrics_cache
+
+    metrics_path = DATA_DIR / "groups" / "pep_group_metrics.csv"
+    if not metrics_path.exists():
+        return None
+
+    _subgraph_metrics_cache = pd.read_csv(metrics_path)
+    return _subgraph_metrics_cache
 
 
 def load_subgraph_metrics(group_id: int) -> "pd.DataFrame | None":
@@ -736,13 +776,11 @@ def load_subgraph_metrics(group_id: int) -> "pd.DataFrame | None":
     Returns:
         DataFrame、存在しない場合はNone
     """
-    metrics_path = DATA_DIR / "groups" / "pep_group_metrics.csv"
-    if not metrics_path.exists():
+    all_metrics = _load_all_subgraph_metrics()
+    if all_metrics is None:
         return None
-    df = pd.read_csv(metrics_path)
-    df = df[df["group_id"] == group_id]
 
-    return df
+    return all_metrics[all_metrics["group_id"] == group_id]
 
 
 def load_full_network_positions() -> dict[int, tuple[float, float]]:

@@ -33,6 +33,11 @@ from src.dash_app.utils.data_loader import (
 _pep_numbers_cache: set[int] | None = None
 _pep_metadata_cache: dict[int, dict[str, str]] | None = None
 
+# グループ選択コールバックの静的出力キャッシュ
+# キー: group_id, 値: (table_data, title, group_name, description_children,
+#                      description_style, adjacent_children, adjacent_style, subgraph_children)
+_group_selection_output_cache: dict[int, tuple] = {}
+
 # グループボタンのスタイル（隣接グループ表示用）
 _GROUP_BUTTON_STYLE: dict[str, str] = {
     "display": "inline-block",
@@ -278,6 +283,335 @@ def linkify_pep_numbers(text: str) -> list[str | Component]:
     return result
 
 
+def _compute_group_static_outputs(group_id: int) -> tuple:
+    """
+    指定されたグループIDの静的出力を計算する
+
+    この関数はコールバックとプリロードの両方から呼ばれる。
+    結果はキャッシュされ、2回目以降はキャッシュから返される。
+
+    Args:
+        group_id: グループID
+
+    Returns:
+        tuple: (table_data, title, group_name, description_children,
+                description_style, adjacent_children, adjacent_style, subgraph_children)
+    """
+    # キャッシュチェック
+    if group_id in _group_selection_output_cache:
+        return _group_selection_output_cache[group_id]
+
+    empty_style = {"display": "none"}
+    filled_style = {
+        "marginBottom": "8px",
+        "marginTop": "0",
+        "backgroundColor": "#EAEAEA",
+        "padding": "8px",
+        "borderRadius": "4px",
+    }
+
+    # サブグラフ計算
+    if group_id < 0:
+        subgraph_children: object = _create_subgraph_placeholder_with_dummy()
+    else:
+        subgraph_elements = build_subgraph_cytoscape_elements(group_id)
+        if subgraph_elements is None:
+            subgraph_children = _create_subgraph_placeholder_with_dummy()
+        else:
+            subgraph_children = cyto.Cytoscape(
+                id="group-subgraph-network-graph",
+                elements=subgraph_elements,
+                layout=get_subgraph_layout_options(),
+                style={
+                    "width": "100%",
+                    "height": "600px",
+                    "border": "1px solid #ddd",
+                    "backgroundColor": "#fafafa",
+                },
+                stylesheet=get_subgraph_base_stylesheet(),
+            )
+
+    df = get_peps_by_group(group_id)
+
+    # グループ名と説明を取得
+    group_info = get_group_name_info(group_id)
+    group_name = group_info["group_name"]
+    group_description = group_info["description"]
+
+    # 説明文コンポーネント
+    if not group_description:
+        description_children: object = ""
+        description_style = empty_style
+    else:
+        paragraphs = group_description.split("\n\n")
+        first_paragraph = paragraphs[0]
+        last_paragraph = paragraphs[-1] if len(paragraphs) > 1 else None
+        middle_paragraphs = paragraphs[1:-1] if len(paragraphs) > 2 else []
+
+        description_children = [
+            html.Div(
+                [
+                    html.P(
+                        "🤖 グループ名と説明はAIが自動生成したものです。内容の正確性・完全性は保証されません。",
+                        style={"margin": "0", "fontSize": "12px"},
+                    ),
+                ],
+                style={
+                    "backgroundColor": "#fffacd",
+                    "border": "1px solid black",
+                    "padding": "8px",
+                    "marginBottom": "8px",
+                    "borderRadius": "4px",
+                },
+            ),
+            html.P(
+                linkify_pep_numbers(first_paragraph),
+                style={
+                    "margin": "0",
+                    "fontSize": "13px",
+                    "color": "#333",
+                    "whiteSpace": "pre-line",
+                },
+            ),
+        ]
+
+        if middle_paragraphs:
+            middle_text = "\n\n".join(middle_paragraphs)
+            description_children.append(
+                html.Details(
+                    [
+                        html.Summary(
+                            [
+                                html.Span(
+                                    "▶ ネットワーク構造の説明を表示する",
+                                    className="show-when-closed",
+                                ),
+                                html.Span(
+                                    "▼ 説明を閉じる",
+                                    className="show-when-open",
+                                ),
+                            ],
+                            style={
+                                "cursor": "pointer",
+                                "fontSize": "12px",
+                                "color": "#0066cc",
+                                "marginTop": "8px",
+                                "textDecoration": "underline",
+                                "listStyle": "none",
+                            },
+                        ),
+                        html.P(
+                            linkify_pep_numbers(middle_text),
+                            style={
+                                "margin": "8px 0 0 0",
+                                "padding": "12px",
+                                "fontSize": "13px",
+                                "color": "#333",
+                                "whiteSpace": "pre-line",
+                                "backgroundColor": "#f0f7ff",
+                                "border": "1px solid #d0e3f7",
+                                "borderRadius": "4px",
+                            },
+                        ),
+                    ],
+                ),
+            )
+
+        if last_paragraph:
+            description_children.append(
+                html.P(
+                    linkify_pep_numbers(last_paragraph),
+                    style={
+                        "marginTop": "8px",
+                        "marginBottom": "0",
+                        "fontSize": "13px",
+                        "color": "#333",
+                        "whiteSpace": "pre-line",
+                    },
+                ),
+            )
+
+        description_style = filled_style
+
+    # 隣接グループ
+    adjacent_info = get_adjacent_groups(group_id)
+    citing_groups = adjacent_info["citing_groups"]
+    cited_groups = adjacent_info["cited_groups"]
+
+    adjacent_children = []
+
+    citing_content: html.Div | html.P
+    if citing_groups:
+        citing_buttons = [
+            _create_group_button_with_tooltip(
+                grp_id, weight, "citing", _GROUP_BUTTON_STYLE
+            )
+            for grp_id, weight in citing_groups
+        ]
+        citing_content = html.Div(citing_buttons)
+    else:
+        citing_content = html.P(
+            "No citing groups.",
+            style={
+                "margin": "0",
+                "fontSize": "12px",
+                "color": "#999",
+                "fontStyle": "italic",
+            },
+        )
+    adjacent_children.append(
+        html.Div(
+            [
+                html.P(
+                    "Groups citing this group:",
+                    style={
+                        "margin": "0 0 4px 0",
+                        "fontSize": "12px",
+                        "color": "#666",
+                        "fontWeight": "bold",
+                    },
+                ),
+                citing_content,
+            ],
+            style={"marginBottom": "8px"},
+        )
+    )
+
+    cited_content: html.Div | html.P
+    if cited_groups:
+        cited_buttons = [
+            _create_group_button_with_tooltip(
+                grp_id, weight, "cited", _GROUP_BUTTON_STYLE
+            )
+            for grp_id, weight in cited_groups
+        ]
+        cited_content = html.Div(cited_buttons)
+    else:
+        cited_content = html.P(
+            "No cited groups.",
+            style={
+                "margin": "0",
+                "fontSize": "12px",
+                "color": "#999",
+                "fontStyle": "italic",
+            },
+        )
+    adjacent_children.append(
+        html.Div(
+            [
+                html.P(
+                    "Groups this group cites:",
+                    style={
+                        "margin": "0 0 4px 0",
+                        "fontSize": "12px",
+                        "color": "#666",
+                        "fontWeight": "bold",
+                    },
+                ),
+                cited_content,
+            ],
+        )
+    )
+
+    # テーブルデータ
+    if df.empty:
+        title = f"Group {group_id} (no data)"
+        result: tuple = (
+            [],
+            title,
+            group_name,
+            description_children,
+            description_style,
+            adjacent_children,
+            _ADJACENT_SECTION_STYLE,
+            subgraph_children,
+        )
+        _group_selection_output_cache[group_id] = result
+        return result
+
+    df = df.sort_values(
+        by=[
+            "pagerank_group",
+            "in-degree_group",
+            "out-degree_group",
+            "degree_group",
+            "PEP",
+        ],
+        ascending=[False, False, False, False, True],
+    ).reset_index(drop=True)
+
+    df["created_str"] = df["created"].dt.strftime("%Y-%m-%d").fillna("")
+    df["pep_markdown"] = df["PEP"].apply(
+        lambda pep_num: f"[PEP {pep_num}]({generate_pep_url(pep_num)})"
+    )
+    df["pagerank_str"] = df["pagerank_group"].apply(lambda x: f"{x:.4f}")
+
+    table_data = (
+        df[
+            [
+                "pep_markdown",
+                "title",
+                "status",
+                "created_str",
+                "in-degree_group",
+                "out-degree_group",
+                "degree_group",
+                "pagerank_str",
+            ]
+        ]
+        .rename(
+            columns={
+                "pep_markdown": "pep",
+                "created_str": "created",
+                "in-degree_group": "in_degree",
+                "out-degree_group": "out_degree",
+                "degree_group": "degree",
+                "pagerank_str": "pagerank",
+            }
+        )
+        .to_dict("records")
+    )
+
+    count = len(table_data)
+    title = f"Group {group_id} ({count} PEPs)"
+
+    result = (
+        table_data,
+        title,
+        group_name,
+        description_children,
+        description_style,
+        adjacent_children,
+        _ADJACENT_SECTION_STYLE,
+        subgraph_children,
+    )
+    _group_selection_output_cache[group_id] = result
+    return result
+
+
+def preload_group_selection_outputs() -> None:
+    """
+    全グループの静的出力を事前計算してキャッシュをウォームアップする
+
+    起動時に呼び出すことで、グループ選択時のレスポンスを高速化する。
+    """
+    from src.dash_app.utils.data_loader import load_group_data
+
+    df = load_group_data()
+    group_ids = df["group_id"].unique().tolist()
+
+    for group_id in group_ids:
+        if group_id < 0:
+            continue
+        _compute_group_static_outputs(group_id)
+
+
+def clear_cache() -> None:
+    """キャッシュをクリアする（テスト用）"""
+    global _group_selection_output_cache
+    _group_selection_output_cache = {}
+
+
 def register_group_callbacks(app):
     """
     Groupタブのコールバックを登録する
@@ -343,30 +677,6 @@ def register_group_callbacks(app):
             return no_update
 
         return no_update
-
-    # ===== ドロップダウン直接操作 → 初期メッセージ表示（サーバーサイド） =====
-    @app.callback(
-        Output("group-pep-info-display", "children", allow_duplicate=True),
-        Input("group-selector-dropdown", "value"),
-        State("group-selection-source", "data"),
-        prevent_initial_call=True,
-    )
-    def update_pep_info_from_dropdown(selected_group, selection_source):
-        """
-        ドロップダウン直接操作時に初期メッセージを表示する
-
-        Args:
-            selected_group: 選択されているグループ
-            selection_source: 選択ソース ("dropdown", "node_tap", "pep_input")
-
-        Returns:
-            html.Div: 初期メッセージまたは no_update
-        """
-        # PEP番号入力またはノードタップからのトリガーの場合は何もしない
-        if selection_source == "pep_input" or selection_source == "node_tap":
-            return no_update
-        # ドロップダウン直接操作の場合は初期メッセージを表示
-        return create_group_initial_info_message()
 
     # ===== グループ選択 → グラフハイライト更新（クライアントサイド） =====
     app.clientside_callback(
@@ -456,8 +766,11 @@ def register_group_callbacks(app):
         State("group-selection-source", "data"),
     )
 
-    # ===== グループ選択 → テーブルデータ更新（サーバーサイド） =====
+    # ===== グループ選択 → テーブル/サブグラフ/PEP情報/リセットを一括更新（サーバーサイド） =====
+    # ドロップダウン変更時に発火するサーバーサイド処理を1つに集約することで
+    # round trip 数を削減する。元々は4つのコールバックに分散していた。
     @app.callback(
+        # テーブル関連
         Output("group-pep-table", "data"),
         Output("group-pep-table-title", "children"),
         Output("group-name-display", "children"),
@@ -465,31 +778,81 @@ def register_group_callbacks(app):
         Output("group-description-display", "style"),
         Output("adjacent-groups-display", "children"),
         Output("adjacent-groups-display", "style"),
+        # サブグラフ
+        Output("subgraph-container", "children"),
+        # PEP情報表示エリア
+        Output("group-pep-info-display", "children", allow_duplicate=True),
+        # selection_source / PEP入力欄リセット
+        Output("group-selection-source", "data", allow_duplicate=True),
+        Output("group-pep-input", "value", allow_duplicate=True),
         Input("group-selector-dropdown", "value"),
+        State("group-selection-source", "data"),
+        State("group-pep-input", "value"),
+        prevent_initial_call=True,
     )
-    def update_group_table(selected_group):
+    def update_on_group_selection(selected_group, selection_source, pep_input):
         """
-        グループ選択時にテーブルデータ、タイトル、グループ名、説明、隣接グループを更新する
+        グループ選択時に以下を一括で更新する。
+
+        - PEPテーブル / グループ名 / グループ説明 / 隣接グループ
+        - サブグラフ
+        - PEP情報表示エリア（ドロップダウン直接操作時のみ初期メッセージにリセット）
+        - selection_source / PEP入力欄（ノードタップ・PEP入力起因でない場合のみリセット）
 
         Args:
             selected_group: 選択されたグループ（"all" または グループID）
+            selection_source: 現在の選択ソース ("dropdown", "node_tap", "pep_input")
+            pep_input: PEP入力欄の値
 
         Returns:
-            tuple: (テーブルデータ, タイトル, グループ名, グループ説明, 説明スタイル,
-                    隣接グループ, 隣接グループスタイル)
+            tuple: 上記の全Outputに対応するタプル
         """
         # 説明文が空の時のスタイル（非表示）
         empty_style = {"display": "none"}
 
-        # 説明文がある時のスタイル（背景色付き）
-        filled_style = {
-            "marginBottom": "8px",
-            "marginTop": "0",
-            "backgroundColor": "#EAEAEA",
-            "padding": "8px",
-            "borderRadius": "4px",
-        }
+        # === selection_source / PEP入力欄のリセット判定 ===
+        # 元の `reset_on_dropdown_change` の挙動を保持する
+        pep_number = parse_pep_number(pep_input)
+        if pep_number is None:
+            # PEP入力欄が空の場合
+            if selection_source == "pep_input":
+                new_selection_source: object = "dropdown"
+                new_pep_input: object = no_update
+            else:
+                new_selection_source = no_update
+                new_pep_input = no_update
+        else:
+            target_group_id = get_group_id_by_pep(pep_number)
+            if target_group_id is None:
+                # 無効なPEP番号の場合はリセット
+                if selection_source == "pep_input":
+                    new_selection_source = "dropdown"
+                    new_pep_input = ""
+                else:
+                    new_selection_source = no_update
+                    new_pep_input = ""
+            elif str(selected_group) == str(target_group_id):
+                # ノードタップ/PEP入力からのドロップダウン更新で値が一致 → 入力値を維持
+                new_selection_source = no_update
+                new_pep_input = no_update
+            else:
+                # 異なる場合はリセット
+                if selection_source == "pep_input":
+                    new_selection_source = "dropdown"
+                    new_pep_input = ""
+                else:
+                    new_selection_source = no_update
+                    new_pep_input = ""
 
+        # === PEP情報表示の更新判定 ===
+        # 元の `update_pep_info_from_dropdown` の挙動を保持する
+        # ノードタップ/PEP入力起因の場合は他コールバックが情報を表示済みなので触らない
+        if selection_source in ("pep_input", "node_tap"):
+            pep_info_children: object = no_update
+        else:
+            pep_info_children = create_group_initial_info_message()
+
+        # === "all"または未選択時 ===
         if selected_group is None or selected_group == "all":
             return (
                 [],
@@ -499,276 +862,29 @@ def register_group_callbacks(app):
                 empty_style,
                 "",
                 empty_style,
+                _create_subgraph_placeholder_with_dummy(),
+                pep_info_children,
+                new_selection_source,
+                new_pep_input,
             )
 
         group_id = int(selected_group)
-        df = get_peps_by_group(group_id)
 
-        # グループ名と説明を取得
-        group_info = get_group_name_info(group_id)
-        group_name = group_info["group_name"]
-        group_description = group_info["description"]
-
-        # 説明文が空かどうかでスタイルと内容を切り替え
-        if not group_description:
-            description_children = ""
-            description_style = empty_style
-        else:
-            # 段落を分割（空行で区切る）
-            paragraphs = group_description.split("\n\n")
-            first_paragraph = paragraphs[0]
-            last_paragraph = paragraphs[-1] if len(paragraphs) > 1 else None
-            # 中間段落（第2・第3段落）を折りたたみ対象とする
-            middle_paragraphs = paragraphs[1:-1] if len(paragraphs) > 2 else []
-
-            # 注意書き（常に表示） + 説明文を生成
-            description_children = [
-                # 注意書き（常に表示、上部）
-                html.Div(
-                    [
-                        html.P(
-                            "🤖 グループ名と説明はAIが自動生成したものです。内容の正確性・完全性は保証されません。",
-                            style={"margin": "0", "fontSize": "12px"},
-                        ),
-                    ],
-                    style={
-                        "backgroundColor": "#fffacd",
-                        "border": "1px solid black",
-                        "padding": "8px",
-                        "marginBottom": "8px",
-                        "borderRadius": "4px",
-                    },
-                ),
-                # 最初の段落（常に表示）
-                html.P(
-                    linkify_pep_numbers(first_paragraph),
-                    style={
-                        "margin": "0",
-                        "fontSize": "13px",
-                        "color": "#333",
-                        "whiteSpace": "pre-line",
-                    },
-                ),
-            ]
-
-            # 中間段落があれば折りたたみで追加
-            if middle_paragraphs:
-                middle_text = "\n\n".join(middle_paragraphs)
-                description_children.append(
-                    html.Details(
-                        [
-                            html.Summary(
-                                [
-                                    html.Span(
-                                        "▶ ネットワーク構造の説明を表示する",
-                                        className="show-when-closed",
-                                    ),
-                                    html.Span(
-                                        "▼ 説明を閉じる",
-                                        className="show-when-open",
-                                    ),
-                                ],
-                                style={
-                                    "cursor": "pointer",
-                                    "fontSize": "12px",
-                                    "color": "#0066cc",
-                                    "marginTop": "8px",
-                                    "textDecoration": "underline",
-                                    "listStyle": "none",  # デフォルトの三角マーカーを非表示
-                                },
-                            ),
-                            html.P(
-                                linkify_pep_numbers(middle_text),
-                                style={
-                                    "margin": "8px 0 0 0",
-                                    "padding": "12px",
-                                    "fontSize": "13px",
-                                    "color": "#333",
-                                    "whiteSpace": "pre-line",
-                                    "backgroundColor": "#f0f7ff",
-                                    "border": "1px solid #d0e3f7",
-                                    "borderRadius": "4px",
-                                },
-                            ),
-                        ],
-                    ),
-                )
-
-            # 最終段落（常に表示）
-            if last_paragraph:
-                description_children.append(
-                    html.P(
-                        linkify_pep_numbers(last_paragraph),
-                        style={
-                            "marginTop": "8px",
-                            "marginBottom": "0",
-                            "fontSize": "13px",
-                            "color": "#333",
-                            "whiteSpace": "pre-line",
-                        },
-                    ),
-                )
-
-            description_style = filled_style
-
-        # 隣接グループ情報を取得
-        adjacent_info = get_adjacent_groups(group_id)
-        citing_groups = adjacent_info["citing_groups"]
-        cited_groups = adjacent_info["cited_groups"]
-
-        # 隣接グループ表示コンポーネントを作成
-        adjacent_children = []
-
-        # 選択中のグループを引用しているグループ
-        if citing_groups:
-            citing_buttons = []
-            for grp_id, weight in citing_groups:
-                citing_buttons.append(
-                    _create_group_button_with_tooltip(
-                        grp_id, weight, "citing", _GROUP_BUTTON_STYLE
-                    )
-                )
-            citing_content = html.Div(citing_buttons)
-        else:
-            citing_content = html.P(
-                "No citing groups.",
-                style={
-                    "margin": "0",
-                    "fontSize": "12px",
-                    "color": "#999",
-                    "fontStyle": "italic",
-                },
-            )
-        adjacent_children.append(
-            html.Div(
-                [
-                    html.P(
-                        "Groups citing this group:",
-                        style={
-                            "margin": "0 0 4px 0",
-                            "fontSize": "12px",
-                            "color": "#666",
-                            "fontWeight": "bold",
-                        },
-                    ),
-                    citing_content,
-                ],
-                style={"marginBottom": "8px"},
-            )
-        )
-
-        # 選択中のグループが引用しているグループ
-        if cited_groups:
-            cited_buttons = []
-            for grp_id, weight in cited_groups:
-                cited_buttons.append(
-                    _create_group_button_with_tooltip(
-                        grp_id, weight, "cited", _GROUP_BUTTON_STYLE
-                    )
-                )
-            cited_content = html.Div(cited_buttons)
-        else:
-            cited_content = html.P(
-                "No cited groups.",
-                style={
-                    "margin": "0",
-                    "fontSize": "12px",
-                    "color": "#999",
-                    "fontStyle": "italic",
-                },
-            )
-        adjacent_children.append(
-            html.Div(
-                [
-                    html.P(
-                        "Groups this group cites:",
-                        style={
-                            "margin": "0 0 4px 0",
-                            "fontSize": "12px",
-                            "color": "#666",
-                            "fontWeight": "bold",
-                        },
-                    ),
-                    cited_content,
-                ],
-            )
-        )
-
-        if df.empty:
-            title = f"Group {group_id} (no data)"
-            return (
-                [],
-                title,
-                group_name,
-                description_children,
-                description_style,
-                adjacent_children,
-                _ADJACENT_SECTION_STYLE,
-            )
-
-        # ソート: PageRank降順 > In-degree降順 > Out-degree降順 > Degree降順 > PEP番号昇順
-        df = df.sort_values(
-            by=[
-                "pagerank_group",
-                "in-degree_group",
-                "out-degree_group",
-                "degree_group",
-                "PEP",
-            ],
-            ascending=[False, False, False, False, True],
-        ).reset_index(drop=True)
-
-        # テーブルデータに変換（pandasを使って効率的に処理）
-        # created列を文字列にフォーマット（日付型への変換はload_group_dataで実施済み）
-        df["created_str"] = df["created"].dt.strftime("%Y-%m-%d").fillna("")
-
-        # PEP列にMarkdownリンクを追加
-        df["pep_markdown"] = df["PEP"].apply(
-            lambda pep_num: f"[PEP {pep_num}]({generate_pep_url(pep_num)})"
-        )
-
-        # PageRank列をフォーマット
-        df["pagerank_str"] = df["pagerank_group"].apply(lambda x: f"{x:.4f}")
-
-        # テーブルデータ用の辞書リストを作成
-        table_data = (
-            df[
-                [
-                    "pep_markdown",
-                    "title",
-                    "status",
-                    "created_str",
-                    "in-degree_group",
-                    "out-degree_group",
-                    "degree_group",
-                    "pagerank_str",
-                ]
-            ]
-            .rename(
-                columns={
-                    "pep_markdown": "pep",
-                    "created_str": "created",
-                    "in-degree_group": "in_degree",
-                    "out-degree_group": "out_degree",
-                    "degree_group": "degree",
-                    "pagerank_str": "pagerank",
-                }
-            )
-            .to_dict("records")
-        )
-
-        # タイトルを設定
-        count = len(table_data)
-        title = f"Group {group_id} ({count} PEPs)"
+        # === 静的出力を取得（キャッシュがあれば使用、なければ計算してキャッシュ） ===
+        cached = _compute_group_static_outputs(group_id)
 
         return (
-            table_data,
-            title,
-            group_name,
-            description_children,
-            description_style,
-            adjacent_children,
-            _ADJACENT_SECTION_STYLE,
+            cached[0],  # table_data
+            cached[1],  # title
+            cached[2],  # group_name
+            cached[3],  # description_children
+            cached[4],  # description_style
+            cached[5],  # adjacent_children
+            cached[6],  # adjacent_style
+            cached[7],  # subgraph_children
+            pep_info_children,
+            new_selection_source,
+            new_pep_input,
         )
 
     # ===== ノードクリック → グループ選択更新 + 選択ソース更新 + PEP入力欄更新（サーバーサイド） =====
@@ -1170,99 +1286,6 @@ def register_group_callbacks(app):
             return create_group_initial_info_message()
 
         return create_pep_info_display(pep_data)
-
-    # ===== ドロップダウン変更 → selection_source・PEP入力欄リセット（サーバーサイド） =====
-    @app.callback(
-        Output("group-selection-source", "data", allow_duplicate=True),
-        Output("group-pep-input", "value", allow_duplicate=True),
-        Input("group-selector-dropdown", "value"),
-        State("group-selection-source", "data"),
-        State("group-pep-input", "value"),
-        prevent_initial_call=True,
-    )
-    def reset_on_dropdown_change(selected_group, selection_source, pep_input):
-        """
-        ドロップダウンが変更された時に selection_source と PEP入力欄をリセットする
-
-        ノードタップ/PEP入力からドロップダウンが更新された場合は何もしない（入力値を維持）
-        ユーザーがドロップダウンを直接操作した場合はリセット（入力値をクリア）
-
-        Args:
-            selected_group: 選択されたグループ
-            selection_source: 現在の選択ソース
-            pep_input: PEP入力欄の値
-
-        Returns:
-            tuple: (selection_source, pep_input) or no_update
-        """
-        # PEP入力欄が空の場合は何もしない
-        pep_number = parse_pep_number(pep_input)
-        if pep_number is None:
-            # selection_source が "pep_input" の場合のみリセット
-            if selection_source == "pep_input":
-                return "dropdown", no_update
-            return no_update, no_update
-
-        # PEP入力欄の値に対応するグループIDを取得
-        target_group_id = get_group_id_by_pep(pep_number)
-        if target_group_id is None:
-            # 無効なPEP番号の場合はリセット
-            if selection_source == "pep_input":
-                return "dropdown", ""
-            return no_update, ""
-
-        # 現在のドロップダウンの値と対象グループIDが一致する場合は何もしない
-        # （ノードタップ/PEP入力からの変更なので入力値を維持）
-        if str(selected_group) == str(target_group_id):
-            return no_update, no_update
-
-        # 異なる場合はリセット（ユーザーがドロップダウンを操作した）
-        if selection_source == "pep_input":
-            return "dropdown", ""
-        return no_update, ""
-
-    # ===== グループ選択 → サブグラフ更新（サーバーサイド） =====
-    @app.callback(
-        Output("subgraph-container", "children"),
-        Input("group-selector-dropdown", "value"),
-    )
-    def update_subgraph(selected_group):
-        """
-        グループ選択時にサブグラフを更新する
-
-        Args:
-            selected_group: 選択されたグループ（"all" または グループID）
-
-        Returns:
-            サブグラフコンポーネント または プレースホルダー（常にCytoscapeを含む）
-        """
-        # "all"または未選択の場合はプレースホルダーを表示
-        if selected_group is None or selected_group == "all":
-            return _create_subgraph_placeholder_with_dummy()
-
-        # 孤立グループ(-1)の場合もプレースホルダーを表示
-        group_id = int(selected_group)
-        if group_id < 0:
-            return _create_subgraph_placeholder_with_dummy()
-
-        # サブグラフのelementsを構築
-        elements = build_subgraph_cytoscape_elements(group_id)
-        if elements is None:
-            return _create_subgraph_placeholder_with_dummy()
-
-        # Cytoscapeコンポーネントを返す
-        return cyto.Cytoscape(
-            id="group-subgraph-network-graph",
-            elements=elements,
-            layout=get_subgraph_layout_options(),
-            style={
-                "width": "100%",
-                "height": "600px",
-                "border": "1px solid #ddd",
-                "backgroundColor": "#fafafa",
-            },
-            stylesheet=get_subgraph_base_stylesheet(),
-        )
 
     # ===== ネットワークタブ切り替え（クライアントサイド） =====
     # visibility/positionベースの切り替えでCytoscapeのレイアウト計算を維持

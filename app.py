@@ -8,9 +8,13 @@ from dash_bootstrap_components import themes
 
 from src.dash_app.layouts.citation_changes_tab import create_citation_changes_tab_layout
 from src.dash_app.layouts.group_tab import create_group_tab_layout
-from src.dash_app.callbacks.group_callbacks import register_group_callbacks
+from src.dash_app.callbacks.group_callbacks import (
+    register_group_callbacks,
+    preload_group_selection_outputs,
+)
 from src.dash_app.components.header import create_header
 from src.dash_app.components.network_graph import build_cytoscape_elements
+from src.dash_app.components.subgraph_network_graph import preload_all_subgraph_elements
 from src.dash_app.layouts.common import create_tab_navigation
 from src.dash_app.layouts.timeline import create_timeline_layout
 from src.dash_app.layouts.network import create_network_layout
@@ -54,48 +58,89 @@ build_cytoscape_elements()  # Networkグラフの座標計算（2秒程度）
 load_citation_changes()  # 引用変更履歴データを読み込む
 load_group_data()  # グループデータを読み込む
 load_group_to_group_network()  # グループ間ネットワークを読み込む
+preload_all_subgraph_elements()  # 全グループのサブグラフ要素を事前計算
+preload_group_selection_outputs()  # 全グループの選択時出力を事前計算
 logger.info("Data preload complete.")
 
+# 全タブのレイアウトを起動時に生成（常時マウント方式）
+# タブ切り替え時はCSSのdisplayで表示/非表示を切り替えるため、
+# 状態（ズーム・パン、選択など）が保持される
+logger.info("Building tab layouts...")
+_timeline_layout = create_timeline_layout()
+_network_layout = create_network_layout()
+_groups_layout = create_group_tab_layout()
+_metrics_layout = create_metrics_tab_layout()
+_citation_changes_layout = create_citation_changes_tab_layout()
+logger.info("Tab layouts complete.")
+
+# タブコンテンツのスタイル定義
+# 初期状態では全タブを表示してCytoscapeを正しく初期化し、
+# clientside callbackで適切なタブ以外を非表示に切り替える
+_TAB_INITIAL_STYLE = {"display": "block"}
+
 # アプリレイアウトの定義
+# 全タブのコンテンツを含み、CSSで表示切り替え
 app.layout = html.Div(
     [
         # ヘッダー
         create_header(),
         # タブナビゲーション
         create_tab_navigation(),
-        # タブコンテンツ表示エリア
-        html.Div(id="tab-content"),
+        # タブコンテンツ（全タブを常時マウント、displayで表示切り替え）
+        # 初期状態では全タブを表示してCytoscapeを正しく初期化
+        html.Div(
+            [
+                html.Div(
+                    id="tab-content-timeline",
+                    children=_timeline_layout,
+                    style=_TAB_INITIAL_STYLE,
+                ),
+                html.Div(
+                    id="tab-content-network",
+                    children=_network_layout,
+                    style=_TAB_INITIAL_STYLE,
+                ),
+                html.Div(
+                    id="tab-content-groups",
+                    children=_groups_layout,
+                    style=_TAB_INITIAL_STYLE,
+                ),
+                html.Div(
+                    id="tab-content-metrics",
+                    children=_metrics_layout,
+                    style=_TAB_INITIAL_STYLE,
+                ),
+                html.Div(
+                    id="tab-content-citation_changes",
+                    children=_citation_changes_layout,
+                    style=_TAB_INITIAL_STYLE,
+                ),
+            ],
+        ),
     ]
 )
 
 
-@app.callback(Output("tab-content", "children"), Input("main-tabs", "value"))
-def render_tab_content(active_tab):
+# タブ切り替えコールバック（クライアントサイド）
+# 初期ロード時およびタブ切り替え時にdisplayスタイルを設定
+# 初期状態で全タブがdisplay:blockのため、Cytoscapeは正しいサイズで初期化される
+app.clientside_callback(
     """
-    選択されたタブに応じてコンテンツを表示する
-
-    Args:
-        active_tab: アクティブなタブの値
-
-    Returns:
-        html.Div: タブコンテンツ
-    """
-    if active_tab == "timeline":
-        return create_timeline_layout()
-    elif active_tab == "network":
-        return create_network_layout()
-    elif active_tab == "metrics":
-        return create_metrics_tab_layout()
-    elif active_tab == "citation_changes":
-        return create_citation_changes_tab_layout()
-    elif active_tab == "groups":
-        return create_group_tab_layout()
-    else:
-        return html.Div(
-            [
-                html.P("Unknown tab."),
-            ]
-        )
+    function(activeTab) {
+        const tabs = ['timeline', 'network', 'groups', 'metrics', 'citation_changes'];
+        const styles = tabs.map(function(tab) {
+            return {display: tab === activeTab ? 'block' : 'none'};
+        });
+        return styles;
+    }
+    """,
+    Output("tab-content-timeline", "style"),
+    Output("tab-content-network", "style"),
+    Output("tab-content-groups", "style"),
+    Output("tab-content-metrics", "style"),
+    Output("tab-content-citation_changes", "style"),
+    Input("main-tabs", "value"),
+)
 
 
 # Timelineコールバックを登録
