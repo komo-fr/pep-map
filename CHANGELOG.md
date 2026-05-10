@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.10.X] - 2026-05-DD
+
+### Added
+- Add `Cited by Groups` and `Cites Groups` columns to the `Groups` tab table to show boundary PEPs.
+
+### Changed
+- Replace DataTable with AG Grid in the `Groups` tab table.
+
 ## [0.9.0] - 2026-05-10
 
 ### Added
