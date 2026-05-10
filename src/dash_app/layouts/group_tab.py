@@ -1,5 +1,7 @@
 """Groupタブのレイアウト"""
 
+import json
+
 import dash_ag_grid as dag
 import dash_bootstrap_components as dbc
 import dash_cytoscape as cyto
@@ -698,7 +700,7 @@ def _generate_status_style_conditions() -> list[dict]:
         font_color = STATUS_FONT_COLOR_MAP.get(status, "#545454")
         conditions.append(
             {
-                "condition": f"params.value === '{status}'",
+                "condition": f"params.value === {json.dumps(status)}",
                 "style": {
                     "backgroundColor": bg_color,
                     "color": font_color,
