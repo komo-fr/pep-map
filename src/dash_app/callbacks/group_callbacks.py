@@ -371,8 +371,9 @@ def linkify_pep_numbers(text: str) -> list[str | Component]:
     テキスト内のPEP番号をリンク付きのDashコンポーネントに変換する
 
     - 「PEP 484」のようなパターンをリンク化
-    - 単独の数字で、後ろに「年」が続かず、存在するPEP番号の場合もリンク化
+    - 単独の数字で、存在するPEP番号の場合もリンク化
     - リンクにはツールチップでPEPタイトル・Status・Createdを表示
+    - 除外パターン: 後ろに「年」が続く場合、「Python 3.13」や「3.11」のようなバージョン番号
 
     Args:
         text: 変換対象のテキスト
@@ -413,7 +414,19 @@ def linkify_pep_numbers(text: str) -> list[str | Component]:
             pep_num = int(num_str)
             # 後ろに「年」が続く場合は除外
             after_match = text[end : end + 1] if end < len(text) else ""
+            # 前が「Python 」で終わる場合は除外（例: 「Python 3」）
+            # 前が「.」の場合も除外（例: 「3.13」の「13」）
+            # 後ろが「.数字」の場合も除外（例: 「3.13」の「3」）
+            before_match = text[max(0, start - 7) : start]
+            after_two = text[end : end + 2] if end + 1 < len(text) else ""
+            is_python_version = before_match.endswith(
+                "Python "
+            ) or before_match.endswith("python ")
+            is_decimal_part = start > 0 and text[start - 1] == "."
+            is_version_number = bool(re.match(r"\.\d", after_two))
             if after_match == "年":
+                result.append(num_str)
+            elif is_python_version or is_decimal_part or is_version_number:
                 result.append(num_str)
             # PEP番号が存在する場合のみリンク化
             elif pep_num in pep_numbers:
