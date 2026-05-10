@@ -17,7 +17,11 @@ from src.dash_app.components.group_to_group_network_graph import (
 )
 from src.dash_app.components.pep_info import create_group_initial_info_message
 from src.dash_app.utils.constants import STATUS_COLOR_MAP, STATUS_FONT_COLOR_MAP
-from src.dash_app.utils.data_loader import get_group_list, load_metadata
+from src.dash_app.utils.data_loader import (
+    get_group_list,
+    load_metadata,
+    get_all_group_tooltip_info,
+)
 
 
 def create_group_tab_layout() -> html.Div:
@@ -566,6 +570,9 @@ def _create_group_pep_table() -> dag.AgGrid:
     # Status列の条件付きスタイルを生成
     status_style_conditions = _generate_status_style_conditions()
 
+    # グループツールチップ情報を取得
+    group_tooltip_info = get_all_group_tooltip_info()
+
     column_defs = [
         {
             "field": "pep",
@@ -574,6 +581,7 @@ def _create_group_pep_table() -> dag.AgGrid:
             "pinned": "left",
             "cellRenderer": "markdown",
             "autoHeight": True,
+            "tooltipField": "title",
         },
         {
             "field": "title",
@@ -628,6 +636,26 @@ def _create_group_pep_table() -> dag.AgGrid:
             "headerTooltip": "Network-based importance score computed from the citation structure within the selected group.",
             "width": 115,
             "type": "rightAligned",
+        },
+        {
+            "field": "cited_by_groups",
+            "headerName": "Cited by Groups ⓘ",
+            "headerTooltip": "Groups of PEPs that cite this PEP (excluding the current group). Click a badge to navigate to that group.",
+            "width": 150,
+            "cellRenderer": "GroupBadges",
+            "cellRendererParams": {"groupInfo": group_tooltip_info},
+            "autoHeight": True,
+            "sortable": False,
+        },
+        {
+            "field": "cites_groups",
+            "headerName": "Cites Groups ⓘ",
+            "headerTooltip": "Groups of PEPs that this PEP cites (excluding the current group). Click a badge to navigate to that group.",
+            "width": 150,
+            "cellRenderer": "GroupBadges",
+            "cellRendererParams": {"groupInfo": group_tooltip_info},
+            "autoHeight": True,
+            "sortable": False,
         },
     ]
 
