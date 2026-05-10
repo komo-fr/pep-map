@@ -31,6 +31,7 @@ _subgraph_cache: dict[int, "nx.DiGraph"] = {}
 _subgraph_metrics_cache: pd.DataFrame | None = None
 _group_to_group_network_cache: "nx.DiGraph | None" = None
 _group_to_group_positions_cache: dict[int, tuple[float, float]] | None = None
+_group_tooltip_info_cache: dict[int, dict] | None = None
 
 
 def load_peps_metadata() -> pd.DataFrame:
@@ -642,11 +643,10 @@ def get_group_list() -> list[dict[str, str | int]]:
 
     # グループ名データを取得
     group_names_df = load_group_names()
-    group_names_dict = {}
-    for _, row in group_names_df.iterrows():
-        group_names_dict[int(row["group_id"])] = (
-            str(row["group_name"]) if pd.notna(row["group_name"]) else ""
-        )
+    group_names_dict = {
+        int(gid): str(name) if pd.notna(name) else ""
+        for gid, name in zip(group_names_df["group_id"], group_names_df["group_name"])
+    }
 
     options: list[dict[str, str | int]] = [{"label": "All Groups", "value": "all"}]
     for group_id in sorted(cast(list[int], list(group_counts.keys()))):
@@ -686,7 +686,8 @@ def clear_cache() -> None:
         _subgraph_cache, \
         _subgraph_metrics_cache, \
         _group_to_group_network_cache, \
-        _group_to_group_positions_cache
+        _group_to_group_positions_cache, \
+        _group_tooltip_info_cache
     _peps_metadata_cache = None
     _citations_cache = None
     _metadata_cache = None
@@ -703,6 +704,7 @@ def clear_cache() -> None:
     _subgraph_metrics_cache = None
     _group_to_group_network_cache = None
     _group_to_group_positions_cache = None
+    _group_tooltip_info_cache = None
 
     # 他モジュールのキャッシュもクリア（遅延インポートで循環参照を回避）
     from src.dash_app.components import (
@@ -1053,15 +1055,19 @@ def get_all_group_tooltip_info() -> dict[int, dict]:
         dict[int, dict]: グループIDをキーとした情報の辞書
             {group_id: {"name": str, "topPeps": list[int]}, ...}
     """
+    global _group_tooltip_info_cache
+
+    if _group_tooltip_info_cache is not None:
+        return _group_tooltip_info_cache
+
     group_data = load_group_data()
     group_names_df = load_group_names()
 
     # グループ名のマッピング
-    group_names_dict = {}
-    for _, row in group_names_df.iterrows():
-        group_names_dict[int(row["group_id"])] = (
-            str(row["group_name"]) if pd.notna(row["group_name"]) else ""
-        )
+    group_names_dict = {
+        int(gid): str(name) if pd.notna(name) else ""
+        for gid, name in zip(group_names_df["group_id"], group_names_df["group_name"])
+    }
 
     # 全グループIDを取得
     all_group_ids = group_data["group_id"].unique().tolist()
@@ -1075,4 +1081,5 @@ def get_all_group_tooltip_info() -> dict[int, dict]:
             "topPeps": top_peps,
         }
 
+    _group_tooltip_info_cache = result
     return result
