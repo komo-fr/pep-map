@@ -13,9 +13,12 @@ from src.dash_app.utils.constants import (
 from src.dash_app.utils.data_loader import get_fetched_year, get_peps_by_group
 
 
-def _get_group_timeline_xaxis_config() -> dict:
+def _get_group_timeline_xaxis_config(include_title: bool = True) -> dict:
     """
     グループタイムラインのX軸設定を取得する
+
+    Args:
+        include_title: X軸タイトルを含めるかどうか（デフォルト: True）
 
     Returns:
         dict: X軸の設定
@@ -24,16 +27,20 @@ def _get_group_timeline_xaxis_config() -> dict:
     fetched_year = get_fetched_year()
     x_range_max = f"{fetched_year}-12-31"
 
-    return dict(
-        title="Created Date",
+    config = dict(
         showgrid=True,
-        gridwidth=1,
         type="date",
         range=[x_range_min, x_range_max],
         dtick="M12",
         tick0="2000-01-01",
         tickformat="%Y",
     )
+
+    if include_title:
+        config["title"] = "Created Date"
+        config["gridwidth"] = 1
+
+    return config
 
 
 def create_group_timeline_empty_figure() -> go.Figure:
@@ -230,10 +237,8 @@ def create_group_timeline_figure(group_id: int) -> go.Figure:
         col=1,
     )
 
-    # X軸設定
-    x_range_min = "2000-01-01"
-    fetched_year = get_fetched_year()
-    x_range_max = f"{fetched_year}-12-31"
+    # X軸の共通設定を取得
+    xaxis_config = _get_group_timeline_xaxis_config(include_title=False)
 
     # レイアウト更新
     fig.update_layout(
@@ -279,25 +284,16 @@ def create_group_timeline_figure(group_id: int) -> go.Figure:
 
     # X軸設定（上段 - 上側に表示）
     fig.update_xaxes(
-        type="date",
-        range=[x_range_min, x_range_max],
-        dtick="M12",
-        tick0="2000-01-01",
-        tickformat="%Y",
-        showgrid=True,
+        **xaxis_config,
         showticklabels=True,
         side="top",
         row=1,
         col=1,
     )
 
+    # X軸設定（下段）
     fig.update_xaxes(
-        type="date",
-        range=[x_range_min, x_range_max],
-        dtick="M12",
-        tick0="2000-01-01",
-        tickformat="%Y",
-        showgrid=True,
+        **xaxis_config,
         row=2,
         col=1,
     )
