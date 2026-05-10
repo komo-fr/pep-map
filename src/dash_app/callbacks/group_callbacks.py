@@ -3,7 +3,7 @@
 import re
 import pandas as pd
 import dash_cytoscape as cyto
-from dash import Input, Output, State, callback_context, no_update, html
+from dash import Input, Output, State, callback_context, no_update, html, ALL
 from dash.development.base_component import Component
 from src.dash_app.components.pep_info import (
     create_group_initial_info_message,
@@ -24,12 +24,98 @@ from src.dash_app.utils.data_loader import (
     generate_pep_url,
     get_group_name_info,
     load_peps_metadata,
+    get_adjacent_groups,
+    get_top_peps_by_group,
 )
 
 
 # PEP番号とメタデータのキャッシュ
 _pep_numbers_cache: set[int] | None = None
 _pep_metadata_cache: dict[int, dict[str, str]] | None = None
+
+# グループボタンのスタイル（隣接グループ表示用）
+_GROUP_BUTTON_STYLE: dict[str, str] = {
+    "display": "inline-block",
+    "padding": "4px 10px",
+    "margin": "2px 4px 2px 0",
+    "backgroundColor": "#E8E8E8",
+    "border": "1px solid #CCC",
+    "borderRadius": "16px",
+    "fontSize": "12px",
+    "cursor": "pointer",
+    "color": "#333",
+}
+
+# 隣接グループセクションのスタイル
+_ADJACENT_SECTION_STYLE: dict[str, str] = {
+    "marginBottom": "8px",
+    "marginTop": "0",
+    "backgroundColor": "#F5F5F5",
+    "padding": "12px",
+    "borderRadius": "4px",
+}
+
+
+def _create_group_button_with_tooltip(
+    grp_id: int,
+    weight: int,
+    direction: str,
+    button_style: dict[str, str],
+) -> Component:
+    """ツールチップ付きのグループボタンを作成
+
+    Args:
+        grp_id: グループID
+        weight: 引用数
+        direction: "citing" または "cited"（IDの一意性のため）
+        button_style: ボタンのスタイル辞書
+
+    Returns:
+        ツールチップ付きボタンのSpanコンポーネント
+    """
+    # グループ名を取得
+    grp_info = get_group_name_info(grp_id)
+    grp_name = grp_info["group_name"] or f"Group {grp_id}"
+
+    # 代表的なPEPを取得
+    top_peps = get_top_peps_by_group(grp_id, top_n=5)
+    top_peps_str = ", ".join(str(p) for p in top_peps) if top_peps else "-"
+
+    # ツールチップコンテンツを作成
+    tooltip_content = [
+        html.Div(
+            grp_name,
+            style={"fontWeight": "bold", "marginBottom": "4px"},
+        ),
+        html.Div(
+            f"Citation links: {weight}",
+            style={"fontSize": "11px", "color": "#aaa"},
+        ),
+        html.Div(
+            f"Top PEPs by PageRank: {top_peps_str}",
+            style={"fontSize": "11px", "color": "#aaa", "marginTop": "2px"},
+        ),
+    ]
+
+    return html.Span(
+        [
+            html.Span(
+                f"Group {grp_id}",
+                style=button_style,
+            ),
+            html.Span(
+                tooltip_content,
+                className="pep-tooltip-text",
+            ),
+        ],
+        id={
+            "type": "adjacent-group-button",
+            "group_id": grp_id,
+            "direction": direction,
+        },
+        className="pep-link-tooltip",
+        style={"cursor": "pointer"},
+    )
 
 
 def _get_pep_data() -> tuple[set[int], dict[int, dict[str, str]]]:
@@ -206,15 +292,17 @@ def register_group_callbacks(app):
         Output("group-pep-info-display", "children"),
         Input("group-full-network-graph", "tapNodeData"),
         Input("group-subgraph-network-graph", "tapNodeData"),
+        Input("group-to-group-network-graph", "tapNodeData"),
         prevent_initial_call=True,
     )
-    def update_pep_info_from_tap(tap_data, subgraph_tap_data):
+    def update_pep_info_from_tap(tap_data, subgraph_tap_data, group_to_group_tap_data):
         """
         ノードタップ時にPEP情報を更新する
 
         Args:
             tap_data: フルネットワークグラフでクリックされたノードのデータ
             subgraph_tap_data: サブグラフでクリックされたノードのデータ
+            group_to_group_tap_data: Group-to-Groupグラフでクリックされたノードのデータ
 
         Returns:
             html.Div: PEP情報表示コンテンツ
@@ -224,6 +312,15 @@ def register_group_callbacks(app):
             return no_update
 
         triggered_id = ctx.triggered[0]["prop_id"]
+
+        # Group-to-Groupのノードがタップされた場合
+        if "group-to-group-network-graph" in triggered_id:
+            if group_to_group_tap_data is not None:
+                group_id = group_to_group_tap_data.get("group_id")
+                if group_id is not None:
+                    # グループ情報を表示（初期メッセージを表示）
+                    return create_group_initial_info_message()
+            return no_update
 
         # サブグラフのノードがタップされた場合
         if "group-subgraph-network-graph" in triggered_id:
@@ -366,17 +463,20 @@ def register_group_callbacks(app):
         Output("group-name-display", "children"),
         Output("group-description-display", "children"),
         Output("group-description-display", "style"),
+        Output("adjacent-groups-display", "children"),
+        Output("adjacent-groups-display", "style"),
         Input("group-selector-dropdown", "value"),
     )
     def update_group_table(selected_group):
         """
-        グループ選択時にテーブルデータ、タイトル、グループ名、説明を更新する
+        グループ選択時にテーブルデータ、タイトル、グループ名、説明、隣接グループを更新する
 
         Args:
             selected_group: 選択されたグループ（"all" または グループID）
 
         Returns:
-            tuple: (テーブルデータ, タイトル, グループ名, グループ説明, 説明スタイル)
+            tuple: (テーブルデータ, タイトル, グループ名, グループ説明, 説明スタイル,
+                    隣接グループ, 隣接グループスタイル)
         """
         # 説明文が空の時のスタイル（非表示）
         empty_style = {"display": "none"}
@@ -391,7 +491,15 @@ def register_group_callbacks(app):
         }
 
         if selected_group is None or selected_group == "all":
-            return [], "Select a group to view PEPs", "", "", empty_style
+            return (
+                [],
+                "Select a group to view PEPs",
+                "",
+                "",
+                empty_style,
+                "",
+                empty_style,
+            )
 
         group_id = int(selected_group)
         df = get_peps_by_group(group_id)
@@ -503,9 +611,100 @@ def register_group_callbacks(app):
 
             description_style = filled_style
 
+        # 隣接グループ情報を取得
+        adjacent_info = get_adjacent_groups(group_id)
+        citing_groups = adjacent_info["citing_groups"]
+        cited_groups = adjacent_info["cited_groups"]
+
+        # 隣接グループ表示コンポーネントを作成
+        adjacent_children = []
+
+        # 選択中のグループを引用しているグループ
+        if citing_groups:
+            citing_buttons = []
+            for grp_id, weight in citing_groups:
+                citing_buttons.append(
+                    _create_group_button_with_tooltip(
+                        grp_id, weight, "citing", _GROUP_BUTTON_STYLE
+                    )
+                )
+            citing_content = html.Div(citing_buttons)
+        else:
+            citing_content = html.P(
+                "No citing groups.",
+                style={
+                    "margin": "0",
+                    "fontSize": "12px",
+                    "color": "#999",
+                    "fontStyle": "italic",
+                },
+            )
+        adjacent_children.append(
+            html.Div(
+                [
+                    html.P(
+                        "Groups citing this group:",
+                        style={
+                            "margin": "0 0 4px 0",
+                            "fontSize": "12px",
+                            "color": "#666",
+                            "fontWeight": "bold",
+                        },
+                    ),
+                    citing_content,
+                ],
+                style={"marginBottom": "8px"},
+            )
+        )
+
+        # 選択中のグループが引用しているグループ
+        if cited_groups:
+            cited_buttons = []
+            for grp_id, weight in cited_groups:
+                cited_buttons.append(
+                    _create_group_button_with_tooltip(
+                        grp_id, weight, "cited", _GROUP_BUTTON_STYLE
+                    )
+                )
+            cited_content = html.Div(cited_buttons)
+        else:
+            cited_content = html.P(
+                "No cited groups.",
+                style={
+                    "margin": "0",
+                    "fontSize": "12px",
+                    "color": "#999",
+                    "fontStyle": "italic",
+                },
+            )
+        adjacent_children.append(
+            html.Div(
+                [
+                    html.P(
+                        "Groups this group cites:",
+                        style={
+                            "margin": "0 0 4px 0",
+                            "fontSize": "12px",
+                            "color": "#666",
+                            "fontWeight": "bold",
+                        },
+                    ),
+                    cited_content,
+                ],
+            )
+        )
+
         if df.empty:
             title = f"Group {group_id} (no data)"
-            return [], title, group_name, description_children, description_style
+            return (
+                [],
+                title,
+                group_name,
+                description_children,
+                description_style,
+                adjacent_children,
+                _ADJACENT_SECTION_STYLE,
+            )
 
         # ソート: PageRank降順 > In-degree降順 > Out-degree降順 > Degree降順 > PEP番号昇順
         df = df.sort_values(
@@ -562,7 +761,15 @@ def register_group_callbacks(app):
         count = len(table_data)
         title = f"Group {group_id} ({count} PEPs)"
 
-        return table_data, title, group_name, description_children, description_style
+        return (
+            table_data,
+            title,
+            group_name,
+            description_children,
+            description_style,
+            adjacent_children,
+            _ADJACENT_SECTION_STYLE,
+        )
 
     # ===== ノードクリック → グループ選択更新 + 選択ソース更新 + PEP入力欄更新（サーバーサイド） =====
     @app.callback(
@@ -570,28 +777,84 @@ def register_group_callbacks(app):
         Output("group-selection-source", "data", allow_duplicate=True),
         Output("group-pep-input", "value", allow_duplicate=True),
         Input("group-full-network-graph", "tapNodeData"),
+        Input("group-to-group-network-graph", "tapNodeData"),
         prevent_initial_call=True,
     )
-    def update_from_node_tap(tap_data):
+    def update_from_node_tap(tap_data, group_to_group_tap_data):
         """
         ノードクリック時にグループ選択、選択ソース、PEP入力欄を更新する
 
         Args:
-            tap_data: クリックされたノードのデータ
+            tap_data: Full Networkグラフでクリックされたノードのデータ
+            group_to_group_tap_data: Group-to-Groupグラフでクリックされたノードのデータ
 
         Returns:
             tuple: (グループID, 選択ソース, PEP番号)
         """
-        if tap_data is None:
+        ctx = callback_context
+        if not ctx.triggered:
             return no_update, no_update, no_update
 
-        group_id = tap_data.get("group_id")
-        pep_number = tap_data.get("pep_number")
+        triggered_id = ctx.triggered[0]["prop_id"]
 
-        if group_id is not None:
-            # PEP番号を文字列に変換（入力欄に表示するため）
-            pep_input_value = str(pep_number) if pep_number is not None else ""
-            return group_id, "node_tap", pep_input_value
+        # Group-to-Group Networkのノードがタップされた場合
+        if "group-to-group-network-graph" in triggered_id:
+            if group_to_group_tap_data is not None:
+                group_id = group_to_group_tap_data.get("group_id")
+                if group_id is not None:
+                    # PEP入力欄はクリア（グループノードにはPEP番号がないため）
+                    return group_id, "dropdown", ""
+            return no_update, no_update, no_update
+
+        # Full Networkのノードがタップされた場合
+        if "group-full-network-graph" in triggered_id:
+            if tap_data is not None:
+                group_id = tap_data.get("group_id")
+                pep_number = tap_data.get("pep_number")
+
+                if group_id is not None:
+                    # PEP番号を文字列に変換（入力欄に表示するため）
+                    pep_input_value = str(pep_number) if pep_number is not None else ""
+                    return group_id, "node_tap", pep_input_value
+
+        return no_update, no_update, no_update
+
+    # ===== 隣接グループボタンクリック → グループ選択更新（サーバーサイド） =====
+    @app.callback(
+        Output("group-selector-dropdown", "value", allow_duplicate=True),
+        Output("group-selection-source", "data", allow_duplicate=True),
+        Output("group-pep-input", "value", allow_duplicate=True),
+        Input(
+            {"type": "adjacent-group-button", "group_id": ALL, "direction": ALL},
+            "n_clicks",
+        ),
+        prevent_initial_call=True,
+    )
+    def update_from_adjacent_group_click(n_clicks_list):
+        """
+        隣接グループボタンクリック時にグループ選択を更新する
+
+        Args:
+            n_clicks_list: 各ボタンのクリック数リスト
+
+        Returns:
+            tuple: (グループID, 選択ソース, PEP入力欄の値)
+        """
+        ctx = callback_context
+        if not ctx.triggered:
+            return no_update, no_update, no_update
+
+        # ctx.triggered_id を使用（Dash推奨パターン）
+        # pattern-matching callbacks では辞書として返される
+        triggered_id = ctx.triggered_id
+        if triggered_id and isinstance(triggered_id, dict):
+            if triggered_id.get("type") == "adjacent-group-button":
+                # 実際にクリックがあった場合のみ処理（value が 1 以上）
+                value = ctx.triggered[0].get("value")
+                if value is not None and value >= 1:
+                    group_id = triggered_id.get("group_id")
+                    if group_id is not None:
+                        return group_id, "dropdown", ""
 
         return no_update, no_update, no_update
 
@@ -1005,8 +1268,8 @@ def register_group_callbacks(app):
     # visibility/positionベースの切り替えでCytoscapeのレイアウト計算を維持
     app.clientside_callback(
         """
-        function(fullClicks, groupClicks) {
-            // どちらのボタンがクリックされたかを判定
+        function(fullClicks, groupClicks, groupToGroupClicks) {
+            // どのボタンがクリックされたかを判定
             const ctx = window.dash_clientside.callback_context;
 
             // 表示タブのスタイル（通常表示）
@@ -1055,7 +1318,9 @@ def register_group_callbacks(app):
                 return [
                     visibleContentStyle,
                     hiddenContentStyle,
+                    hiddenContentStyle,
                     selectedButtonStyle,
+                    unselectedButtonStyle,
                     unselectedButtonStyle
                 ];
             }
@@ -1066,13 +1331,27 @@ def register_group_callbacks(app):
                 return [
                     visibleContentStyle,
                     hiddenContentStyle,
+                    hiddenContentStyle,
+                    selectedButtonStyle,
+                    unselectedButtonStyle,
+                    unselectedButtonStyle
+                ];
+            } else if (triggeredId === 'group-network-tab-button') {
+                return [
+                    hiddenContentStyle,
+                    visibleContentStyle,
+                    hiddenContentStyle,
+                    unselectedButtonStyle,
                     selectedButtonStyle,
                     unselectedButtonStyle
                 ];
             } else {
+                // group-to-group-tab-button
                 return [
                     hiddenContentStyle,
+                    hiddenContentStyle,
                     visibleContentStyle,
+                    unselectedButtonStyle,
                     unselectedButtonStyle,
                     selectedButtonStyle
                 ];
@@ -1081,10 +1360,13 @@ def register_group_callbacks(app):
         """,
         Output("full-network-content", "style"),
         Output("group-network-content", "style"),
+        Output("group-to-group-content", "style"),
         Output("full-network-tab-button", "style"),
         Output("group-network-tab-button", "style"),
+        Output("group-to-group-tab-button", "style"),
         Input("full-network-tab-button", "n_clicks"),
         Input("group-network-tab-button", "n_clicks"),
+        Input("group-to-group-tab-button", "n_clicks"),
     )
 
     # ===== Full Networkタップ → Group Network選択解除（クライアントサイド） =====
@@ -1343,5 +1625,199 @@ def register_group_callbacks(app):
         Output("group-subgraph-network-graph", "elements", allow_duplicate=True),
         Input("group-subgraph-network-graph", "selectedNodeData"),
         State("group-subgraph-network-graph", "elements"),
+        prevent_initial_call=True,
+    )
+
+    # ===== グループ選択 → Group-to-Group Networkハイライト更新（クライアントサイド） =====
+    # ドロップダウンやFull Networkタップでグループが選択されたときに
+    # Group-to-Group Networkの該当ノードをハイライトする
+    app.clientside_callback(
+        """
+        function(selectedGroup, currentElements) {
+            // elementsがない場合は更新しない
+            if (!currentElements || currentElements.length === 0) {
+                return window.dash_clientside.no_update;
+            }
+
+            // "all"または未選択の場合は全要素のハイライトをクリア
+            if (selectedGroup === null || selectedGroup === undefined || selectedGroup === 'all') {
+                return currentElements.map(function(el) {
+                    var newEl = JSON.parse(JSON.stringify(el));
+                    newEl.classes = '';
+                    newEl.selected = false;
+                    return newEl;
+                });
+            }
+
+            // 選択されたグループIDを数値に変換
+            var selectedGroupId = parseInt(selectedGroup, 10);
+            var selectedNodeId = 'group_' + selectedGroupId;
+
+            // 選択されたノードを探す
+            var selectedNode = null;
+            for (var i = 0; i < currentElements.length; i++) {
+                if (currentElements[i].data && currentElements[i].data.id === selectedNodeId) {
+                    selectedNode = currentElements[i];
+                    break;
+                }
+            }
+
+            // 選択ノードが見つからない場合はハイライトをクリア
+            if (!selectedNode) {
+                return currentElements.map(function(el) {
+                    var newEl = JSON.parse(JSON.stringify(el));
+                    newEl.classes = '';
+                    newEl.selected = false;
+                    return newEl;
+                });
+            }
+
+            // 隣接情報を取得
+            var adjacentNodes = selectedNode.data.adjacent_nodes || [];
+            var incomingEdges = selectedNode.data.incoming_edges || [];
+            var outgoingEdges = selectedNode.data.outgoing_edges || [];
+
+            // セットに変換（高速検索用）
+            var adjacentNodesSet = new Set(adjacentNodes);
+            var incomingEdgesSet = new Set(incomingEdges);
+            var outgoingEdgesSet = new Set(outgoingEdges);
+
+            // elementsを更新
+            return currentElements.map(function(el) {
+                var newEl = JSON.parse(JSON.stringify(el));
+                var data = newEl.data;
+
+                // ノードの場合
+                if (!data.source) {
+                    if (data.id === selectedNodeId) {
+                        newEl.classes = 'selected';
+                        newEl.selected = true;
+                    } else if (adjacentNodesSet.has(data.id)) {
+                        newEl.classes = 'connected';
+                        newEl.selected = false;
+                    } else {
+                        newEl.classes = 'faded';
+                        newEl.selected = false;
+                    }
+                }
+                // エッジの場合
+                else {
+                    if (incomingEdgesSet.has(data.id)) {
+                        newEl.classes = 'incoming-edge';
+                    } else if (outgoingEdgesSet.has(data.id)) {
+                        newEl.classes = 'outgoing-edge';
+                    } else {
+                        newEl.classes = 'faded';
+                    }
+                }
+
+                return newEl;
+            });
+        }
+        """,
+        Output("group-to-group-network-graph", "elements", allow_duplicate=True),
+        Input("group-selector-dropdown", "value"),
+        State("group-to-group-network-graph", "elements"),
+        prevent_initial_call=True,
+    )
+
+    # ===== Group-to-Group Networkノードタップ → エッジハイライト更新（クライアントサイド） =====
+    app.clientside_callback(
+        """
+        function(tapNodeData, currentElements) {
+            // tapNodeDataまたはelementsがない場合は更新しない
+            if (!tapNodeData || !currentElements || currentElements.length === 0) {
+                return window.dash_clientside.no_update;
+            }
+
+            // タップされたノードのID
+            var selectedNodeId = 'group_' + tapNodeData.group_id;
+
+            // タップされたノードを探す
+            var selectedNode = null;
+            for (var i = 0; i < currentElements.length; i++) {
+                if (currentElements[i].data && currentElements[i].data.id === selectedNodeId) {
+                    selectedNode = currentElements[i];
+                    break;
+                }
+            }
+
+            // 選択ノードが見つからない場合は更新しない
+            if (!selectedNode) {
+                return window.dash_clientside.no_update;
+            }
+
+            // 隣接情報を取得
+            var adjacentNodes = selectedNode.data.adjacent_nodes || [];
+            var incomingEdges = selectedNode.data.incoming_edges || [];
+            var outgoingEdges = selectedNode.data.outgoing_edges || [];
+
+            // セットに変換（高速検索用）
+            var adjacentNodesSet = new Set(adjacentNodes);
+            var incomingEdgesSet = new Set(incomingEdges);
+            var outgoingEdgesSet = new Set(outgoingEdges);
+
+            // elementsを更新
+            return currentElements.map(function(el) {
+                var newEl = JSON.parse(JSON.stringify(el));
+                var data = newEl.data;
+
+                // ノードの場合
+                if (!data.source) {
+                    if (data.id === selectedNodeId) {
+                        newEl.classes = 'selected';
+                    } else if (adjacentNodesSet.has(data.id)) {
+                        newEl.classes = 'connected';
+                    } else {
+                        newEl.classes = 'faded';
+                    }
+                }
+                // エッジの場合
+                else {
+                    if (incomingEdgesSet.has(data.id)) {
+                        newEl.classes = 'incoming-edge';
+                    } else if (outgoingEdgesSet.has(data.id)) {
+                        newEl.classes = 'outgoing-edge';
+                    } else {
+                        newEl.classes = 'faded';
+                    }
+                }
+
+                return newEl;
+            });
+        }
+        """,
+        Output("group-to-group-network-graph", "elements", allow_duplicate=True),
+        Input("group-to-group-network-graph", "tapNodeData"),
+        State("group-to-group-network-graph", "elements"),
+        prevent_initial_call=True,
+    )
+
+    # ===== Group-to-Group Network背景クリック → ハイライト解除（クライアントサイド） =====
+    app.clientside_callback(
+        """
+        function(selectedNodeData, currentElements) {
+            // elementsがない場合は更新しない
+            if (!currentElements || currentElements.length === 0) {
+                return window.dash_clientside.no_update;
+            }
+
+            // selectedNodeDataが空配列の場合（ノード選択解除 = 背景クリック等）
+            if (!selectedNodeData || selectedNodeData.length === 0) {
+                // 全elementsのclassesをクリアして初期状態に戻す
+                return currentElements.map(function(el) {
+                    var newEl = JSON.parse(JSON.stringify(el));
+                    newEl.classes = '';
+                    return newEl;
+                });
+            }
+
+            // ノードが選択されている場合は更新しない（tapNodeDataのコールバックで処理）
+            return window.dash_clientside.no_update;
+        }
+        """,
+        Output("group-to-group-network-graph", "elements", allow_duplicate=True),
+        Input("group-to-group-network-graph", "selectedNodeData"),
+        State("group-to-group-network-graph", "elements"),
         prevent_initial_call=True,
     )
