@@ -15,7 +15,6 @@ from src.dash_app.components.subgraph_network_graph import (
     get_subgraph_base_stylesheet,
     get_subgraph_layout_options,
 )
-from src.dash_app.layouts.group_tab import create_subgraph_placeholder_with_dummy
 from src.dash_app.utils.constants import TEXT_OUTLINE_COLOR, TEXT_OUTLINE_WIDTH
 from src.dash_app.utils.data_loader import (
     get_peps_by_group,
@@ -27,6 +26,7 @@ from src.dash_app.utils.data_loader import (
     get_adjacent_groups,
     get_top_peps_by_group,
 )
+from src.dash_app.layouts.group_tab import create_subgraph_placeholder_with_dummy
 
 
 # PEP番号とメタデータのキャッシュ
@@ -452,11 +452,11 @@ def _compute_group_static_outputs(group_id: int) -> tuple:
 
     # サブグラフ計算
     if group_id < 0:
-        subgraph_children: object = _create_subgraph_placeholder_with_dummy()
+        subgraph_children: object = create_subgraph_placeholder_with_dummy()
     else:
         subgraph_elements = build_subgraph_cytoscape_elements(group_id)
         if subgraph_elements is None:
-            subgraph_children = _create_subgraph_placeholder_with_dummy()
+            subgraph_children = create_subgraph_placeholder_with_dummy()
         else:
             subgraph_children = cyto.Cytoscape(
                 id="group-subgraph-network-graph",
@@ -1062,7 +1062,7 @@ def register_group_callbacks(app):
                 empty_style,
                 "",
                 empty_style,
-                _create_subgraph_placeholder_with_dummy(),
+                create_subgraph_placeholder_with_dummy(),
                 pep_info_children,
                 new_selection_source,
                 new_pep_input,
