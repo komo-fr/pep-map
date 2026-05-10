@@ -32,6 +32,7 @@ from src.dash_app.utils.data_loader import (
     get_group_boundary_data,
 )
 from src.dash_app.layouts.group_tab import create_subgraph_placeholder_with_dummy
+from src.dash_app.styles.tab_styles import get_tab_styles_js
 
 
 # PEP番号とメタデータのキャッシュ
@@ -1899,79 +1900,40 @@ def register_group_callbacks(app):
     )
 
     # ===== PEPs/Createdタブ切り替え（クライアントサイド） =====
-    app.clientside_callback(
-        """
-        function(pepsClicks, createdClicks) {
+    tab_switch_js = f"""
+        function(pepsClicks, createdClicks) {{
             const ctx = window.dash_clientside.callback_context;
-
-            const visibleContentStyle = {
-                'visibility': 'visible',
-                'position': 'relative',
-                'zIndex': '1'
-            };
-
-            const hiddenContentStyle = {
-                'visibility': 'hidden',
-                'position': 'absolute',
-                'top': '0',
-                'left': '0',
-                'right': '0',
-                'zIndex': '0'
-            };
-
-            const selectedButtonStyle = {
-                'padding': '6px 12px',
-                'border': '1px solid #ddd',
-                'borderTop': '3px solid #DDAD3E',
-                'borderBottom': '1px solid #fff',
-                'backgroundColor': '#fff',
-                'cursor': 'pointer',
-                'marginRight': '4px',
-                'borderRadius': '4px 4px 0 0',
-                'fontSize': '13px',
-                'fontWeight': 'bold',
-                'marginBottom': '-1px'
-            };
-
-            const unselectedButtonStyle = {
-                'padding': '6px 12px',
-                'border': '1px solid #ddd',
-                'borderBottom': 'none',
-                'backgroundColor': '#f5f5f5',
-                'cursor': 'pointer',
-                'marginRight': '4px',
-                'borderRadius': '4px 4px 0 0',
-                'fontSize': '13px'
-            };
-
-            if (!ctx.triggered || ctx.triggered.length === 0) {
+{get_tab_styles_js()}
+            if (!ctx.triggered || ctx.triggered.length === 0) {{
                 return [
                     visibleContentStyle,
                     hiddenContentStyle,
                     selectedButtonStyle,
                     unselectedButtonStyle
                 ];
-            }
+            }}
 
             const triggeredId = ctx.triggered[0].prop_id.split('.')[0];
 
-            if (triggeredId === 'group-peps-tab-button') {
+            if (triggeredId === 'group-peps-tab-button') {{
                 return [
                     visibleContentStyle,
                     hiddenContentStyle,
                     selectedButtonStyle,
                     unselectedButtonStyle
                 ];
-            } else {
+            }} else {{
                 return [
                     hiddenContentStyle,
                     visibleContentStyle,
                     unselectedButtonStyle,
                     selectedButtonStyle
                 ];
-            }
-        }
-        """,
+            }}
+        }}
+        """
+    app.clientside_callback(
+        tab_switch_js,
         Output("group-peps-content", "style"),
         Output("group-created-content", "style"),
         Output("group-peps-tab-button", "style"),

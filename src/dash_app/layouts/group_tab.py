@@ -21,6 +21,12 @@ from src.dash_app.components.pep_info import create_group_initial_info_message
 from src.dash_app.components.group_created_timeline import (
     create_group_timeline_empty_figure,
 )
+from src.dash_app.styles.tab_styles import (
+    TAB_BUTTON_SELECTED_STYLE,
+    TAB_BUTTON_UNSELECTED_STYLE,
+    TAB_CONTENT_VISIBLE_STYLE,
+    TAB_CONTENT_HIDDEN_STYLE,
+)
 from src.dash_app.utils.constants import STATUS_COLOR_MAP, STATUS_FONT_COLOR_MAP
 from src.dash_app.utils.data_loader import (
     get_group_list,
@@ -565,25 +571,6 @@ def _create_group_pep_table_section() -> html.Div:
 
 def _create_pep_content_tabs() -> html.Div:
     """PEPsタブとCreatedタブを生成する"""
-    tab_button_base_style = {
-        "padding": "6px 12px",
-        "border": "1px solid #ddd",
-        "borderBottom": "none",
-        "backgroundColor": "#f5f5f5",
-        "cursor": "pointer",
-        "marginRight": "4px",
-        "borderRadius": "4px 4px 0 0",
-        "fontSize": "13px",
-    }
-    tab_button_selected_style = {
-        **tab_button_base_style,
-        "backgroundColor": "#fff",
-        "fontWeight": "bold",
-        "borderTop": "3px solid #DDAD3E",
-        "borderBottom": "1px solid #fff",
-        "marginBottom": "-1px",
-    }
-
     return html.Div(
         [
             # タブボタン
@@ -593,13 +580,13 @@ def _create_pep_content_tabs() -> html.Div:
                         "PEPs",
                         id="group-peps-tab-button",
                         n_clicks=0,
-                        style=tab_button_selected_style,
+                        style=TAB_BUTTON_SELECTED_STYLE,
                     ),
                     html.Button(
                         "Created",
                         id="group-created-tab-button",
                         n_clicks=0,
-                        style=tab_button_base_style,
+                        style=TAB_BUTTON_UNSELECTED_STYLE,
                     ),
                     dbc.Tooltip(
                         "View PEPs in this group as a table with metrics.",
@@ -624,24 +611,13 @@ def _create_pep_content_tabs() -> html.Div:
                     html.Div(
                         id="group-peps-content",
                         children=_create_peps_tab_content(),
-                        style={
-                            "visibility": "visible",
-                            "position": "relative",
-                            "zIndex": "1",
-                        },
+                        style=TAB_CONTENT_VISIBLE_STYLE,
                     ),
                     # Createdタブコンテンツ（初期非表示）
                     html.Div(
                         id="group-created-content",
                         children=_create_created_tab_content(),
-                        style={
-                            "visibility": "hidden",
-                            "position": "absolute",
-                            "top": "0",
-                            "left": "0",
-                            "right": "0",
-                            "zIndex": "0",
-                        },
+                        style=TAB_CONTENT_HIDDEN_STYLE,
                     ),
                 ],
                 style={"position": "relative"},
