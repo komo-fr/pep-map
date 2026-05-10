@@ -1,6 +1,7 @@
 """グループ内PEPのCreatedタイムライン"""
 
 import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 
 from src.dash_app.utils.constants import (
     DEFAULT_STATUS_COLOR,
@@ -110,6 +111,9 @@ def create_group_timeline_figure(group_id: int) -> go.Figure:
     """
     グループ内PEPのCreatedタイムライングラフを生成する
 
+    上段: 散布図（PEP作成日）
+    下段: 積み上げヒストグラム（年ごとのStatus別カウント）
+
     Args:
         group_id: グループID
 
@@ -126,6 +130,7 @@ def create_group_timeline_figure(group_id: int) -> go.Figure:
 
     df = df.sort_values("created").reset_index(drop=True)
 
+    # 散布図用データ
     dates = []
     colors = []
     texts = []
@@ -155,8 +160,40 @@ def create_group_timeline_figure(group_id: int) -> go.Figure:
 
     y_positions = _compute_y_positions(dates)
 
-    fig = go.Figure()
+    # ヒストグラム用データ（年ごとのStatus別カウント）
+    df["year"] = df["created"].dt.year
+    year_status_counts = df.groupby(["year", "status"]).size().unstack(fill_value=0)
 
+    # subplotsを作成（上: ヒストグラム、下: 散布図）
+    fig = make_subplots(
+        rows=2,
+        cols=1,
+        shared_xaxes=True,
+        vertical_spacing=0.03,
+        row_heights=[0.35, 0.65],
+    )
+
+    # 上段: 積み上げヒストグラム（Statusごと）
+    years = year_status_counts.index.tolist()
+    year_dates = [f"{y}-07-01" for y in years]
+
+    for status in year_status_counts.columns:
+        counts = year_status_counts[status].tolist()
+        color = STATUS_COLOR_MAP.get(status, DEFAULT_STATUS_COLOR)
+        fig.add_trace(
+            go.Bar(
+                x=year_dates,
+                y=counts,
+                name=status,
+                marker_color=color,
+                opacity=0.8,
+                hovertemplate=f"{status}: %{{y}}<extra></extra>",
+            ),
+            row=1,
+            col=1,
+        )
+
+    # 下段: 散布図
     fig.add_trace(
         go.Scatter(
             x=dates,
@@ -176,21 +213,82 @@ def create_group_timeline_figure(group_id: int) -> go.Figure:
             hovertext=hover_texts,
             hoverinfo="text",
             customdata=pep_numbers,
-        )
+            showlegend=False,
+        ),
+        row=2,
+        col=1,
     )
 
+    # X軸設定
+    x_range_min = "2000-01-01"
+    fetched_year = get_fetched_year()
+    x_range_max = f"{fetched_year}-12-31"
+
+    # レイアウト更新
     fig.update_layout(
-        xaxis=_get_group_timeline_xaxis_config(),
-        yaxis=dict(
-            showticklabels=False,
-            showgrid=False,
-            zeroline=False,
-            range=[-1.2, 1.2],
+        barmode="stack",
+        showlegend=True,
+        legend=dict(
+            orientation="h",
+            yanchor="top",
+            y=-0.18,
+            xanchor="left",
+            x=0,
+            font=dict(size=10),
         ),
-        showlegend=False,
-        margin=dict(**TIMELINE_MARGIN),
+        margin=dict(l=40, r=40, t=80, b=80),
         hovermode="closest",
-        height=350,
+        height=520,
+        title=dict(
+            text="Created Date",
+            x=0.5,
+            y=0.99,
+            xanchor="center",
+            font=dict(size=14),
+        ),
+    )
+
+    # 上段Y軸（ヒストグラム）
+    fig.update_yaxes(
+        title_text="Count",
+        showgrid=True,
+        row=1,
+        col=1,
+    )
+
+    # 下段Y軸（散布図）
+    fig.update_yaxes(
+        showticklabels=False,
+        showgrid=False,
+        zeroline=False,
+        range=[-1.2, 1.2],
+        row=2,
+        col=1,
+    )
+
+    # X軸設定（上段 - 上側に表示）
+    fig.update_xaxes(
+        type="date",
+        range=[x_range_min, x_range_max],
+        dtick="M12",
+        tick0="2000-01-01",
+        tickformat="%Y",
+        showgrid=True,
+        showticklabels=True,
+        side="top",
+        row=1,
+        col=1,
+    )
+
+    fig.update_xaxes(
+        type="date",
+        range=[x_range_min, x_range_max],
+        dtick="M12",
+        tick0="2000-01-01",
+        tickformat="%Y",
+        showgrid=True,
+        row=2,
+        col=1,
     )
 
     return fig
