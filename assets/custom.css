@@ -20,11 +20,11 @@
 }
 
 /* 折りたたみの開閉状態でテキストを切り替え */
-details:not([open]) .show-when-open {
+details:not([open]) > summary .show-when-open {
     display: none;
 }
 
-details[open] .show-when-closed {
+details[open] > summary .show-when-closed {
     display: none;
 }
 
@@ -77,4 +77,85 @@ details[open] .show-when-closed {
 /* safari対応：detailsの三角マーカーを非表示 */
 summary::-webkit-details-marker {
     display: none;
+}
+
+/* Related Groups / Group Description 折りたたみの共通スタイル */
+.related-groups-details > summary,
+.group-description-details > summary {
+    list-style: none;
+}
+
+.related-groups-summary,
+.group-description-summary {
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 13px;
+    color: #333;
+    padding: 6px 12px;
+    background-color: #e0e0e0;
+    border-bottom: 1px solid #ccc;
+    border-radius: 4px 4px 0 0;
+    display: flex;
+    align-items: center;
+    transition: background-color 0.15s ease;
+}
+
+.related-groups-summary:hover,
+.group-description-summary:hover {
+    background-color: #d0d0d0;
+}
+
+.related-groups-details:not([open]) .related-groups-summary,
+.group-description-details:not([open]) .group-description-summary {
+    border-bottom: none;
+    border-radius: 4px;
+}
+
+.related-groups-summary::before,
+.group-description-summary::before {
+    content: "▼";
+    font-size: 10px;
+    margin-right: 6px;
+}
+
+.related-groups-details:not([open]) .related-groups-summary::before,
+.group-description-details:not([open]) .group-description-summary::before {
+    content: "▶";
+}
+
+.related-groups-summary::after,
+.group-description-summary::after {
+    content: "Collapse";
+    font-size: 12px;
+    font-weight: normal;
+    color: #666;
+    margin-left: auto;
+}
+
+.related-groups-details:not([open]) .related-groups-summary::after,
+.group-description-details:not([open]) .group-description-summary::after {
+    content: "Expand";
+}
+
+/* AI Generated バッジ */
+.ai-badge {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #666;
+    background: #f3f3f3;
+    border: 1px solid #ddd;
+    border-radius: 999px;
+    padding: 2px 8px;
+    margin-left: 8px;
+}
+
+/* グループ名表示 */
+.group-name-label {
+    color: #666;
+    font-weight: 600;
+}
+
+.group-name-text {
+    color: #2f3437;
+    font-weight: 700;
 }

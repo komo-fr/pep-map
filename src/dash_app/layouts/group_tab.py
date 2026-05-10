@@ -1,5 +1,6 @@
 """Groupタブのレイアウト"""
 
+import dash_bootstrap_components as dbc
 import dash_cytoscape as cyto
 from dash import dcc, html, dash_table
 
@@ -7,6 +8,11 @@ from src.dash_app.components.group_network_graph import (
     build_group_cytoscape_elements,
     get_group_base_stylesheet,
     get_preset_layout_options,
+)
+from src.dash_app.components.group_to_group_network_graph import (
+    build_group_to_group_cytoscape_elements,
+    get_group_to_group_base_stylesheet,
+    get_group_to_group_layout_options,
 )
 from src.dash_app.components.pep_info import create_group_initial_info_message
 from src.dash_app.components.pep_tables import generate_status_styles
@@ -36,9 +42,9 @@ def create_group_tab_layout() -> html.Div:
                 style={
                     "backgroundColor": "#fffacd",
                     "border": "1px solid black",
-                    "padding": "8px",
+                    "padding": "4px 8px",
                     "borderRadius": "4px",
-                    "marginBottom": "16px",
+                    "marginBottom": "12px",
                     "fontSize": "13px",
                 },
             ),
@@ -281,6 +287,7 @@ def _create_network_tabs() -> html.Div:
         **tab_button_base_style,
         "backgroundColor": "#fff",
         "fontWeight": "bold",
+        "borderTop": "3px solid #DDAD3E",
         "borderBottom": "1px solid #fff",
         "marginBottom": "-1px",
     }
@@ -291,16 +298,41 @@ def _create_network_tabs() -> html.Div:
             html.Div(
                 [
                     html.Button(
-                        "Full Network",
+                        "Full PEP Network",
                         id="full-network-tab-button",
                         n_clicks=0,
                         style=tab_button_selected_style,
                     ),
                     html.Button(
-                        "Group Network",
+                        "Selected Group Network",
                         id="group-network-tab-button",
                         n_clicks=0,
                         style=tab_button_base_style,
+                    ),
+                    html.Button(
+                        "Group-to-Group Network",
+                        id="group-to-group-tab-button",
+                        n_clicks=0,
+                        style=tab_button_base_style,
+                    ),
+                    # ツールチップ
+                    dbc.Tooltip(
+                        "Use this view to see the selected group in the context of the entire PEP citation network.",
+                        target="full-network-tab-button",
+                        placement="bottom",
+                        style={"maxWidth": "300px"},
+                    ),
+                    dbc.Tooltip(
+                        "Use this view to see which PEPs are central within the selected group and how they cite each other.",
+                        target="group-network-tab-button",
+                        placement="bottom",
+                        style={"maxWidth": "300px"},
+                    ),
+                    dbc.Tooltip(
+                        "Use this view to see how the selected group is connected to other groups through citations.",
+                        target="group-to-group-tab-button",
+                        placement="bottom",
+                        style={"maxWidth": "300px"},
                     ),
                 ],
                 style={
@@ -334,6 +366,19 @@ def _create_network_tabs() -> html.Div:
                             "zIndex": "0",
                         },
                     ),
+                    # Group-to-Group Networkコンテンツ（初期非表示）
+                    html.Div(
+                        id="group-to-group-content",
+                        children=_create_group_to_group_tab_content(),
+                        style={
+                            "visibility": "hidden",
+                            "position": "absolute",
+                            "top": "0",
+                            "left": "0",
+                            "right": "0",
+                            "zIndex": "0",
+                        },
+                    ),
                 ],
                 style={"position": "relative"},
             ),
@@ -351,19 +396,19 @@ def _create_full_network_tab_content() -> html.Div:
                     html.Strong("Color"),
                     " indicates the group of each PEP.",
                 ],
-                style={"fontSize": "12px", "color": "#666", "marginBottom": "4px"},
+                style={"fontSize": "12px", "color": "#666", "margin": "0"},
             ),
             html.P(
                 [
                     html.Strong("Node sizes"),
                     " in the network graph are based on PageRank computed from the full citation network.",
                 ],
-                style={"fontSize": "12px", "color": "#666", "marginBottom": "8px"},
+                style={"fontSize": "12px", "color": "#666", "margin": "0 0 4px 0"},
             ),
             # ネットワークグラフ
             _create_group_graph(),
         ],
-        style={"paddingTop": "8px"},
+        style={"paddingTop": "4px"},
     )
 
 
@@ -377,23 +422,74 @@ def _create_subgraph_tab_content() -> html.Div:
                     html.Strong("Color"),
                     " indicates the status of each PEP.",
                 ],
-                style={"fontSize": "12px", "color": "#666", "marginBottom": "4px"},
+                style={"fontSize": "12px", "color": "#666", "margin": "0"},
             ),
             html.P(
                 [
                     html.Strong("Node sizes"),
                     " are based on PageRank computed within the selected group.",
                 ],
-                style={"fontSize": "12px", "color": "#666", "marginBottom": "8px"},
+                style={"fontSize": "12px", "color": "#666", "margin": "0 0 4px 0"},
             ),
             # サブグラフ表示エリア（初期状態はプレースホルダー + 非表示Cytoscape）
             html.Div(
                 id="subgraph-container",
-                children=_create_subgraph_placeholder_with_dummy(),
+                children=create_subgraph_placeholder_with_dummy(),
                 style={"minHeight": "600px"},
             ),
         ],
-        style={"paddingTop": "8px"},
+        style={"paddingTop": "4px"},
+    )
+
+
+def _create_group_to_group_tab_content() -> html.Div:
+    """Group-to-Group Networkタブの内容を生成する"""
+    return html.Div(
+        [
+            # 説明テキスト
+            html.P(
+                [
+                    html.Strong("Color"),
+                    " indicates the group (same as Full Network).",
+                ],
+                style={"fontSize": "12px", "color": "#666", "margin": "0"},
+            ),
+            html.P(
+                [
+                    html.Strong("Node sizes"),
+                    " are based on the number of PEPs in each group.",
+                ],
+                style={"fontSize": "12px", "color": "#666", "margin": "0"},
+            ),
+            html.P(
+                [
+                    html.Strong("Edge widths"),
+                    " are based on the number of citations between groups.",
+                ],
+                style={"fontSize": "12px", "color": "#666", "margin": "0 0 4px 0"},
+            ),
+            # ネットワークグラフ
+            _create_group_to_group_graph(),
+        ],
+        style={"paddingTop": "4px"},
+    )
+
+
+def _create_group_to_group_graph() -> cyto.Cytoscape:
+    """Group-to-Groupネットワークグラフコンポーネントを生成する"""
+    elements = build_group_to_group_cytoscape_elements()
+
+    return cyto.Cytoscape(
+        id="group-to-group-network-graph",
+        elements=elements,
+        layout=get_group_to_group_layout_options(),
+        style={
+            "width": "100%",
+            "height": "800px",
+            "border": "1px solid #ddd",
+            "backgroundColor": "#fafafa",
+        },
+        stylesheet=get_group_to_group_base_stylesheet(),
     )
 
 
@@ -438,6 +534,14 @@ def _create_group_pep_table_section() -> html.Div:
             # グループ説明表示エリア（初期状態は空、非表示）
             html.Div(
                 id="group-description-display",
+                children="",
+                style={
+                    "display": "none",  # 初期状態は非表示
+                },
+            ),
+            # 隣接グループ表示エリア（初期状態は非表示）
+            html.Div(
+                id="adjacent-groups-display",
                 children="",
                 style={
                     "display": "none",  # 初期状態は非表示
@@ -581,7 +685,7 @@ def _create_subgraph_placeholder() -> html.Div:
     )
 
 
-def _create_subgraph_placeholder_with_dummy() -> html.Div:
+def create_subgraph_placeholder_with_dummy() -> html.Div:
     """サブグラフ未選択時のプレースホルダー + ダミーCytoscapeを生成する
 
     コールバック登録時にgroup-subgraph-network-graphが存在する必要があるため、

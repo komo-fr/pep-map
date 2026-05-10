@@ -134,13 +134,23 @@ You can select a group, enter a PEP number, or click a node in the network graph
 
 You can switch between two network views:
 
-- **Full Network**
+- **Full PEP Network**
     - Displays the entire PEP citation network.
     - The selected group is highlighted within the full network.
     - Node sizes are based on PageRank computed from the full network.
-- **Group Network**
+- **Selected Group Network**
     - Displays only the PEPs and citation relationships within the selected group.
     - Node sizes are based on PageRank computed within the selected group.
+- **Group-to-Group Network**
+    - Displays groups as nodes and citation relationships between groups as edges.
+    - Node sizes are based on the number of PEPs in each group.
+    - Edge widths are based on the number of citation links between groups.
+    - This view helps identify cross-group relationships.
+        - Groups with many incoming edges are referenced by many other groups.    
+        They may indicate specifications that are commonly reused across different areas.
+        - Groups with many outgoing edges cite many other groups.   
+         They may indicate topics that draw on specifications from multiple areas.
+
 
 ![](images/groups/switch_full_group_network.gif)
 

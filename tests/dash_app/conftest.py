@@ -122,7 +122,7 @@ def sample_group_data():
                 "PEP": 8,
                 "title": "Style Guide for Python Code",
                 "status": "Active",
-                "created": "2001-07-05",
+                "created": pd.Timestamp("2001-07-05"),
                 "group_id": 0,
                 "in-degree_group": 1,
                 "out-degree_group": 0,
@@ -134,7 +134,7 @@ def sample_group_data():
                 "PEP": 484,
                 "title": "Type Hints",
                 "status": "Final",
-                "created": "2014-09-29",
+                "created": pd.Timestamp("2014-09-29"),
                 "group_id": 0,
                 "in-degree_group": 0,
                 "out-degree_group": 1,
@@ -146,7 +146,7 @@ def sample_group_data():
                 "PEP": 3107,
                 "title": "Function Annotations",
                 "status": "Final",
-                "created": "2000-01-01",
+                "created": pd.Timestamp("2000-01-01"),
                 "group_id": 1,
                 "in-degree_group": 0,
                 "out-degree_group": 0,
@@ -158,7 +158,7 @@ def sample_group_data():
                 "PEP": 9999,
                 "title": "Isolated PEP",
                 "status": "Draft",
-                "created": "2025-01-01",
+                "created": pd.Timestamp("2025-01-01"),
                 "group_id": -1,
                 "in-degree_group": 0,
                 "out-degree_group": 0,
@@ -254,7 +254,7 @@ def mock_data_files(
     group_dir = data_dir / "groups"
     group_dir.mkdir()
     group_csv = group_dir / "pep_group_metrics.csv"
-    sample_group_data.to_csv(group_csv, index=False)
+    sample_group_data.to_csv(group_csv, index=False, date_format="%d-%b-%Y")
 
     # group_profiles.csv を追加
     group_profiles_csv = group_dir / "group_profiles.csv"

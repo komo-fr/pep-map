@@ -14,6 +14,9 @@ from src.dash_app.utils.data_loader import (
 )
 
 
+# モジュールレベルでキャッシュ
+_subgraph_elements_cache: dict[int, list[dict]] = {}
+
 # モジュールレベル定数
 # グループ内PageRankは全体グラフより約50倍大きいため、専用の係数を使用
 # 全体グラフ: pagerank 0.0004〜0.018、グループ内: pagerank_group 0.009〜0.65
@@ -139,6 +142,12 @@ def build_subgraph_cytoscape_elements(group_id: int) -> list[dict] | None:
         list[dict]: Cytoscape elementsのリスト(ノードとエッジ)、
                     データが存在しない場合はNone
     """
+    global _subgraph_elements_cache
+
+    # キャッシュをチェック
+    if group_id in _subgraph_elements_cache:
+        return _subgraph_elements_cache[group_id]
+
     # サブグラフを読み込む
     subgraph = load_subgraph(group_id)
     if subgraph is None:
@@ -219,6 +228,8 @@ def build_subgraph_cytoscape_elements(group_id: int) -> list[dict] | None:
         }
         elements.append(edge_data)
 
+    # キャッシュに保存
+    _subgraph_elements_cache[group_id] = elements
     return elements
 
 
@@ -329,3 +340,28 @@ def get_subgraph_layout_options() -> dict:
         "fit": True,  # グラフを画面に収める
         "padding": 30,  # 余白
     }
+
+
+def clear_cache() -> None:
+    """
+    キャッシュをクリアする（テスト用）
+    """
+    global _subgraph_elements_cache
+    _subgraph_elements_cache = {}
+
+
+def preload_all_subgraph_elements() -> None:
+    """
+    全グループのサブグラフ要素を事前計算してキャッシュをウォームアップする
+
+    起動時に呼び出すことで、グループ選択時のレスポンスを高速化する。
+    """
+    from src.dash_app.utils.data_loader import load_group_data
+
+    df = load_group_data()
+    group_ids = df["group_id"].unique().tolist()
+
+    for group_id in group_ids:
+        if group_id < 0:
+            continue
+        build_subgraph_cytoscape_elements(group_id)

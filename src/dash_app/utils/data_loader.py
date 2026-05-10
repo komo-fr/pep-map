@@ -27,6 +27,10 @@ _group_data_cache: pd.DataFrame | None = None
 _group_names_cache: pd.DataFrame | None = None
 _full_network_positions_cache: dict[int, tuple[float, float]] | None = None
 _subgraph_positions_cache: dict[int, dict[int, tuple[float, float]]] = {}
+_subgraph_cache: dict[int, "nx.DiGraph"] = {}
+_subgraph_metrics_cache: pd.DataFrame | None = None
+_group_to_group_network_cache: "nx.DiGraph | None" = None
+_group_to_group_positions_cache: dict[int, tuple[float, float]] | None = None
 
 
 def load_peps_metadata() -> pd.DataFrame:
@@ -678,7 +682,11 @@ def clear_cache() -> None:
         _group_data_cache, \
         _group_names_cache, \
         _full_network_positions_cache, \
-        _subgraph_positions_cache
+        _subgraph_positions_cache, \
+        _subgraph_cache, \
+        _subgraph_metrics_cache, \
+        _group_to_group_network_cache, \
+        _group_to_group_positions_cache
     _peps_metadata_cache = None
     _citations_cache = None
     _metadata_cache = None
@@ -691,12 +699,23 @@ def clear_cache() -> None:
     _group_names_cache = None
     _full_network_positions_cache = None
     _subgraph_positions_cache = {}
+    _subgraph_cache = {}
+    _subgraph_metrics_cache = None
+    _group_to_group_network_cache = None
+    _group_to_group_positions_cache = None
 
     # 他モジュールのキャッシュもクリア（遅延インポートで循環参照を回避）
-    from src.dash_app.components import network_graph, group_network_graph
+    from src.dash_app.components import (
+        network_graph,
+        group_network_graph,
+        subgraph_network_graph,
+    )
+    from src.dash_app.callbacks import group_callbacks
 
     network_graph.clear_cache()
     group_network_graph.clear_cache()
+    subgraph_network_graph.clear_cache()
+    group_callbacks.clear_cache()
 
 
 def load_subgraph(group_id: int) -> "nx.DiGraph | None":
@@ -709,6 +728,10 @@ def load_subgraph(group_id: int) -> "nx.DiGraph | None":
     Returns:
         NetworkX DiGraph、存在しない場合はNone
     """
+    global _subgraph_cache
+
+    if group_id in _subgraph_cache:
+        return _subgraph_cache[group_id]
 
     subgraph_path = (
         DATA_DIR / "groups" / "subgraphs" / "graphs" / f"subgraph_{group_id}.pkl"
@@ -717,7 +740,30 @@ def load_subgraph(group_id: int) -> "nx.DiGraph | None":
         return None
 
     with open(subgraph_path, "rb") as f:
-        return pickle.load(f)
+        subgraph = pickle.load(f)
+
+    _subgraph_cache[group_id] = subgraph
+    return subgraph
+
+
+def _load_all_subgraph_metrics() -> pd.DataFrame | None:
+    """
+    全グループのメトリクスを読み込む（内部用）
+
+    Returns:
+        DataFrame、存在しない場合はNone
+    """
+    global _subgraph_metrics_cache
+
+    if _subgraph_metrics_cache is not None:
+        return _subgraph_metrics_cache
+
+    metrics_path = DATA_DIR / "groups" / "pep_group_metrics.csv"
+    if not metrics_path.exists():
+        return None
+
+    _subgraph_metrics_cache = pd.read_csv(metrics_path)
+    return _subgraph_metrics_cache
 
 
 def load_subgraph_metrics(group_id: int) -> "pd.DataFrame | None":
@@ -730,13 +776,11 @@ def load_subgraph_metrics(group_id: int) -> "pd.DataFrame | None":
     Returns:
         DataFrame、存在しない場合はNone
     """
-    metrics_path = DATA_DIR / "groups" / "pep_group_metrics.csv"
-    if not metrics_path.exists():
+    all_metrics = _load_all_subgraph_metrics()
+    if all_metrics is None:
         return None
-    df = pd.read_csv(metrics_path)
-    df = df[df["group_id"] == group_id]
 
-    return df
+    return all_metrics[all_metrics["group_id"] == group_id]
 
 
 def load_full_network_positions() -> dict[int, tuple[float, float]]:
@@ -798,3 +842,129 @@ def load_subgraph_positions(group_id: int) -> dict[int, tuple[float, float]] | N
 
     _subgraph_positions_cache[group_id] = positions
     return positions
+
+
+def load_group_to_group_positions() -> dict[int, tuple[float, float]]:
+    """
+    グループ間ネットワークのノード座標を読み込む
+
+    Returns:
+        dict[int, tuple[float, float]]: グループIDをキー、(x, y)座標を値とする辞書
+    """
+    global _group_to_group_positions_cache
+
+    if _group_to_group_positions_cache is not None:
+        return _group_to_group_positions_cache
+
+    positions_path = (
+        DATA_DIR / "groups" / "group_to_group" / "group_to_group_positions.json"
+    )
+    if not positions_path.exists():
+        raise FileNotFoundError(
+            f"Group-to-group positions file not found: {positions_path}. "
+            "Run detect_communities.py to generate this file."
+        )
+
+    with open(positions_path, encoding="utf-8") as f:
+        positions_json = json.load(f)
+
+    # キーを整数に変換
+    positions = {int(node): tuple(pos) for node, pos in positions_json.items()}
+
+    _group_to_group_positions_cache = positions
+    return positions
+
+
+def load_group_to_group_network() -> "nx.DiGraph":
+    """
+    グループ間ネットワークを読み込む（キャッシュあり）
+
+    Returns:
+        nx.DiGraph: グループ間ネットワークグラフ
+            ノード属性:
+                - pep_count (int): グループに含まれるPEP数
+            エッジ属性:
+                - weight (int): グループ間の引用数
+
+    Note:
+        group_nameはgroup_profiles.csvで別途管理されているため、
+        get_group_name_info()で取得すること
+    """
+    global _group_to_group_network_cache
+
+    if _group_to_group_network_cache is not None:
+        return _group_to_group_network_cache
+
+    network_path = DATA_DIR / "groups" / "group_to_group" / "group_to_group_network.pkl"
+    if not network_path.exists():
+        raise FileNotFoundError(
+            f"Group-to-group network file not found: {network_path}. "
+            "Run the data pipeline to generate this file."
+        )
+
+    with open(network_path, "rb") as f:
+        _group_to_group_network_cache = pickle.load(f)
+
+    return _group_to_group_network_cache
+
+
+def get_adjacent_groups(group_id: int) -> dict:
+    """
+    指定されたグループの隣接グループ情報を取得する
+
+    Args:
+        group_id: グループID
+
+    Returns:
+        dict: 隣接グループ情報
+            - citing_groups: 選択中のグループを引用しているグループのリスト
+                             [(group_id, weight), ...] 引用数(weight)の降順
+            - cited_groups: 選択中のグループが引用しているグループのリスト
+                            [(group_id, weight), ...] 引用数(weight)の降順
+    """
+    G = load_group_to_group_network()
+
+    # 選択中のグループを引用しているグループ（in_edges）
+    # edge: (source, target, data) で target が group_id
+    citing_groups = []
+    for source, _, data in G.in_edges(group_id, data=True):
+        if source != group_id:  # 自己ループを除外
+            citing_groups.append((source, data.get("weight", 1)))
+    # 引用数の降順でソート
+    citing_groups.sort(key=lambda x: x[1], reverse=True)
+
+    # 選択中のグループが引用しているグループ（out_edges）
+    # edge: (source, target, data) で source が group_id
+    cited_groups = []
+    for _, target, data in G.out_edges(group_id, data=True):
+        if target != group_id:  # 自己ループを除外
+            cited_groups.append((target, data.get("weight", 1)))
+    # 引用数の降順でソート
+    cited_groups.sort(key=lambda x: x[1], reverse=True)
+
+    return {
+        "citing_groups": citing_groups,
+        "cited_groups": cited_groups,
+    }
+
+
+def get_top_peps_by_group(group_id: int, top_n: int = 5) -> list[int]:
+    """
+    指定されたグループのPageRank上位のPEP番号を取得する
+
+    Args:
+        group_id: グループID
+        top_n: 取得するPEP数（デフォルト: 5）
+
+    Returns:
+        list[int]: PageRank上位のPEP番号リスト
+    """
+    df = get_peps_by_group(group_id)
+    if df.empty:
+        return []
+
+    # PageRank降順でソート
+    df_sorted = df.sort_values(by="pagerank_group", ascending=False)
+
+    # 上位N件のPEP番号を取得
+    return df_sorted["PEP"].head(top_n).tolist()
