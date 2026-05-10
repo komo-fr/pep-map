@@ -9,12 +9,15 @@ from src.dash_app.utils.constants import (
     TEXT_OUTLINE_WIDTH,
     get_group_color,
 )
-from src.dash_app.utils.data_loader import load_group_to_group_network
+from src.dash_app.utils.data_loader import (
+    get_group_name_info,
+    load_group_to_group_network,
+    load_group_to_group_positions,
+)
 
 
 # モジュールレベルでキャッシュ
 _group_to_group_cytoscape_elements_cache: list[dict] | None = None
-_group_to_group_positions_cache: dict[int, tuple[float, float]] | None = None
 
 # ノードサイズ計算用の定数（面積がpep_countに比例するため、サイズは√pep_countに比例）
 _MIN_NODE_SIZE = 30.0
@@ -25,49 +28,6 @@ _MAX_FONT_SIZE = 25.0
 # エッジスタイル用の定数
 _MIN_EDGE_WIDTH = 1.0
 _MAX_EDGE_WIDTH = 10.0
-
-
-def _calculate_node_positions(G: nx.DiGraph) -> dict[int, tuple[float, float]]:
-    """
-    グループ間ネットワークのノード座標を計算する
-
-    Args:
-        G: グループ間ネットワークグラフ
-
-    Returns:
-        dict[int, tuple[float, float]]: グループIDをキー、(x, y)座標を値とする辞書
-    """
-    # 最大グループID（孤立ノードの集まり）を取得
-    max_group_id = max(G.nodes())
-
-    # 通常どおりレイアウトを計算する
-    raw_pos = nx.spring_layout(
-        G,
-        seed=42,
-        weight=None,
-        k=5,
-        iterations=300,
-    )
-
-    # numpy配列をtupleに変換する
-    pos: dict[int, tuple[float, float]] = {
-        node: (float(xy[0]), float(xy[1])) for node, xy in raw_pos.items()
-    }
-
-    # max_group_idだけ左上に移動する
-    # 他の孤立グループはspring_layoutの結果をそのまま使う
-    other_positions = {node: xy for node, xy in pos.items() if node != max_group_id}
-
-    if other_positions:
-        x_values = [xy[0] for xy in other_positions.values()]
-        y_values = [xy[1] for xy in other_positions.values()]
-
-        x_min = min(x_values)
-        y_max = max(y_values)
-
-        pos[max_group_id] = (x_min, y_max)
-
-    return pos
 
 
 def _calculate_node_size(pep_count: int, min_count: int, max_count: int) -> float:
@@ -217,8 +177,8 @@ def build_group_to_group_cytoscape_elements() -> list[dict]:
     # グループ間ネットワークを読み込む
     G = load_group_to_group_network()
 
-    # ノード座標を計算
-    positions = _calculate_node_positions(G)
+    # 事前計算された座標を読み込む
+    positions = load_group_to_group_positions()
 
     # PEP数の最小値と最大値を取得
     pep_counts = [G.nodes[node].get("pep_count", 1) for node in G.nodes()]
@@ -242,7 +202,7 @@ def build_group_to_group_cytoscape_elements() -> list[dict]:
     for node in G.nodes():
         group_id = node
         node_data = G.nodes[node]
-        group_name = node_data.get("group_name", "")
+        group_name = get_group_name_info(group_id)["group_name"]
         pep_count = node_data.get("pep_count", 1)
 
         # 座標を取得（Cytoscapeはy軸が下向きなので反転）
@@ -415,6 +375,5 @@ def clear_cache() -> None:
     """
     キャッシュをクリアする（テスト用）
     """
-    global _group_to_group_cytoscape_elements_cache, _group_to_group_positions_cache
+    global _group_to_group_cytoscape_elements_cache
     _group_to_group_cytoscape_elements_cache = None
-    _group_to_group_positions_cache = None

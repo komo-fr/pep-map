@@ -64,6 +64,30 @@ class TestDetectCommunitiesMain:
         )
         return csv_path
 
+    @pytest.fixture
+    def sample_citations_file(self, temp_dir):
+        """テスト用の引用データファイルを作成"""
+        csv_path = temp_dir / "citations.csv"
+        csv_path.write_text(
+            "citing,cited,count\n"
+            "1,8,1\n"
+            "1,20,1\n"
+            "1,257,1\n"
+            "8,20,1\n"
+            "8,234,1\n"
+            "20,234,1\n"
+            "234,8,1\n"
+            "234,257,1\n"
+            "257,1,1\n"
+            "484,3107,1\n"
+            "484,3119,1\n"
+            "3107,484,1\n"
+            "3119,3107,1\n"
+            "3119,3141,1\n"
+            "3141,3119,1\n"
+        )
+        return csv_path
+
     def test_exit_code_1_when_graph_not_found(self, temp_dir, monkeypatch):
         """pep_graph.pkl が存在しない場合はエラー終了（exit code 1）"""
         from scripts.detect_communities import main
@@ -81,7 +105,12 @@ class TestDetectCommunitiesMain:
         assert result == 1
 
     def test_exit_code_0_on_success(
-        self, temp_dir, sample_graph_file, sample_metadata_file, monkeypatch
+        self,
+        temp_dir,
+        sample_graph_file,
+        sample_metadata_file,
+        sample_citations_file,
+        monkeypatch,
     ):
         """正常終了時は exit code 0"""
         from scripts.detect_communities import main
@@ -96,8 +125,16 @@ class TestDetectCommunitiesMain:
             sample_metadata_file,
         )
         monkeypatch.setattr(
+            "scripts.detect_communities.CITATIONS_FILE",
+            sample_citations_file,
+        )
+        monkeypatch.setattr(
             "scripts.detect_communities.OUTPUT_DIR",
             temp_dir / "groups",
+        )
+        monkeypatch.setattr(
+            "scripts.detect_communities.GROUP_TO_GROUP_DIR",
+            temp_dir / "groups" / "group_to_group",
         )
 
         # When
@@ -107,7 +144,12 @@ class TestDetectCommunitiesMain:
         assert result == 0
 
     def test_output_files_generated(
-        self, temp_dir, sample_graph_file, sample_metadata_file, monkeypatch
+        self,
+        temp_dir,
+        sample_graph_file,
+        sample_metadata_file,
+        sample_citations_file,
+        monkeypatch,
     ):
         """出力ファイルが正しいパスに生成される"""
         from scripts.detect_communities import main
@@ -124,8 +166,16 @@ class TestDetectCommunitiesMain:
             sample_metadata_file,
         )
         monkeypatch.setattr(
+            "scripts.detect_communities.CITATIONS_FILE",
+            sample_citations_file,
+        )
+        monkeypatch.setattr(
             "scripts.detect_communities.OUTPUT_DIR",
             output_dir,
+        )
+        monkeypatch.setattr(
+            "scripts.detect_communities.GROUP_TO_GROUP_DIR",
+            output_dir / "group_to_group",
         )
 
         # When
@@ -136,6 +186,12 @@ class TestDetectCommunitiesMain:
         assert (output_dir / "group_metrics.csv").exists()
         assert (output_dir / "detection_metadata.json").exists()
         assert (output_dir / "subgraphs" / "images").exists()
+        # group_to_group出力ファイルも確認
+        assert (output_dir / "group_to_group" / "group_citations.csv").exists()
+        assert (output_dir / "group_to_group" / "group_to_group_network.pkl").exists()
+        assert (
+            output_dir / "group_to_group" / "group_to_group_positions.json"
+        ).exists()
 
         # JSONファイルの内容を確認
         with open(output_dir / "detection_metadata.json") as f:

@@ -19,6 +19,7 @@ from src.graph.community_detector import (
     save_subgraphs,
     save_full_network_positions,
     save_subgraph_positions,
+    save_group_to_group_network,
 )
 
 logger = logging.getLogger(__name__)
@@ -27,7 +28,9 @@ logger = logging.getLogger(__name__)
 PROJECT_ROOT = Path(__file__).parent.parent
 GRAPH_FILE = PROJECT_ROOT / "data/processed/pep_graph.pkl"
 METADATA_FILE = PROJECT_ROOT / "data/processed/peps_metadata.csv"
+CITATIONS_FILE = PROJECT_ROOT / "data/processed/citations.csv"
 OUTPUT_DIR = PROJECT_ROOT / "data/processed/groups"
+GROUP_TO_GROUP_DIR = OUTPUT_DIR / "group_to_group"
 
 # Louvainパラメータ（固定値）
 RESOLUTION = 4
@@ -140,6 +143,16 @@ def main() -> int:
         communities, G, full_images_dir, positions=full_positions
     )
     logger.info(f"Generated {len(generated_full_images)} full network highlight images")
+
+    # グループ間ネットワークを生成・保存
+    citations_csv, network_pkl, positions_json = save_group_to_group_network(
+        pep_group_metrics_path=pep_group_path,
+        citations_path=CITATIONS_FILE,
+        output_dir=GROUP_TO_GROUP_DIR,
+    )
+    logger.info(
+        f"Saved group-to-group network: {citations_csv}, {network_pkl}, {positions_json}"
+    )
 
     logger.info("Community detection completed successfully")
     return 0

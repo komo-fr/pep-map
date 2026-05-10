@@ -153,3 +153,54 @@ def calculate_subgraph_positions(
 
     # 座標を変換（NetworkXは{node: array([x, y])}形式）
     return {node: (float(coords[0]), float(coords[1])) for node, coords in pos.items()}
+
+
+def calculate_group_to_group_positions(
+    G: nx.DiGraph,
+) -> dict[int, tuple[float, float]]:
+    """
+    グループ間ネットワークのノード座標を計算する
+
+    max_group_id（孤立PEPの集まり）は左上に配置し、
+    それ以外のグループはspring_layoutで配置する。
+
+    Args:
+        G: グループ間ネットワークグラフ
+
+    Returns:
+        dict[int, tuple[float, float]]: グループIDをキー、(x, y)座標を値とする辞書
+    """
+    if len(G.nodes()) == 0:
+        return {}
+
+    # 最大グループID（孤立ノードの集まり）を取得
+    max_group_id = max(G.nodes())
+
+    # 通常どおりレイアウトを計算する
+    raw_pos = nx.spring_layout(
+        G,
+        seed=42,
+        weight=None,
+        k=5,
+        iterations=300,
+    )
+
+    # numpy配列をtupleに変換する
+    pos: dict[int, tuple[float, float]] = {
+        node: (float(xy[0]), float(xy[1])) for node, xy in raw_pos.items()
+    }
+
+    # max_group_idだけ左上に移動する
+    # 他の孤立グループはspring_layoutの結果をそのまま使う
+    other_positions = {node: xy for node, xy in pos.items() if node != max_group_id}
+
+    if other_positions:
+        x_values = [xy[0] for xy in other_positions.values()]
+        y_values = [xy[1] for xy in other_positions.values()]
+
+        x_min = min(x_values)
+        y_max = max(y_values)
+
+        pos[max_group_id] = (x_min, y_max)
+
+    return pos
