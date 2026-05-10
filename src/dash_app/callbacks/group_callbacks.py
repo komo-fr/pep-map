@@ -10,6 +10,10 @@ from src.dash_app.components.pep_info import (
     create_pep_info_display,
 )
 from src.dash_app.components import parse_pep_number
+from src.dash_app.components.group_created_timeline import (
+    create_group_timeline_figure,
+    create_group_timeline_empty_figure,
+)
 from src.dash_app.components.subgraph_network_graph import (
     build_subgraph_cytoscape_elements,
     get_subgraph_base_stylesheet,
@@ -28,6 +32,7 @@ from src.dash_app.utils.data_loader import (
     get_group_boundary_data,
 )
 from src.dash_app.layouts.group_tab import create_subgraph_placeholder_with_dummy
+from src.dash_app.styles.tab_styles import get_tab_styles_js
 
 
 # PEP番号とメタデータのキャッシュ
@@ -367,8 +372,9 @@ def linkify_pep_numbers(text: str) -> list[str | Component]:
     テキスト内のPEP番号をリンク付きのDashコンポーネントに変換する
 
     - 「PEP 484」のようなパターンをリンク化
-    - 単独の数字で、後ろに「年」が続かず、存在するPEP番号の場合もリンク化
+    - 単独の数字で、存在するPEP番号の場合もリンク化
     - リンクにはツールチップでPEPタイトル・Status・Createdを表示
+    - 除外パターン: 後ろに「年」が続く場合、「Python 3.13」や「3.11」のようなバージョン番号
 
     Args:
         text: 変換対象のテキスト
@@ -409,7 +415,19 @@ def linkify_pep_numbers(text: str) -> list[str | Component]:
             pep_num = int(num_str)
             # 後ろに「年」が続く場合は除外
             after_match = text[end : end + 1] if end < len(text) else ""
+            # 前が「Python 」で終わる場合は除外（例: 「Python 3」）
+            # 前が「.」の場合も除外（例: 「3.13」の「13」）
+            # 後ろが「.数字」の場合も除外（例: 「3.13」の「3」）
+            before_match = text[max(0, start - 7) : start]
+            after_two = text[end : end + 2] if end + 1 < len(text) else ""
+            is_python_version = before_match.endswith(
+                "Python "
+            ) or before_match.endswith("python ")
+            is_decimal_part = start > 0 and text[start - 1] == "."
+            is_version_number = bool(re.match(r"\.\d", after_two))
             if after_match == "年":
+                result.append(num_str)
+            elif is_python_version or is_decimal_part or is_version_number:
                 result.append(num_str)
             # PEP番号が存在する場合のみリンク化
             elif pep_num in pep_numbers:
@@ -1880,3 +1898,68 @@ def register_group_callbacks(app):
         State("group-to-group-network-graph", "elements"),
         prevent_initial_call=True,
     )
+
+    # ===== PEPs/Createdタブ切り替え（クライアントサイド） =====
+    tab_switch_js = f"""
+        function(pepsClicks, createdClicks) {{
+            const ctx = window.dash_clientside.callback_context;
+{get_tab_styles_js()}
+            if (!ctx.triggered || ctx.triggered.length === 0) {{
+                return [
+                    visibleContentStyle,
+                    hiddenContentStyle,
+                    selectedButtonStyle,
+                    unselectedButtonStyle
+                ];
+            }}
+
+            const triggeredId = ctx.triggered[0].prop_id.split('.')[0];
+
+            if (triggeredId === 'group-peps-tab-button') {{
+                return [
+                    visibleContentStyle,
+                    hiddenContentStyle,
+                    selectedButtonStyle,
+                    unselectedButtonStyle
+                ];
+            }} else {{
+                return [
+                    hiddenContentStyle,
+                    visibleContentStyle,
+                    unselectedButtonStyle,
+                    selectedButtonStyle
+                ];
+            }}
+        }}
+        """
+    app.clientside_callback(
+        tab_switch_js,
+        Output("group-peps-content", "style"),
+        Output("group-created-content", "style"),
+        Output("group-peps-tab-button", "style"),
+        Output("group-created-tab-button", "style"),
+        Input("group-peps-tab-button", "n_clicks"),
+        Input("group-created-tab-button", "n_clicks"),
+    )
+
+    # ===== グループ選択 → Createdタイムライン更新（サーバーサイド） =====
+    @app.callback(
+        Output("group-created-timeline-graph", "figure"),
+        Input("group-selector-dropdown", "value"),
+        prevent_initial_call=True,
+    )
+    def update_created_timeline(selected_group):
+        """
+        グループ選択時にCreatedタイムライングラフを更新する
+
+        Args:
+            selected_group: 選択されたグループ（"all" または グループID）
+
+        Returns:
+            go.Figure: タイムライングラフ
+        """
+        if selected_group is None or selected_group == "all":
+            return create_group_timeline_empty_figure()
+
+        group_id = int(selected_group)
+        return create_group_timeline_figure(group_id)

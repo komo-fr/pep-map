@@ -18,6 +18,15 @@ from src.dash_app.components.group_to_group_network_graph import (
     get_group_to_group_layout_options,
 )
 from src.dash_app.components.pep_info import create_group_initial_info_message
+from src.dash_app.components.group_created_timeline import (
+    create_group_timeline_empty_figure,
+)
+from src.dash_app.styles.tab_styles import (
+    TAB_BUTTON_SELECTED_STYLE,
+    TAB_BUTTON_UNSELECTED_STYLE,
+    TAB_CONTENT_VISIBLE_STYLE,
+    TAB_CONTENT_HIDDEN_STYLE,
+)
 from src.dash_app.utils.constants import STATUS_COLOR_MAP, STATUS_FONT_COLOR_MAP
 from src.dash_app.utils.data_loader import (
     get_group_list,
@@ -519,7 +528,7 @@ def _create_group_graph() -> cyto.Cytoscape:
 
 
 def _create_group_pep_table_section() -> html.Div:
-    """グループPEPテーブルセクション"""
+    """グループPEPテーブルセクション（PEPs / Created タブ付き）"""
     return html.Div(
         [
             html.H4(
@@ -554,6 +563,73 @@ def _create_group_pep_table_section() -> html.Div:
                     "display": "none",  # 初期状態は非表示
                 },
             ),
+            # PEPs / Created タブ
+            _create_pep_content_tabs(),
+        ],
+    )
+
+
+def _create_pep_content_tabs() -> html.Div:
+    """PEPsタブとCreatedタブを生成する"""
+    return html.Div(
+        [
+            # タブボタン
+            html.Div(
+                [
+                    html.Button(
+                        "PEPs",
+                        id="group-peps-tab-button",
+                        n_clicks=0,
+                        style=TAB_BUTTON_SELECTED_STYLE,
+                    ),
+                    html.Button(
+                        "Created",
+                        id="group-created-tab-button",
+                        n_clicks=0,
+                        style=TAB_BUTTON_UNSELECTED_STYLE,
+                    ),
+                    dbc.Tooltip(
+                        "View PEPs in this group as a table with metrics.",
+                        target="group-peps-tab-button",
+                        placement="bottom",
+                    ),
+                    dbc.Tooltip(
+                        "View PEP creation timeline to see when PEPs were created.",
+                        target="group-created-tab-button",
+                        placement="bottom",
+                    ),
+                ],
+                style={
+                    "borderBottom": "1px solid #ddd",
+                    "paddingLeft": "4px",
+                },
+            ),
+            # タブコンテンツコンテナ
+            html.Div(
+                [
+                    # PEPsタブコンテンツ（初期表示）
+                    html.Div(
+                        id="group-peps-content",
+                        children=_create_peps_tab_content(),
+                        style=TAB_CONTENT_VISIBLE_STYLE,
+                    ),
+                    # Createdタブコンテンツ（初期非表示）
+                    html.Div(
+                        id="group-created-content",
+                        children=_create_created_tab_content(),
+                        style=TAB_CONTENT_HIDDEN_STYLE,
+                    ),
+                ],
+                style={"position": "relative"},
+            ),
+        ],
+    )
+
+
+def _create_peps_tab_content() -> html.Div:
+    """PEPsタブの内容を生成する"""
+    return html.Div(
+        [
             html.P(
                 "Scroll the table to view all rows.",
                 style={"fontSize": "12px", "color": "#666", "marginBottom": "2px"},
@@ -564,6 +640,31 @@ def _create_group_pep_table_section() -> html.Div:
             ),
             _create_group_pep_table(),
         ],
+        style={"paddingTop": "8px"},
+    )
+
+
+def _create_created_tab_content() -> html.Div:
+    """Createdタブの内容（タイムライングラフ）を生成する"""
+    return html.Div(
+        [
+            html.P(
+                [
+                    html.Strong("Color"),
+                    " indicates the status of each PEP.",
+                ],
+                style={"fontSize": "12px", "color": "#666", "margin": "0"},
+            ),
+            html.P(
+                "Shows when PEPs in this group were created.",
+                style={"fontSize": "12px", "color": "#666", "marginBottom": "8px"},
+            ),
+            dcc.Graph(
+                id="group-created-timeline-graph",
+                figure=create_group_timeline_empty_figure(),
+            ),
+        ],
+        style={"paddingTop": "8px"},
     )
 
 
