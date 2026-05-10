@@ -1,8 +1,11 @@
 """Groupタブのレイアウト"""
 
+import json
+
+import dash_ag_grid as dag
 import dash_bootstrap_components as dbc
 import dash_cytoscape as cyto
-from dash import dcc, html, dash_table
+from dash import dcc, html
 
 from src.dash_app.components.group_network_graph import (
     build_group_cytoscape_elements,
@@ -15,8 +18,12 @@ from src.dash_app.components.group_to_group_network_graph import (
     get_group_to_group_layout_options,
 )
 from src.dash_app.components.pep_info import create_group_initial_info_message
-from src.dash_app.components.pep_tables import generate_status_styles
-from src.dash_app.utils.data_loader import get_group_list, load_metadata
+from src.dash_app.utils.constants import STATUS_COLOR_MAP, STATUS_FONT_COLOR_MAP
+from src.dash_app.utils.data_loader import (
+    get_group_list,
+    load_metadata,
+    get_all_group_tooltip_info,
+)
 
 
 def create_group_tab_layout() -> html.Div:
@@ -560,112 +567,148 @@ def _create_group_pep_table_section() -> html.Div:
     )
 
 
-def _create_group_pep_table() -> dash_table.DataTable:  # type: ignore[name-defined]
-    """グループPEPテーブルを生成する"""
+def _create_group_pep_table() -> dag.AgGrid:
+    """グループPEPテーブルを生成する（AG Grid版）"""
     # Status列の条件付きスタイルを生成
-    status_styles = generate_status_styles()
+    status_style_conditions = _generate_status_style_conditions()
 
-    return dash_table.DataTable(  # type: ignore[attr-defined]
+    # グループツールチップ情報を取得
+    group_tooltip_info = get_all_group_tooltip_info()
+
+    column_defs = [
+        {
+            "field": "pep",
+            "headerName": "PEP",
+            "width": 100,
+            "pinned": "left",
+            "cellRenderer": "markdown",
+            "autoHeight": True,
+            "tooltipField": "title",
+        },
+        {
+            "field": "title",
+            "headerName": "Title",
+            "width": 250,
+            "minWidth": 250,
+            "wrapText": True,
+            "autoHeight": True,
+            "cellStyle": {
+                "lineHeight": "1.2",
+                "paddingTop": "4px",
+                "paddingBottom": "4px",
+            },
+        },
+        {
+            "field": "status",
+            "headerName": "Status",
+            "width": 110,
+            "cellStyle": {
+                "styleConditions": status_style_conditions,
+            },
+        },
+        {
+            "field": "created",
+            "headerName": "Created",
+            "width": 110,
+        },
+        {
+            "field": "in_degree",
+            "headerName": "In-degree ⓘ",
+            "headerTooltip": "Number of PEPs within the selected group that cite this PEP.\nPEPs with a high in-degree are widely referenced within the group and often influential.",
+            "width": 115,
+            "type": "numericColumn",
+        },
+        {
+            "field": "out_degree",
+            "headerName": "Out-degree ⓘ",
+            "headerTooltip": "Number of PEPs within the selected group cited by this PEP.\nPEPs with a high out-degree tend to reference many other PEPs within the group and may serve as integrative or coordinating proposals.",
+            "width": 120,
+            "type": "numericColumn",
+        },
+        {
+            "field": "degree",
+            "headerName": "Degree ⓘ",
+            "headerTooltip": "Sum of in-degree and out-degree within the selected group.",
+            "width": 105,
+            "type": "numericColumn",
+        },
+        {
+            "field": "pagerank",
+            "headerName": "PageRank ⓘ",
+            "headerTooltip": "Network-based importance score computed from the citation structure within the selected group.",
+            "width": 115,
+            "type": "rightAligned",
+        },
+        {
+            "field": "cited_by_groups",
+            "headerName": "Cited by Groups ⓘ",
+            "headerTooltip": "Groups of PEPs that cite this PEP (excluding the current group). Click a badge to navigate to that group.",
+            "width": 150,
+            "cellRenderer": "GroupBadges",
+            "cellRendererParams": {"groupInfo": group_tooltip_info},
+            "autoHeight": True,
+            "sortable": False,
+        },
+        {
+            "field": "cites_groups",
+            "headerName": "Cites Groups ⓘ",
+            "headerTooltip": "Groups of PEPs that this PEP cites (excluding the current group). Click a badge to navigate to that group.",
+            "width": 150,
+            "cellRenderer": "GroupBadges",
+            "cellRendererParams": {"groupInfo": group_tooltip_info},
+            "autoHeight": True,
+            "sortable": False,
+        },
+    ]
+
+    default_col_def = {
+        "sortable": True,
+        "resizable": True,
+    }
+
+    return dag.AgGrid(
         id="group-pep-table",
-        columns=[
-            {"name": "PEP", "id": "pep", "type": "text", "presentation": "markdown"},
-            {"name": "Title", "id": "title", "type": "text"},
-            {"name": "Status", "id": "status", "type": "text"},
-            {"name": "Created", "id": "created", "type": "text"},
-            {"name": "In-degree ⓘ", "id": "in_degree", "type": "numeric"},
-            {"name": "Out-degree ⓘ", "id": "out_degree", "type": "numeric"},
-            {"name": "Degree ⓘ", "id": "degree", "type": "numeric"},
-            {"name": "PageRank ⓘ", "id": "pagerank", "type": "text"},
-        ],
-        data=[],
-        sort_action="native",
-        sort_mode="single",
-        page_action="none",
-        tooltip_header={
-            "in_degree": "Number of PEPs within the selected group that cite this PEP. PEPs with a high in-degree are widely referenced within the group and often influential.",
-            "out_degree": "Number of PEPs within the selected group cited by this PEP. PEPs with a high out-degree tend to reference many other PEPs within the group and may serve as integrative or coordinating proposals.",
-            "degree": "Sum of in-degree and out-degree within the selected group.",
-            "pagerank": "Network-based importance score computed from the citation structure within the selected group.",
+        columnDefs=column_defs,
+        rowData=[],
+        defaultColDef=default_col_def,
+        dashGridOptions={
+            "tooltipShowDelay": 0,
+            "domLayout": "normal",
         },
-        tooltip_delay=0,
-        tooltip_duration=None,
-        style_table={
-            "overflowX": "auto",
-            "overflowY": "scroll",
-            "height": "500px",
+        style={"height": "500px", "width": "100%"},
+        getRowStyle={
+            "styleConditions": [
+                {
+                    "condition": "params.rowIndex % 2 !== 0",
+                    "style": {"backgroundColor": "#fafafa"},
+                },
+            ],
         },
-        style_cell={
-            "textAlign": "left",
-            "padding": "4px 6px",
-            "fontSize": "15px",
-            "height": "auto",
-            "minHeight": "18px",
-        },
-        style_cell_conditional=[
-            {"if": {"column_id": "pep"}, "width": "80px"},
-            {
-                "if": {"column_id": "title"},
-                "width": "250px",
-                "minWidth": "250px",
-                "whiteSpace": "normal",
-            },
-            {"if": {"column_id": "status"}, "width": "90px", "textAlign": "center"},
-            {"if": {"column_id": "created"}, "width": "90px"},
-            {
-                "if": {"column_id": "in_degree"},
-                "minWidth": "30px",
-                "width": "30px",
-                "textAlign": "right",
-            },
-            {
-                "if": {"column_id": "out_degree"},
-                "minWidth": "30px",
-                "width": "30px",
-                "textAlign": "right",
-            },
-            {
-                "if": {"column_id": "degree"},
-                "minWidth": "30px",
-                "width": "30px",
-                "textAlign": "right",
-            },
-            {
-                "if": {"column_id": "pagerank"},
-                "minWidth": "30px",
-                "width": "30px",
-                "textAlign": "right",
-            },
-        ],
-        style_data={
-            "lineHeight": "1.1",
-            "verticalAlign": "middle",
-        },
-        style_header={
-            "fontWeight": "bold",
-            "backgroundColor": "#f5f5f5",
-        },
-        style_data_conditional=[
-            {
-                "if": {"row_index": "odd"},
-                "backgroundColor": "#fafafa",
-            },
-            {
-                "if": {"column_id": "pep"},
-                "paddingTop": "11px",
-                "paddingBottom": "0px",
-                "fontSize": "14px",
-                "verticalAlign": "bottom",
-            },
-        ]
-        + status_styles,
-        css=[
-            {
-                "selector": ".dash-table-tooltip",
-                "rule": "background-color: #222; color: white; font-size: 12px;",
-            },
-        ],
-        markdown_options={"html": True},
+        className="ag-theme-alpine",
     )
+
+
+def _generate_status_style_conditions() -> list[dict]:
+    """
+    AG Grid用のStatus列スタイル条件を生成する
+
+    Returns:
+        list[dict]: styleConditionsのリスト
+    """
+    conditions = []
+    for status, bg_color in STATUS_COLOR_MAP.items():
+        font_color = STATUS_FONT_COLOR_MAP.get(status, "#545454")
+        conditions.append(
+            {
+                "condition": f"params.value === {json.dumps(status)}",
+                "style": {
+                    "backgroundColor": bg_color,
+                    "color": font_color,
+                    "textAlign": "center",
+                },
+            }
+        )
+    return conditions
 
 
 def _create_subgraph_placeholder() -> html.Div:

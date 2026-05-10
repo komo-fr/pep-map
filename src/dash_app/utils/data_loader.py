@@ -31,6 +31,7 @@ _subgraph_cache: dict[int, "nx.DiGraph"] = {}
 _subgraph_metrics_cache: pd.DataFrame | None = None
 _group_to_group_network_cache: "nx.DiGraph | None" = None
 _group_to_group_positions_cache: dict[int, tuple[float, float]] | None = None
+_group_tooltip_info_cache: dict[int, dict] | None = None
 
 
 def load_peps_metadata() -> pd.DataFrame:
@@ -642,11 +643,10 @@ def get_group_list() -> list[dict[str, str | int]]:
 
     # グループ名データを取得
     group_names_df = load_group_names()
-    group_names_dict = {}
-    for _, row in group_names_df.iterrows():
-        group_names_dict[int(row["group_id"])] = (
-            str(row["group_name"]) if pd.notna(row["group_name"]) else ""
-        )
+    group_names_dict = {
+        int(gid): str(name) if pd.notna(name) else ""
+        for gid, name in zip(group_names_df["group_id"], group_names_df["group_name"])
+    }
 
     options: list[dict[str, str | int]] = [{"label": "All Groups", "value": "all"}]
     for group_id in sorted(cast(list[int], list(group_counts.keys()))):
@@ -686,7 +686,8 @@ def clear_cache() -> None:
         _subgraph_cache, \
         _subgraph_metrics_cache, \
         _group_to_group_network_cache, \
-        _group_to_group_positions_cache
+        _group_to_group_positions_cache, \
+        _group_tooltip_info_cache
     _peps_metadata_cache = None
     _citations_cache = None
     _metadata_cache = None
@@ -703,6 +704,7 @@ def clear_cache() -> None:
     _subgraph_metrics_cache = None
     _group_to_group_network_cache = None
     _group_to_group_positions_cache = None
+    _group_tooltip_info_cache = None
 
     # 他モジュールのキャッシュもクリア（遅延インポートで循環参照を回避）
     from src.dash_app.components import (
@@ -908,6 +910,81 @@ def load_group_to_group_network() -> "nx.DiGraph":
     return _group_to_group_network_cache
 
 
+def get_group_boundary_data(group_id: int) -> dict[int, dict]:
+    """
+    指定されたグループの全PEPについて境界グループ情報を一括取得する
+
+    Args:
+        group_id: グループID
+
+    Returns:
+        dict[int, dict]: PEP番号をキーとした境界グループ情報の辞書
+            {
+                pep_number: {
+                    "cited_by_groups": [group_id, ...],  # グループIDリスト（表示用）
+                    "cited_by_groups_detail": {group_id: [pep, ...], ...},  # グループごとのPEP（ツールチップ用）
+                    "cites_groups": [group_id, ...],
+                    "cites_groups_detail": {group_id: [pep, ...], ...},
+                },
+                ...
+            }
+    """
+    citations = load_citations()
+    group_data = load_group_data()
+
+    # PEP→グループIDのマッピングを作成
+    pep_to_group = dict(zip(group_data["PEP"], group_data["group_id"]))
+
+    # 指定グループのPEP一覧を取得
+    group_peps = set(group_data[group_data["group_id"] == group_id]["PEP"].tolist())
+
+    # グループ全体を一括フィルタリング（全citationsを毎ループスキャンしないよう最適化）
+    group_pep_list = list(group_peps)
+    cited_by_df = citations[citations["cited"].isin(group_pep_list)]
+    cites_out_df = citations[citations["citing"].isin(group_pep_list)]
+
+    result = {}
+    for pep_number in group_peps:
+        # このPEPを引用しているPEP（グループごとに分類）
+        citing_peps = cited_by_df[cited_by_df["cited"] == pep_number]["citing"].tolist()
+        cited_by_groups_detail: dict[int, list[int]] = {}
+        for citing_pep in citing_peps:
+            grp = pep_to_group.get(citing_pep)
+            if grp is not None and grp != group_id:
+                if grp not in cited_by_groups_detail:
+                    cited_by_groups_detail[grp] = []
+                cited_by_groups_detail[grp].append(citing_pep)
+
+        # 各グループ内のPEPをソート
+        for grp in cited_by_groups_detail:
+            cited_by_groups_detail[grp].sort()
+
+        # このPEPが引用しているPEP（グループごとに分類）
+        cited_peps = cites_out_df[cites_out_df["citing"] == pep_number][
+            "cited"
+        ].tolist()
+        cites_groups_detail: dict[int, list[int]] = {}
+        for cited_pep in cited_peps:
+            grp = pep_to_group.get(cited_pep)
+            if grp is not None and grp != group_id:
+                if grp not in cites_groups_detail:
+                    cites_groups_detail[grp] = []
+                cites_groups_detail[grp].append(cited_pep)
+
+        # 各グループ内のPEPをソート
+        for grp in cites_groups_detail:
+            cites_groups_detail[grp].sort()
+
+        result[pep_number] = {
+            "cited_by_groups": sorted(cited_by_groups_detail.keys()),
+            "cited_by_groups_detail": cited_by_groups_detail,
+            "cites_groups": sorted(cites_groups_detail.keys()),
+            "cites_groups_detail": cites_groups_detail,
+        }
+
+    return result
+
+
 def get_adjacent_groups(group_id: int) -> dict:
     """
     指定されたグループの隣接グループ情報を取得する
@@ -968,3 +1045,41 @@ def get_top_peps_by_group(group_id: int, top_n: int = 5) -> list[int]:
 
     # 上位N件のPEP番号を取得
     return df_sorted["PEP"].head(top_n).tolist()
+
+
+def get_all_group_tooltip_info() -> dict[int, dict]:
+    """
+    全グループのツールチップ表示用情報を取得する
+
+    Returns:
+        dict[int, dict]: グループIDをキーとした情報の辞書
+            {group_id: {"name": str, "topPeps": list[int]}, ...}
+    """
+    global _group_tooltip_info_cache
+
+    if _group_tooltip_info_cache is not None:
+        return _group_tooltip_info_cache
+
+    group_data = load_group_data()
+    group_names_df = load_group_names()
+
+    # グループ名のマッピング
+    group_names_dict = {
+        int(gid): str(name) if pd.notna(name) else ""
+        for gid, name in zip(group_names_df["group_id"], group_names_df["group_name"])
+    }
+
+    # 全グループIDを取得
+    all_group_ids = group_data["group_id"].unique().tolist()
+
+    result = {}
+    for group_id in all_group_ids:
+        top_peps = get_top_peps_by_group(group_id, top_n=5)
+        group_name = group_names_dict.get(group_id, "")
+        result[group_id] = {
+            "name": group_name,
+            "topPeps": top_peps,
+        }
+
+    _group_tooltip_info_cache = result
+    return result

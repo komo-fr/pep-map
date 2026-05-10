@@ -25,6 +25,7 @@ from src.dash_app.utils.data_loader import (
     load_peps_metadata,
     get_adjacent_groups,
     get_top_peps_by_group,
+    get_group_boundary_data,
 )
 from src.dash_app.layouts.group_tab import create_subgraph_placeholder_with_dummy
 
@@ -746,6 +747,21 @@ def _compute_group_static_outputs(group_id: int) -> tuple:
     )
     df["pagerank_str"] = df["pagerank_group"].apply(lambda x: f"{x:.4f}")
 
+    # 境界グループ情報を取得
+    boundary_data = get_group_boundary_data(group_id)
+    df["cited_by_groups"] = df["PEP"].apply(
+        lambda pep: boundary_data.get(pep, {}).get("cited_by_groups", [])
+    )
+    df["cited_by_groups_detail"] = df["PEP"].apply(
+        lambda pep: boundary_data.get(pep, {}).get("cited_by_groups_detail", {})
+    )
+    df["cites_groups"] = df["PEP"].apply(
+        lambda pep: boundary_data.get(pep, {}).get("cites_groups", [])
+    )
+    df["cites_groups_detail"] = df["PEP"].apply(
+        lambda pep: boundary_data.get(pep, {}).get("cites_groups_detail", {})
+    )
+
     table_data = (
         df[
             [
@@ -757,6 +773,10 @@ def _compute_group_static_outputs(group_id: int) -> tuple:
                 "out-degree_group",
                 "degree_group",
                 "pagerank_str",
+                "cited_by_groups",
+                "cited_by_groups_detail",
+                "cites_groups",
+                "cites_groups_detail",
             ]
         ]
         .rename(
@@ -971,7 +991,7 @@ def register_group_callbacks(app):
     # round trip 数を削減する。元々は4つのコールバックに分散していた。
     @app.callback(
         # テーブル関連
-        Output("group-pep-table", "data"),
+        Output("group-pep-table", "rowData"),
         Output("group-pep-table-title", "children"),
         Output("group-name-display", "children"),
         Output("group-description-display", "children"),
@@ -1171,6 +1191,38 @@ def register_group_callbacks(app):
                     group_id = triggered_id.get("group_id")
                     if group_id is not None:
                         return group_id, "dropdown", ""
+
+        return no_update, no_update, no_update
+
+    # ===== テーブル内グループバッジクリック → グループ選択更新（サーバーサイド） =====
+    @app.callback(
+        Output("group-selector-dropdown", "value", allow_duplicate=True),
+        Output("group-selection-source", "data", allow_duplicate=True),
+        Output("group-pep-input", "value", allow_duplicate=True),
+        Input("group-pep-table", "cellRendererData"),
+        prevent_initial_call=True,
+    )
+    def update_from_table_group_badge_click(cell_renderer_data):
+        """
+        テーブル内のグループバッジクリック時にグループ選択を更新する
+
+        Args:
+            cell_renderer_data: セルレンダラーからのデータ
+                - value: {"groupId": int, "field": str}
+
+        Returns:
+            tuple: (グループID, 選択ソース, PEP入力欄の値)
+        """
+        if cell_renderer_data is None:
+            return no_update, no_update, no_update
+
+        value = cell_renderer_data.get("value")
+        if value is None:
+            return no_update, no_update, no_update
+
+        group_id = value.get("groupId")
+        if group_id is not None:
+            return group_id, "dropdown", ""
 
         return no_update, no_update, no_update
 
