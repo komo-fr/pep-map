@@ -75,7 +75,7 @@ def _compute_y_positions(dates: list) -> list[float]:
     """
     重なりを避けるためにY位置を計算する
 
-    前のPEPとの日数差が閾値以下の場合、Y方向にオフセットする。
+    前のPEPとの日数差が閾値以下の場合、Y方向に上下交互にオフセットする。
 
     Args:
         dates: ソート済みの日付リスト
@@ -88,7 +88,7 @@ def _compute_y_positions(dates: list) -> list[float]:
 
     y_positions = []
     prev_date = None
-    current_y = 0.0
+    offset_level = 0
     offset_step = 0.3
     threshold_days = 120
 
@@ -96,11 +96,22 @@ def _compute_y_positions(dates: list) -> list[float]:
         if prev_date is not None:
             days_diff = (date - prev_date).days
             if days_diff < threshold_days:
-                current_y += offset_step
-                if current_y > 0.9:
-                    current_y = -0.9
+                offset_level += 1
             else:
+                offset_level = 0
+
+        if offset_level == 0:
+            current_y = 0.0
+        else:
+            level = (offset_level + 1) // 2
+            if offset_level % 2 == 1:
+                current_y = level * offset_step
+            else:
+                current_y = -level * offset_step
+            if abs(current_y) > 0.9:
                 current_y = 0.0
+                offset_level = 0
+
         y_positions.append(current_y)
         prev_date = date
 
