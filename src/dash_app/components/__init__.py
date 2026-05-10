@@ -12,6 +12,10 @@ from src.dash_app.components.group_network_graph import (
     build_group_cytoscape_elements,
     get_group_base_stylesheet,
 )
+from src.dash_app.components.group_created_timeline import (
+    create_group_timeline_figure,
+    create_group_timeline_empty_figure,
+)
 from src.dash_app.components.pep_info import (
     parse_pep_number,
     create_status_badge,
@@ -46,4 +50,6 @@ __all__ = [
     "convert_df_to_table_data",
     "build_group_cytoscape_elements",
     "get_group_base_stylesheet",
+    "create_group_timeline_figure",
+    "create_group_timeline_empty_figure",
 ]

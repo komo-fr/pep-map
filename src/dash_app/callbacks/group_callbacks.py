@@ -10,6 +10,10 @@ from src.dash_app.components.pep_info import (
     create_pep_info_display,
 )
 from src.dash_app.components import parse_pep_number
+from src.dash_app.components.group_created_timeline import (
+    create_group_timeline_figure,
+    create_group_timeline_empty_figure,
+)
 from src.dash_app.components.subgraph_network_graph import (
     build_subgraph_cytoscape_elements,
     get_subgraph_base_stylesheet,
@@ -1880,3 +1884,107 @@ def register_group_callbacks(app):
         State("group-to-group-network-graph", "elements"),
         prevent_initial_call=True,
     )
+
+    # ===== PEPs/Createdタブ切り替え（クライアントサイド） =====
+    app.clientside_callback(
+        """
+        function(pepsClicks, createdClicks) {
+            const ctx = window.dash_clientside.callback_context;
+
+            const visibleContentStyle = {
+                'visibility': 'visible',
+                'position': 'relative',
+                'zIndex': '1'
+            };
+
+            const hiddenContentStyle = {
+                'visibility': 'hidden',
+                'position': 'absolute',
+                'top': '0',
+                'left': '0',
+                'right': '0',
+                'zIndex': '0'
+            };
+
+            const selectedButtonStyle = {
+                'padding': '6px 12px',
+                'border': '1px solid #ddd',
+                'borderTop': '3px solid #DDAD3E',
+                'borderBottom': '1px solid #fff',
+                'backgroundColor': '#fff',
+                'cursor': 'pointer',
+                'marginRight': '4px',
+                'borderRadius': '4px 4px 0 0',
+                'fontSize': '13px',
+                'fontWeight': 'bold',
+                'marginBottom': '-1px'
+            };
+
+            const unselectedButtonStyle = {
+                'padding': '6px 12px',
+                'border': '1px solid #ddd',
+                'borderBottom': 'none',
+                'backgroundColor': '#f5f5f5',
+                'cursor': 'pointer',
+                'marginRight': '4px',
+                'borderRadius': '4px 4px 0 0',
+                'fontSize': '13px'
+            };
+
+            if (!ctx.triggered || ctx.triggered.length === 0) {
+                return [
+                    visibleContentStyle,
+                    hiddenContentStyle,
+                    selectedButtonStyle,
+                    unselectedButtonStyle
+                ];
+            }
+
+            const triggeredId = ctx.triggered[0].prop_id.split('.')[0];
+
+            if (triggeredId === 'group-peps-tab-button') {
+                return [
+                    visibleContentStyle,
+                    hiddenContentStyle,
+                    selectedButtonStyle,
+                    unselectedButtonStyle
+                ];
+            } else {
+                return [
+                    hiddenContentStyle,
+                    visibleContentStyle,
+                    unselectedButtonStyle,
+                    selectedButtonStyle
+                ];
+            }
+        }
+        """,
+        Output("group-peps-content", "style"),
+        Output("group-created-content", "style"),
+        Output("group-peps-tab-button", "style"),
+        Output("group-created-tab-button", "style"),
+        Input("group-peps-tab-button", "n_clicks"),
+        Input("group-created-tab-button", "n_clicks"),
+    )
+
+    # ===== グループ選択 → Createdタイムライン更新（サーバーサイド） =====
+    @app.callback(
+        Output("group-created-timeline-graph", "figure"),
+        Input("group-selector-dropdown", "value"),
+        prevent_initial_call=True,
+    )
+    def update_created_timeline(selected_group):
+        """
+        グループ選択時にCreatedタイムライングラフを更新する
+
+        Args:
+            selected_group: 選択されたグループ（"all" または グループID）
+
+        Returns:
+            go.Figure: タイムライングラフ
+        """
+        if selected_group is None or selected_group == "all":
+            return create_group_timeline_empty_figure()
+
+        group_id = int(selected_group)
+        return create_group_timeline_figure(group_id)
