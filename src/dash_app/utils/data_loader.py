@@ -936,10 +936,15 @@ def get_group_boundary_data(group_id: int) -> dict[int, dict]:
     # 指定グループのPEP一覧を取得
     group_peps = set(group_data[group_data["group_id"] == group_id]["PEP"].tolist())
 
+    # グループ全体を一括フィルタリング（全citationsを毎ループスキャンしないよう最適化）
+    group_pep_list = list(group_peps)
+    cited_by_df = citations[citations["cited"].isin(group_pep_list)]
+    cites_out_df = citations[citations["citing"].isin(group_pep_list)]
+
     result = {}
     for pep_number in group_peps:
         # このPEPを引用しているPEP（グループごとに分類）
-        citing_peps = citations[citations["cited"] == pep_number]["citing"].tolist()
+        citing_peps = cited_by_df[cited_by_df["cited"] == pep_number]["citing"].tolist()
         cited_by_groups_detail: dict[int, list[int]] = {}
         for citing_pep in citing_peps:
             grp = pep_to_group.get(citing_pep)
@@ -953,7 +958,9 @@ def get_group_boundary_data(group_id: int) -> dict[int, dict]:
             cited_by_groups_detail[grp].sort()
 
         # このPEPが引用しているPEP（グループごとに分類）
-        cited_peps = citations[citations["citing"] == pep_number]["cited"].tolist()
+        cited_peps = cites_out_df[cites_out_df["citing"] == pep_number][
+            "cited"
+        ].tolist()
         cites_groups_detail: dict[int, list[int]] = {}
         for cited_pep in cited_peps:
             grp = pep_to_group.get(cited_pep)
