@@ -606,6 +606,12 @@ def preload_group_selection_outputs() -> None:
         _compute_group_static_outputs(group_id)
 
 
+def clear_cache() -> None:
+    """キャッシュをクリアする（テスト用）"""
+    global _group_selection_output_cache
+    _group_selection_output_cache = {}
+
+
 def register_group_callbacks(app):
     """
     Groupタブのコールバックを登録する
@@ -803,15 +809,6 @@ def register_group_callbacks(app):
         """
         # 説明文が空の時のスタイル（非表示）
         empty_style = {"display": "none"}
-
-        # 説明文がある時のスタイル（背景色付き）
-        filled_style = {
-            "marginBottom": "8px",
-            "marginTop": "0",
-            "backgroundColor": "#EAEAEA",
-            "padding": "8px",
-            "borderRadius": "4px",
-        }
 
         # === selection_source / PEP入力欄のリセット判定 ===
         # 元の `reset_on_dropdown_change` の挙動を保持する

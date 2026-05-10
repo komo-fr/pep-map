@@ -710,10 +710,12 @@ def clear_cache() -> None:
         group_network_graph,
         subgraph_network_graph,
     )
+    from src.dash_app.callbacks import group_callbacks
 
     network_graph.clear_cache()
     group_network_graph.clear_cache()
     subgraph_network_graph.clear_cache()
+    group_callbacks.clear_cache()
 
 
 def load_subgraph(group_id: int) -> "nx.DiGraph | None":
