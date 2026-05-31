@@ -104,8 +104,11 @@ Drag a node to reposition it manually.
 
 ![](images/network/move_node.gif)
 
-## Groups tab (beta)
+## Groups tab
 ### Viewing Topic Groups from Citations
+
+**NOTE:**
+This feature is currently in beta.
 
 The Groups tab shows how PEPs are organized into groups based on citation relationships.
 
