@@ -15,7 +15,6 @@
 - **[Groups tab (beta)](#groups-tab):**
     - Explore groups of PEPs detected from the citation network using a community detection algorithm.
     - It helps you identify groups of related topics based on citation relationships.
-    - **This feature is currently in beta. Automatic generation of group descriptions is planned.**
 - **PEP Metrics tab:**
     - View structural metrics such as in-degree, out-degree, degree, and PageRank in a table format.
     - It helps you compare PEPs using quantitative network measures.
@@ -150,7 +149,6 @@ You can switch between two network views:
         They may indicate specifications that are commonly reused across different areas.
         - Groups with many outgoing edges cite many other groups.   
          They may indicate topics that draw on specifications from multiple areas.
-
 
 ![](images/groups/switch_full_group_network.gif)
 
