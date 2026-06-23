@@ -1,6 +1,7 @@
 """PEPテーブルの共通コンポーネント"""
 
-from dash import dash_table, html
+import dash_ag_grid as dag
+from dash import html
 
 from src.dash_app.utils.constants import (
     STATUS_COLOR_MAP,
@@ -19,81 +20,87 @@ def create_pep_table_description() -> html.P:
     )
 
 
-def create_pep_table(table_id: str) -> dash_table.DataTable:  # type: ignore[name-defined]
+def create_pep_table(table_id: str) -> dag.AgGrid:
     """
     PEPテーブルを生成する
 
-    引用関係を表示するためのDataTableコンポーネントを生成する。
+    引用関係を表示するためのAG Gridコンポーネントを生成する。
     カラム構成: #, PEP, Title, Status, Created
 
     Args:
         table_id: テーブルのコンポーネントID
 
     Returns:
-        dash_table.DataTable: テーブルコンポーネント
+        dag.AgGrid: テーブルコンポーネント
     """
-    # Status列の条件付きスタイルを生成
-    status_styles = generate_status_styles()
+    status_style_conditions = [
+        {
+            "condition": f"params.value === '{status}'",
+            "style": {
+                "backgroundColor": bg_color,
+                "color": STATUS_FONT_COLOR_MAP.get(status, "#545454"),
+            },
+        }
+        for status, bg_color in STATUS_COLOR_MAP.items()
+    ]
 
-    return dash_table.DataTable(  # type: ignore[attr-defined]
+    column_defs = [
+        {
+            "field": "pep",
+            "headerName": "PEP",
+            "width": 100,
+            "cellRenderer": "markdown",
+        },
+        {
+            "field": "title",
+            "headerName": "Title",
+            "width": 300,
+            "minWidth": 300,
+            "wrapText": True,
+            "autoHeight": True,
+            "cellStyle": {
+                "lineHeight": "1.2",
+                "paddingTop": "4px",
+                "paddingBottom": "4px",
+            },
+        },
+        {
+            "field": "status",
+            "headerName": "Status",
+            "width": 110,
+            "cellStyle": {
+                "styleConditions": status_style_conditions,
+                "defaultStyle": {"textAlign": "center"},
+            },
+        },
+        {
+            "field": "created",
+            "headerName": "Created",
+            "width": 120,
+        },
+    ]
+
+    return dag.AgGrid(
         id=table_id,
-        columns=[
-            {"name": "#", "id": "row_num", "type": "numeric"},
-            {"name": "PEP", "id": "pep", "type": "text", "presentation": "markdown"},
-            {"name": "Title", "id": "title", "type": "text"},
-            {"name": "Status", "id": "status", "type": "text"},
-            {"name": "Created", "id": "created", "type": "text"},
-        ],
-        data=[],
-        sort_action="native",
-        sort_mode="single",
-        page_action="none",
-        style_table={
-            "overflowX": "auto",
-            "overflowY": "scroll",
-            "height": "500px",
+        columnDefs=column_defs,
+        rowData=[],
+        defaultColDef={
+            "sortable": True,
+            "resizable": True,
         },
-        style_cell={
-            "textAlign": "left",
-            "padding": "4px 6px",
-            "fontSize": "15px",
-            "height": "auto",
-            "minHeight": "18px",
+        dashGridOptions={
+            "domLayout": "normal",
         },
-        style_cell_conditional=[
-            {"if": {"column_id": "row_num"}, "width": "40px", "textAlign": "right"},
-            {"if": {"column_id": "pep"}, "width": "80px"},
-            {
-                "if": {"column_id": "title"},
-                "width": "300px",
-                "maxWidth": "300px",
-                "whiteSpace": "normal",
-            },
-            {"if": {"column_id": "status"}, "width": "100px", "textAlign": "center"},
-            {"if": {"column_id": "created"}, "width": "100px"},
-        ],
-        style_data={
-            "lineHeight": "1.1",
-            "verticalAlign": "middle",
+        style={"height": "500px", "width": "100%"},
+        getRowStyle={
+            "styleConditions": [
+                {
+                    "condition": "params.rowIndex % 2 !== 0",
+                    "style": {"backgroundColor": "#fafafa"},
+                },
+            ],
         },
-        style_header={
-            "fontWeight": "bold",
-            "backgroundColor": "#f5f5f5",
-        },
-        style_data_conditional=[
-            {
-                "if": {"row_index": "odd"},
-                "backgroundColor": "#fafafa",
-            },
-            {
-                "if": {"column_id": "pep"},
-                "paddingTop": "11px",
-                "paddingBottom": "0px",
-                "fontSize": "14px",
-                "verticalAlign": "bottom",
-            },
-        ]
-        + status_styles,
+        className="ag-theme-alpine",
     )
 
 
