@@ -9,6 +9,11 @@
     padding: 8px 10px !important;
 }
 
+/* AG Gridのヘッダー中央寄せ */
+.ag-header-cell-center .ag-header-cell-label {
+    justify-content: center;
+}
+
 /* AG Gridのヘッダーツールチップスタイル */
 .ag-tooltip {
     max-width: 400px !important;
