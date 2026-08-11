@@ -1,9 +1,10 @@
 """PEP Metricsタブのレイアウト"""
 
-from dash import dash_table, html
+import dash_ag_grid as dag
 import dash_bootstrap_components as dbc  # type: ignore[import-untyped]
+from dash import html
 
-from src.dash_app.utils.data_loader import load_metadata
+from src.dash_app.utils.data_loader import load_metadata, load_metrics_styles
 
 
 def create_metrics_tab_layout() -> html.Div:
@@ -17,6 +18,85 @@ def create_metrics_tab_layout() -> html.Div:
     metadata = load_metadata()
     fetched_at = metadata["fetched_at"]
     checked_at = metadata["checked_at"]
+
+    # 事前計算されたスタイル条件を取得
+    styles = load_metrics_styles()
+
+    column_defs = [
+        {
+            "field": "pep",
+            "headerName": "PEP",
+            "minWidth": 100,
+            "cellRenderer": "markdown",
+        },
+        {
+            "field": "title",
+            "headerName": "Title",
+            "minWidth": 300,
+            "flex": 1,
+            "wrapText": True,
+            "autoHeight": True,
+            "cellStyle": {
+                "lineHeight": "1.2",
+                "paddingTop": "4px",
+                "paddingBottom": "4px",
+            },
+        },
+        {
+            "field": "status",
+            "headerName": "Status",
+            "minWidth": 110,
+            "cellStyle": {
+                "styleConditions": styles.get("status", []),
+                "defaultStyle": {"textAlign": "center"},
+            },
+        },
+        {
+            "field": "created",
+            "headerName": "Created",
+            "minWidth": 120,
+        },
+        {
+            "field": "in_degree",
+            "headerName": "In-degree ⓘ",
+            "headerTooltip": "Number of PEPs that cite this PEP. PEPs with a high in-degree are widely referenced and often influential.",
+            "minWidth": 120,
+            "type": "numericColumn",
+            "cellStyle": {
+                "styleConditions": styles.get("in_degree", []),
+            },
+        },
+        {
+            "field": "out_degree",
+            "headerName": "Out-degree ⓘ",
+            "headerTooltip": "Number of PEPs cited by this PEP. PEPs with a high out-degree tend to reference many other PEPs and may serve as integrative or coordinating proposals.",
+            "minWidth": 125,
+            "type": "numericColumn",
+            "cellStyle": {
+                "styleConditions": styles.get("out_degree", []),
+            },
+        },
+        {
+            "field": "degree",
+            "headerName": "Degree ⓘ",
+            "headerTooltip": "Sum of in-degree and out-degree.",
+            "minWidth": 110,
+            "type": "numericColumn",
+            "cellStyle": {
+                "styleConditions": styles.get("degree", []),
+            },
+        },
+        {
+            "field": "pagerank",
+            "headerName": "PageRank ⓘ",
+            "headerTooltip": "Network-based importance score.",
+            "minWidth": 120,
+            "type": "numericColumn",
+            "cellStyle": {
+                "styleConditions": styles.get("pagerank", []),
+            },
+        },
+    ]
 
     return html.Div(
         [
@@ -182,12 +262,11 @@ def create_metrics_tab_layout() -> html.Div:
                             # ページネーション
                             html.Div(
                                 dbc.Pagination(
-                                    id="metrics-pagination",
-                                    max_value=15,  # 初期値（コールバックで更新）
-                                    fully_expanded=False,  # 中程度の表示（... で省略）
-                                    first_last=True,  # 最初・最後のボタンを表示
-                                    size="sm",  # 小さいサイズ
-                                    class_name="metrics-pagination-custom",
+                                    id="metrics-pagination-top",
+                                    max_value=1,
+                                    fully_expanded=False,
+                                    first_last=True,
+                                    size="sm",
                                 ),
                                 style={
                                     "display": "flex",
@@ -232,116 +311,32 @@ def create_metrics_tab_layout() -> html.Div:
                 },
             ),
             # メトリクステーブル
-            dash_table.DataTable(  # type: ignore[attr-defined]
+            dag.AgGrid(
                 id="metrics-table",
-                columns=[
-                    {
-                        "name": "PEP",
-                        "id": "pep",
-                        "type": "text",
-                        "presentation": "markdown",
-                    },
-                    {"name": "Title", "id": "title", "type": "text"},
-                    {"name": "Status", "id": "status", "type": "text"},
-                    {"name": "Created", "id": "created", "type": "text"},
-                    {"name": "In-degree ⓘ", "id": "in_degree", "type": "numeric"},
-                    {"name": "Out-degree ⓘ", "id": "out_degree", "type": "numeric"},
-                    {"name": "Degree ⓘ", "id": "degree", "type": "numeric"},
-                    {"name": "PageRank ⓘ", "id": "pagerank", "type": "numeric"},
-                ],
-                data=[],  # 初期は空、コールバックで更新
-                sort_action="custom",  # サーバサイドソート
-                sort_mode="single",
-                page_action="custom",  # サーバサイドページング
-                page_size=50,  # 1ページあたり50行
-                page_count=0,  # 全ページ数（コールバックで更新）
-                style_table={
-                    "overflowX": "auto",
+                columnDefs=column_defs,
+                rowData=[],
+                columnSize="responsiveSizeToFit",
+                defaultColDef={
+                    "sortable": True,
+                    "resizable": True,
                 },
-                tooltip_header={
-                    "in_degree": "Number of PEPs that cite this PEP. PEPs with a high in-degree are widely referenced and often influential.",
-                    "out_degree": "Number of PEPs cited by this PEP. PEPs with a high out-degree tend to reference many other PEPs and may serve as integrative or coordinating proposals.",
-                    "degree": "Sum of in-degree and out-degree.",
-                    "pagerank": "Network-based importance score.",
+                dashGridOptions={
+                    "pagination": True,
+                    "paginationPageSize": 50,
+                    "paginationPageSizeSelector": [50, 100, 200],
+                    "tooltipShowDelay": 0,
+                    "domLayout": "autoHeight",
                 },
-                tooltip_delay=0,
-                tooltip_duration=None,
-                style_cell={
-                    "textAlign": "left",
-                    "padding": "4px 6px",
-                    "fontSize": "15px",
-                    "height": "auto",
-                    "minHeight": "18px",
+                style={"width": "100%"},
+                getRowStyle={
+                    "styleConditions": [
+                        {
+                            "condition": "params.rowIndex % 2 !== 0",
+                            "style": {"backgroundColor": "#fafafa"},
+                        },
+                    ],
                 },
-                style_cell_conditional=[
-                    {"if": {"column_id": "pep"}, "width": "80px"},
-                    {
-                        "if": {"column_id": "title"},
-                        "width": "300px",
-                        "maxWidth": "300px",
-                        "whiteSpace": "normal",
-                    },
-                    {
-                        "if": {"column_id": "status"},
-                        "width": "100px",
-                        "textAlign": "center",
-                    },
-                    {"if": {"column_id": "created"}, "width": "100px"},
-                    {
-                        "if": {"column_id": "in_degree"},
-                        "width": "90px",
-                        "textAlign": "right",
-                    },
-                    {
-                        "if": {"column_id": "out_degree"},
-                        "width": "90px",
-                        "textAlign": "right",
-                    },
-                    {
-                        "if": {"column_id": "degree"},
-                        "width": "80px",
-                        "textAlign": "right",
-                    },
-                    {
-                        "if": {"column_id": "pagerank"},
-                        "width": "100px",
-                        "textAlign": "right",
-                    },
-                ],
-                style_header={
-                    "backgroundColor": "#f5f5f5",
-                    "fontWeight": "bold",
-                },
-                style_data={
-                    "lineHeight": "1.1",
-                    "verticalAlign": "middle",
-                },
-                style_data_conditional=[],  # コールバックで動的に設定
-                css=[
-                    {
-                        "selector": ".dash-table-tooltip",
-                        "rule": "background-color: #222; color: white; font-size: 12px;",
-                    },
-                    {
-                        "selector": ".previous-next-container",
-                        "rule": "display: none;",
-                    },
-                ],
-            ),
-            # ページネーションコンポーネント（テーブルの下）
-            html.Div(
-                dbc.Pagination(
-                    id="metrics-pagination-bottom",
-                    max_value=15,  # 初期値（コールバックで更新）
-                    fully_expanded=False,  # 中程度の表示（... で省略）
-                    first_last=True,  # 最初・最後のボタンを表示
-                    size="sm",  # 小さいサイズ
-                ),
-                style={
-                    "marginTop": "16px",
-                    "display": "flex",
-                    "justifyContent": "flex-end",
-                },
+                className="ag-theme-alpine",
             ),
         ],
         style={

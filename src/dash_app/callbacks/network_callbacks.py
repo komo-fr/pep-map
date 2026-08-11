@@ -198,8 +198,8 @@ def register_network_callbacks(app):
 
     # ===== テーブルデータ更新コールバック（サーバーサイド） =====
     @app.callback(
-        Output("network-citing-peps-table", "data"),
-        Output("network-cited-peps-table", "data"),
+        Output("network-citing-peps-table", "rowData"),
+        Output("network-cited-peps-table", "rowData"),
         Input("network-pep-input", "value"),
     )
     def update_tables(pep_number):

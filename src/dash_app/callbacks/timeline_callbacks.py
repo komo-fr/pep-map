@@ -110,8 +110,8 @@ def register_timeline_callbacks(app):
 
     # === テーブル更新コールバック（新規追加） ===
     @app.callback(
-        Output("citing-peps-table", "data"),
-        Output("cited-peps-table", "data"),
+        Output("citing-peps-table", "rowData"),
+        Output("cited-peps-table", "rowData"),
         Input("pep-input", "value"),
     )
     def update_tables(pep_number):
