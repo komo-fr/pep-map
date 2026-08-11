@@ -20,7 +20,7 @@ dash-ag-grid==35.2.0
 pytest
 pytest-mock
 pytest-cov
-ruff~=0.15
+ruff>=0.15,<0.16
 mypy
 types-requests
 pandas-stubs
