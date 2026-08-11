@@ -1,6 +1,7 @@
 """Citation Changesタブのレイアウト"""
 
-from dash import dash_table, html
+import dash_ag_grid as dag
+from dash import html
 
 from src.dash_app.utils.constants import (
     CHANGE_TYPE_COLOR_MAP,
@@ -29,48 +30,92 @@ def create_citation_changes_tab_layout() -> html.Div:
         columns={"citing_markdown": "citing", "cited_markdown": "cited"}
     )
 
-    # Change Type ごとの背景色とフォント色のスタイルを作成
-    style_data_conditional = [
-        # 奇数行に背景色を適用（ストライプパターン）
+    # Change Type ごとの背景色とフォント色のスタイル条件を生成
+    change_type_style_conditions = [
         {
-            "if": {"row_index": "odd"},
-            "backgroundColor": "#fafafa",
+            "condition": f"params.value === '{change_type}'",
+            "style": {
+                "backgroundColor": bg_color,
+                "color": CHANGE_TYPE_FONT_COLOR_MAP[change_type],
+                "textAlign": "center",
+            },
+        }
+        for change_type, bg_color in CHANGE_TYPE_COLOR_MAP.items()
+    ]
+
+    column_defs = [
+        {
+            "field": "detected",
+            "headerName": "Detected",
+            "width": 120,
+            "sort": "desc",
+        },
+        {
+            "field": "change_type",
+            "headerName": "Change",
+            "width": 100,
+            "cellStyle": {
+                "styleConditions": change_type_style_conditions,
+                "defaultStyle": {"textAlign": "center"},
+            },
+            "headerClass": "ag-header-cell-center",
+        },
+        {
+            "headerName": "PEP",
+            "children": [
+                {
+                    "field": "citing",
+                    "headerName": "Citing",
+                    "width": 100,
+                    "cellRenderer": "markdown",
+                    "headerClass": "ag-header-cell-center",
+                },
+                {
+                    "field": "cited",
+                    "headerName": "Cited",
+                    "width": 100,
+                    "cellRenderer": "markdown",
+                    "headerClass": "ag-header-cell-center",
+                },
+            ],
+        },
+        {
+            "headerName": "Title",
+            "children": [
+                {
+                    "field": "citing_title",
+                    "headerName": "Citing",
+                    "minWidth": 150,
+                    "flex": 1,
+                    "headerClass": "ag-header-cell-center",
+                },
+                {
+                    "field": "cited_title",
+                    "headerName": "Cited",
+                    "minWidth": 150,
+                    "flex": 1,
+                    "headerClass": "ag-header-cell-center",
+                },
+            ],
+        },
+        {
+            "headerName": "Count",
+            "children": [
+                {
+                    "field": "count_before",
+                    "headerName": "Before",
+                    "width": 90,
+                    "headerClass": "ag-header-cell-center",
+                },
+                {
+                    "field": "count_after",
+                    "headerName": "After",
+                    "width": 90,
+                    "headerClass": "ag-header-cell-center",
+                },
+            ],
         },
     ]
-    for change_type, bg_color in CHANGE_TYPE_COLOR_MAP.items():
-        font_color = CHANGE_TYPE_FONT_COLOR_MAP[change_type]
-        style_data_conditional.append(
-            {
-                "if": {
-                    "filter_query": f"{{change_type}} = {change_type}",
-                    "column_id": "change_type",
-                },
-                "backgroundColor": bg_color,
-                "color": font_color,
-                "textAlign": "center",
-            }
-        )
-
-    # PEP列（citingとcited）の位置調整スタイルを追加
-    # Markdownリンクの位置を調整するために、paddingとverticalAlignを設定
-    style_data_conditional.extend(
-        [
-            {
-                "if": {"column_id": "citing"},
-                "paddingTop": "11px",
-                "paddingBottom": "0px",
-                "fontSize": "14px",
-                "verticalAlign": "bottom",
-            },
-            {
-                "if": {"column_id": "cited"},
-                "paddingTop": "11px",
-                "paddingBottom": "0px",
-                "fontSize": "14px",
-                "verticalAlign": "bottom",
-            },
-        ]
-    )
 
     return html.Div(
         [
@@ -117,61 +162,29 @@ def create_citation_changes_tab_layout() -> html.Div:
                     "margin": "8px 0",
                 },
             ),
-            # DataTableコンポーネント
-            dash_table.DataTable(  # type: ignore[attr-defined]
+            # AG Gridコンポーネント
+            dag.AgGrid(
                 id="citation-changes-table",
-                columns=[
-                    {"name": ["", "Detected"], "id": "detected", "type": "text"},
-                    {"name": ["", "Change"], "id": "change_type", "type": "text"},
-                    {
-                        "name": ["PEP", "Citing"],
-                        "id": "citing",
-                        "type": "text",
-                        "presentation": "markdown",
-                    },
-                    {
-                        "name": ["PEP", "Cited"],
-                        "id": "cited",
-                        "type": "text",
-                        "presentation": "markdown",
-                    },
-                    {"name": ["Title", "Citing"], "id": "citing_title", "type": "text"},
-                    {"name": ["Title", "Cited"], "id": "cited_title", "type": "text"},
-                    {"name": ["Count", "Before"], "id": "count_before", "type": "text"},
-                    {"name": ["Count", "After"], "id": "count_after", "type": "text"},
-                ],
-                data=df.to_dict("records"),
-                sort_action="native",
-                sort_by=[{"column_id": "detected", "direction": "desc"}],
-                filter_action="native",
-                merge_duplicate_headers=True,
-                style_table={"overflowX": "auto"},
-                style_cell={
-                    "textAlign": "left",
-                    "padding": "4px 6px",
-                    "fontSize": "15px",
-                    "height": "auto",
-                    "minHeight": "18px",
+                columnDefs=column_defs,
+                rowData=df.to_dict("records"),
+                defaultColDef={
+                    "sortable": True,
+                    "filter": True,
+                    "floatingFilter": True,
+                    "resizable": True,
                 },
-                style_data={
-                    "lineHeight": "1.1",
-                    "verticalAlign": "middle",
+                dashGridOptions={
+                    "domLayout": "autoHeight",
                 },
-                style_header={
-                    "backgroundColor": "#f5f5f5",
-                    "fontWeight": "bold",
+                getRowStyle={
+                    "styleConditions": [
+                        {
+                            "condition": "params.rowIndex % 2 !== 0",
+                            "style": {"backgroundColor": "#fafafa"},
+                        },
+                    ],
                 },
-                style_header_conditional=[
-                    # PEP、Title、Count、Changeのヘッダーを中央寄せ
-                    {"if": {"column_id": "change_type"}, "textAlign": "center"},
-                    {"if": {"column_id": "citing"}, "textAlign": "center"},
-                    {"if": {"column_id": "cited"}, "textAlign": "center"},
-                    {"if": {"column_id": "citing_title"}, "textAlign": "center"},
-                    {"if": {"column_id": "cited_title"}, "textAlign": "center"},
-                    {"if": {"column_id": "count_before"}, "textAlign": "center"},
-                    {"if": {"column_id": "count_after"}, "textAlign": "center"},
-                ],
-                style_data_conditional=style_data_conditional,
+                className="ag-theme-alpine",
             ),
         ],
         style={"padding": "20px"},

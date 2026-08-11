@@ -23,14 +23,25 @@ def test_citation_changes_tab_layout_returns_div():
     assert isinstance(layout, html.Div)
 
 
+def _collect_fields(column_defs: list[dict]) -> list[str]:
+    """columnDefsからfield名をフラットに収集する（childrenを再帰展開）"""
+    fields = []
+    for col in column_defs:
+        if "children" in col:
+            fields.extend(_collect_fields(col["children"]))
+        elif "field" in col:
+            fields.append(col["field"])
+    return fields
+
+
 def test_citation_changes_table_columns():
-    """DataTableの列が正しく定義されていることを確認"""
+    """AG Gridの列が正しく定義されていることを確認"""
     layout = create_citation_changes_tab_layout()
 
-    # layout.children[3] がDataTable
-    datatable = layout.children[3]
+    # layout.children[3] がAG Grid
+    grid = layout.children[3]
 
-    expected_column_ids = [
+    expected_fields = [
         "detected",
         "change_type",
         "citing",
@@ -40,30 +51,22 @@ def test_citation_changes_table_columns():
         "count_before",
         "count_after",
     ]
-    actual_column_ids = [col["id"] for col in datatable.columns]
-    assert actual_column_ids == expected_column_ids
+    actual_fields = _collect_fields(grid.columnDefs)
+    assert actual_fields == expected_fields
 
 
 def test_citation_changes_table_multi_headers():
-    """DataTableのマルチヘッダーが正しく定義されていることを確認"""
+    """AG Gridのマルチヘッダー（カラムグルーピング）が正しく定義されていることを確認"""
     layout = create_citation_changes_tab_layout()
 
-    # layout.children[3] がDataTable
-    datatable = layout.children[3]
+    # layout.children[3] がAG Grid
+    grid = layout.children[3]
 
-    # merge_duplicate_headersが設定されていることを確認
-    assert datatable.merge_duplicate_headers is True
+    # グループヘッダーを持つ列を確認
+    group_headers = [col["headerName"] for col in grid.columnDefs if "children" in col]
+    assert group_headers == ["PEP", "Title", "Count"]
 
-    # 各列のヘッダー構造を確認
-    expected_headers = [
-        ["", "Detected"],
-        ["", "Change"],
-        ["PEP", "Citing"],
-        ["PEP", "Cited"],
-        ["Title", "Citing"],
-        ["Title", "Cited"],
-        ["Count", "Before"],
-        ["Count", "After"],
-    ]
-    actual_headers = [col["name"] for col in datatable.columns]
-    assert actual_headers == expected_headers
+    # PEPグループの子列を確認
+    pep_group = [col for col in grid.columnDefs if col.get("headerName") == "PEP"][0]
+    pep_child_names = [c["headerName"] for c in pep_group["children"]]
+    assert pep_child_names == ["Citing", "Cited"]

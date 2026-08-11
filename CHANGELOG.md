@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.10.0] - 2026-08-11
+
+### Changed
+- Replace DataTable with AG Grid in the `Citation Changes` tab and `PEP Metrics` tab tables.
+
 ## [0.9.0] - 2026-05-10
 
 ### Added

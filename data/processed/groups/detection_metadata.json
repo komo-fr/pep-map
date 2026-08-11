@@ -5,13 +5,13 @@
     "seed": 42
   },
   "statistics": {
-    "modularity": 0.6684897512173613,
-    "total_communities": 122,
-    "total_peps_in_communities": 651,
-    "isolated_peps": 75,
+    "modularity": 0.6762834809423071,
+    "total_communities": 120,
+    "total_peps_in_communities": 657,
+    "isolated_peps": 76,
     "max_community_size": 30,
     "min_community_size": 2,
-    "avg_community_size": 13.851063829787234
+    "avg_community_size": 14.931818181818182
   },
-  "detected_at": "2026-05-09T11:50:00.732325+00:00"
+  "detected_at": "2026-08-11T14:19:17.322587+00:00"
 }
