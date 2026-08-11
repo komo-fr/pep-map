@@ -1,18 +1,17 @@
 """データ読み込みモジュール"""
 
 import json
-from datetime import datetime
 import pickle
+from datetime import datetime
 from typing import cast
 
-import pandas as pd
 import networkx as nx
+import pandas as pd
 
 from src.dash_app.utils.constants import (
     DATA_DIR,
     STATIC_DIR,
 )
-
 
 # モジュールレベルでキャッシュ（アプリ起動時に一度だけ読み込む）
 _peps_metadata_cache: pd.DataFrame | None = None
@@ -21,7 +20,7 @@ _metadata_cache: dict | None = None
 _python_releases_cache: pd.DataFrame | None = None
 _node_metrics_cache: pd.DataFrame | None = None
 _peps_with_metrics_cache: pd.DataFrame | None = None
-_metrics_styles_cache: list[dict] | None = None
+_metrics_styles_cache: dict[str, list[dict]] | None = None
 _citation_changes_cache: pd.DataFrame | None = None
 _group_data_cache: pd.DataFrame | None = None
 _group_names_cache: pd.DataFrame | None = None
@@ -448,24 +447,26 @@ def load_peps_with_metrics() -> pd.DataFrame:
     return merged_df
 
 
-def load_metrics_styles() -> list[dict]:
+def load_metrics_styles() -> dict[str, list[dict]]:
     """
-    メトリクステーブルのスタイル条件を事前計算
+    メトリクステーブルのAG Grid用スタイル条件を事前計算
 
-    In-degree, Out-degree, Degree列に対してデータバースタイルを生成
-    PageRank列に対してグラデーション背景を生成
-    他のスタイル条件（ステータスカラー、縞模様）も含める
+    列ごとにcellStyle.styleConditionsで使用する条件リストを生成する。
+    - status列: ステータスカラー
+    - in_degree, out_degree, degree列: データバー
+    - pagerank列: グラデーション背景
 
     Returns:
-        list[dict]: style_data_conditionalに使用するスタイルのリスト
+        dict[str, list[dict]]: 列名 → styleConditionsのリスト
     """
     from src.dash_app.utils.table_helpers import data_bars, gradient_backgrounds
-    from src.dash_app.components.pep_tables import generate_status_styles
 
     global _metrics_styles_cache
 
     if _metrics_styles_cache is not None:
         return _metrics_styles_cache
+
+    from src.dash_app.utils.constants import STATUS_COLOR_MAP, STATUS_FONT_COLOR_MAP
 
     # PEP + メトリクスデータを取得
     df = load_peps_with_metrics()
@@ -475,37 +476,31 @@ def load_metrics_styles() -> list[dict]:
         if col in df.columns:
             df[col] = df[col].fillna(0)
 
-    # デフォルトのスタイル条件
-    base_styles = [
+    result: dict[str, list[dict]] = {}
+
+    # Status列のスタイル条件
+    result["status"] = [
         {
-            "if": {"row_index": "odd"},
-            "backgroundColor": "#fafafa",
-        },
-        {
-            "if": {"column_id": "pep"},
-            "paddingTop": "11px",
-            "paddingBottom": "0px",
-            "fontSize": "14px",
-            "verticalAlign": "bottom",
-        },
-    ] + generate_status_styles()
+            "condition": f"params.value === '{status}'",
+            "style": {
+                "backgroundColor": bg_color,
+                "color": STATUS_FONT_COLOR_MAP.get(status, "#545454"),
+            },
+        }
+        for status, bg_color in STATUS_COLOR_MAP.items()
+    ]
 
     # データバースタイルを生成（In-degree, Out-degree, Degree）
-    data_bar_styles = []
     for column in ["in_degree", "out_degree", "degree"]:
         if column in df.columns and len(df) > 0:
-            data_bar_styles.extend(data_bars(df, column))
+            result[column] = data_bars(df, column)
 
     # PageRank列にグラデーション背景を生成
-    gradient_styles = []
     if "pagerank" in df.columns and len(df) > 0:
-        gradient_styles.extend(gradient_backgrounds(df, "pagerank"))
+        result["pagerank"] = gradient_backgrounds(df, "pagerank")
 
-    # 全てのスタイルを結合
-    all_styles = base_styles + data_bar_styles + gradient_styles
-
-    _metrics_styles_cache = all_styles
-    return all_styles
+    _metrics_styles_cache = result
+    return result
 
 
 def load_group_data() -> pd.DataFrame:
@@ -707,12 +702,12 @@ def clear_cache() -> None:
     _group_tooltip_info_cache = None
 
     # 他モジュールのキャッシュもクリア（遅延インポートで循環参照を回避）
+    from src.dash_app.callbacks import group_callbacks
     from src.dash_app.components import (
-        network_graph,
         group_network_graph,
+        network_graph,
         subgraph_network_graph,
     )
-    from src.dash_app.callbacks import group_callbacks
 
     network_graph.clear_cache()
     group_network_graph.clear_cache()
