@@ -460,13 +460,12 @@ def load_metrics_styles() -> dict[str, list[dict]]:
         dict[str, list[dict]]: 列名 → styleConditionsのリスト
     """
     from src.dash_app.utils.table_helpers import data_bars, gradient_backgrounds
+    from src.dash_app.components.pep_tables import generate_status_styles
 
     global _metrics_styles_cache
 
     if _metrics_styles_cache is not None:
         return _metrics_styles_cache
-
-    from src.dash_app.utils.constants import STATUS_COLOR_MAP, STATUS_FONT_COLOR_MAP
 
     # PEP + メトリクスデータを取得
     df = load_peps_with_metrics()
@@ -479,16 +478,7 @@ def load_metrics_styles() -> dict[str, list[dict]]:
     result: dict[str, list[dict]] = {}
 
     # Status列のスタイル条件
-    result["status"] = [
-        {
-            "condition": f"params.value === '{status}'",
-            "style": {
-                "backgroundColor": bg_color,
-                "color": STATUS_FONT_COLOR_MAP.get(status, "#545454"),
-            },
-        }
-        for status, bg_color in STATUS_COLOR_MAP.items()
-    ]
+    result["status"] = generate_status_styles()
 
     # データバースタイルを生成（In-degree, Out-degree, Degree）
     for column in ["in_degree", "out_degree", "degree"]:

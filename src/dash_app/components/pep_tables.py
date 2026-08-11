@@ -33,16 +33,7 @@ def create_pep_table(table_id: str) -> dag.AgGrid:
     Returns:
         dag.AgGrid: テーブルコンポーネント
     """
-    status_style_conditions = [
-        {
-            "condition": f"params.value === '{status}'",
-            "style": {
-                "backgroundColor": bg_color,
-                "color": STATUS_FONT_COLOR_MAP.get(status, "#545454"),
-            },
-        }
-        for status, bg_color in STATUS_COLOR_MAP.items()
-    ]
+    status_style_conditions = generate_status_styles()
 
     column_defs = [
         {
@@ -104,30 +95,26 @@ def create_pep_table(table_id: str) -> dag.AgGrid:
     )
 
 
-def generate_status_styles() -> list:
+def generate_status_styles() -> list[dict]:
     """
-    Status列の各ステータス値に対する条件付きスタイルを生成する
+    AG Grid用のStatus列スタイル条件を生成する
 
     STATUS_COLOR_MAPで定義された各ステータスに対して、
-    背景色とフォント色を設定するスタイルルールを生成する。
+    cellStyle.styleConditionsで使用する条件リストを生成する。
 
     Returns:
-        list: 条件付きスタイルのリスト
+        list[dict]: styleConditionsに使用する条件リスト
     """
-    styles = []
-    for status, bg_color in STATUS_COLOR_MAP.items():
-        font_color = STATUS_FONT_COLOR_MAP.get(status, "#545454")
-        styles.append(
-            {
-                "if": {
-                    "column_id": "status",
-                    "filter_query": f'{{status}} = "{status}"',
-                },
+    return [
+        {
+            "condition": f"params.value === '{status}'",
+            "style": {
                 "backgroundColor": bg_color,
-                "color": font_color,
-            }
-        )
-    return styles
+                "color": STATUS_FONT_COLOR_MAP.get(status, "#545454"),
+            },
+        }
+        for status, bg_color in STATUS_COLOR_MAP.items()
+    ]
 
 
 def convert_df_to_table_data(df) -> list[dict]:
