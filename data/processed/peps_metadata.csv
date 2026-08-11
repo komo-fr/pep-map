@@ -485,7 +485,7 @@ pep_number,title,status,type,created,authors,topic,requires,replaces,python_vers
 665,A file format to list Python dependencies for reproducibility of an application,Rejected,Standards Track,29-Jul-2021,Brett Cannon; Pradyun Gedam; Tzu-ping Chung,Packaging,,,
 666,Reject Foolish Indentation,Rejected,Standards Track,03-Dec-2001,Laura Creighton,,,,2.2
 667,Consistent views of namespaces,Final,Standards Track,30-Jul-2021,Mark Shannon; Tian Gao,,,,3.13
-668,Marking Python base environments as “externally managed”,Accepted,Standards Track,18-May-2021,Geoffrey Thomas; Matthias Klose; Filipe Laíns; Donald Stufft; Tzu-ping Chung; Stefano Rivera; Elana Hashman; Pradyun Gedam,Packaging,,,
+668,Marking Python base environments as “externally managed”,Final,Standards Track,18-May-2021,Geoffrey Thomas; Matthias Klose; Filipe Laíns; Donald Stufft; Tzu-ping Chung; Stefano Rivera; Elana Hashman; Pradyun Gedam,Packaging,,,
 669,Low Impact Monitoring for CPython,Final,Standards Track,18-Aug-2021,Mark Shannon,,,,3.12
 670,Convert macros to functions in the Python C API,Final,Standards Track,19-Oct-2021,Erlend Egeberg Aasland; Victor Stinner,,,,3.11
 671,Syntax for late-bound function argument defaults,Draft,Standards Track,24-Oct-2021,Chris Angelico,,,,3.12
@@ -504,11 +504,11 @@ pep_number,title,status,type,created,authors,topic,requires,replaces,python_vers
 684,A Per-Interpreter GIL,Final,Standards Track,08-Mar-2022,Eric Snow,,683,,3.12
 685,Comparison of extra names for optional distribution dependencies,Final,Standards Track,08-Mar-2022,Brett Cannon,Packaging,,,
 686,Make UTF-8 mode default,Final,Standards Track,18-Mar-2022,Inada Naoki,,,,3.15
-687,Isolating modules in the standard library,Accepted,Standards Track,04-Apr-2022,Erlend Egeberg Aasland; Petr Viktorin,,489; 573; 630,,3.12
+687,Isolating modules in the standard library,Final,Standards Track,04-Apr-2022,Erlend Egeberg Aasland; Petr Viktorin,,489; 573; 630,,3.12
 688,Making the buffer protocol accessible in Python,Final,Standards Track,23-Apr-2022,Jelle Zijlstra,Typing,,,3.12
 689,Unstable C API tier,Final,Standards Track,22-Apr-2022,Petr Viktorin,,523,,3.12
 690,Lazy Imports,Rejected,Standards Track,29-Apr-2022,Germán Méndez Bravo; Carl Meyer,,,,3.12
-691,JSON-based Simple API for Python Package Indexes,Accepted,Standards Track,04-May-2022,Donald Stufft; Pradyun Gedam; Cooper Lees; Dustin Ingram,Packaging,,,
+691,JSON-based Simple API for Python Package Indexes,Final,Standards Track,04-May-2022,Donald Stufft; Pradyun Gedam; Cooper Lees; Dustin Ingram,Packaging,,,
 692,Using TypedDict for more precise \*\*kwargs typing,Final,Standards Track,29-May-2022,Franek Magiera,Typing,,,3.12
 693,Python 3.12 Release Schedule,Active,Informational,24-May-2022,Thomas Wouters,Release,,,3.12
 694,Upload 2.0 API for Python Package Indexes,Draft,Standards Track,11-Jun-2022,Barry Warsaw; Donald Stufft; Ee Durbin,Packaging,,,
@@ -516,11 +516,11 @@ pep_number,title,status,type,created,authors,topic,requires,replaces,python_vers
 696,Type Defaults for Type Parameters,Final,Standards Track,14-Jul-2022,James Hilton-Balfe,Typing,,,3.13
 697,Limited C API for Extending Opaque Types,Final,Standards Track,23-Aug-2022,Petr Viktorin,,,,3.12
 698,Override Decorator for Static Typing,Final,Standards Track,05-Sep-2022,Steven Troxler; Joshua Xu; Shannon Zhu,Typing,,,3.12
-699,Remove private dict version field added in PEP 509,Accepted,Standards Track,03-Oct-2022,Ken Jin,,,509,3.12
+699,Remove private dict version field added in PEP 509,Final,Standards Track,03-Oct-2022,Ken Jin,,,509,3.12
 700,Additional Fields for the Simple API for Package Indexes,Final,Standards Track,21-Oct-2022,Paul Moore,Packaging,,,
-701,Syntactic formalization of f-strings,Accepted,Standards Track,15-Nov-2022,Pablo Galindo Salgado; Batuhan Taskaya; Lysandros Nikolaou; Marta Gómez Macías,,,,3.12
+701,Syntactic formalization of f-strings,Final,Standards Track,15-Nov-2022,Pablo Galindo Salgado; Batuhan Taskaya; Lysandros Nikolaou; Marta Gómez Macías,,,,3.12
 702,Marking deprecations using the type system,Final,Standards Track,30-Dec-2022,Jelle Zijlstra,Typing,,,3.13
-703,Making the Global Interpreter Lock Optional in CPython,Accepted,Standards Track,09-Jan-2023,Sam Gross,,,,3.13
+703,Making the Global Interpreter Lock Optional in CPython,Final,Standards Track,09-Jan-2023,Sam Gross,,,,3.13
 704,Require virtual environments by default for package installers,Withdrawn,Standards Track,16-Jan-2023,Pradyun Gedam,Packaging,,,
 705,TypedDict: Read-only items,Final,Standards Track,07-Nov-2022,Alice Purcell,Typing,,,3.13
 706,Filter for tarfile.extractall,Final,Standards Track,09-Feb-2023,Petr Viktorin,,,,3.12
@@ -543,7 +543,7 @@ pep_number,title,status,type,created,authors,topic,requires,replaces,python_vers
 725,Specifying external dependencies in pyproject.toml,Draft,Standards Track,17-Aug-2023,Pradyun Gedam; Jaime Rodríguez-Guerra; Ralf Gommers,Packaging,,,
 726,Module ``__setattr__`` and ``__delattr__``,Rejected,Standards Track,24-Aug-2023,Sergey B Kirpichev,,,,3.13
 727,Documentation in Annotated Metadata,Withdrawn,Standards Track,28-Aug-2023,Sebastián Ramírez,Typing,,,3.13
-728,TypedDict with Typed Extra Items,Accepted,Standards Track,12-Sep-2023,Zixuan James Li,Typing,,,3.15
+728,TypedDict with Typed Extra Items,Final,Standards Track,12-Sep-2023,Zixuan James Li,Typing,,,3.15
 729,Typing governance process,Active,Process,19-Sep-2023,Jelle Zijlstra; Shantanu Jain,Governance; Typing,,,
 730,Adding iOS as a supported platform,Final,Standards Track,09-Oct-2023,Russell Keith-Magee,,,,3.13
 731,C API Working Group Charter,Active,Process,11-Oct-2023,Guido van Rossum; Petr Viktorin; Victor Stinner; Steve Dower; Irit Katriel,Governance,,,
@@ -567,8 +567,8 @@ pep_number,title,status,type,created,authors,topic,requires,replaces,python_vers
 749,Implementing PEP 649,Final,Standards Track,28-May-2024,Jelle Zijlstra,Typing,649,,3.14
 750,Template Strings,Final,Standards Track,08-Jul-2024,Jim Baker; Guido van Rossum; Paul Everitt; Koudai Aono; Lysandros Nikolaou; Dave Peck,,,,3.14
 751,A file format to record Python dependencies for installation reproducibility,Final,Standards Track,24-Jul-2024,Brett Cannon,Packaging,,665,
-752,Implicit namespaces for package repositories,Draft,Standards Track,13-Aug-2024,Ofek Lev; Jarek Potiuk,Packaging,,,
-753,Uniform project URLs in core metadata,Accepted,Standards Track,29-Aug-2024,William Woodruff; Facundo Tuesca,Packaging,,,
+752,Implicit namespaces for package repositories,Accepted,Standards Track,13-Aug-2024,Ofek Lev; Jarek Potiuk,Packaging,,,
+753,Uniform project URLs in core metadata,Final,Standards Track,29-Aug-2024,William Woodruff; Facundo Tuesca,Packaging,,,
 754,IEEE 754 Floating Point Special Values,Rejected,Standards Track,28-Mar-2003,Gregory R. Warnes,,,,2.3
 755,Implicit namespace policy for PyPI,Draft,Process,05-Sep-2024,Ofek Lev,Packaging,,,
 756,Add PyUnicode_Export() and PyUnicode_Import() C functions,Withdrawn,Standards Track,13-Sep-2024,Victor Stinner,,,,3.14
@@ -585,10 +585,10 @@ pep_number,title,status,type,created,authors,topic,requires,replaces,python_vers
 767,Annotating Read-Only Attributes,Draft,Standards Track,18-Nov-2024,Łukasz Modzelewski,Typing,,,3.15
 768,Safe external debugger interface for CPython,Final,Standards Track,25-Nov-2024,Pablo Galindo Salgado; Matt Wozniski; Ivona Stojanovic,,,,3.14
 769,"Add a 'default' keyword argument to 'attrgetter', 'itemgetter' and 'getitem'",Rejected,Standards Track,22-Dec-2024,Facundo Batista,,,,3.14
-770,Improving measurability of Python packages with Software Bill-of-Materials,Accepted,Standards Track,02-Jan-2025,Seth Larson,Packaging,,,
+770,Improving measurability of Python packages with Software Bill-of-Materials,Final,Standards Track,02-Jan-2025,Seth Larson,Packaging,,,
 771,Default Extras for Python Software Packages,Draft,Standards Track,13-Jan-2025,Thomas Robitaille; Jonathan Dekhtiar,Packaging,,,
 772,Packaging Council governance process,Accepted,Process,21-Jan-2025,Barry Warsaw; Deb Nicholson; Pradyun Gedam,Governance; Packaging,,609,
-773,A Python Installation Manager for Windows,Accepted,Standards Track,21-Jan-2025,Steve Dower,Release,,397; 486,
+773,A Python Installation Manager for Windows,Final,Standards Track,21-Jan-2025,Steve Dower,Release,,397; 486,
 774,Removing the LLVM requirement for JIT builds,Deferred,Standards Track,27-Jan-2025,Savannah Ostrowski,,,,3.14
 775,Make zlib required to build CPython,Withdrawn,Standards Track,24-Feb-2025,Gregory P. Smith; Stan Ulbrych; Petr Viktorin,,,,3.14
 776,Emscripten Support,Active,Informational,18-Mar-2025,Hood Chatham,,,,3.14
@@ -603,46 +603,53 @@ pep_number,title,status,type,created,authors,topic,requires,replaces,python_vers
 785,New methods for easier handling of ``ExceptionGroup``\ s,Draft,Standards Track,08-Apr-2025,Zac Hatfield-Dodds,,,,3.14
 786,Precision and modulo-precision flag format specifiers for integer fields,Draft,Standards Track,04-Apr-2025,Jay Berry,,,,3.15
 787,Safer subprocess usage using t-strings,Deferred,Standards Track,13-Apr-2025,Nick Humrich; Alyssa Coghlan,,750,,3.15
-788,Protecting the C API from Interpreter Finalization,Accepted,Standards Track,23-Apr-2025,Peter Bierma,,,,3.15
+788,Protecting the C API from Interpreter Finalization,Final,Standards Track,23-Apr-2025,Peter Bierma,,,,3.15
 789,Preventing task-cancellation bugs by limiting yield in async generators,Draft,Standards Track,14-May-2024,Zac Hatfield-Dodds; Nathaniel J. Smith,,,,3.14
 790,Python 3.15 Release Schedule,Active,Informational,26-Apr-2025,Hugo van Kemenade,Release,,,3.15
 791,math.integer --- submodule for integer-specific mathematics functions,Final,Standards Track,12-May-2025,Neil Girdhar; Sergey B Kirpichev; Tim Peters; Serhiy Storchaka,,,,3.15
 792,Project status markers in the simple index,Final,Standards Track,21-May-2025,William Woodruff; Facundo Tuesca,Packaging,,,
-793,PyModExport: A new entry point for C extension modules,Accepted,Standards Track,23-May-2025,Petr Viktorin,,,,3.15
+793,PyModExport: A new entry point for C extension modules,Final,Standards Track,23-May-2025,Petr Viktorin,,,,3.15
 794,Import Name Metadata,Accepted,Standards Track,05-Jun-2025,Brett Cannon,Packaging,,,
-797,Shared Object Proxies,Draft,Standards Track,08-Aug-2025,Peter Bierma,,,,3.15
-798,Unpacking in Comprehensions,Accepted,Standards Track,19-Jul-2025,Adam Hartz; Erik Demaine,,,,3.15
-799,A dedicated ``profiling`` package for organizing Python profiling tools,Accepted,Standards Track,21-Jul-2025,Pablo Galindo Salgado; László Kiss Kollár,,,,3.15
-800,Disjoint bases in the type system,Accepted,Standards Track,21-Jul-2025,Jelle Zijlstra,Typing,,,3.15
+797,Shared Object Proxies,Rejected,Standards Track,08-Aug-2025,Peter Bierma,,,,3.16
+798,Unpacking in Comprehensions,Final,Standards Track,19-Jul-2025,Adam Hartz; Erik Demaine,,,,3.15
+799,A dedicated ``profiling`` package for organizing Python profiling tools,Final,Standards Track,21-Jul-2025,Pablo Galindo Salgado; László Kiss Kollár,,,,3.15
+800,Disjoint bases in the type system,Final,Standards Track,21-Jul-2025,Jelle Zijlstra,Typing,,,3.15
 801,Reserved,Active,Informational,21-Jun-2018,Barry Warsaw,,,,
 802,Display Syntax for the Empty Set,Draft,Standards Track,08-Aug-2025,Adam Turner,,,,3.15
-803,"""abi3t"": Stable ABI for Free-Threaded Builds",Accepted,Standards Track,19-Aug-2025,Petr Viktorin; Nathan Goldbaum,,703; 793; 697,,3.15
+803,"""abi3t"": Stable ABI for Free-Threaded Builds",Final,Standards Track,19-Aug-2025,Petr Viktorin; Nathan Goldbaum,,703; 793; 697,,3.15
 804,An external dependency registry and name mapping mechanism,Draft,Standards Track,03-Sep-2025,Pradyun Gedam; Ralf Gommers; Michał Górny; Jaime Rodríguez-Guerra; Michael Sarahan,Packaging,725,,
 806,Mixed sync/async context managers with precise async marking,Rejected,Standards Track,05-Sep-2025,Zac Hatfield-Dodds,,,,3.15
 807,Index support for Trusted Publishing,Draft,Standards Track,19-Sep-2025,William Woodruff,Packaging,,,
-808,Including static values in dynamic metadata,Draft,Standards Track,19-Sep-2025,Henry Schreiner; Cristian Le,Packaging,,,
+808,Including static values in dynamic metadata,Accepted,Standards Track,19-Sep-2025,Henry Schreiner; Cristian Le,Packaging,,,
 809,Stable ABI for the Future,Draft,Standards Track,19-Sep-2025,Steve Dower,,703; 793; 697,,3.15
-810,Explicit lazy imports,Accepted,Standards Track,02-Oct-2025,Pablo Galindo Salgado; Germán Méndez Bravo; Thomas Wouters; Dino Viehland; Brittany Reynoso; Noah Kim; Tim Stumbaugh,,,,3.15
-811,Defining Python Security Response Team membership and responsibilities,Accepted,Process,22-Oct-2025,Seth Michael Larson,Governance,,,
-813,The Pretty Print Protocol,Draft,Standards Track,07-Nov-2025,Barry Warsaw; Eric V. Smith,,,,3.15
+810,Explicit lazy imports,Final,Standards Track,02-Oct-2025,Pablo Galindo Salgado; Germán Méndez Bravo; Thomas Wouters; Dino Viehland; Brittany Reynoso; Noah Kim; Tim Stumbaugh,,,,3.15
+811,Defining Python Security Response Team membership and responsibilities,Active,Process,22-Oct-2025,Seth Michael Larson,Governance,,,
+813,The Pretty Print Protocol,Draft,Standards Track,07-Nov-2025,Barry Warsaw; Eric V. Smith,,,,3.16
 814,Add frozendict built-in type,Final,Standards Track,12-Nov-2025,Victor Stinner; Donghee Na,,,,3.15
 815,Deprecate ``RECORD.jws`` and ``RECORD.p7s``,Final,Standards Track,04-Dec-2025,Konstantin Schütze; William Woodruff,Packaging,,,
 816,WASI Support,Active,Informational,05-Nov-2025,Brett Cannon,,,,
 817,Wheel Variants: Beyond Platform Tags,Draft,Standards Track,10-Dec-2025,Jonathan Dekhtiar; Michał Górny; Konstantin Schütze; Ralf Gommers; Andrey Talman; Charlie Marsh; Michael Sarahan; Eli Uriegas; Barry Warsaw; Donald Stufft; Andy R. Terrel,Packaging,,,
 818,Adding the Core of the Pyodide Foreign Function Interface to Python,Draft,Standards Track,10-Dec-2025,Hood Chatham,,,,3.15
 819,JSON Package Metadata,Draft,Standards Track,18-Dec-2025,Emma Harper Smith,Packaging,,,
-820,PySlot: Unified slot system for the C API,Accepted,Standards Track,19-Dec-2025,Petr Viktorin,,,,3.15
+820,PySlot: Unified slot system for the C API,Final,Standards Track,19-Dec-2025,Petr Viktorin,,,,3.15
 821,Support for unpacking TypedDicts in Callable type hints,Draft,Standards Track,12-Jan-2026,Daniel Sperber,Typing,,,3.15
 822,Dedented Multiline String (d-string),Draft,Standards Track,05-Jan-2026,Inada Naoki,,,,3.16
 825,Wheel Variants: Package Format,Draft,Standards Track,17-Feb-2026,Jonathan Dekhtiar; Michał Górny; Konstantin Schütze; Ralf Gommers; Andrey Talman; Charlie Marsh; Michael Sarahan; Eli Uriegas; Barry Warsaw; Donald Stufft; Andy R. Terrel,Packaging,,,
 826,Python 3.16 Release Schedule,Active,Informational,23-Feb-2026,Savannah Ostrowski,Release,,,3.16
-827,Type Manipulation,Draft,Standards Track,27-Feb-2026,Michael J. Sullivan; Daniel W. Park; Yury Selivanov,Typing,,,3.15
-828,Supporting 'yield from' in asynchronous generators,Draft,Standards Track,07-Mar-2026,Peter Bierma,,,,3.15
-829,Package Startup Configuration Files,Accepted,Standards Track,31-Mar-2026,Barry Warsaw,,,,3.15
-830,Add timestamps to exceptions and tracebacks,Draft,Standards Track,15-Mar-2026,Gregory P. Smith,,,,3.15
-831,Frame Pointers Everywhere: Enabling System-Level Observability for Python,Accepted,Standards Track,14-Mar-2026,Pablo Galindo Salgado; Ken Jin; Savannah Ostrowski,,,,3.15
+827,Type Manipulation,Draft,Standards Track,27-Feb-2026,Michael J. Sullivan; Daniel W. Park; Yury Selivanov,Typing,,,3.16
+828,Supporting 'yield from' in asynchronous generators,Accepted,Standards Track,07-Mar-2026,Peter Bierma,,,,3.16
+829,Package Startup Configuration Files,Final,Standards Track,31-Mar-2026,Barry Warsaw,,,,3.15
+830,Add timestamps to exceptions and tracebacks,Draft,Standards Track,15-Mar-2026,Gregory P. Smith,,,,3.16
+831,Frame Pointers Everywhere: Enabling System-Level Observability for Python,Final,Standards Track,14-Mar-2026,Pablo Galindo Salgado; Ken Jin; Savannah Ostrowski; Diego Russo,,,,3.15
 832,Virtual environment discovery,Draft,Standards Track,19-Jan-2026,Brett Cannon,,,,3.15
-833,Freezing the HTML simple repository API,Draft,Standards Track,21-Apr-2026,William Woodruff,Packaging,,,
+833,Freezing the HTML simple repository API,Final,Standards Track,21-Apr-2026,William Woodruff,Packaging,,,
+835,Shorthand syntax for Annotated type metadata,Draft,Standards Track,12-Jun-2026,Till Varoquaux,Typing,,,3.16
+836,JIT Go Brrr: The Path to a Supported JIT Compiler for CPython,Draft,Standards Track,02-Jul-2026,Savannah Ostrowski; Ken Jin; Brandt Bucher,,,,3.16
+837,Extensible JSON serialization,Draft,Standards Track,12-Jul-2026,Serhiy Storchaka,,,,3.16
+838,Adding python-version to pyvenv.cfg,Draft,Standards Track,15-Jul-2026,Konstantin Schütze,,,,3.16
+840,Name Resolution in Class Namespaces,Draft,Standards Track,15-Jul-2026,Jeremy Hylton; Guido van Rossum,,,,3.16
+841,Adding Frozen Syntax to Optimize Immutable Types,Draft,Standards Track,20-Jul-2026,Donghee Na; Nikita Sobolev,,,,3.16
+842,Module Exports,Draft,Standards Track,25-Jul-2026,Peter Bierma,,,,3.16
 2026,Calendar versioning for Python,Rejected,Process,11-Jun-2024,Hugo van Kemenade,,,,3.26
 3000,Python 3000,Final,Process,05-Apr-2006,Guido van Rossum,,,,
 3001,Procedure for reviewing and improving standard library modules,Withdrawn,Process,05-Apr-2006,Georg Brandl,,,,
