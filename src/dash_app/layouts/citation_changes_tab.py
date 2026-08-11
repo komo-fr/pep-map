@@ -170,6 +170,7 @@ def create_citation_changes_tab_layout() -> html.Div:
                 defaultColDef={
                     "sortable": True,
                     "filter": True,
+                    "floatingFilter": True,
                     "resizable": True,
                 },
                 dashGridOptions={
