@@ -647,9 +647,11 @@ pep_number,title,status,type,created,authors,topic,requires,replaces,python_vers
 836,JIT Go Brrr: The Path to a Supported JIT Compiler for CPython,Draft,Standards Track,02-Jul-2026,Savannah Ostrowski; Ken Jin; Brandt Bucher,,,,3.16
 837,Extensible JSON serialization,Draft,Standards Track,12-Jul-2026,Serhiy Storchaka,,,,3.16
 838,Adding python-version to pyvenv.cfg,Draft,Standards Track,15-Jul-2026,Konstantin Schütze,,,,3.16
+839,PyFrozenSetWriter and PyFrozenDictWriter C API,Draft,Standards Track,15-Jul-2026,Donghee Na,,,,3.16
 840,Name Resolution in Class Namespaces,Draft,Standards Track,15-Jul-2026,Jeremy Hylton; Guido van Rossum,,,,3.16
 841,Adding Frozen Syntax to Optimize Immutable Types,Draft,Standards Track,20-Jul-2026,Donghee Na; Nikita Sobolev,,,,3.16
-842,Module Exports,Draft,Standards Track,25-Jul-2026,Peter Bierma,,,,3.16
+842,Module Exports,Withdrawn,Standards Track,25-Jul-2026,Peter Bierma,,,,3.16
+844,``public`` and ``private`` builtins,Draft,Standards Track,05-Aug-2026,Barry Warsaw,,,,3.16
 2026,Calendar versioning for Python,Rejected,Process,11-Jun-2024,Hugo van Kemenade,,,,3.26
 3000,Python 3000,Final,Process,05-Apr-2006,Guido van Rossum,,,,
 3001,Procedure for reviewing and improving standard library modules,Withdrawn,Process,05-Apr-2006,Georg Brandl,,,,
